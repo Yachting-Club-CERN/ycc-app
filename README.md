@@ -1,2 +1,3 @@
-# ycc-app
-YCC App
+# YCC App
+
+YCC Frontend Application.
