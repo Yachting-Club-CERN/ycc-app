@@ -22,11 +22,11 @@ const App = () => {
           <Box sx={{width: '100%', pl: 2, pr: 2}}>
             <Toolbar />
             <Stack>
-              <Box component="main" sx={{flexGrow: 1}}>
+              <Box component="main">
                 <AppRoutes />
               </Box>
               <Divider />
-              <Box component="div" sx={{flexGrow: 1}}>
+              <Box component="div">
                 <Footer />
               </Box>
             </Stack>
