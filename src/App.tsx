@@ -21,7 +21,7 @@ const App = () => {
           <TopBarAndSidebar />
           <Box sx={{width: '100%', pl: 2, pr: 2}}>
             <Toolbar />
-            <Stack spacing={2}>
+            <Stack>
               <Box component="main" sx={{flexGrow: 1}}>
                 <AppRoutes />
               </Box>
