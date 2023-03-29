@@ -1,0 +1,150 @@
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
+import HomeIcon from '@mui/icons-material/Home';
+import LanguageIcon from '@mui/icons-material/Language';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SailingIcon from '@mui/icons-material/Sailing';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import React, {useContext} from 'react';
+import {Link as RouterLink, useLocation} from 'react-router-dom';
+
+import CompactListItemText from '@app/components/CompactListItemText';
+import AuthenticationContext from '@app/context/AuthenticationContext';
+
+import {externalUrls} from './ExternalUrls';
+
+type SidebarItem = {
+  title: string;
+  path: string;
+  icon: JSX.Element;
+  secondaryAction?: JSX.Element;
+};
+
+const items: SidebarItem[][] = [
+  [{title: 'Home', path: '/', icon: <HomeIcon />}],
+  [
+    {
+      title: 'Reserve a boat',
+      path: externalUrls.yccBoatBooking,
+      icon: <SailingIcon />,
+    },
+    {
+      title: 'Help the Club!',
+      path: '/helper-tasks',
+      icon: <AccessibilityNewIcon />,
+    },
+  ],
+  [
+    {
+      title: 'Go to the website',
+      path: externalUrls.yccWebsite,
+      icon: <LanguageIcon />,
+    },
+  ],
+  // TODO Only display in local instances
+  [
+    {
+      title: 'Playground: Error',
+      path: '/playground/error',
+      icon: <ErrorIcon />,
+    },
+    {
+      title: 'Playground: 404',
+      path: '/playground/this-page-is-definitely-not-declared-in-the-routes',
+      icon: <ErrorIcon />,
+    },
+    {
+      title: 'Playground: Styles',
+      path: '/playground/styles',
+      icon: <FormatColorFillIcon />,
+    },
+  ],
+];
+
+const SidebarMenu = () => {
+  const location = useLocation();
+  const auth = useContext(AuthenticationContext);
+
+  return (
+    <>
+      <List>
+        <ListItem
+          key="user-info"
+          disablePadding
+          secondaryAction={
+            <IconButton onClick={auth.logout}>
+              <LogoutIcon />
+            </IconButton>
+          }
+        >
+          <ListItemButton
+            selected={'/profile' === location.pathname}
+            component={RouterLink}
+            to="/profile"
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <CompactListItemText primary={auth.currentUser.firstName} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+
+      <Divider />
+
+      {items.map((itemGroup, index) => (
+        <React.Fragment key={'group_' + index}>
+          <Divider />
+          <List>
+            {itemGroup.map(item => {
+              const props = item.path.startsWith('/')
+                ? {
+                    selected: item.path === location.pathname,
+                    component: RouterLink,
+                    to: item.path,
+                  }
+                : {
+                    component: Link,
+                    href: item.path,
+                    target: '_blank',
+                    rel: 'noopener',
+                  };
+
+              return (
+                <ListItem key={item.path} disablePadding>
+                  <ListItemButton
+                    selected={item.path === location.pathname}
+                    {...props}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <CompactListItemText primary={item.title} />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        </React.Fragment>
+      ))}
+
+      <Box sx={{display: 'flex', justifyContent: 'center', marginTop: 2}}>
+        <Box
+          component="img"
+          sx={{height: 192}}
+          src={process.env.PUBLIC_URL + '/logo192.png'}
+          alt="YCC Logo"
+        />
+      </Box>
+    </>
+  );
+};
+
+export default SidebarMenu;
