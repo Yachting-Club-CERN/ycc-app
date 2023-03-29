@@ -18,7 +18,7 @@ const ErrorAlert = ({error, fatal}: Props) => {
           ? 'Oops, something went terribly wrong :-('
           : 'Oops, something went wrong...'}
       </AlertTitle>
-      <Typography style={{whiteSpace: 'pre-wrap'}}>
+      <Typography sx={{whiteSpace: 'pre-wrap'}}>
         {getErrorText(error)}
       </Typography>
     </Alert>

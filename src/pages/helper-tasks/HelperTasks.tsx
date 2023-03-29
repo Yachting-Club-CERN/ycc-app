@@ -7,7 +7,7 @@ const HelperTasks = () => {
   return (
     <>
       <PageTitle value="Helper Tasks" />
-      <Typography padding={2}>Coming soon, stay tuned!</Typography>
+      <Typography>Coming soon, stay tuned!</Typography>
     </>
   );
 };

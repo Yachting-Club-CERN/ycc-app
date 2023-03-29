@@ -18,17 +18,15 @@ const NotFound = () => {
   return (
     <>
       <PageTitle value="Page Not Found" />
-      <Typography padding={2}>
+      <Typography>
         The page you are looking for does not seem to exist. No worries though,
         our boats are definitely found in Versoix (at least during the season).
         😉🌊⛵🎉
       </Typography>
-      <Typography padding={2}>
-        If you feel the boogie you can send this to the IT helpers:
+      <Typography>
+        If you feel the boogie you can send this to the IT Helpers:
       </Typography>
-      <Typography padding={2} style={{whiteSpace: 'pre-wrap'}}>
-        {toJson(debug)}
-      </Typography>
+      <Typography sx={{whiteSpace: 'pre-wrap'}}>{toJson(debug)}</Typography>
     </>
   );
 };
