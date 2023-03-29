@@ -19,14 +19,14 @@ const App = () => {
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <TopBarAndSidebar />
-          <Box sx={{width: '100%'}}>
+          <Box sx={{width: '100%', pl: 2, pr: 2}}>
             <Toolbar />
             <Stack spacing={2}>
-              <Box component="main" sx={{flexGrow: 1, p: 2}}>
+              <Box component="main" sx={{flexGrow: 1}}>
                 <AppRoutes />
               </Box>
               <Divider />
-              <Box component="div" sx={{flexGrow: 1, p: 2}}>
+              <Box component="div" sx={{flexGrow: 1}}>
                 <Footer />
               </Box>
             </Stack>

@@ -10,7 +10,8 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 2. Start `ycc-keycloak-local` (from `ycc-infra`)
 3. Start `ycc-hull`
 4. Populate test data if this is your first time
-5. `pnpm start`
+5. `pnpm install`
+6. `pnpm start`
 
 ## Basic QA
 
