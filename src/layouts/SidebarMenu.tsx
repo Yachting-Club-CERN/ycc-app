@@ -20,7 +20,7 @@ import {Link as RouterLink, useLocation} from 'react-router-dom';
 import CompactListItemText from '@app/components/CompactListItemText';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 
-import ExternalUrls from './ExternalUrls';
+import {externalUrls} from './ExternalUrls';
 
 type SidebarItem = {
   title: string;
@@ -34,7 +34,7 @@ const items: SidebarItem[][] = [
   [
     {
       title: 'Reserve a boat',
-      path: ExternalUrls.yccBoatBooking,
+      path: externalUrls.yccBoatBooking,
       icon: <SailingIcon />,
     },
     {
@@ -46,7 +46,7 @@ const items: SidebarItem[][] = [
   [
     {
       title: 'Go to the website',
-      path: ExternalUrls.yccWebsite,
+      path: externalUrls.yccWebsite,
       icon: <LanguageIcon />,
     },
   ],

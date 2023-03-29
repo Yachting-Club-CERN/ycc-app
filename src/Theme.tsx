@@ -1,6 +1,6 @@
 import createTheme from '@mui/material/styles/createTheme';
 
-const theme = createTheme({
+export const theme = createTheme({
   typography: {
     allVariants: {
       marginTop: '1rem',
@@ -15,5 +15,3 @@ const theme = createTheme({
     h6: {fontSize: '1.25rem', fontWeight: 500},
   },
 });
-
-export default theme;

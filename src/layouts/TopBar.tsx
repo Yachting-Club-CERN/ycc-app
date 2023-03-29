@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-import ExternalUrls from './ExternalUrls';
+import {externalUrls} from './ExternalUrls';
 
 type TopBarProps = {
   toggleDrawer: (event: React.SyntheticEvent) => void;
@@ -31,7 +31,7 @@ const TopBar = (props: TopBarProps) => {
         <Typography component="h1" variant="h6" flexGrow="3">
           YCC App{' '}
           <Link
-            href={ExternalUrls.yccBoatBooking}
+            href={externalUrls.yccBoatBooking}
             target="_blank"
             rel="noopener"
             sx={{fontSize: '1.25rem'}}

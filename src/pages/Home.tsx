@@ -4,7 +4,7 @@ import React from 'react';
 
 import PageTitle from '@app/components/PageTitle';
 import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import ExternalUrls from '@app/layouts/ExternalUrls';
+import {externalUrls} from '@app/layouts/ExternalUrls';
 
 const Home = () => {
   return (
@@ -30,7 +30,7 @@ const Home = () => {
           Oracle DB, Openshift (... of course no need for all the same time ...
           and whatever you would like, infra is ready to create standalone
           apps). We are on{' '}
-          <Link href={ExternalUrls.yccGithub} target="_blank" rel="noopener">
+          <Link href={externalUrls.yccGithub} target="_blank" rel="noopener">
             GitHub
           </Link>
           !

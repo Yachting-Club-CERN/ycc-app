@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import theme from 'Theme';
+import {theme} from 'Theme';
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
