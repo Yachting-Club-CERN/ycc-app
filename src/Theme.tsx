@@ -2,11 +2,6 @@ import createTheme from '@mui/material/styles/createTheme';
 
 export const theme = createTheme({
   typography: {
-    allVariants: {
-      marginTop: '1rem',
-      marginBottom: '1rem',
-      textAlign: 'justify',
-    },
     h1: {fontSize: '3rem', fontWeight: 500},
     h2: {fontSize: '2.5rem', fontWeight: 500},
     h3: {fontSize: '2rem', fontWeight: 500},

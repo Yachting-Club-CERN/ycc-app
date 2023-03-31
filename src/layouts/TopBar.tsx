@@ -21,7 +21,7 @@ const TopBar = (props: TopBarProps) => {
           edge="start"
           color="inherit"
           sx={{
-            display: {xs: 'block', sm: 'none'},
+            display: {xs: 'block', sm: 'block', lg: 'none'},
             mr: 2,
           }}
           onClick={props.toggleDrawer}

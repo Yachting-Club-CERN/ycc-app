@@ -1,7 +1,7 @@
-import Typography from '@mui/material/Typography';
 import React, {useEffect} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
+import SpacedTypopgraphy from '@app/components/SpacedTypography';
 
 const PlaygroundError = () => {
   useEffect(() => {
@@ -13,7 +13,7 @@ const PlaygroundError = () => {
   return (
     <>
       <PageTitle value="Playground: Error" />
-      <Typography>Wait for it...</Typography>
+      <SpacedTypopgraphy>Wait for it...</SpacedTypopgraphy>
     </>
   );
 };
