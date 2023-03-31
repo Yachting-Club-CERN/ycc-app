@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.15",
+    "@mui/x-data-grid": "^5.17.26",
     "@mui/x-date-pickers": "^5.0.20",
     "@types/node": "^16.18.21",
     "@types/react": "^18.0.31",
