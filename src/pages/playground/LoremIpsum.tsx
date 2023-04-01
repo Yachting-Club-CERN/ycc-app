@@ -1,6 +1,7 @@
-import Typography from '@mui/material/Typography';
 import {Variant} from '@mui/material/styles/createTypography';
 import React from 'react';
+
+import SpacedTypography from '@app/components/SpacedTypography';
 
 type Props = {
   title: string;
@@ -11,8 +12,8 @@ type Props = {
 const LoremIpsum = ({title, titleVariant, variant}: Props) => {
   return (
     <>
-      <Typography variant={titleVariant}>{title}</Typography>
-      <Typography variant={variant}>
+      <SpacedTypography variant={titleVariant}>{title}</SpacedTypography>
+      <SpacedTypography variant={variant}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ut
         dignissim purus, a malesuada leo. Duis quam magna, facilisis in accumsan
         at, efficitur ut tortor. Phasellus a placerat arcu. Nunc pretium posuere
@@ -26,8 +27,8 @@ const LoremIpsum = ({title, titleVariant, variant}: Props) => {
         purus porttitor risus, in ultrices felis leo et nunc. Vivamus a
         porttitor lorem. Praesent vulputate arcu in commodo semper. Morbi ac
         pharetra ante. Vivamus bibendum eleifend sollicitudin.
-      </Typography>
-      <Typography variant={variant}>
+      </SpacedTypography>
+      <SpacedTypography variant={variant}>
         Sed viverra, tellus quis condimentum tempor, libero nunc condimentum
         orci, ac consectetur magna leo sed lacus. Maecenas pellentesque blandit
         magna ac euismod. Nulla lorem velit, sagittis quis sem quis, aliquam
@@ -40,7 +41,7 @@ const LoremIpsum = ({title, titleVariant, variant}: Props) => {
         vestibulum, ac convallis tellus laoreet. Integer augue nibh, convallis
         ut posuere non, pretium nec nunc. Mauris vulputate, nulla eget egestas
         gravida, nisi arcu egestas erat, in rutrum felis lacus eu sem.
-      </Typography>
+      </SpacedTypography>
     </>
   );
 };

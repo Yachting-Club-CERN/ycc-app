@@ -5,6 +5,7 @@ import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import HomeIcon from '@mui/icons-material/Home';
 import LanguageIcon from '@mui/icons-material/Language';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleIcon from '@mui/icons-material/People';
 import SailingIcon from '@mui/icons-material/Sailing';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -14,10 +15,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import React, {useContext} from 'react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 
-import CompactListItemText from '@app/components/CompactListItemText';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 
 import {externalUrls} from './ExternalUrls';
@@ -41,6 +42,11 @@ const items: SidebarItem[][] = [
       title: 'Help the Club!',
       path: '/helper-tasks',
       icon: <AccessibilityNewIcon />,
+    },
+    {
+      title: 'Members List',
+      path: '/members',
+      icon: <PeopleIcon />,
     },
   ],
   [
@@ -94,7 +100,7 @@ const SidebarMenu = () => {
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <CompactListItemText primary={auth.currentUser.firstName} />
+            <ListItemText primary={auth.currentUser.firstName} />
           </ListItemButton>
         </ListItem>
       </List>
@@ -126,7 +132,7 @@ const SidebarMenu = () => {
                     {...props}
                   >
                     <ListItemIcon>{item.icon}</ListItemIcon>
-                    <CompactListItemText primary={item.title} />
+                    <ListItemText primary={item.title} />
                   </ListItemButton>
                 </ListItem>
               );

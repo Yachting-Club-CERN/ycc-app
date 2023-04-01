@@ -1,11 +1,12 @@
-import Typography from '@mui/material/Typography';
 import React from 'react';
+
+import SpacedTypography from '@app/components/SpacedTypography';
 
 const Footer = () => {
   return (
-    <Typography variant="body2" width="100%" alignItems="center">
+    <SpacedTypography variant="body2" width="100%" alignItems="center">
       Made for Helpers, Made by Helpers ❤️
-    </Typography>
+    </SpacedTypography>
   );
 };
 

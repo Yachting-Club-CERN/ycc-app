@@ -7,11 +7,25 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 ### Quick start
 
 1. Start `ycc-local-db` (from `ycc-infra`)
-2. Start `ycc-keycloak-local` (from `ycc-infra`)
+2. Start `ycc-keycloak-local` (from `ycc-infra`) & configure it (see below)
 3. Start `ycc-hull`
 4. Populate test data if this is your first time
 5. `pnpm install`
 6. `pnpm start`
+
+## Configuring Keycloak
+
+1. Create a realm `YCC-LOCAL` and select it
+2. Add YCC user federation `ycc-db-local`
+3. Create a client scope `ycc-client-groups-and-roles` which will allow clients to access Keycloak groups and roles for the user
+4. Add mappers to the client scope:
+   1. `Mappers -> Add mapper -> By configuration -> Group Membership`, token claim name: `groups`
+   2. `Mappers -> Add mapper -> By configuration -> User realm role`, token claim name: `roles`, multivalued, type: `String`
+   3. On all mappers enable `Add to user info`
+5. Create a client `ycc-app-local`:
+   1. For URLs use `http://localhost:3000`
+   2. You need to enable `Standard flow` in capability config
+   3. Add the `ycc-client-groups-and-roles` client scope
 
 ## Basic QA
 
