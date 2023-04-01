@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PageTitle from '@app/components/PageTitle';
-import SpacedTypopgraphy from '@app/components/SpacedTypography';
+import SpacedTypography from '@app/components/SpacedTypography';
 
 import LoremIpsum from './LoremIpsum';
 
@@ -10,19 +10,19 @@ const PlaygroundStyles = () => {
     <>
       <PageTitle value="Playground: Styles" />
 
-      <SpacedTypopgraphy variant="h2">
+      <SpacedTypography variant="h2">
         SpacedTypography Heading Variants
-      </SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h1">Demo: Heading 1</SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h2">Demo: Heading 2</SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h3">Demo: Heading 3</SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h4">Demo: Heading 4</SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h5">Demo: Heading 5</SpacedTypopgraphy>
-      <SpacedTypopgraphy variant="h6">Demo: Heading 6</SpacedTypopgraphy>
+      </SpacedTypography>
+      <SpacedTypography variant="h1">Demo: Heading 1</SpacedTypography>
+      <SpacedTypography variant="h2">Demo: Heading 2</SpacedTypography>
+      <SpacedTypography variant="h3">Demo: Heading 3</SpacedTypography>
+      <SpacedTypography variant="h4">Demo: Heading 4</SpacedTypography>
+      <SpacedTypography variant="h5">Demo: Heading 5</SpacedTypography>
+      <SpacedTypography variant="h6">Demo: Heading 6</SpacedTypography>
 
-      <SpacedTypopgraphy variant="h2">
+      <SpacedTypography variant="h2">
         SpacedTypography Text Variants
-      </SpacedTypopgraphy>
+      </SpacedTypography>
       <LoremIpsum title="Default" titleVariant="h3" />
       <LoremIpsum title="Body 1" titleVariant="h3" variant="body1" />
       <LoremIpsum title="Body 2" titleVariant="h3" variant="body2" />

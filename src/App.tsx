@@ -19,7 +19,7 @@ const App = () => {
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <TopBarAndSidebar />
-          <Box sx={{width: '100%', pl: 2, pr: 2}}>
+          <Box sx={{width: '100%', p: 2}}>
             <Toolbar />
             <Stack>
               <Box component="main">

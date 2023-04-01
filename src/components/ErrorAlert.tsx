@@ -4,7 +4,7 @@ import React from 'react';
 
 import getErrorText from '@app/utils/error-helper';
 
-import SpacedTypopgraphy from './SpacedTypography';
+import SpacedTypography from './SpacedTypography';
 
 type Props = {
   error: unknown;
@@ -19,9 +19,9 @@ const ErrorAlert = ({error, fatal}: Props) => {
           ? 'Oops, something went terribly wrong :-('
           : 'Oops, something went wrong...'}
       </AlertTitle>
-      <SpacedTypopgraphy sx={{whiteSpace: 'pre-wrap'}}>
+      <SpacedTypography sx={{whiteSpace: 'pre-wrap'}}>
         {getErrorText(error)}
-      </SpacedTypopgraphy>
+      </SpacedTypography>
     </Alert>
   );
 };
