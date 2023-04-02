@@ -15,11 +15,17 @@ type Params = {
 
 const MembersDataGridDialog = ({selected, handleClose}: Params) => {
   return (
-    <Dialog open={!!selected} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={!!selected} onClose={handleClose} maxWidth="sm">
       {selected && (
         <>
           <DialogTitle>{`${selected.firstName} ${selected.lastName}`}</DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}
+          >
             <Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>
               Email:
             </Typography>
