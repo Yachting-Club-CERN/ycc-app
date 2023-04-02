@@ -36,4 +36,4 @@ RUN npm install -g serve
 COPY --chown=1001:0 --from=builder "/opt/app-root/src/build" "/opt/app-root/src/build"
 
 EXPOSE 8080
-ENTRYPOINT ["serve", "--no-clipboard", "-s", "-l", "8080", "build"]
+ENTRYPOINT ["serve", "--no-clipboard", "-s", "-p", "8080", "build"]
