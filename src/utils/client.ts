@@ -1,8 +1,6 @@
 import axios, {Axios, Method} from 'axios';
+import config from 'config';
 import {MemberPublicInfos} from 'model/dtos';
-
-// TODO Move to config
-const BACKEND_ROOT_URL = 'http://localhost:8000';
 
 enum ClientErrorCode {
   Cancelled = 'CANCELLED',
@@ -27,7 +25,7 @@ class Client {
 
   private static initHttp(): Axios {
     const http = axios.create({
-      baseURL: BACKEND_ROOT_URL,
+      baseURL: config.yccHullUrl,
     });
 
     http.interceptors.request.use(

@@ -1,3 +1,4 @@
+import config from 'config';
 import Keycloak, {
   KeycloakConfig,
   KeycloakProfile,
@@ -6,10 +7,9 @@ import Keycloak, {
 import {createContext} from 'react';
 
 const KEYCLOAK_CONFIG: KeycloakConfig = {
-  // TODO Get these from env
-  url: 'http://localhost:8080/',
-  realm: 'YCC-LOCAL',
-  clientId: 'ycc-app-local',
+  url: config.keycloakServerUrl,
+  realm: config.keycloakRealm,
+  clientId: config.keycloakClient,
 };
 
 const KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY = 30;
@@ -229,13 +229,13 @@ class AuthenticationProvider {
             this._user = null;
           });
       } else {
-        console.error('Not authenticated');
+        console.error('[auth] Not authenticated');
         alert('Not authenticated, please log in');
         this._keycloak.login();
         return Promise.reject();
       }
     } catch (error) {
-      return console.error('Authentication failed', error);
+      return console.error('[auth] Authentication failed', error);
     }
   }
 

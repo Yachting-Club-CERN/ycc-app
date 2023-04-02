@@ -16,6 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import config, {Environment} from 'config';
 import React, {useContext} from 'react';
 import {Link as RouterLink, useLocation} from 'react-router-dom';
 
@@ -56,16 +57,18 @@ const items: SidebarItem[][] = [
       icon: <LanguageIcon />,
     },
   ],
-  // TODO Only display in local instances
-  [
-    {
-      title: 'Playground: Error',
-      path: '/playground/error',
-      icon: <ErrorIcon />,
-    },
+];
+
+if (config.environment === Environment.LOCAL) {
+  items.push([
     {
       title: 'Playground: 404',
       path: '/playground/this-page-is-definitely-not-declared-in-the-routes',
+      icon: <ErrorIcon />,
+    },
+    {
+      title: 'Playground: Error',
+      path: '/playground/error',
       icon: <ErrorIcon />,
     },
     {
@@ -73,8 +76,8 @@ const items: SidebarItem[][] = [
       path: '/playground/styles',
       icon: <FormatColorFillIcon />,
     },
-  ],
-];
+  ]);
+}
 
 const SidebarMenu = () => {
   const location = useLocation();
