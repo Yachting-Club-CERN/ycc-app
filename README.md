@@ -33,3 +33,19 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 pnpm lint
 pnpm fix
 ```
+
+## Usage
+
+Deployed on CERN OKD, built SPA served by `serve`.
+
+### Testing Docker Build Locally
+
+You can test the build locally. If you do not want to run the instance, but only inspect the contents, you can set the entry point in your local copy to `/bin/bash` for simplicity.
+
+You can test the build with this command:
+
+`docker build . -t ycc-app-local-test --build-arg REACT_APP_ENVIRONMENT=DEVELOPMENT`
+
+Then start a new container from the image:
+
+`docker run -p 3000:8080 -it ycc-app-local-test`
