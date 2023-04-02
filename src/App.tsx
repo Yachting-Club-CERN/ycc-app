@@ -25,7 +25,7 @@ const App = () => {
               <Box component="main">
                 <AppRoutes />
               </Box>
-              <Divider />
+              <Divider sx={{mt: 2}} />
               <Box component="div">
                 <Footer />
               </Box>

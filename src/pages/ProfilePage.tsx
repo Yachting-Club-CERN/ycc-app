@@ -7,17 +7,17 @@ import TableRow from '@mui/material/TableRow';
 import React, {useContext} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 
 const ProfilePage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
-  console.log(currentUser);
   const yccOnly = (array: readonly string[]) => {
     return array.filter(el => el.startsWith('ycc')).sort();
   };
 
   return (
-    <>
+    <ReadingFriendlyBox>
       <PageTitle value="Profile" />
       <TableContainer component={Paper}>
         <Table>
@@ -49,7 +49,7 @@ const ProfilePage = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </ReadingFriendlyBox>
   );
 };
 
