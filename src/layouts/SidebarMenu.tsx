@@ -45,7 +45,7 @@ const items: SidebarItem[][] = [
       icon: <AccessibilityNewIcon />,
     },
     {
-      title: 'Members List',
+      title: 'Member List',
       path: '/members',
       icon: <PeopleIcon />,
     },
