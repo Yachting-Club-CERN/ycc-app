@@ -13,6 +13,16 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 5. `pnpm install`
 6. `pnpm start`
 
+### Even quicker start
+
+**Needs a CERN account.**
+
+1. In `config.ts` choose `DEV_WITH_LOCAL_HULL_CONFIG`
+2. Configure `ycc-hull` to use the DEVELOPMENT DB.
+3. Start `ycc-hull`
+4. `pnpm install`
+5. `pnpm start`
+
 ## Configuring Keycloak
 
 1. Create a realm `YCC-LOCAL` and select it
