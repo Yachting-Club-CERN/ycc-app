@@ -3,13 +3,16 @@ import React from 'react';
 import PageTitle from '@app/components/PageTitle';
 import SpacedTypography from '@app/components/SpacedTypography';
 
-const HelperTasksPage = () => {
+import HelperTasksDataGrid from './HelperTasksDataGrid';
+
+const HelpersPage = () => {
   return (
     <>
       <PageTitle value="Helper Tasks" />
       <SpacedTypography>Coming soon, stay tuned!</SpacedTypography>
+      <HelperTasksDataGrid />
     </>
   );
 };
 
-export default HelperTasksPage;
+export default HelpersPage;

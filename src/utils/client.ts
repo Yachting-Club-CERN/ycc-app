@@ -1,6 +1,7 @@
 import axios, {Axios, Method} from 'axios';
 import config from 'config';
 import {MemberPublicInfos} from 'model/dtos';
+import {HelperTaskCategories, HelperTasks} from 'model/helpers-dtos';
 
 enum ClientErrorCode {
   Cancelled = 'CANCELLED',
@@ -46,6 +47,16 @@ class Client {
 
   getMembers = (year?: number, signal?: AbortSignal) =>
     this.getData<MemberPublicInfos>('/api/v0/members', {year: year}, signal);
+
+  getHelperTaskCategories = (signal?: AbortSignal) =>
+    this.getData<HelperTaskCategories>(
+      '/api/v0/helpers/task-categories',
+      null,
+      signal
+    );
+
+  getHelperTasks = (signal?: AbortSignal) =>
+    this.getData<HelperTasks>('/api/v0/helpers/tasks', null, signal);
 
   private getData = async <T>(
     path: string,

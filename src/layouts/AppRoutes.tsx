@@ -5,7 +5,7 @@ import {Route, Routes, useLocation} from 'react-router-dom';
 import Home from '@app/pages/Home';
 import NotFound from '@app/pages/NotFound';
 import ProfilePage from '@app/pages/ProfilePage';
-import HelperTasksPage from '@app/pages/helper-tasks/HelperTasksPage';
+import HelpersPage from '@app/pages/helpers/HelpersPage';
 import MembersPage from '@app/pages/members/MembersPage';
 import PlaygroundError from '@app/pages/playground/PlaygroundError';
 import PlaygroundStyles from '@app/pages/playground/PlaygroundStyles';
@@ -23,7 +23,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/members" element={<MembersPage />} />
-        <Route path="/helper-tasks" element={<HelperTasksPage />} />
+        <Route path="/helpers" element={<HelpersPage />} />
 
         <Route path="/playground/error" element={<PlaygroundError />} />
         <Route path="/playground/styles" element={<PlaygroundStyles />} />
