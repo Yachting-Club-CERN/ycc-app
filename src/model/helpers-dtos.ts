@@ -1,4 +1,4 @@
-import {MemberPublicInfo} from './dtos';
+import {LicenceInfo, MemberPublicInfo} from './dtos';
 
 export type HelperTaskCategory = {
   id: number;
@@ -21,7 +21,7 @@ export type HelperTask = {
   end?: string | null;
   deadline?: string | null;
   urgent: boolean;
-  captainRequiredLicence?: string | null;
+  captainRequiredLicence?: LicenceInfo | null;
   helpersMinCount: number;
   helpersMaxCount: number;
   published: boolean;

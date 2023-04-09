@@ -13,7 +13,7 @@ type Params = {
   handleClose: () => void;
 };
 
-const MembersDataGridDialog = ({selected, handleClose}: Params) => {
+const MemberInfoDialog = ({selected, handleClose}: Params) => {
   return (
     <Dialog open={!!selected} onClose={handleClose} maxWidth="sm">
       {selected && (
@@ -77,4 +77,4 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
   );
 };
 
-export default MembersDataGridDialog;
+export default MemberInfoDialog;

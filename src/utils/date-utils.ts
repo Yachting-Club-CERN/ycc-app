@@ -10,6 +10,9 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
   month: '2-digit',
   day: '2-digit',
 };
+const dateWithDayFormatOptions: Intl.DateTimeFormatOptions = {
+  dateStyle: 'full',
+};
 
 const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
   ...dateFormatOptions,
@@ -20,6 +23,10 @@ const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleString(formatLocale, dateFormatOptions);
 };
 
+const formatDateWithDay = (date: Date | string) => {
+  return new Date(date).toLocaleString(formatLocale, dateWithDayFormatOptions);
+};
+
 const formatTime = (date: Date | string) => {
   return new Date(date).toLocaleString(formatLocale, timeFormatOptions);
 };
@@ -28,4 +35,4 @@ const formatDateTime = (date: Date | string) => {
   return new Date(date).toLocaleString(formatLocale, dateTimeFormatOptions);
 };
 
-export {formatDate, formatTime, formatDateTime};
+export {formatDate, formatDateWithDay, formatTime, formatDateTime};

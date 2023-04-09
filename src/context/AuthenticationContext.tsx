@@ -57,6 +57,10 @@ class User {
   get activeMember(): boolean {
     return this.roles.includes('ycc-member-active');
   }
+
+  hasLicence = (licence: string): boolean => {
+    return this.roles.includes(`ycc-licence-${licence.toLowerCase()}`);
+  };
 }
 
 class UserFactory {

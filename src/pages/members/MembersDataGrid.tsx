@@ -4,11 +4,10 @@ import {MemberPublicInfo, MemberPublicInfos} from 'model/dtos';
 import React, {useState} from 'react';
 
 import ErrorAlert from '@app/components/ErrorAlert';
+import MemberInfoDialog from '@app/components/MemberInfoDialog';
 import {toEmailLink, toTelLink} from '@app/components/links';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
-
-import MembersDataGridDialog from './MembersDataGridDialog';
 
 const renderEmail = (params: GridCellParams<string | null>) => {
   return toEmailLink(params.value);
@@ -117,7 +116,7 @@ const MembersDataGrid = ({year, search}: Props) => {
       {error && <ErrorAlert error={error} />}
       {pending && <CircularProgress />}
 
-      <MembersDataGridDialog
+      <MemberInfoDialog
         selected={selected}
         handleClose={() => setSelected(null)}
       />
