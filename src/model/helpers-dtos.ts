@@ -16,7 +16,7 @@ export type HelperTask = {
   shortDescription: string;
   longDescription?: string | null;
   contact: MemberPublicInfo;
-  // TODO These could be already Date objects at this point
+  // TODO #19 These could be already Date objects at this point
   start?: string | null;
   end?: string | null;
   deadline?: string | null;
@@ -34,7 +34,7 @@ export type HelperTasks = HelperTask[];
 
 export type HelperTaskHelper = {
   member: MemberPublicInfo;
-  // TODO This could be already Date object at this point
+  // TODO #19 This could be already Date object at this point
   subscribedAt: string;
 };
 

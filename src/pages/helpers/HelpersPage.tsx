@@ -12,7 +12,7 @@ const HelpersPage = () => {
       <SpacedTypography>
         On this page you can subscribe to surveillance and maintenance tasks.
         Captain means Q-boat driver or the person who is organising the
-        execution of a maintenance task.
+        execution the maintenance task.
       </SpacedTypography>
       <HelperTasksDataGrid />
     </>

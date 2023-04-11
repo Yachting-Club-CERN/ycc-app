@@ -14,22 +14,22 @@ const HelperTaskPage = () => {
   const getHelperTask = (signal?: AbortSignal) => {
     const task_id = parseInt(id ?? 'NaN');
     if (isNaN(task_id)) {
-      throw new Error('Invalid task id');
+      throw new Error('Invalid task ID');
     } else {
       return client.getHelperTaskById(task_id, signal);
     }
   };
   const {result: task, error, pending} = usePromise(getHelperTask);
   const [updatedTask, setUpdatedTask] = React.useState<HelperTask>();
-  const displayTask = updatedTask ? updatedTask : task;
+  const taskToDisplay = updatedTask ? updatedTask : task;
 
   return (
     <>
-      {displayTask && (
-        <HelperTaskInfo task={displayTask} refreshTask={setUpdatedTask} />
+      {taskToDisplay && (
+        <HelperTaskInfo task={taskToDisplay} refreshTask={setUpdatedTask} />
       )}
-      {error && !updatedTask && <ErrorAlert error={error} />}
-      {pending && !updatedTask && <CircularProgress />}
+      {error && !taskToDisplay && <ErrorAlert error={error} />}
+      {pending && !taskToDisplay && <CircularProgress />}
     </>
   );
 };
