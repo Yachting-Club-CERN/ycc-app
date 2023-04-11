@@ -10,9 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - New DTOs: `LicenceInfo`, `HelperTaskCategory`, `HelperTask`, `HelperTaskHelper`
-- Helpers task list page
-- Helpers task details page
-- Helpers task subscription for captains and helpers
+- Helper task list page
+- Helper task details page
+- Helper task subscription for captains and helpers
 
 ### Changed
 

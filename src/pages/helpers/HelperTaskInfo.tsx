@@ -43,7 +43,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
   const showSubscribeAsHelper = canSubscribeAsHelper(task, currentUser);
 
   const subscribeAsCaptain = async () => {
-    // TODO This is very basic
+    // TODO #20 This is very basic
     try {
       const newTask = await client.subscribeToHelperTaskAsCaptain(task.id);
       refreshTask(newTask);
@@ -53,7 +53,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
   };
 
   const subscribeAsHelper = async () => {
-    // TODO This is very basic
+    // TODO #20 This is very basic
     try {
       const newTask = await client.subscribeToHelperTaskAsHelper(task.id);
       refreshTask(newTask);
