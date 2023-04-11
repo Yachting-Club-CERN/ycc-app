@@ -5,7 +5,7 @@ import React from 'react';
 import MemberInfoDialog from '@app/components/MemberInfoDialog';
 
 /**
- * Hook to open a dialog with information about a member. Creates `useState()` hook under the hood.
+ * Hook to open a dialog with information about a member. Creates a `useState()` hook under the hood.
  *
  * Usage:
  * 1. Call the hook

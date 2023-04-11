@@ -15,3 +15,5 @@ export type LicenceInfo = {
   id: number;
   licence: string;
 };
+
+export type LicenceInfos = LicenceInfo[];
