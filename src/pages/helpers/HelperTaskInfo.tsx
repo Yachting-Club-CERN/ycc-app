@@ -17,7 +17,7 @@ import client from '@app/utils/client';
 import {
   canSubscribeAsCaptain,
   canSubscribeAsHelper,
-  createTimingNode,
+  createTimingInfoFragment,
 } from './helpers-utils';
 
 type Params = {
@@ -73,7 +73,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
           ← Back to the task list
         </Link>
       </SpacedTypography>
-      <SpacedTypography>{createTimingNode(task)}</SpacedTypography>
+      <SpacedTypography>{createTimingInfoFragment(task)}</SpacedTypography>
       {task.urgent && (
         <SpacedTypography variant="h6" color="error">
           Urgent

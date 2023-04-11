@@ -9,6 +9,12 @@ import {
   formatTime,
 } from '@app/utils/date-utils';
 
+/**
+ * Tells if a task is in the future or in the past.
+ *
+ * @param task a task
+ * @returns true if the task is in the future, false if it is in the past
+ */
 export const isUpcomingTask = (task: HelperTask): boolean => {
   const now = new Date();
   const startInFutureOrMissing = task.start ? new Date(task.start) > now : true;
@@ -18,15 +24,43 @@ export const isUpcomingTask = (task: HelperTask): boolean => {
   return startInFutureOrMissing && deadlineInFutureOrMissing;
 };
 
+/**
+ * Tells if a user is subscribed to a task as captain.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user is subscribed as captain, false otherwise
+ */
 export const isSubscribedAsCaptain = (task: HelperTask, user: User): boolean =>
   task.captain?.member.username === user.username;
 
+/**
+ * Tells if a user is subscribed to a task as helper.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user is subscribed as helper, false otherwise
+ */
 export const isSubscribedAsHelper = (task: HelperTask, user: User): boolean =>
   task.helpers.some(helper => helper.member.username === user.username);
 
+/**
+ * Tells if a user is subscribed to a task.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user is subscribed, false otherwise
+ */
 export const isSubscribed = (task: HelperTask, user: User): boolean =>
   isSubscribedAsCaptain(task, user) || isSubscribedAsHelper(task, user);
 
+/**
+ * Tells whether a user can subscribe to a task as captain.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user can subscribe as captain, false otherwise
+ */
 export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
   isUpcomingTask(task) &&
   !task.captain &&
@@ -34,17 +68,35 @@ export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
   (!task.captainRequiredLicence ||
     user.hasLicence(task.captainRequiredLicence.licence));
 
+/**
+ * Tells whether a user can subscribe to a task as helper.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user can subscribe as helper, false otherwise
+ */
 export const canSubscribeAsHelper = (task: HelperTask, user: User): boolean =>
   isUpcomingTask(task) &&
   task.helpers.length < task.helpersMaxCount &&
   !isSubscribedAsCaptain(task, user) &&
   !isSubscribedAsHelper(task, user);
 
+/**
+ * Tells whether a user can subscribe to a task.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user can subscribe, false otherwise
+ */
 export const canSubscribe = (task: HelperTask, user: User): boolean =>
   canSubscribeAsCaptain(task, user) || canSubscribeAsHelper(task, user);
 
-export const fakeRandomSignupText = (taskId: number, captain: boolean) => {
+/**
+ * Gives a "fake random" subscribe text. Deterministic.
+ */
+export const fakeRandomSubscribeText = (taskId: number, captain: boolean) => {
   const texts = [
+    // You want to keep the length of this array a prime number for best results
     'Sign me up!',
     'Sign me up!',
     'I am in!',
@@ -54,7 +106,13 @@ export const fakeRandomSignupText = (taskId: number, captain: boolean) => {
   return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length];
 };
 
-export const createTimingNode = (task: HelperTask) => {
+/**
+ * Creates the timing info fragment for a task.
+ *
+ * @param task a task
+ * @returns the timing info fragment
+ */
+export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
   if (task.deadline && !task.start && !task.end) {
     return (
       <>

@@ -28,8 +28,8 @@ import {
   canSubscribe,
   canSubscribeAsCaptain,
   canSubscribeAsHelper,
-  createTimingNode,
-  fakeRandomSignupText,
+  createTimingInfoFragment,
+  fakeRandomSubscribeText,
   isSubscribed,
   isUpcomingTask,
 } from './helpers-utils';
@@ -107,7 +107,7 @@ const HelperTasksDataGrid = () => {
     const task = params.row as HelperTask;
     return (
       <Typography align="center" variant="body2">
-        {createTimingNode(task)}
+        {createTimingInfoFragment(task)}
       </Typography>
     );
   };
@@ -147,7 +147,7 @@ const HelperTasksDataGrid = () => {
       return (
         <Typography variant="body2">
           <Link onClick={() => navigateToTask(task.id)}>
-            {fakeRandomSignupText(task.id, true)}
+            {fakeRandomSubscribeText(task.id, true)}
           </Link>
         </Typography>
       );
@@ -164,7 +164,7 @@ const HelperTasksDataGrid = () => {
         {canSubscribeAsHelper(task, currentUser) && (
           <SpanBlockBox>
             <Link onClick={() => navigateToTask(task.id)}>
-              {fakeRandomSignupText(task.id, false)}
+              {fakeRandomSubscribeText(task.id, false)}
             </Link>
           </SpanBlockBox>
         )}
