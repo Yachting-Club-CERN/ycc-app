@@ -10,12 +10,12 @@ import {
 } from '@app/utils/date-utils';
 
 /**
- * Tells if a task is in the future or in the past.
+ * Tells if a task is in the future.
  *
  * @param task a task
- * @returns true if the task is in the future, false if it is in the past
+ * @returns true if the task is in the future, false otherwise
  */
-export const isUpcomingTask = (task: HelperTask): boolean => {
+export const isUpcoming = (task: HelperTask): boolean => {
   const now = new Date();
   const startInFutureOrMissing = task.start ? new Date(task.start) > now : true;
   const deadlineInFutureOrMissing = task.deadline
@@ -62,7 +62,7 @@ export const isSubscribed = (task: HelperTask, user: User): boolean =>
  * @returns true if the user can subscribe as captain, false otherwise
  */
 export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
-  isUpcomingTask(task) &&
+  isUpcoming(task) &&
   !task.captain &&
   !isSubscribedAsHelper(task, user) &&
   (!task.captainRequiredLicence ||
@@ -76,7 +76,7 @@ export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
  * @returns true if the user can subscribe as helper, false otherwise
  */
 export const canSubscribeAsHelper = (task: HelperTask, user: User): boolean =>
-  isUpcomingTask(task) &&
+  isUpcoming(task) &&
   task.helpers.length < task.helpersMaxCount &&
   !isSubscribedAsCaptain(task, user) &&
   !isSubscribedAsHelper(task, user);

@@ -31,7 +31,7 @@ import {
   createTimingInfoFragment,
   fakeRandomSubscribeText,
   isSubscribed,
-  isUpcomingTask,
+  isUpcoming,
 } from './helpers-utils';
 
 const StyledDataGrid = styled(DataGrid)(({theme}) => ({
@@ -60,7 +60,7 @@ const HelperTasksDataGrid = () => {
   const getRowId = (task: HelperTask) => task.id;
   const filter = (tasks: HelperTasks) => {
     return tasks
-      .filter(task => (showOnlyUpcoming ? isUpcomingTask(task) : true))
+      .filter(task => (showOnlyUpcoming ? isUpcoming(task) : true))
       .filter(task =>
         showOnlySubscribed ? isSubscribed(task, currentUser) : true
       )
