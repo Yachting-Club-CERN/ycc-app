@@ -1,7 +1,11 @@
-import axios, {Axios, Method} from 'axios';
+import axios, {Axios, AxiosResponse, Method} from 'axios';
 import config from 'config';
 import {MemberPublicInfos} from 'model/dtos';
-import {HelperTaskCategories, HelperTasks} from 'model/helpers-dtos';
+import {
+  HelperTask,
+  HelperTaskCategories,
+  HelperTasks,
+} from 'model/helpers-dtos';
 
 enum ClientErrorCode {
   Cancelled = 'CANCELLED',
@@ -45,39 +49,88 @@ class Client {
     return http;
   }
 
-  getMembers = (year?: number, signal?: AbortSignal) =>
-    this.getData<MemberPublicInfos>('/api/v0/members', {year: year}, signal);
+  //
+  // Members
+  //
+  getMembers = async (year?: number, signal?: AbortSignal) =>
+    await this.getData<MemberPublicInfos>(
+      '/api/v0/members',
+      {year: year},
+      signal
+    );
 
-  getHelperTaskCategories = (signal?: AbortSignal) =>
-    this.getData<HelperTaskCategories>(
+  //
+  // Helpers
+  //
+  getHelperTaskCategories = async (signal?: AbortSignal) =>
+    await this.getData<HelperTaskCategories>(
       '/api/v0/helpers/task-categories',
       null,
       signal
     );
 
-  getHelperTasks = (signal?: AbortSignal) =>
-    this.getData<HelperTasks>('/api/v0/helpers/tasks', null, signal);
+  getHelperTasks = async (signal?: AbortSignal) =>
+    await this.getData<HelperTasks>('/api/v0/helpers/tasks', null, signal);
 
+  getHelperTaskById = async (id: number, signal?: AbortSignal) =>
+    await this.getData<HelperTask>(`/api/v0/helpers/tasks/${id}`, null, signal);
+
+  subscribeToHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
+    await this.postForData<HelperTask, {}>(
+      `/api/v0/helpers/tasks/${id}/subscribe-as-captain`,
+      null,
+      {},
+      signal
+    );
+
+  subscribeToHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
+    await this.postForData<HelperTask, {}>(
+      `/api/v0/helpers/tasks/${id}/subscribe-as-helper`,
+      null,
+      {},
+      signal
+    );
+
+  //
+  // General
+  //
   private getData = async <T>(
     path: string,
-    params?: unknown,
+    params: unknown,
     signal?: AbortSignal
   ) => (await this.get<T>(path, params, signal)).data;
 
-  private get = <T>(path: string, params?: unknown, signal?: AbortSignal) =>
-    this.request<T>('GET', path, params, undefined, signal);
+  private get = async <T>(
+    path: string,
+    params: unknown,
+    signal?: AbortSignal
+  ) => await this.request<T, undefined>('GET', path, params, undefined, signal);
 
-  private request = async <T>(
+  private postForData = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => (await this.post<T, D>(path, params, requestData, signal)).data;
+
+  private post = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => await this.request<T, D>('POST', path, params, requestData, signal);
+
+  private request = async <T, D = T>(
     method: Method,
     path: string,
     params?: unknown,
-    requestData?: T,
+    requestData?: D,
     signal?: AbortSignal
   ) => {
     console.debug(`[client] ${method} ${path} ...`);
 
     try {
-      const request = this._http.request<T>({
+      const request = this._http.request<T, AxiosResponse<T>, D>({
         method: method,
         url: path,
         params: params,

@@ -9,7 +9,11 @@ const HelpersPage = () => {
   return (
     <>
       <PageTitle value="Helper Tasks" />
-      <SpacedTypography>Coming soon, stay tuned!</SpacedTypography>
+      <SpacedTypography>
+        On this page you can subscribe to surveillance and maintenance tasks.
+        Captain means Q-boat driver or the person who is organising the
+        execution of a maintenance task.
+      </SpacedTypography>
       <HelperTasksDataGrid />
     </>
   );
