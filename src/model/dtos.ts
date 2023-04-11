@@ -1,4 +1,5 @@
 export type MemberPublicInfo = {
+  id: number;
   username: string;
   firstName: string;
   lastName: string;
@@ -9,3 +10,10 @@ export type MemberPublicInfo = {
 };
 
 export type MemberPublicInfos = MemberPublicInfo[];
+
+export type LicenceInfo = {
+  id: number;
+  licence: string;
+};
+
+export type LicenceInfos = LicenceInfo[];

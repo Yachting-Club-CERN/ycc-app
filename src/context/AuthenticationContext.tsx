@@ -45,7 +45,8 @@ type KeycloakUserInfo = {
 
 class User {
   constructor(
-    readonly id: string,
+    readonly keycloakId: string,
+    readonly memberId: number,
     readonly username: string,
     readonly email: string,
     readonly firstName: string,
@@ -57,6 +58,10 @@ class User {
   get activeMember(): boolean {
     return this.roles.includes('ycc-member-active');
   }
+
+  hasLicence = (licence: string): boolean => {
+    return this.roles.includes(`ycc-licence-${licence.toLowerCase()}`);
+  };
 }
 
 class UserFactory {
@@ -67,12 +72,15 @@ class UserFactory {
     accessToken?: KeycloakTokenParsed,
     idToken?: KeycloakTokenParsed
   ): User {
-    const id = UserFactory.parseAsString(
+    const keycloakId = UserFactory.parseAsString(
       profile?.id,
       info?.sub,
       accessToken?.sub,
       idToken?.sub
     );
+
+    // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
+    const memberId = parseInt(keycloakId.split(':').slice(-1)[0]);
 
     const username = UserFactory.parseAsString(
       profile?.username,
@@ -114,7 +122,16 @@ class UserFactory {
       idToken?.roles
     );
 
-    return new User(id, username, email, firstName, lastName, groups, roles);
+    return new User(
+      keycloakId,
+      memberId,
+      username,
+      email,
+      firstName,
+      lastName,
+      groups,
+      roles
+    );
   }
 
   private static parseAsString(...potentialValues: unknown[]): string {
@@ -141,6 +158,7 @@ const _UNKNOWN = '<unknown>';
 
 const UNKNOWN_USER: User = new User(
   _UNKNOWN,
+  -1,
   _UNKNOWN,
   _UNKNOWN,
   _UNKNOWN,
@@ -251,7 +269,7 @@ class AuthenticationProvider {
 
 const auth = new AuthenticationProvider();
 
-export {auth};
+export {auth, User};
 
 const AuthenticationContext = createContext<AuthenticationProvider>(auth);
 export default AuthenticationContext;

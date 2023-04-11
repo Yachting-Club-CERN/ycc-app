@@ -41,7 +41,7 @@ const items: SidebarItem[][] = [
     },
     {
       title: 'Help the Club!',
-      path: '/helper-tasks',
+      path: '/helpers',
       icon: <AccessibilityNewIcon />,
     },
     {

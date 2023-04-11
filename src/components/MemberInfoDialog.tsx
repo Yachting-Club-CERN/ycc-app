@@ -9,16 +9,16 @@ import React from 'react';
 import {toEmailLink, toTelLink} from '@app/components/links';
 
 type Params = {
-  selected?: MemberPublicInfo | null;
-  handleClose: () => void;
+  member?: MemberPublicInfo | null;
+  onClose: () => void;
 };
 
-const MembersDataGridDialog = ({selected, handleClose}: Params) => {
+const MemberInfoDialog = ({member, onClose}: Params) => {
   return (
-    <Dialog open={!!selected} onClose={handleClose} maxWidth="sm">
-      {selected && (
+    <Dialog open={!!member} onClose={onClose} maxWidth="sm">
+      {member && (
         <>
-          <DialogTitle>{`${selected.firstName} ${selected.lastName}`}</DialogTitle>
+          <DialogTitle>{`${member.firstName} ${member.lastName}`}</DialogTitle>
           <DialogContent
             sx={{
               display: 'flex',
@@ -29,8 +29,8 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
             <Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>
               Email:
             </Typography>
-            <Typography>{toEmailLink(selected.email) || '-'}</Typography>
-            {selected.mobilePhone && (
+            <Typography>{toEmailLink(member.email) || '-'}</Typography>
+            {member.mobilePhone && (
               <>
                 <Typography
                   variant="subtitle1"
@@ -38,10 +38,10 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
                 >
                   Mobile Phone:
                 </Typography>
-                <Typography>{toTelLink(selected.mobilePhone)}</Typography>
+                <Typography>{toTelLink(member.mobilePhone)}</Typography>
               </>
             )}
-            {selected.homePhone && (
+            {member.homePhone && (
               <>
                 <Typography
                   variant="subtitle1"
@@ -49,10 +49,10 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
                 >
                   Home Phone:
                 </Typography>
-                <Typography>{toTelLink(selected.homePhone)}</Typography>
+                <Typography>{toTelLink(member.homePhone)}</Typography>
               </>
             )}
-            {selected.workPhone && (
+            {member.workPhone && (
               <>
                 <Typography
                   variant="subtitle1"
@@ -60,14 +60,14 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
                 >
                   Work Phone:
                 </Typography>
-                <Typography>{toTelLink(selected.workPhone)}</Typography>
+                <Typography>{toTelLink(member.workPhone)}</Typography>
               </>
             )}
             <Typography variant="subtitle1" sx={{fontWeight: 'bold', mt: 2}}>
               Username:
             </Typography>
-            <Typography>{selected.username}</Typography>
-            <Button onClick={handleClose} sx={{m: 2}}>
+            <Typography>{member.username}</Typography>
+            <Button onClick={onClose} sx={{m: 2}}>
               Close
             </Button>
           </DialogContent>
@@ -77,4 +77,4 @@ const MembersDataGridDialog = ({selected, handleClose}: Params) => {
   );
 };
 
-export default MembersDataGridDialog;
+export default MemberInfoDialog;

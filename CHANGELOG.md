@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New DTOs: `LicenceInfo`, `HelperTaskCategory`, `HelperTask`, `HelperTaskHelper`
+- Helper task list page
+- Helper task details page
+- Helper task subscription for captains and helpers
+- Date format utilities
+
+### Changed
+
+- `User.id` superseeded by `User.keycloakId: string` and `User.memberId: number`
+- Members dialog info can be used with a simplified hook `useMemberInfoDialog()`
+  - Also renamed `MembersDataGridDialog` to `MemberInfoDialog`
+
 ## [0.1.0] - 2023-04-05
 
 ### Added

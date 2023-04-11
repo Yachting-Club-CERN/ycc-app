@@ -1,14 +1,13 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import {DataGrid, GridCellParams, GridColDef} from '@mui/x-data-grid';
 import {MemberPublicInfo, MemberPublicInfos} from 'model/dtos';
-import React, {useState} from 'react';
+import React from 'react';
 
 import ErrorAlert from '@app/components/ErrorAlert';
 import {toEmailLink, toTelLink} from '@app/components/links';
+import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
-
-import MembersDataGridDialog from './MembersDataGridDialog';
 
 const renderEmail = (params: GridCellParams<string | null>) => {
   return toEmailLink(params.value);
@@ -77,11 +76,12 @@ const MembersDataGrid = ({year, search}: Props) => {
   const getMembersForYear = (signal?: AbortSignal) =>
     client.getMembers(year, signal);
   const {result: members, error, pending} = usePromise(getMembersForYear);
-  const [selected, setSelected] = useState<MemberPublicInfo | null>(null);
+  const {memberInfoDialogComponent, openMemberInfoDialog} =
+    useMemberInfoDialog();
 
   const getRowId = (member: MemberPublicInfo) => member.username;
   const handleGridClick = (params: GridCellParams) => {
-    setSelected(params.row as MemberPublicInfo);
+    openMemberInfoDialog(params.row as MemberPublicInfo);
   };
 
   const filter = (search: string, members: MemberPublicInfos) => {
@@ -110,17 +110,14 @@ const MembersDataGrid = ({year, search}: Props) => {
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: '215px',
-            height: 'calc(100vh - 260px)',
+            height: 'calc(100vh - 270px)',
           }}
         />
       )}
       {error && <ErrorAlert error={error} />}
       {pending && <CircularProgress />}
 
-      <MembersDataGridDialog
-        selected={selected}
-        handleClose={() => setSelected(null)}
-      />
+      {memberInfoDialogComponent}
     </>
   );
 };

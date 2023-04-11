@@ -17,10 +17,10 @@ type Config = {
 //
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LOCAL_CONFIG: Config = {
-  environment: Environment.DEVELOPMENT,
-  keycloakServerUrl: 'https://ycc-auth.web.cern.ch/',
-  keycloakRealm: 'YCC-DEV',
-  keycloakClient: 'ycc-app-dev',
+  environment: Environment.LOCAL,
+  keycloakServerUrl: 'http://localhost:8080',
+  keycloakRealm: 'YCC-LOCAL',
+  keycloakClient: 'ycc-app-local',
   yccHullUrl: 'http://localhost:8000',
 };
 
@@ -31,7 +31,7 @@ const LOCAL_CONFIG: Config = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DEV_WITH_LOCAL_HULL_CONFIG: Config = {
   environment: Environment.DEVELOPMENT,
-  keycloakServerUrl: 'https://ycc-auth.web.cern.ch/',
+  keycloakServerUrl: 'https://ycc-auth.web.cern.ch',
   keycloakRealm: 'YCC-DEV',
   keycloakClient: 'ycc-app-dev',
   yccHullUrl: 'http://localhost:8000',
