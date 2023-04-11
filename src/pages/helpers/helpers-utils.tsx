@@ -93,6 +93,8 @@ export const canSubscribe = (task: HelperTask, user: User): boolean =>
 
 /**
  * Gives a "fake random" subscribe text. Deterministic.
+ *
+ * @returns a subscribe text
  */
 export const fakeRandomSubscribeText = (taskId: number, captain: boolean) => {
   const texts = [
