@@ -172,10 +172,10 @@ const HelperTasksDataGrid = () => {
           .sort((lhs: HelperTaskHelper, rhs: HelperTaskHelper) =>
             lhs.member.username.localeCompare(rhs.member.username)
           )
-          .map((h: HelperTaskHelper) => {
+          .map((helper: HelperTaskHelper) => {
             return (
-              <SpanBlockBox key={h.member.username}>
-                {createMemberDialogLink(h.member)}
+              <SpanBlockBox key={helper.member.username}>
+                {createMemberDialogLink(helper.member)}
               </SpanBlockBox>
             );
           })}
@@ -269,15 +269,14 @@ const HelperTasksDataGrid = () => {
             onCellClick={handleGridClick}
             disableColumnFilter={true}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            // getRowStyle={getRowStyle}
             getRowClassName={(params: GridRowParams) =>
               (params.row as HelperTask).urgent ? 'urgent' : ''
             }
             rowHeight={78}
             sx={{
               // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
-              minHeight: '215px',
-              height: 'calc(100vh - 260px)',
+              minHeight: '265px',
+              height: 'calc(100vh - 340px)',
             }}
           />
         </>
