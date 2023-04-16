@@ -1,48 +1,27 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  FormControl,
-  Hidden,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
-import TextField from '@mui/material/TextField';
-import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {
-  LicenceDetailedInfos,
-  LicenceInfos,
-  MemberPublicInfos,
-} from 'model/dtos';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {
   HelperTaskCategories,
   HelperTaskCreationRequestDto,
 } from 'model/helpers-dtos';
 import React, {useContext, useState} from 'react';
-import {useErrorBoundary} from 'react-error-boundary';
-import {useForm} from 'react-hook-form';
 import {
   AutocompleteElement,
-  CheckboxElement,
   DateTimePickerElement,
   FormContainer,
-  SelectElement,
   SwitchElement,
   TextFieldElement,
 } from 'react-hook-form-mui';
 import {useNavigate} from 'react-router-dom';
 
 import ErrorAlert from '@app/components/ErrorAlert';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
+import SpacedBox from '@app/components/SpacedBox';
+import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
-import SharedDataContext from '@app/context/SharedDataContext';
-import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
-
-// interface Props {
-//   onSubmit: (data: HelperTaskCreationRequestDto) => void;
-// }
 
 type Props = {
   categories: HelperTaskCategories;
@@ -52,19 +31,8 @@ type Props = {
 
 const HelpersNewTaskFrom = ({categories, members, licenceInfos}: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<unknown>();
   const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: {errors},
-  } = useForm<HelperTaskCreationRequestDto>();
-
-  //   const handleFormSubmit = (data: HelperTaskCreationRequestDto) => {
-  //     onSubmit(data);
-  //   };
 
   const initialData: HelperTaskCreationRequestDto = {
     categoryId: -1,
@@ -83,7 +51,7 @@ const HelpersNewTaskFrom = ({categories, members, licenceInfos}: Props) => {
   };
 
   const onSubmit = async (data: HelperTaskCreationRequestDto) => {
-    setSaving(true);
+    // TODO #20 This is very basic
     try {
       setError(undefined);
       const dataToSend = {...data};
@@ -94,8 +62,6 @@ const HelpersNewTaskFrom = ({categories, members, licenceInfos}: Props) => {
       navigate(`/helpers/tasks/${task.id}`);
     } catch (error) {
       setError(error);
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -129,221 +95,151 @@ const HelpersNewTaskFrom = ({categories, members, licenceInfos}: Props) => {
   ];
 
   return (
-    <>
+    <ReadingFriendlyBox>
       <FormContainer defaultValues={initialData} onSuccess={onSubmit}>
-        <AutocompleteElement
-          name="categoryId"
-          label="Category"
-          matchId
-          options={categoryOptions}
-        />
-        <TextFieldElement name="title" required label="Title" />
-        <TextFieldElement
-          name="shortDescription"
-          required
-          label="Short Description"
-        />
-        <AutocompleteElement
-          name="contactId"
-          label="Contact"
-          matchId
-          options={memberOptions}
-        />
-        <Typography>
-          You need to specify either the start and the end or a deadline.
-        </Typography>
-        <DateTimePickerElement name="start" label="Start" />
-        <DateTimePickerElement name="end" label="End" />
-        <DateTimePickerElement name="deadline" label="Deadline" />
-        <AutocompleteElement
-          name="captainRequiredLicenceInfoId"
-          label="Captain required licence"
-          matchId
-          options={captainRequiredLicenceInfoOptions}
-        />
-        <TextFieldElement
-          name="helpersMinCount"
-          required
-          label="Min. Helpers"
-          type={'number'}
-        />
-        <TextFieldElement
-          name="helpersMaxCount"
-          required
-          label="Max. Helpers"
-          type={'number'}
-        />
-        <SwitchElement name="urgent" label="Urgent" labelPlacement="start" />
-        <SwitchElement
-          name="published"
-          label="Published"
-          labelPlacement="start"
-        />
+        <SpacedTypography>
+          Here you can create a new helper task. This can be a surveillance
+          shift, a maintenance task, a regatta helper shift, etc.
+        </SpacedTypography>
 
-        <Button type="submit" variant="contained">
-          Create
-        </Button>
-      </FormContainer>
-      {error && <ErrorAlert error={error} />}
+        <SpacedTypography variant="h3">General</SpacedTypography>
 
-      <form
-      //  onSubmit={handleSubmit(handleFormSubmit)}
-      >
-        <FormControl>
-          {/* <InputLabel id="category-label">Category</InputLabel>
-          <Select
-            labelId="category-label"
-            id="category"
+        <SpacedTypography>
+          If you need a new category contact Lajos.
+        </SpacedTypography>
+
+        <SpacedBox minWidth={400}>
+          <AutocompleteElement
+            name="categoryId"
             label="Category"
-            sx={{width: '20rem'}}
-          >
-            {categories.map(category => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.title}
-              </MenuItem>
-            ))}
-          </Select> */}
-        </FormControl>
-        <TextField id="title" label="Title" sx={{width: '20rem'}} />
-        <TextField
-          id="shortDescription"
-          label="Short Description"
-          sx={{width: '20rem'}}
-        />
-        {currentUser.helpersAppAdmin && (
-          <Autocomplete
-            id="contact"
-            autoComplete
-            options={members}
-            sx={{width: '20rem'}}
-            getOptionLabel={member =>
-              `${member.lastName.toUpperCase()} ${member.firstName} (${
-                member.username
-              })`
-            }
-            renderInput={params => <TextField {...params} label="Contact" />}
+            matchId
+            options={categoryOptions}
           />
+        </SpacedBox>
+
+        <SpacedBox minWidth={400}>
+          <TextFieldElement name="title" required label="Title" fullWidth />
+        </SpacedBox>
+
+        <SpacedBox minWidth={400} maxWidth={800}>
+          <TextFieldElement
+            name="shortDescription"
+            required
+            label="Short Description"
+            fullWidth
+          />
+        </SpacedBox>
+
+        {currentUser.helpersAppAdmin ? (
+          <AutocompleteElement
+            name="contactId"
+            label="Contact"
+            matchId
+            options={memberOptions}
+          />
+        ) : (
+          <SpacedTypography variant="subtitle2">
+            You will be marked as contact for this task.
+          </SpacedTypography>
         )}
-        {!currentUser.helpersAppAdmin && (
-          <>
-            <TextField
-              disabled
-              id="contact"
-              label="Contact"
-              sx={{width: '20rem'}}
-              value={`${currentUser.lastName.toUpperCase()} ${
-                currentUser.firstName
-              } (${currentUser.username})`}
+
+        <SpacedTypography variant="h3">Timing</SpacedTypography>
+        <SpacedTypography variant="subtitle1">
+          You need to specify either both start and end <em>or</em> a deadline.
+        </SpacedTypography>
+        <SpacedBox>
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <DateTimePickerElement name="start" label="Start" />
+            <DateTimePickerElement name="end" label="End" />
+            <DateTimePickerElement name="deadline" label="Deadline" />
+          </Stack>
+        </SpacedBox>
+
+        <SpacedTypography variant="h3">Helpers</SpacedTypography>
+
+        <SpacedTypography>
+          Every task needs a captain and the specified minimum and maximum
+          number of helpers. The captain is responsible for coordinating the
+          task. For example you might want to create a task &quot;Clean &amp;
+          organise Mic Mac cockpit&quot; with a deadline, you can set a SU key
+          requirement for the captain and number of helpers to 1-2. This would
+          mean that you would have 2-3 volunteers and you can delegate the task
+          completely.
+        </SpacedTypography>
+
+        <SpacedTypography>
+          If you personally plan to coordinate the task, you can later subscribe
+          to the task as captain.
+        </SpacedTypography>
+
+        <SpacedBox>
+          <Stack direction="row" spacing={2}>
+            <AutocompleteElement
+              name="captainRequiredLicenceInfoId"
+              label="Captain required licence"
+              matchId
+              options={captainRequiredLicenceInfoOptions}
+              textFieldProps={{
+                sx: {
+                  minWidth: '15rem',
+                  maxWidth: '20rem',
+                },
+              }}
             />
-          </>
-        )}
-        TODO Type: shift / deadline TODO global LocalizationProvider
-        {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
-        {/* <DateTimePicker
-            // renderInput={props => <TextField {...props} />}
-            label="Start"
-            value={1}
-            onChange={newValue => {
-              setValue(newValue);
-            }}
-          /> */}
-        {/* </LocalizationProvider> */}
-        <Box>TODO</Box>
-        {/* <TextField
-          label="Category ID"
-          type="number"
-          error={Boolean(errors.categoryId)}
-          helperText={errors.categoryId?.message}
-          {...register('category_id', {required: 'Category ID is required'})}
-        />
-        <TextField
-          label="Title"
-          error={Boolean(errors.title)}
-          helperText={errors.title?.message}
-          {...register('title', {required: 'Title is required'})}
-        />
-        <TextField
-          label="Short Description"
-          error={Boolean(errors.shortDescription)}
-          helperText={errors.shortDescription?.message}
-          {...register('short_description', {
-            required: 'Short Description is required',
-          })}
-        />
-        <TextField
-          label="Long Description"
-          error={Boolean(errors.longDescription)}
-          helperText={errors.longDescription?.message}
-          {...register('long_description')}
-        />
-        <TextField
-          label="Contact ID"
-          type="number"
-          error={Boolean(errors.contactId)}
-          helperText={errors.contactId?.message}
-          {...register('contact_id', {required: 'Contact ID is required'})}
-        /> */}
-        <TextField
-          label="Start"
-          type="date"
-          error={Boolean(errors.start)}
-          helperText={errors.start?.message}
-          {...register('start')}
-        />
-        <TextField
-          label="End"
-          type="date"
-          error={Boolean(errors.end)}
-          helperText={errors.end?.message}
-          {...register('end')}
-        />
-        <TextField
-          label="Deadline"
-          type="date"
-          error={Boolean(errors.deadline)}
-          helperText={errors.deadline?.message}
-          {...register('deadline')}
-        />
-        <TextField
-          label="Urgent"
-          type="checkbox"
-          error={Boolean(errors.urgent)}
-          helperText={errors.urgent?.message}
-          {...register('urgent', {required: 'Urgent is required'})}
-        />
-        {/* <TextField
-          label="Captain Required Licence Info ID"
-          type="number"
-          error={Boolean(errors.captain_required_licence_info_id)}
-          helperText={errors.captain_required_licence_info_id?.message}
-          {...register('captain_required_licence_info_id')}
-        />
-        <TextField
-          label="Minimum Number of Helpers"
-          type="number"
-          error={Boolean(errors.helpers_min_count)}
-          helperText={errors.helpers_min_count?.message}
-          {...register('helpers_min_count', {
-            required: 'Minimum Number of Helpers is required',
-          })}
-        />
-        <TextField
-          label="Maximum Number of Helpers"
-          type="number"
-          error={Boolean(errors.helpers_max_count)}
-          helperText={errors.helpers_max_count?.message}
-          {...register('helpers_max_count', {
-            required: 'Maximum Number of Helpers is required',
-          })} */}
-        {/* /> */}
-        {/* <TextField
-        label="Published"
-        type="checkbox"
-        error={Boolean(errors.published)}
-        helperText={errors.published?.message}
-        {...register('published', { */}
-      </form>
-    </>
+            <TextFieldElement
+              name="helpersMinCount"
+              required
+              label="Min. Helpers"
+              type={'number'}
+              inputProps={{
+                sx: {
+                  textAlign: 'center',
+                  width: '5rem',
+                },
+              }}
+            />
+            <TextFieldElement
+              name="helpersMaxCount"
+              required
+              label="Max. Helpers"
+              type={'number'}
+              inputProps={{
+                sx: {
+                  textAlign: 'center',
+                  width: '5rem',
+                },
+              }}
+            />
+          </Stack>
+        </SpacedBox>
+        <Divider sx={{mt: 2}} />
+        <SpacedTypography>
+          Urgent tasks are highlighted at the top of the table, unpublished
+          tasks are not shown to club members.
+        </SpacedTypography>
+        <SpacedBox>
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <SwitchElement
+              name="urgent"
+              label="Urgent"
+              labelPlacement="start"
+            />
+            <SwitchElement
+              name="published"
+              label="Published"
+              labelPlacement="start"
+            />
+
+            <Button type="submit" variant="contained">
+              Submit
+            </Button>
+          </Stack>
+        </SpacedBox>
+        <SpacedBox>
+          <>{error && <ErrorAlert error={error} />}</>
+        </SpacedBox>
+      </FormContainer>
+    </ReadingFriendlyBox>
   );
 };
 

@@ -1,4 +1,4 @@
-import axios, {Axios, AxiosError, AxiosResponse, Method} from 'axios';
+import axios, {Axios, AxiosResponse, Method} from 'axios';
 import config from 'config';
 import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {

@@ -30,7 +30,7 @@ const PlaygroundStyles = () => {
       <LoremIpsum title="Caption" titleVariant="h3" variant="caption" />
       <LoremIpsum title="Overline" titleVariant="h3" variant="overline" />
       <LoremIpsum title="Subtitle1" titleVariant="h3" variant="subtitle1" />
-      <LoremIpsum title="Subtitle1" titleVariant="h3" variant="subtitle2" />
+      <LoremIpsum title="Subtitle2" titleVariant="h3" variant="subtitle2" />
     </>
   );
 };
