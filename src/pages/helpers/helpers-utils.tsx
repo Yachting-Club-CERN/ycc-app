@@ -25,6 +25,16 @@ export const isUpcoming = (task: HelperTask): boolean => {
 };
 
 /**
+ * Tells if a user is the contact of a task.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user is the contact, false otherwise
+ */
+export const isContact = (task: HelperTask, user: User): boolean =>
+  task.contact.username === user.username;
+
+/**
  * Tells if a user is subscribed to a task as captain.
  *
  * @param task a task
@@ -63,10 +73,11 @@ export const isSubscribed = (task: HelperTask, user: User): boolean =>
  */
 export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
+  task.published &&
   !task.captain &&
   !isSubscribedAsHelper(task, user) &&
-  (!task.captainRequiredLicence ||
-    user.hasLicence(task.captainRequiredLicence.licence));
+  (!task.captainRequiredLicenceInfo ||
+    user.hasLicence(task.captainRequiredLicenceInfo.licence));
 
 /**
  * Tells whether a user can subscribe to a task as helper.
@@ -77,6 +88,7 @@ export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
  */
 export const canSubscribeAsHelper = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
+  task.published &&
   task.helpers.length < task.helpersMaxCount &&
   !isSubscribedAsCaptain(task, user) &&
   !isSubscribedAsHelper(task, user);
@@ -115,11 +127,21 @@ export const fakeRandomSubscribeText = (taskId: number, captain: boolean) => {
  * @returns the timing info fragment
  */
 export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
+  let extraTimingTitle = [
+    task.urgent ? 'Urgent' : '',
+    task.published ? '' : 'Hidden',
+  ]
+    .filter(Boolean)
+    .join(', ');
+  if (extraTimingTitle !== '') {
+    extraTimingTitle = ` (${extraTimingTitle})`;
+  }
+
   if (task.deadline && !task.start && !task.end) {
     return (
       <>
         <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
-          Deadline
+          Deadline{extraTimingTitle}
         </SpanBlockBox>
         <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>
         <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
@@ -132,7 +154,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
       return (
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
-            Shift
+            Shift{extraTimingTitle}
           </SpanBlockBox>
           <SpanBlockBox>{formatDateWithDay(task.start)}</SpanBlockBox>
           <SpanBlockBox>
@@ -145,7 +167,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
       return (
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
-            Multi-day Shift
+            Multi-Day Shift{extraTimingTitle}
           </SpanBlockBox>
           <SpanBlockBox>Start: {formatDateTime(task.start)}</SpanBlockBox>
           <SpanBlockBox>End: {formatDateTime(task.end)}</SpanBlockBox>

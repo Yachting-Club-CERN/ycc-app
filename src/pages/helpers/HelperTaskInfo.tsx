@@ -8,12 +8,12 @@ import React, {useContext} from 'react';
 import {useErrorBoundary} from 'react-error-boundary';
 import {Link as RouterLink} from 'react-router-dom';
 
-import PageTitle from '@app/components/PageTitle';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
 
+import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
 import {
   canSubscribeAsCaptain,
   canSubscribeAsHelper,
@@ -64,7 +64,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
   return (
     <>
-      <PageTitle value={task.title} />
+      <PageTitleWithNewTaskButton value={task.title} />
       <SpacedTypography variant="h3">
         Category: {task.category.title}
       </SpacedTypography>
@@ -89,9 +89,9 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
       <SpacedTypography>
         Contact: {createMemberDialogLink(task.contact)}
       </SpacedTypography>
-      {task.captainRequiredLicence && (
+      {task.captainRequiredLicenceInfo && (
         <SpacedTypography>
-          Captain Required Licence: {task.captainRequiredLicence.licence}
+          Captain Required Licence: {task.captainRequiredLicenceInfo.licence}
         </SpacedTypography>
       )}
       <SpacedTypography>

@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -17,7 +16,7 @@ import {HelperTask, HelperTaskHelper, HelperTasks} from 'model/helpers-dtos';
 import React, {useContext, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import ErrorAlert from '@app/components/ErrorAlert';
+import PromiseStatus from '@app/components/PromiseStatus';
 import SpanBlockBox from '@app/components/SpanBlockBox';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
@@ -30,6 +29,7 @@ import {
   canSubscribeAsHelper,
   createTimingInfoFragment,
   fakeRandomSubscribeText,
+  isContact,
   isSubscribed,
   isUpcoming,
 } from './helpers-utils';
@@ -47,13 +47,15 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
 })) as typeof DataGrid;
 
 const HelperTasksDataGrid = () => {
-  const {result: tasks, error, pending} = usePromise(client.getHelperTasks);
+  const tasks = usePromise(client.getHelperTasks);
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
 
   const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(true);
-  const [showOnlySubscribed, setShowOnlySubscribed] = useState(false);
+  const [showOnlyContactOrSubscribed, setShowOnlyContactOrSubscribed] =
+    useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
+  const [showOnlyUnpublished, setShowOnlyUnpublished] = useState(false);
   const {memberInfoDialogComponent, openMemberInfoDialog} =
     useMemberInfoDialog();
 
@@ -62,19 +64,22 @@ const HelperTasksDataGrid = () => {
     return tasks
       .filter(task => (showOnlyUpcoming ? isUpcoming(task) : true))
       .filter(task =>
-        showOnlySubscribed ? isSubscribed(task, currentUser) : true
+        showOnlyContactOrSubscribed
+          ? isContact(task, currentUser) || isSubscribed(task, currentUser)
+          : true
       )
       .filter(task =>
         showOnlyAvailable ? canSubscribe(task, currentUser) : true
-      );
+      )
+      .filter(task => (showOnlyUnpublished ? !task.published : true));
   };
 
   const handleCheckboxChange = (
     event: React.SyntheticEvent,
-    setState: React.Dispatch<React.SetStateAction<boolean>>
+    handler: (checked: boolean) => void
   ) => {
     const {checked} = event.target as HTMLInputElement;
-    setState(checked);
+    handler(checked);
   };
 
   const navigateToTask = (id: number) => {
@@ -190,42 +195,48 @@ const HelperTasksDataGrid = () => {
       align: 'center',
       width: 200,
       renderCell: renderTimingCell,
+      sortable: false,
     },
     {
       field: 'title',
       headerName: 'Task',
       width: 200,
       renderCell: renderTaskCell,
+      sortable: false,
     },
     {
       field: 'shortDescription',
       headerName: 'Short Description',
       minWidth: 300,
       flex: 1,
+      sortable: false,
     },
     {
       field: 'contact',
       headerName: 'Contact',
       width: 120,
       renderCell: renderContactCell,
+      sortable: false,
     },
     {
       field: 'captain',
       headerName: 'Captain',
       width: 120,
       renderCell: renderCaptainCell,
+      sortable: false,
     },
     {
       field: 'helpers',
       headerName: 'Helpers',
       width: 120,
       renderCell: renderHelpersCell,
+      sortable: false,
     },
   ];
 
   return (
     <>
-      {tasks && (
+      {tasks.result && (
         <>
           <Box>
             <FormControlLabel
@@ -233,38 +244,65 @@ const HelperTasksDataGrid = () => {
                 <Checkbox
                   checked={showOnlyUpcoming}
                   onChange={event =>
-                    handleCheckboxChange(event, setShowOnlyUpcoming)
+                    handleCheckboxChange(event, checked =>
+                      setShowOnlyUpcoming(checked)
+                    )
                   }
                 />
               }
-              label="Only show upcoming tasks"
+              label="Only upcoming"
             />
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={showOnlySubscribed}
+                  checked={showOnlyContactOrSubscribed}
                   onChange={event =>
-                    handleCheckboxChange(event, setShowOnlySubscribed)
+                    handleCheckboxChange(event, checked => {
+                      setShowOnlyContactOrSubscribed(checked);
+                      if (checked) {
+                        setShowOnlyAvailable(false);
+                      }
+                    })
                   }
                 />
               }
-              label="Only show my tasks"
+              label="Only mine"
             />
             <FormControlLabel
               control={
                 <Checkbox
                   checked={showOnlyAvailable}
                   onChange={event =>
-                    handleCheckboxChange(event, setShowOnlyAvailable)
+                    handleCheckboxChange(event, checked => {
+                      setShowOnlyAvailable(checked);
+                      if (checked) {
+                        setShowOnlyContactOrSubscribed(false);
+                      }
+                    })
                   }
                 />
               }
-              label="Only show tasks where I can subscribe"
+              label="Only available"
             />
+            {currentUser.helpersAppAdminOrEditor && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showOnlyUnpublished}
+                    onChange={event =>
+                      handleCheckboxChange(event, checked =>
+                        setShowOnlyUnpublished(checked)
+                      )
+                    }
+                  />
+                }
+                label="Only unpublished"
+              />
+            )}
           </Box>
           <StyledDataGrid
             columns={columns}
-            rows={filter(tasks)}
+            rows={filter(tasks.result)}
             getRowId={getRowId}
             onCellClick={handleGridClick}
             disableColumnFilter={true}
@@ -281,8 +319,8 @@ const HelperTasksDataGrid = () => {
           />
         </>
       )}
-      {error && <ErrorAlert error={error} />}
-      {pending && <CircularProgress />}
+
+      <PromiseStatus outcomes={[tasks]} />
 
       {memberInfoDialogComponent}
     </>

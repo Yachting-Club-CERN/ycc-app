@@ -12,7 +12,22 @@ const getErrorAsString = (error: Error): string => {
   if (error instanceof AxiosError) {
     const message = `${error.name}: ${error.message} [${error.code}]`;
     const detail = error.response?.data?.detail;
-    return detail ? `${detail}\n\n(${message})` : message;
+
+    let str = '';
+    if (Array.isArray(detail)) {
+      const errors = detail
+        .map(d => d?.msg)
+        .filter(msg => msg)
+        .join(', ');
+      str += `${errors}\n\n`;
+    }
+
+    if (detail) {
+      str += `${toJson(detail)}\n\n`;
+    }
+
+    str += message;
+    return str;
   } else {
     return error.toString();
   }

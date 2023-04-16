@@ -1,9 +1,10 @@
-import axios, {Axios, AxiosResponse, Method} from 'axios';
+import axios, {Axios, AxiosError, AxiosResponse, Method} from 'axios';
 import config from 'config';
-import {MemberPublicInfos} from 'model/dtos';
+import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
+  HelperTaskCreationRequestDto,
   HelperTasks,
 } from 'model/helpers-dtos';
 
@@ -16,7 +17,8 @@ class ClientError<T = unknown> extends Error {
   readonly code: ClientErrorCode;
 
   constructor(message: string, cause: T, code: ClientErrorCode) {
-    super(message, {cause: cause});
+    super(message);
+    this.cause = cause;
     this.code = code;
   }
 }
@@ -50,16 +52,6 @@ class Client {
   }
 
   //
-  // Members
-  //
-  getMembers = async (year?: number, signal?: AbortSignal) =>
-    await this.getData<MemberPublicInfos>(
-      '/api/v0/members',
-      {year: year},
-      signal
-    );
-
-  //
   // Helpers
   //
   getHelperTaskCategories = async (signal?: AbortSignal) =>
@@ -75,6 +67,17 @@ class Client {
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
     await this.getData<HelperTask>(`/api/v0/helpers/tasks/${id}`, null, signal);
 
+  createHelperTask = async (
+    task: HelperTaskCreationRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.postForData<HelperTask, HelperTaskCreationRequestDto>(
+      '/api/v0/helpers/tasks',
+      null,
+      task,
+      signal
+    );
+
   subscribeToHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
       `/api/v0/helpers/tasks/${id}/subscribe-as-captain`,
@@ -88,6 +91,26 @@ class Client {
       `/api/v0/helpers/tasks/${id}/subscribe-as-helper`,
       null,
       {},
+      signal
+    );
+
+  //
+  // Licences
+  //
+  getLicenceInfos = async (signal?: AbortSignal) =>
+    await this.getData<LicenceDetailedInfos>(
+      '/api/v0/licence-infos',
+      null,
+      signal
+    );
+
+  //
+  // Members
+  //
+  getMembers = async (year: number, signal?: AbortSignal) =>
+    await this.getData<MemberPublicInfos>(
+      '/api/v0/members',
+      {year: year},
       signal
     );
 

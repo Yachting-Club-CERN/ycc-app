@@ -17,3 +17,9 @@ export type LicenceInfo = {
 };
 
 export type LicenceInfos = LicenceInfo[];
+
+export type LicenceDetailedInfo = LicenceInfo & {
+  description: string;
+};
+
+export type LicenceDetailedInfos = LicenceDetailedInfo[];

@@ -6,6 +6,7 @@ import Home from '@app/pages/Home';
 import NotFound from '@app/pages/NotFound';
 import ProfilePage from '@app/pages/ProfilePage';
 import HelperTaskPage from '@app/pages/helpers/HelperTaskPage';
+import HelpersNewTaskPage from '@app/pages/helpers/HelpersNewTaskPage';
 import HelpersPage from '@app/pages/helpers/HelpersPage';
 import MembersPage from '@app/pages/members/MembersPage';
 import PlaygroundError from '@app/pages/playground/PlaygroundError';
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/members" element={<MembersPage />} />
         <Route path="/helpers" element={<HelpersPage />} />
+        <Route path="/helpers/tasks/new" element={<HelpersNewTaskPage />} />
         <Route path="/helpers/tasks/:id" element={<HelperTaskPage />} />
 
         <Route path="/playground/error" element={<PlaygroundError />} />
