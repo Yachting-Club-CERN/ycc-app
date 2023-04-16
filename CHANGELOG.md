@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Helpers task creation page
+
+### Changed
+
+- Improve filtering options on the task list page
+
 ## [0.2.0] - 2023-04-12
 
 ### Added
