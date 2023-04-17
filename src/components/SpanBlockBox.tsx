@@ -14,4 +14,6 @@ SpanBlockBox.defaultProps = {
   component: 'span',
 };
 
-export default SpanBlockBox;
+const SpanBlockBoxAsBox = SpanBlockBox as typeof Box;
+
+export default SpanBlockBoxAsBox;

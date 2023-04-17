@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 
 const PlaygroundErrorPage = () => {
@@ -11,10 +12,10 @@ const PlaygroundErrorPage = () => {
   }, []);
 
   return (
-    <>
+    <ReadingFriendlyBox>
       <PageTitle value="Playground: Error" />
       <SpacedTypography>Wait for it...</SpacedTypography>
-    </>
+    </ReadingFriendlyBox>
   );
 };
 

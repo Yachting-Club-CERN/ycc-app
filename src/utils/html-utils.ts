@@ -1,5 +1,6 @@
 import {Element as DOMElement, Text as DOMText} from 'html-react-parser';
 import HTMLReactParser from 'html-react-parser';
+import React from 'react';
 
 const forbiddenTags = [
   'base',
@@ -29,7 +30,7 @@ const forbiddenTags = [
  * @returns React component(s)
  */
 export const sanitiseHtmlForReact = (html: string) => {
-  return HTMLReactParser(html, {
+  const reactDom = HTMLReactParser(html, {
     // We trust our backend+React+TinyMCE, but you never know...
     replace: domNode => {
       if (domNode instanceof DOMText) {
@@ -54,4 +55,8 @@ export const sanitiseHtmlForReact = (html: string) => {
       }
     },
   });
+
+  return typeof reactDom === 'string'
+    ? React.createElement('p', {}, reactDom)
+    : reactDom;
 };
