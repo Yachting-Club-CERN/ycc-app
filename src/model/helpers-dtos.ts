@@ -40,16 +40,17 @@ export type HelperTaskHelper = {
 
 export type HelperTaskHelpers = HelperTaskHelper[];
 
-export type HelperTaskCreationRequestDto = {
-  // TODO Add client side validation for better UX
+// TODO Add client side validation for better UX
+export type HelperTaskMutationRequestDto = {
   categoryId: number;
   title: string;
   shortDescription: string;
   longDescription?: string | null;
   contactId: number;
-  start?: Date | null;
-  end?: Date | null;
-  deadline?: Date | null;
+  // TODO #19 These could be Date (kept to be consistent with HelperTask)
+  start?: string | null;
+  end?: string | null;
+  deadline?: string | null;
   urgent: boolean;
   captainRequiredLicenceInfoId?: number | null;
   helpersMinCount: number;

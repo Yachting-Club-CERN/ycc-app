@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
 import PromiseStatus from '@app/components/PromiseStatus';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
 
@@ -23,12 +24,12 @@ const HelperTaskPage = () => {
   const taskToDisplay = updatedTask ? updatedTask : task.result;
 
   return (
-    <>
+    <ReadingFriendlyBox>
       {taskToDisplay && (
         <HelperTaskInfo task={taskToDisplay} refreshTask={setUpdatedTask} />
       )}
       {!taskToDisplay && <PromiseStatus outcomes={[task]} />}
-    </>
+    </ReadingFriendlyBox>
   );
 };
 

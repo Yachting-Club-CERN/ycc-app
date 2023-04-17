@@ -104,6 +104,16 @@ export const canSubscribe = (task: HelperTask, user: User): boolean =>
   canSubscribeAsCaptain(task, user) || canSubscribeAsHelper(task, user);
 
 /**
+ * Tells whether a user can edit a task.
+ *
+ * @param task a task
+ * @param user a user
+ * @returns true if the user can edit the task, false otherwise
+ */
+export const canEditTask = (task: HelperTask, user: User): boolean =>
+  user.helpersAppAdmin || (user.helpersAppEditor && isContact(task, user));
+
+/**
  * Gives a "fake random" subscribe text. Deterministic.
  *
  * @returns a subscribe text

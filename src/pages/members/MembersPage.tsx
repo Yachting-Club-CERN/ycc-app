@@ -10,7 +10,7 @@ import MembersDataGrid from './MembersDataGrid';
 const MembersPage = () => {
   const [search, setSearch] = useState<string>('');
   const currentYear = new Date().getFullYear();
-  const typingTimeout = useRef<number | undefined>();
+  const typingTimeout = useRef<number>();
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (typingTimeout.current) {

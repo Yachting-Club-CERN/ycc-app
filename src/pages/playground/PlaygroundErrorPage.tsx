@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import PageTitle from '@app/components/PageTitle';
 import SpacedTypography from '@app/components/SpacedTypography';
 
-const PlaygroundError = () => {
+const PlaygroundErrorPage = () => {
   useEffect(() => {
     throw new Error('This is an error...', {
       cause: '... and this is the cause',
@@ -18,4 +18,4 @@ const PlaygroundError = () => {
   );
 };
 
-export default PlaygroundError;
+export default PlaygroundErrorPage;

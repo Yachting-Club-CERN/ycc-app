@@ -1,5 +1,6 @@
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ErrorIcon from '@mui/icons-material/Error';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import HomeIcon from '@mui/icons-material/Home';
@@ -28,7 +29,6 @@ type SidebarItem = {
   title: string;
   path: string;
   icon: JSX.Element;
-  secondaryAction?: JSX.Element;
 };
 
 const items: SidebarItem[][] = [
@@ -65,6 +65,11 @@ if (config.environment === Environment.LOCAL) {
       title: 'Playground: 404',
       path: '/playground/this-page-is-definitely-not-declared-in-the-routes',
       icon: <ErrorIcon />,
+    },
+    {
+      title: 'Playground: Editor',
+      path: '/playground/editor',
+      icon: <AutoFixHighIcon />,
     },
     {
       title: 'Playground: Error',

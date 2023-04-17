@@ -2,10 +2,11 @@ import React from 'react';
 import {useLocation} from 'react-router-dom';
 
 import PageTitle from '@app/components/PageTitle';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 import toJson from '@app/utils/toJson';
 
-const NotFound = () => {
+const NotFoundPage = () => {
   const location = useLocation();
 
   const debug = {
@@ -16,7 +17,7 @@ const NotFound = () => {
   console.debug('Debug info: ', debug);
 
   return (
-    <>
+    <ReadingFriendlyBox>
       <PageTitle value="Page Not Found" />
       <SpacedTypography>
         The page you are looking for does not seem to exist. No worries though,
@@ -29,8 +30,8 @@ const NotFound = () => {
       <SpacedTypography sx={{whiteSpace: 'pre-wrap'}}>
         {toJson(debug)}
       </SpacedTypography>
-    </>
+    </ReadingFriendlyBox>
   );
 };
 
-export default NotFound;
+export default NotFoundPage;

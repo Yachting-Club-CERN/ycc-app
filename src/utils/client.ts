@@ -4,7 +4,7 @@ import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
-  HelperTaskCreationRequestDto,
+  HelperTaskMutationRequestDto,
   HelperTasks,
 } from 'model/helpers-dtos';
 
@@ -68,11 +68,23 @@ class Client {
     await this.getData<HelperTask>(`/api/v0/helpers/tasks/${id}`, null, signal);
 
   createHelperTask = async (
-    task: HelperTaskCreationRequestDto,
+    task: HelperTaskMutationRequestDto,
     signal?: AbortSignal
   ) =>
-    await this.postForData<HelperTask, HelperTaskCreationRequestDto>(
+    await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
       '/api/v0/helpers/tasks',
+      null,
+      task,
+      signal
+    );
+
+  updateHelperTask = async (
+    id: number,
+    task: HelperTaskMutationRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
+      `/api/v0/helpers/tasks/${id}`,
       null,
       task,
       signal
@@ -142,6 +154,20 @@ class Client {
     requestData: D,
     signal?: AbortSignal
   ) => await this.request<T, D>('POST', path, params, requestData, signal);
+
+  private putForData = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => (await this.put<T, D>(path, params, requestData, signal)).data;
+
+  private put = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => await this.request<T, D>('PUT', path, params, requestData, signal);
 
   private request = async <T, D = T>(
     method: Method,

@@ -64,7 +64,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
   return (
     <>
-      <PageTitleWithNewTaskButton value={task.title} />
+      <PageTitleWithNewTaskButton value={task.title} task={task} />
       <SpacedTypography variant="h3">
         Category: {task.category.title}
       </SpacedTypography>
@@ -141,7 +141,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
             )}
           </Stack>
           <SpacedTypography variant="subtitle2">
-            Reminder: after subscribing to a task, you will be unable to
+            Reminder: after subscribing to a task you will be unable to
             unsubscribe. If you want to cancel a shift, first find a
             replacement, then notify Lajos Cseppentő by e-mail, who will
             administer the change (and CC your replacement).
