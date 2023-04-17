@@ -1,4 +1,5 @@
 build/
+/public/tinymce/
 
 # Created by https://www.toptal.com/developers/gitignore/api/git,node,react,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=git,node,react,visualstudiocode
