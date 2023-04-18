@@ -12,6 +12,7 @@ import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
+import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
 import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
 import {
@@ -85,6 +86,15 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
       <SpacedTypography>{task.shortDescription}</SpacedTypography>
 
       <Divider sx={{mt: 2}} />
+
+      {task.longDescription && (
+        <>
+          <SpacedTypography>
+            {sanitiseHtmlForReact(task.longDescription)}
+          </SpacedTypography>
+          <Divider sx={{mt: 2}} />
+        </>
+      )}
 
       <SpacedTypography>
         Contact: {createMemberDialogLink(task.contact)}

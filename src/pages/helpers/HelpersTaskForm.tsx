@@ -18,9 +18,11 @@ import {
 import {useNavigate} from 'react-router-dom';
 
 import ErrorAlert from '@app/components/ErrorAlert';
+import RichTextEditor from '@app/components/RichTextEditor';
 import SpacedBox from '@app/components/SpacedBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
+import useDelay from '@app/hooks/useDelay';
 import client from '@app/utils/client';
 import {sanitiseInputDate} from '@app/utils/date-utils';
 
@@ -36,6 +38,13 @@ type Props = {
 const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const [error, setError] = useState<unknown>();
+  const [longDescription, setLongDescriptionImmediately] = useState(
+    task?.longDescription
+  );
+  const setLongDescriptionWithDelay = useDelay(
+    500,
+    setLongDescriptionImmediately
+  );
   const navigate = useNavigate();
   // Some components may be already loaded at this point
   useEffect(() => {
@@ -68,12 +77,13 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
     try {
       setError(undefined);
       const dataToSend = {...data};
-      if (dataToSend.captainRequiredLicenceInfoId === -1) {
-        dataToSend.captainRequiredLicenceInfoId = null;
-      }
+      dataToSend.longDescription = longDescription;
       dataToSend.start = sanitiseInputDate(dataToSend.start);
       dataToSend.end = sanitiseInputDate(dataToSend.end);
       dataToSend.deadline = sanitiseInputDate(dataToSend.deadline);
+      if (dataToSend.captainRequiredLicenceInfoId === -1) {
+        dataToSend.captainRequiredLicenceInfoId = null;
+      }
 
       const mutatedTask = task
         ? await client.updateHelperTask(task.id, dataToSend)
@@ -151,6 +161,15 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
           required
           label="Short Description"
           fullWidth
+        />
+      </SpacedBox>
+
+      <SpacedBox>
+        <RichTextEditor
+          initialContent={task?.longDescription}
+          onBlur={setLongDescriptionImmediately}
+          onInit={setLongDescriptionImmediately}
+          onChange={setLongDescriptionWithDelay}
         />
       </SpacedBox>
 

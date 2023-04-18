@@ -1,27 +1,28 @@
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
+import useDelay from '@app/hooks/useDelay';
 
 import MembersDataGrid from './MembersDataGrid';
 
 const MembersPage = () => {
   const [search, setSearch] = useState<string>('');
   const currentYear = new Date().getFullYear();
-  const typingTimeout = useRef<number>();
-
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (typingTimeout.current) {
-      clearTimeout(typingTimeout.current);
-    }
-
-    typingTimeout.current = window.setTimeout(() => {
+  const onSearch = useDelay(
+    100,
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(event.target.value);
-    }, 100);
-  };
+    }
+  );
 
+  const onKeySearch = useDelay(100, () => {
+    alert('Coming soon... ;-)');
+  });
+
+  // TODO Search by key (active licence, exact(!) match), but need to display key
   return (
     <>
       <PageTitle
@@ -29,17 +30,27 @@ const MembersPage = () => {
         mobileValue={`Members (${currentYear})`}
       />
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          marginBottom: '1rem',
-        }}
-      >
+      <Stack direction="row" alignItems="center" spacing={1} mt={2} mb={2}>
         <Typography>Search:</Typography>
-        <Input onChange={onSearch} />
-      </Box>
+        <TextField
+          onChange={onSearch}
+          variant="outlined"
+          label="Name, username, phone..."
+          size="small"
+          sx={{
+            width: 230,
+          }}
+        />
+        <TextField
+          onChange={onKeySearch}
+          variant="outlined"
+          label="Key..."
+          size="small"
+          sx={{
+            width: 65,
+          }}
+        />
+      </Stack>
 
       <MembersDataGrid year={currentYear} search={search} />
     </>

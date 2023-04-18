@@ -13,7 +13,8 @@ const prefix =
   '-->\n';
 
 type Props = {
-  initialContent?: string;
+  initialContent?: string | null;
+  onBlur?: (html: string) => void;
   onInit?: (html: string) => void;
   onChange: (html: string) => void;
   height?: number | string;
@@ -23,8 +24,9 @@ type Props = {
 
 const RichTextEditor = ({
   initialContent,
-  onInit,
+  onBlur,
   onChange,
+  onInit,
   height,
   minHeight,
   maxHeight,
@@ -52,12 +54,17 @@ const RichTextEditor = ({
           'forecolor backcolor removeformat | image link emoticons | searchreplace code',
         block_formats: 'Paragraph=p;Header=h4;Header=h5;Header=h6',
       }}
+      onBlur={(_, editor) => {
+        if (onBlur) {
+          onBlur(editor.getContent());
+        }
+      }}
+      onEditorChange={onChange}
       onInit={(_, editor) => {
         if (onInit) {
           onInit(editor.getContent());
         }
       }}
-      onEditorChange={onChange}
     />
   );
 };
