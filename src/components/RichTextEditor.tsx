@@ -53,6 +53,10 @@ const RichTextEditor = ({
           'undo redo | bold italic underline strikethrough | blocks | outdent indent | bullist numlist | ' +
           'forecolor backcolor removeformat | image link emoticons | searchreplace code',
         block_formats: 'Paragraph=p;Header=h4;Header=h5;Header=h6',
+        // TODO Image upload https://www.tiny.cloud/docs/plugins/opensource/image
+        // images_upload_base_path
+        // images_upload_credentials
+        // images_upload_handler
       }}
       onBlur={(_, editor) => {
         if (onBlur) {
