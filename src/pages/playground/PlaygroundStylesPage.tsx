@@ -1,13 +1,14 @@
 import React from 'react';
 
 import PageTitle from '@app/components/PageTitle';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 
 import LoremIpsum from './LoremIpsum';
 
-const PlaygroundStyles = () => {
+const PlaygroundStylesPage = () => {
   return (
-    <>
+    <ReadingFriendlyBox>
       <PageTitle value="Playground: Styles" />
 
       <SpacedTypography variant="h2">
@@ -30,9 +31,9 @@ const PlaygroundStyles = () => {
       <LoremIpsum title="Caption" titleVariant="h3" variant="caption" />
       <LoremIpsum title="Overline" titleVariant="h3" variant="overline" />
       <LoremIpsum title="Subtitle1" titleVariant="h3" variant="subtitle1" />
-      <LoremIpsum title="Subtitle1" titleVariant="h3" variant="subtitle2" />
-    </>
+      <LoremIpsum title="Subtitle2" titleVariant="h3" variant="subtitle2" />
+    </ReadingFriendlyBox>
   );
 };
 
-export default PlaygroundStyles;
+export default PlaygroundStylesPage;

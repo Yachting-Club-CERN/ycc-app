@@ -1,17 +1,23 @@
 import {DependencyList, useEffect, useState} from 'react';
 
+type PromiseOutcome<T> = {
+  result: T | undefined;
+  error: unknown;
+  pending: boolean;
+};
+
 /**
  * Cancellable promise hook. Creates `useState()` and `useEffect()` hooks under the hood.
  *
  * @param promise promise
  * @param deps `useEffect()` dependencies, `undefined` is translated to `[]`
- * @returns array of promise result, promise error and pending (boolean)
+ * @returns object of promise result, promise error and pending (boolean)
  */
 const usePromise = <T>(
   promise: (signal?: AbortSignal) => Promise<T>,
   deps?: DependencyList
-) => {
-  const [result, setResult] = useState<T | null>();
+): PromiseOutcome<T> => {
+  const [result, setResult] = useState<T>();
   const [error, setError] = useState<unknown>();
   const [pending, setPending] = useState(true);
 
@@ -37,7 +43,7 @@ const usePromise = <T>(
         })
         .catch((error: unknown) => {
           if (!abortController.signal.aborted) {
-            setResult(null);
+            setResult(undefined);
             setError(error);
             setPending(false);
           }
@@ -51,11 +57,8 @@ const usePromise = <T>(
     deps === undefined ? [] : deps
   );
 
-  return {
-    result,
-    error,
-    pending,
-  };
+  return {result, error, pending};
 };
 
+export type {PromiseOutcome};
 export default usePromise;

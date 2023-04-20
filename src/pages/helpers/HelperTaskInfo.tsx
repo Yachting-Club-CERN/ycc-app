@@ -8,12 +8,13 @@ import React, {useContext} from 'react';
 import {useErrorBoundary} from 'react-error-boundary';
 import {Link as RouterLink} from 'react-router-dom';
 
-import PageTitle from '@app/components/PageTitle';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
+import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
+import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
 import {
   canSubscribeAsCaptain,
   canSubscribeAsHelper,
@@ -64,7 +65,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
   return (
     <>
-      <PageTitle value={task.title} />
+      <PageTitleWithNewTaskButton value={task.title} task={task} />
       <SpacedTypography variant="h3">
         Category: {task.category.title}
       </SpacedTypography>
@@ -86,12 +87,21 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
       <Divider sx={{mt: 2}} />
 
+      {task.longDescription && (
+        <>
+          <SpacedTypography>
+            {sanitiseHtmlForReact(task.longDescription)}
+          </SpacedTypography>
+          <Divider sx={{mt: 2}} />
+        </>
+      )}
+
       <SpacedTypography>
         Contact: {createMemberDialogLink(task.contact)}
       </SpacedTypography>
-      {task.captainRequiredLicence && (
+      {task.captainRequiredLicenceInfo && (
         <SpacedTypography>
-          Captain Required Licence: {task.captainRequiredLicence.licence}
+          Captain Required Licence: {task.captainRequiredLicenceInfo.licence}
         </SpacedTypography>
       )}
       <SpacedTypography>
@@ -141,7 +151,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
             )}
           </Stack>
           <SpacedTypography variant="subtitle2">
-            Reminder: after subscribing to a task, you will be unable to
+            Reminder: after subscribing to a task you will be unable to
             unsubscribe. If you want to cancel a shift, first find a
             replacement, then notify Lajos Cseppentő by e-mail, who will
             administer the change (and CC your replacement).

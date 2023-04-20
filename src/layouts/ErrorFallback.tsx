@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import React from 'react';
 import {FallbackProps} from 'react-error-boundary';
 
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 import getErrorText from '@app/utils/error-helper';
 
@@ -13,24 +14,26 @@ const ErrorFallback = (props: FallbackProps) => {
   const boatCount = Math.floor(Math.random() * 10) + 1;
 
   return (
-    <Alert severity="error">
-      <AlertTitle>Oops, something went terribly wrong :-(</AlertTitle>
-      <SpacedTypography sx={{whiteSpace: 'pre-wrap'}}>
-        {getErrorText(error)}
-      </SpacedTypography>
-      <SpacedTypography>
-        No promise that{' '}
-        <Link href="#" onClick={props.resetErrorBoundary}>
-          reset
-        </Link>{' '}
-        will solve this issue, but worth a try...
-      </SpacedTypography>
-      <SpacedTypography>
-        {[...Array(boatCount)].map((_, i) => (
-          <SailingIcon key={i} />
-        ))}
-      </SpacedTypography>
-    </Alert>
+    <ReadingFriendlyBox>
+      <Alert severity="error">
+        <AlertTitle>Oops, something went terribly wrong :-(</AlertTitle>
+        <SpacedTypography sx={{whiteSpace: 'pre-wrap'}}>
+          {getErrorText(error)}
+        </SpacedTypography>
+        <SpacedTypography>
+          No promise that{' '}
+          <Link href="#" onClick={props.resetErrorBoundary}>
+            reset
+          </Link>{' '}
+          will solve this issue, but worth a try...
+        </SpacedTypography>
+        <SpacedTypography>
+          {[...Array(boatCount)].map((_, i) => (
+            <SailingIcon key={i} />
+          ))}
+        </SpacedTypography>
+      </Alert>
+    </ReadingFriendlyBox>
   );
 };
 

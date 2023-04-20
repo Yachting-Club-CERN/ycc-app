@@ -1,13 +1,12 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import {DataGrid, GridCellParams, GridColDef} from '@mui/x-data-grid';
 import {MemberPublicInfo, MemberPublicInfos} from 'model/dtos';
-import React from 'react';
+import React, {useContext} from 'react';
 
-import ErrorAlert from '@app/components/ErrorAlert';
+import PromiseStatus from '@app/components/PromiseStatus';
 import {toEmailLink, toTelLink} from '@app/components/links';
+import SharedDataContext from '@app/context/SharedDataContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
-import client from '@app/utils/client';
 
 const renderEmail = (params: GridCellParams<string | null>) => {
   return toEmailLink(params.value);
@@ -73,9 +72,10 @@ type Props = {
 };
 
 const MembersDataGrid = ({year, search}: Props) => {
+  const sharedData = useContext(SharedDataContext);
   const getMembersForYear = (signal?: AbortSignal) =>
-    client.getMembers(year, signal);
-  const {result: members, error, pending} = usePromise(getMembersForYear);
+    sharedData.getMembers(year, signal);
+  const members = usePromise(getMembersForYear);
   const {memberInfoDialogComponent, openMemberInfoDialog} =
     useMemberInfoDialog();
 
@@ -99,10 +99,10 @@ const MembersDataGrid = ({year, search}: Props) => {
 
   return (
     <>
-      {members && (
+      {members.result && (
         <DataGrid
           columns={columns}
-          rows={filter(search, members)}
+          rows={filter(search, members.result)}
           getRowId={getRowId}
           onCellClick={handleGridClick}
           disableColumnFilter={true}
@@ -114,8 +114,8 @@ const MembersDataGrid = ({year, search}: Props) => {
           }}
         />
       )}
-      {error && <ErrorAlert error={error} />}
-      {pending && <CircularProgress />}
+
+      <PromiseStatus outcomes={[members]} />
 
       {memberInfoDialogComponent}
     </>

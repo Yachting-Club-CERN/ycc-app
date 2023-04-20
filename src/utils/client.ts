@@ -1,9 +1,10 @@
 import axios, {Axios, AxiosResponse, Method} from 'axios';
 import config from 'config';
-import {MemberPublicInfos} from 'model/dtos';
+import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
+  HelperTaskMutationRequestDto,
   HelperTasks,
 } from 'model/helpers-dtos';
 
@@ -16,7 +17,8 @@ class ClientError<T = unknown> extends Error {
   readonly code: ClientErrorCode;
 
   constructor(message: string, cause: T, code: ClientErrorCode) {
-    super(message, {cause: cause});
+    super(message);
+    this.cause = cause;
     this.code = code;
   }
 }
@@ -50,16 +52,6 @@ class Client {
   }
 
   //
-  // Members
-  //
-  getMembers = async (year?: number, signal?: AbortSignal) =>
-    await this.getData<MemberPublicInfos>(
-      '/api/v0/members',
-      {year: year},
-      signal
-    );
-
-  //
   // Helpers
   //
   getHelperTaskCategories = async (signal?: AbortSignal) =>
@@ -75,6 +67,29 @@ class Client {
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
     await this.getData<HelperTask>(`/api/v0/helpers/tasks/${id}`, null, signal);
 
+  createHelperTask = async (
+    task: HelperTaskMutationRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
+      '/api/v0/helpers/tasks',
+      null,
+      task,
+      signal
+    );
+
+  updateHelperTask = async (
+    id: number,
+    task: HelperTaskMutationRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
+      `/api/v0/helpers/tasks/${id}`,
+      null,
+      task,
+      signal
+    );
+
   subscribeToHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
       `/api/v0/helpers/tasks/${id}/subscribe-as-captain`,
@@ -88,6 +103,26 @@ class Client {
       `/api/v0/helpers/tasks/${id}/subscribe-as-helper`,
       null,
       {},
+      signal
+    );
+
+  //
+  // Licences
+  //
+  getLicenceInfos = async (signal?: AbortSignal) =>
+    await this.getData<LicenceDetailedInfos>(
+      '/api/v0/licence-infos',
+      null,
+      signal
+    );
+
+  //
+  // Members
+  //
+  getMembers = async (year: number, signal?: AbortSignal) =>
+    await this.getData<MemberPublicInfos>(
+      '/api/v0/members',
+      {year: year},
       signal
     );
 
@@ -119,6 +154,20 @@ class Client {
     requestData: D,
     signal?: AbortSignal
   ) => await this.request<T, D>('POST', path, params, requestData, signal);
+
+  private putForData = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => (await this.put<T, D>(path, params, requestData, signal)).data;
+
+  private put = async <T, D = T>(
+    path: string,
+    params: unknown,
+    requestData: D,
+    signal?: AbortSignal
+  ) => await this.request<T, D>('PUT', path, params, requestData, signal);
 
   private request = async <T, D = T>(
     method: Method,

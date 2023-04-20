@@ -1,12 +1,12 @@
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-type Props = {
+type PageTitleProps = {
   value: string;
   mobileValue?: string;
 };
 
-const PageTitle = ({value, mobileValue}: Props) => (
+const PageTitle = ({value, mobileValue}: PageTitleProps) => (
   <>
     <Typography variant="h2" sx={{display: {xs: 'block', sm: 'none'}}}>
       {mobileValue ?? value}
@@ -17,4 +17,5 @@ const PageTitle = ({value, mobileValue}: Props) => (
   </>
 );
 
+export type {PageTitleProps};
 export default PageTitle;

@@ -1,9 +1,9 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import {HelperTask} from 'model/helpers-dtos';
-import React from 'react';
+import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
-import ErrorAlert from '@app/components/ErrorAlert';
+import PromiseStatus from '@app/components/PromiseStatus';
+import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
 
@@ -19,18 +19,17 @@ const HelperTaskPage = () => {
       return client.getHelperTaskById(task_id, signal);
     }
   };
-  const {result: task, error, pending} = usePromise(getHelperTask);
-  const [updatedTask, setUpdatedTask] = React.useState<HelperTask>();
-  const taskToDisplay = updatedTask ? updatedTask : task;
+  const task = usePromise(getHelperTask, [id]);
+  const [updatedTask, setUpdatedTask] = useState<HelperTask>();
+  const taskToDisplay = updatedTask ? updatedTask : task.result;
 
   return (
-    <>
+    <ReadingFriendlyBox>
       {taskToDisplay && (
         <HelperTaskInfo task={taskToDisplay} refreshTask={setUpdatedTask} />
       )}
-      {error && !taskToDisplay && <ErrorAlert error={error} />}
-      {pending && !taskToDisplay && <CircularProgress />}
-    </>
+      {!taskToDisplay && <PromiseStatus outcomes={[task]} />}
+    </ReadingFriendlyBox>
   );
 };
 

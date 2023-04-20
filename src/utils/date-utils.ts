@@ -1,36 +1,33 @@
-// Avoid funny results with an English page running on a French phone
-const formatLocale: Intl.LocalesArgument = 'en-GB';
-
-const timeFormatOptions: Intl.DateTimeFormatOptions = {
-  hour12: false,
-  hour: '2-digit',
-  minute: '2-digit',
-};
-const dateFormatOptions: Intl.DateTimeFormatOptions = {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-};
-const dateWithDayFormatOptions: Intl.DateTimeFormatOptions = {
-  dateStyle: 'full',
-};
-const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
-  ...dateFormatOptions,
-  ...timeFormatOptions,
-};
+import * as dayjs from 'dayjs';
 
 export const formatDate = (date: Date | string) => {
-  return new Date(date).toLocaleString(formatLocale, dateFormatOptions);
+  return dayjs(date).format('DD/MM/YYYY');
 };
 
 export const formatDateWithDay = (date: Date | string) => {
-  return new Date(date).toLocaleString(formatLocale, dateWithDayFormatOptions);
+  return dayjs(date).format('dddd, D MMMM YYYY ');
 };
 
 export const formatTime = (date: Date | string) => {
-  return new Date(date).toLocaleString(formatLocale, timeFormatOptions);
+  return dayjs(date).format('HH:mm');
 };
 
 export const formatDateTime = (date: Date | string) => {
-  return new Date(date).toLocaleString(formatLocale, dateTimeFormatOptions);
+  return dayjs(date).format('D/M/YYYY, HH:mm');
+};
+
+/**
+ * Sanitises a date from an input and prepares it to be sent to the server.
+ *
+ * @param date Date to be sanitised
+ * @returns sanitised date
+ */
+export const sanitiseInputDate = (
+  date: string | Date | dayjs.Dayjs | null | undefined
+) => {
+  if (date === null || date === undefined) {
+    return date;
+  }
+
+  return dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSS');
 };

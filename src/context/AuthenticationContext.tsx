@@ -59,6 +59,22 @@ class User {
     return this.roles.includes('ycc-member-active');
   }
 
+  get committeeMember(): boolean {
+    return this.roles.includes('ycc-member-committee');
+  }
+
+  get helpersAppAdmin(): boolean {
+    return this.roles.includes('ycc-helpers-app-admin');
+  }
+
+  get helpersAppEditor(): boolean {
+    return this.roles.includes('ycc-helpers-app-editor');
+  }
+
+  get helpersAppAdminOrEditor(): boolean {
+    return this.helpersAppAdmin || this.helpersAppEditor;
+  }
+
   hasLicence = (licence: string): boolean => {
     return this.roles.includes(`ycc-licence-${licence.toLowerCase()}`);
   };
@@ -185,7 +201,7 @@ class AuthenticationProvider {
     return this._user || UNKNOWN_USER;
   }
 
-  public async init() {
+  init = async () => {
     this._keycloak.onTokenExpired = () => {
       this._keycloak
         .updateToken(KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY)
@@ -255,7 +271,7 @@ class AuthenticationProvider {
     } catch (error) {
       return console.error('[auth] Authentication failed', error);
     }
-  }
+  };
 
   public logout = () => {
     console.debug('[auth] Logging out');
