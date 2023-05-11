@@ -13,8 +13,6 @@ type Config = {
   yccHullUrl: string;
 };
 
-// Use this if you run everything locally
-//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LOCAL_CONFIG: Config = {
   environment: Environment.LOCAL,
@@ -24,20 +22,34 @@ const LOCAL_CONFIG: Config = {
   yccHullUrl: 'http://localhost:8000',
 };
 
-// Use this configuration if you run the backend locally, but you use KeyCloak YCC-DEV from CERN OKD
-//
-// Note: if you run YCC Hull locally, make sure that it connects to the same database at CERN as Keycloak realm YCC-DEV
-//
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DEV_WITH_LOCAL_HULL_CONFIG: Config = {
   environment: Environment.DEVELOPMENT,
   keycloakServerUrl: 'https://ycc-auth.web.cern.ch',
   keycloakRealm: 'YCC-DEV',
-  keycloakClient: 'ycc-app-dev',
+  keycloakClient: 'ycc-app-dev-local',
   yccHullUrl: 'http://localhost:8000',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const DEV_CONFIG: Config = {
+  environment: Environment.DEVELOPMENT,
+  keycloakServerUrl: 'https://ycc-auth.web.cern.ch',
+  keycloakRealm: 'YCC-DEV',
+  keycloakClient: 'ycc-app-dev-local',
+  yccHullUrl: 'https://ycc-hull-dev.web.cern.ch',
+};
+
+// Use this configuration if you run everything locally
 const DEFAULT_CONFIG = LOCAL_CONFIG;
+
+// Use this configuration if you run the backend locally, but you use KeyCloak YCC-DEV from CERN OKD
+//
+// Note: if you run YCC Hull locally, make sure that it connects to the same database at CERN as Keycloak realm YCC-DEV
+// const DEFAULT_CONFIG = DEV_WITH_LOCAL_HULL_CONFIG;
+
+// Use this configuration if you only run the frontend locally and you use KeyCloak YCC-DEV and YCC Hull from CERN OKD
+// const DEFAULT_CONFIG = DEV_CONFIG;
 
 const config: Config = {
   environment:
