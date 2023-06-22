@@ -55,6 +55,9 @@ dependencies:
   react-error-boundary:
     specifier: ^4.0.3
     version: 4.0.3(react@18.2.0)
+  react-ga4:
+    specifier: ^2.1.0
+    version: 2.1.0
   react-hook-form:
     specifier: ^7.43.9
     version: 7.43.9(react@18.2.0)
@@ -9431,6 +9434,10 @@ packages:
 
   /react-error-overlay@6.0.11:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
+
+  /react-ga4@2.1.0:
+    resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
+    dev: false
 
   /react-hook-form-mui@5.15.1(@mui/icons-material@5.11.16)(@mui/material@5.12.0)(@mui/x-date-pickers@5.0.20)(react-hook-form@7.43.9)(react@18.2.0):
     resolution: {integrity: sha512-/jgGMhe/eQwWzO0YhxafoWEJrW4lYx/rZGGeqVwwPP4gPu7OkwVCupvhI7+4gTW2C4AbH/wjV6bwyD4WOVarwQ==}

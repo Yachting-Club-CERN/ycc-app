@@ -9,11 +9,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import {auth} from '@app/context/AuthenticationContext';
+import GoogleAnalytics from '@app/utils/GoogleAnalytics';
 
 import App from './App';
 
 // Avoid funny results with an English page running on a French phone
 dayjs.locale('en-gb');
+
+GoogleAnalytics.init();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -11,6 +11,7 @@ import 'dayjs/locale/en-gb';
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 
+import Analytics from '@app/components/Analytics';
 import AppRoutes from '@app/layouts/AppRoutes';
 import Footer from '@app/layouts/Footer';
 import TopBarAndSidebar from '@app/layouts/TopBarAndSidebar';
@@ -32,6 +33,7 @@ const App = () => {
                 <Divider sx={{mt: 2}} />
                 <Box component="div">
                   <Footer />
+                  <Analytics />
                 </Box>
               </Stack>
             </Box>
