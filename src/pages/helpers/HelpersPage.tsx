@@ -10,7 +10,7 @@ const HelpersPage = () => {
     <>
       <PageTitleWithNewTaskButton value="Helper Tasks" />
       <SpacedTypography>
-        On this page you can subscribe to surveillance and maintenance tasks.
+        On this page you can sign up for surveillance and maintenance tasks.
         Captain means Q-boat driver or the person who is organising the
         execution of the task.
       </SpacedTypography>

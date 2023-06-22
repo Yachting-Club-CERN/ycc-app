@@ -24,13 +24,13 @@ import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
 
 import {
-  canSubscribe,
-  canSubscribeAsCaptain,
-  canSubscribeAsHelper,
+  canSignUp,
+  canSignUpAsCaptain,
+  canSignUpAsHelper,
   createTimingInfoFragment,
-  fakeRandomSubscribeText,
+  fakeRandomSignUpText,
   isContact,
-  isSubscribed,
+  isSignedUp,
   isUpcoming,
 } from './helpers-utils';
 
@@ -52,7 +52,7 @@ const HelperTasksDataGrid = () => {
   const navigate = useNavigate();
 
   const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(true);
-  const [showOnlyContactOrSubscribed, setShowOnlyContactOrSubscribed] =
+  const [showOnlyContactOrSignedUp, setShowOnlyContactOrSignedUp] =
     useState(false);
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [showOnlyUnpublished, setShowOnlyUnpublished] = useState(false);
@@ -64,13 +64,11 @@ const HelperTasksDataGrid = () => {
     return tasks
       .filter(task => (showOnlyUpcoming ? isUpcoming(task) : true))
       .filter(task =>
-        showOnlyContactOrSubscribed
-          ? isContact(task, currentUser) || isSubscribed(task, currentUser)
+        showOnlyContactOrSignedUp
+          ? isContact(task, currentUser) || isSignedUp(task, currentUser)
           : true
       )
-      .filter(task =>
-        showOnlyAvailable ? canSubscribe(task, currentUser) : true
-      )
+      .filter(task => (showOnlyAvailable ? canSignUp(task, currentUser) : true))
       .filter(task => (showOnlyUnpublished ? !task.published : true));
   };
 
@@ -148,11 +146,11 @@ const HelperTasksDataGrid = () => {
           {createMemberDialogLink(task.captain.member)}
         </Typography>
       );
-    } else if (canSubscribeAsCaptain(task, currentUser)) {
+    } else if (canSignUpAsCaptain(task, currentUser)) {
       return (
         <Typography variant="body2">
           <Link onClick={() => navigateToTask(task.id)}>
-            {fakeRandomSubscribeText(task.id, true)}
+            {fakeRandomSignUpText(task.id, true)}
           </Link>
         </Typography>
       );
@@ -166,10 +164,10 @@ const HelperTasksDataGrid = () => {
 
     return (
       <Typography variant="body2">
-        {canSubscribeAsHelper(task, currentUser) && (
+        {canSignUpAsHelper(task, currentUser) && (
           <SpanBlockBox>
             <Link onClick={() => navigateToTask(task.id)}>
-              {fakeRandomSubscribeText(task.id, false)}
+              {fakeRandomSignUpText(task.id, false)}
             </Link>
           </SpanBlockBox>
         )}
@@ -255,10 +253,10 @@ const HelperTasksDataGrid = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={showOnlyContactOrSubscribed}
+                  checked={showOnlyContactOrSignedUp}
                   onChange={event =>
                     handleCheckboxChange(event, checked => {
-                      setShowOnlyContactOrSubscribed(checked);
+                      setShowOnlyContactOrSignedUp(checked);
                       if (checked) {
                         setShowOnlyAvailable(false);
                       }
@@ -276,7 +274,7 @@ const HelperTasksDataGrid = () => {
                     handleCheckboxChange(event, checked => {
                       setShowOnlyAvailable(checked);
                       if (checked) {
-                        setShowOnlyContactOrSubscribed(false);
+                        setShowOnlyContactOrSignedUp(false);
                       }
                     })
                   }

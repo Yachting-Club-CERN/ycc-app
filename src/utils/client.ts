@@ -90,17 +90,17 @@ class Client {
       signal
     );
 
-  subscribeToHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
+  signUpForHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
-      `/api/v0/helpers/tasks/${id}/subscribe-as-captain`,
+      `/api/v0/helpers/tasks/${id}/sign-up-as-captain`,
       null,
       {},
       signal
     );
 
-  subscribeToHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
+  signUpForHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
-      `/api/v0/helpers/tasks/${id}/subscribe-as-helper`,
+      `/api/v0/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
       signal

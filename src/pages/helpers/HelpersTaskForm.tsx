@@ -62,13 +62,13 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
     shortDescription: task?.shortDescription ?? '',
     longDescription: task?.longDescription ?? null,
     contactId: task?.contact.id ?? currentUser.memberId,
-    start: task?.start ?? null,
-    end: task?.end ?? null,
+    startsAt: task?.startsAt ?? null,
+    endsAt: task?.endsAt ?? null,
     deadline: task?.deadline ?? null,
     urgent: task?.urgent ?? false,
     captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
-    helpersMinCount: task?.helpersMinCount ?? 1,
-    helpersMaxCount: task?.helpersMaxCount ?? 2,
+    helperMinCount: task?.helperMinCount ?? 1,
+    helperMaxCount: task?.helperMaxCount ?? 2,
     published: true,
   };
 
@@ -78,8 +78,8 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       setError(undefined);
       const dataToSend = {...data};
       dataToSend.longDescription = longDescription;
-      dataToSend.start = sanitiseInputDate(dataToSend.start);
-      dataToSend.end = sanitiseInputDate(dataToSend.end);
+      dataToSend.startsAt = sanitiseInputDate(dataToSend.startsAt);
+      dataToSend.endsAt = sanitiseInputDate(dataToSend.endsAt);
       dataToSend.deadline = sanitiseInputDate(dataToSend.deadline);
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
         dataToSend.captainRequiredLicenceInfoId = null;
@@ -192,8 +192,8 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       </SpacedTypography>
       <SpacedBox>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <DateTimePickerElement name="start" label="Start" isDate={true} />
-          <DateTimePickerElement name="end" label="End" />
+          <DateTimePickerElement name="startsAt" label="Start" />
+          <DateTimePickerElement name="endsAt" label="End" />
           <DateTimePickerElement name="deadline" label="Deadline" />
         </Stack>
       </SpacedBox>
@@ -210,8 +210,8 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       </SpacedTypography>
 
       <SpacedTypography>
-        If you personally plan to coordinate the task, you can later subscribe
-        to the task as captain.
+        If you personally plan to coordinate the task, you can later sign up for
+        the task as captain.
       </SpacedTypography>
 
       <SpacedBox>
@@ -229,7 +229,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
             }}
           />
           <TextFieldElement
-            name="helpersMinCount"
+            name="helperMinCount"
             required
             label="Min. Helpers"
             type={'number'}
@@ -241,7 +241,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
             }}
           />
           <TextFieldElement
-            name="helpersMaxCount"
+            name="helperMaxCount"
             required
             label="Max. Helpers"
             type={'number'}
@@ -257,7 +257,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       <Divider sx={{mt: 2}} />
       <SpacedTypography>
         Urgent tasks are highlighted at the top of the table, unpublished tasks
-        are not shown to club members. After a member subscribes to a task, you
+        are not shown to club members. After a member signs up for a task, you
         will be limited in modifications (e.g, you cannot change the timing).
       </SpacedTypography>
       <SpacedBox>
