@@ -37,7 +37,7 @@ export const isContact = (task: HelperTask, user: User): boolean =>
   task.contact.username === user.username;
 
 /**
- * Tells if a user is signed up to a task as captain.
+ * Tells if a user is signed up for a task as captain.
  *
  * @param task a task
  * @param user a user
@@ -47,7 +47,7 @@ export const isSignedUpAsCaptain = (task: HelperTask, user: User): boolean =>
   task.captain?.member.username === user.username;
 
 /**
- * Tells if a user is signed up to a task as helper.
+ * Tells if a user is signed up for a task as helper.
  *
  * @param task a task
  * @param user a user
@@ -57,7 +57,7 @@ export const isSignedUpAsHelper = (task: HelperTask, user: User): boolean =>
   task.helpers.some(helper => helper.member.username === user.username);
 
 /**
- * Tells if a user is signed up to a task.
+ * Tells if a user is signed up for a task.
  *
  * @param task a task
  * @param user a user
@@ -67,7 +67,7 @@ export const isSignedUp = (task: HelperTask, user: User): boolean =>
   isSignedUpAsCaptain(task, user) || isSignedUpAsHelper(task, user);
 
 /**
- * Tells whether a user can signed up to a task as captain.
+ * Tells whether a user can signed up for a task as captain.
  *
  * @param task a task
  * @param user a user
@@ -82,7 +82,7 @@ export const canSignUpAsCaptain = (task: HelperTask, user: User): boolean =>
     user.hasLicence(task.captainRequiredLicenceInfo.licence));
 
 /**
- * Tells whether a user can sign up to a task as helper.
+ * Tells whether a user can sign up for a task as helper.
  *
  * @param task a task
  * @param user a user
@@ -96,7 +96,7 @@ export const canSignUpAsHelper = (task: HelperTask, user: User): boolean =>
   !isSignedUpAsHelper(task, user);
 
 /**
- * Tells whether a user can sign up to a task.
+ * Tells whether a user can sign up for a task.
  *
  * @param task a task
  * @param user a user
