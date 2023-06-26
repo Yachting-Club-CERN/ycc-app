@@ -17,7 +17,9 @@ import {
  */
 export const isUpcoming = (task: HelperTask): boolean => {
   const now = new Date();
-  const startInFutureOrMissing = task.start ? new Date(task.start) > now : true;
+  const startInFutureOrMissing = task.startsAt
+    ? new Date(task.startsAt) > now
+    : true;
   const deadlineInFutureOrMissing = task.deadline
     ? new Date(task.deadline) > now
     : true;
@@ -35,73 +37,73 @@ export const isContact = (task: HelperTask, user: User): boolean =>
   task.contact.username === user.username;
 
 /**
- * Tells if a user is subscribed to a task as captain.
+ * Tells if a user is signed up for a task as captain.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user is subscribed as captain, false otherwise
+ * @returns true if the user is signed up as captain, false otherwise
  */
-export const isSubscribedAsCaptain = (task: HelperTask, user: User): boolean =>
+export const isSignedUpAsCaptain = (task: HelperTask, user: User): boolean =>
   task.captain?.member.username === user.username;
 
 /**
- * Tells if a user is subscribed to a task as helper.
+ * Tells if a user is signed up for a task as helper.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user is subscribed as helper, false otherwise
+ * @returns true if the user is signed up as helper, false otherwise
  */
-export const isSubscribedAsHelper = (task: HelperTask, user: User): boolean =>
+export const isSignedUpAsHelper = (task: HelperTask, user: User): boolean =>
   task.helpers.some(helper => helper.member.username === user.username);
 
 /**
- * Tells if a user is subscribed to a task.
+ * Tells if a user is signed up for a task.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user is subscribed, false otherwise
+ * @returns true if the user is signed up, false otherwise
  */
-export const isSubscribed = (task: HelperTask, user: User): boolean =>
-  isSubscribedAsCaptain(task, user) || isSubscribedAsHelper(task, user);
+export const isSignedUp = (task: HelperTask, user: User): boolean =>
+  isSignedUpAsCaptain(task, user) || isSignedUpAsHelper(task, user);
 
 /**
- * Tells whether a user can subscribe to a task as captain.
+ * Tells whether a user can signed up for a task as captain.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user can subscribe as captain, false otherwise
+ * @returns true if the user can signed up as captain, false otherwise
  */
-export const canSubscribeAsCaptain = (task: HelperTask, user: User): boolean =>
+export const canSignUpAsCaptain = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
   task.published &&
   !task.captain &&
-  !isSubscribedAsHelper(task, user) &&
+  !isSignedUpAsHelper(task, user) &&
   (!task.captainRequiredLicenceInfo ||
     user.hasLicence(task.captainRequiredLicenceInfo.licence));
 
 /**
- * Tells whether a user can subscribe to a task as helper.
+ * Tells whether a user can sign up for a task as helper.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user can subscribe as helper, false otherwise
+ * @returns true if the user can sign up as helper, false otherwise
  */
-export const canSubscribeAsHelper = (task: HelperTask, user: User): boolean =>
+export const canSignUpAsHelper = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
   task.published &&
-  task.helpers.length < task.helpersMaxCount &&
-  !isSubscribedAsCaptain(task, user) &&
-  !isSubscribedAsHelper(task, user);
+  task.helpers.length < task.helperMaxCount &&
+  !isSignedUpAsCaptain(task, user) &&
+  !isSignedUpAsHelper(task, user);
 
 /**
- * Tells whether a user can subscribe to a task.
+ * Tells whether a user can sign up for a task.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user can subscribe, false otherwise
+ * @returns true if the user can sign up, false otherwise
  */
-export const canSubscribe = (task: HelperTask, user: User): boolean =>
-  canSubscribeAsCaptain(task, user) || canSubscribeAsHelper(task, user);
+export const canSignUp = (task: HelperTask, user: User): boolean =>
+  canSignUpAsCaptain(task, user) || canSignUpAsHelper(task, user);
 
 /**
  * Tells whether a user can edit a task.
@@ -114,11 +116,11 @@ export const canEditTask = (task: HelperTask, user: User): boolean =>
   user.helpersAppAdmin || (user.helpersAppEditor && isContact(task, user));
 
 /**
- * Gives a "fake random" subscribe text. Deterministic.
+ * Gives a "fake random" sign up text. Deterministic.
  *
- * @returns a subscribe text
+ * @returns a sign up text
  */
-export const fakeRandomSubscribeText = (taskId: number, captain: boolean) => {
+export const fakeRandomSignUpText = (taskId: number, captain: boolean) => {
   const texts = [
     // You want to keep the length of this array a prime number for best results
     'Sign me up!',
@@ -147,7 +149,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     extraTimingTitle = ` (${extraTimingTitle})`;
   }
 
-  if (task.deadline && !task.start && !task.end) {
+  if (task.deadline && !task.startsAt && !task.endsAt) {
     return (
       <>
         <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
@@ -157,18 +159,18 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
         <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
       </>
     );
-  } else if (task.start && task.end) {
+  } else if (task.startsAt && task.endsAt) {
     const sameDayEnd =
-      new Date(task.start).getDate() === new Date(task.end).getDate();
+      new Date(task.startsAt).getDate() === new Date(task.endsAt).getDate();
     if (sameDayEnd) {
       return (
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
             Shift{extraTimingTitle}
           </SpanBlockBox>
-          <SpanBlockBox>{formatDateWithDay(task.start)}</SpanBlockBox>
+          <SpanBlockBox>{formatDateWithDay(task.startsAt)}</SpanBlockBox>
           <SpanBlockBox>
-            {formatTime(task.start)} -- {formatTime(task.end)}
+            {formatTime(task.startsAt)} -- {formatTime(task.endsAt)}
           </SpanBlockBox>
         </>
       );
@@ -179,8 +181,8 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
             Multi-Day Shift{extraTimingTitle}
           </SpanBlockBox>
-          <SpanBlockBox>Start: {formatDateTime(task.start)}</SpanBlockBox>
-          <SpanBlockBox>End: {formatDateTime(task.end)}</SpanBlockBox>
+          <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
+          <SpanBlockBox>End: {formatDateTime(task.endsAt)}</SpanBlockBox>
         </>
       );
     }
@@ -188,8 +190,8 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     // Fallback for inconsistent data
     return (
       <>
-        <SpanBlockBox>Start: {task.start ?? '-'}</SpanBlockBox>
-        <SpanBlockBox>End: {task.end ?? '-'}</SpanBlockBox>
+        <SpanBlockBox>Start: {task.startsAt ?? '-'}</SpanBlockBox>
+        <SpanBlockBox>End: {task.endsAt ?? '-'}</SpanBlockBox>
         <SpanBlockBox>Deadline: {task.deadline ?? '-'}</SpanBlockBox>
       </>
     );

@@ -16,8 +16,8 @@ import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
 import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
 import {
-  canSubscribeAsCaptain,
-  canSubscribeAsHelper,
+  canSignUpAsCaptain,
+  canSignUpAsHelper,
   createTimingInfoFragment,
 } from './helpers-utils';
 
@@ -40,23 +40,23 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
     );
   };
 
-  const showSubscribeAsCaptain = canSubscribeAsCaptain(task, currentUser);
-  const showSubscribeAsHelper = canSubscribeAsHelper(task, currentUser);
+  const showSignUpAsCaptain = canSignUpAsCaptain(task, currentUser);
+  const showSignUpAsHelper = canSignUpAsHelper(task, currentUser);
 
-  const subscribeAsCaptain = async () => {
+  const signUpAsCaptain = async () => {
     // TODO #20 This is very basic
     try {
-      const newTask = await client.subscribeToHelperTaskAsCaptain(task.id);
+      const newTask = await client.signUpForHelperTaskAsCaptain(task.id);
       refreshTask(newTask);
     } catch (ex) {
       showBoundary(ex);
     }
   };
 
-  const subscribeAsHelper = async () => {
+  const signUpAsHelper = async () => {
     // TODO #20 This is very basic
     try {
-      const newTask = await client.subscribeToHelperTaskAsHelper(task.id);
+      const newTask = await client.signUpForHelperTaskAsHelper(task.id);
       refreshTask(newTask);
     } catch (ex) {
       showBoundary(ex);
@@ -106,9 +106,9 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
       )}
       <SpacedTypography>
         Helpers needed (apart from captain):{' '}
-        {task.helpersMinCount === task.helpersMaxCount
-          ? task.helpersMinCount
-          : `${task.helpersMinCount} - ${task.helpersMaxCount}`}
+        {task.helperMinCount === task.helperMaxCount
+          ? task.helperMinCount
+          : `${task.helperMinCount} - ${task.helperMaxCount}`}
       </SpacedTypography>
       {task.captain && (
         <SpacedTypography>
@@ -127,34 +127,34 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
         </SpacedTypography>
       )}
 
-      {(showSubscribeAsCaptain || showSubscribeAsHelper) && (
+      {(showSignUpAsCaptain || showSignUpAsHelper) && (
         <>
           <Stack direction="row" spacing={2}>
-            {showSubscribeAsCaptain && (
+            {showSignUpAsCaptain && (
               <Button
                 variant="contained"
                 color="primary"
-                onClick={subscribeAsCaptain}
+                onClick={signUpAsCaptain}
               >
-                Subscribe as Captain
+                Sign up as Captain
               </Button>
             )}
 
-            {showSubscribeAsHelper && (
+            {showSignUpAsHelper && (
               <Button
                 variant="contained"
                 color="primary"
-                onClick={subscribeAsHelper}
+                onClick={signUpAsHelper}
               >
-                Subscribe as Helper
+                Sign up as Helper
               </Button>
             )}
           </Stack>
           <SpacedTypography variant="subtitle2">
-            Reminder: after subscribing to a task you will be unable to
-            unsubscribe. If you want to cancel a shift, first find a
-            replacement, then notify Lajos Cseppentő by e-mail, who will
-            administer the change (and CC your replacement).
+            Reminder: after signing up for a task you will be unable to cancel.
+            If you want to cancel a shift, first find a replacement, then notify
+            Lajos Cseppentő by e-mail, who will administer the change (and CC
+            your replacement).
           </SpacedTypography>
         </>
       )}
