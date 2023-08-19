@@ -32,6 +32,7 @@ import {
   fakeRandomSignUpText,
   getTaskLocation,
   isContact,
+  isHappeningNow,
   isSignedUp,
   isUpcoming,
 } from './helpers-utils';
@@ -64,7 +65,9 @@ const HelperTasksDataGrid = () => {
   const getRowId = (task: HelperTask) => task.id;
   const filter = (tasks: HelperTasks) => {
     return tasks
-      .filter(task => (showOnlyUpcoming ? isUpcoming(task) : true))
+      .filter(task =>
+        showOnlyUpcoming ? isHappeningNow(task) || isUpcoming(task) : true
+      )
       .filter(task =>
         showOnlyContactOrSignedUp
           ? isContact(task, currentUser) || isSignedUp(task, currentUser)
