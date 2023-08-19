@@ -40,6 +40,15 @@ const DEV_CONFIG: Config = {
   yccHullUrl: 'https://ycc-hull-dev.web.cern.ch',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TEST_CONFIG: Config = {
+  environment: Environment.TEST,
+  keycloakServerUrl: 'https://ycc-auth.web.cern.ch',
+  keycloakRealm: 'YCC-TEST',
+  keycloakClient: 'ycc-app-test-local',
+  yccHullUrl: 'https://ycc-hull-test.web.cern.ch',
+};
+
 // Use this configuration if you run everything locally
 const DEFAULT_CONFIG = LOCAL_CONFIG;
 
