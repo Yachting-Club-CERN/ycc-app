@@ -8,7 +8,7 @@ import {Link as RouterLink} from 'react-router-dom';
 import PageTitle, {PageTitleProps} from '@app/components/PageTitle';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 
-import {canEditTask} from './helpers-utils';
+import {canEditTask, getTaskEditLocation} from './helpers-utils';
 
 type Props = PageTitleProps & {
   task?: HelperTask;
@@ -33,7 +33,7 @@ const PageTitleWithNewTaskButton = (props: Props) => {
             <Button
               variant="contained"
               component={RouterLink}
-              to={`/helpers/tasks/${props.task.id}/edit`}
+              to={`${getTaskEditLocation(props.task.id)}`}
               sx={{ml: 2}}
             >
               Edit Task

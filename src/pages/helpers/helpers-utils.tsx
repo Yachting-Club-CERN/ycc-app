@@ -10,6 +10,23 @@ import {
 } from '@app/utils/date-utils';
 
 /**
+ * Returns the location of a task's page.
+ *
+ * @param taskId task id
+ * @returns task location
+ */
+export const getTaskLocation = (taskId: number) => `/helpers/tasks/${taskId}`;
+
+/**
+ * Returns the location of a task's edit page.
+ *
+ * @param taskId task id
+ * @returns task edit location
+ */
+export const getTaskEditLocation = (taskId: number) =>
+  `${getTaskLocation(taskId)}/edit`;
+
+/**
  * Tells if a task is in the future.
  *
  * @param task a task
