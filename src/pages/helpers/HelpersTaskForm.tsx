@@ -26,7 +26,7 @@ import useDelay from '@app/hooks/useDelay';
 import client from '@app/utils/client';
 import {sanitiseInputDate} from '@app/utils/date-utils';
 
-import {canEditTask} from './helpers-utils';
+import {canEditTask, getTaskLocation} from './helpers-utils';
 
 type Props = {
   task?: HelperTask;
@@ -52,7 +52,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       alert(
         'Hello there! No idea how you got here! You cannot edit this task, sorry :-('
       );
-      navigate(`/helpers/tasks/${task.id}`);
+      navigate(getTaskLocation(task.id));
     }
   });
 
@@ -88,7 +88,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       const mutatedTask = task
         ? await client.updateHelperTask(task.id, dataToSend)
         : await client.createHelperTask(dataToSend);
-      navigate(`/helpers/tasks/${mutatedTask.id}`);
+      navigate(getTaskLocation(mutatedTask.id));
     } catch (error) {
       setError(error);
     }

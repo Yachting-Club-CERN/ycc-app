@@ -9,6 +9,7 @@ import {
   GridCellParams,
   GridColDef,
   GridRowParams,
+  MuiEvent,
   gridClasses,
 } from '@mui/x-data-grid';
 import {MemberPublicInfo} from 'model/dtos';
@@ -29,6 +30,7 @@ import {
   canSignUpAsHelper,
   createTimingInfoFragment,
   fakeRandomSignUpText,
+  getTaskLocation,
   isContact,
   isSignedUp,
   isUpcoming,
@@ -80,11 +82,27 @@ const HelperTasksDataGrid = () => {
     handler(checked);
   };
 
-  const navigateToTask = (id: number) => {
-    navigate(`/helpers/tasks/${id}`);
-  };
-  const handleGridClick = (params: GridCellParams) => {
-    navigateToTask(params.row.id);
+  const handleGridClick = (
+    params: GridCellParams,
+    event: MuiEvent<React.MouseEvent<HTMLElement>>
+  ) => {
+    const location = getTaskLocation(params.row.id);
+
+    // Not an <a> but good enough
+    if (event.ctrlKey) {
+      // Note: blur/focus might not work depending on the browser
+      window.open(location, '_blank')?.blur();
+      window.focus();
+    } else if (event.shiftKey) {
+      // https://stackoverflow.com/a/726803
+      window.open(
+        location,
+        '_blank',
+        `height=${window.innerHeight},width=${window.innerWidth})`
+      );
+    } else {
+      navigate(location);
+    }
   };
 
   const openMemberInfoDialogFromGrid = (
@@ -149,9 +167,7 @@ const HelperTasksDataGrid = () => {
     } else if (canSignUpAsCaptain(task, currentUser)) {
       return (
         <Typography variant="body2">
-          <Link onClick={() => navigateToTask(task.id)}>
-            {fakeRandomSignUpText(task.id, true)}
-          </Link>
+          <Link>{fakeRandomSignUpText(task.id, true)}</Link>
         </Typography>
       );
     } else {
@@ -166,9 +182,7 @@ const HelperTasksDataGrid = () => {
       <Typography variant="body2">
         {canSignUpAsHelper(task, currentUser) && (
           <SpanBlockBox>
-            <Link onClick={() => navigateToTask(task.id)}>
-              {fakeRandomSignUpText(task.id, false)}
-            </Link>
+            <Link>{fakeRandomSignUpText(task.id, false)}</Link>
           </SpanBlockBox>
         )}
         {[...task.helpers]
