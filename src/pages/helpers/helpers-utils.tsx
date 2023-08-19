@@ -27,6 +27,21 @@ export const getTaskEditLocation = (taskId: number) =>
   `${getTaskLocation(taskId)}/edit`;
 
 /**
+ * Tells if a shift is happening right now.
+ *
+ * @param task a task
+ * @returns true if the task is a shift and it is happening right now, false otherwise
+ */
+export const isHappeningNow = (task: HelperTask): boolean => {
+  const now = new Date();
+  if (task.startsAt && task.endsAt) {
+    return new Date(task.startsAt) <= now && now <= new Date(task.endsAt);
+  } else {
+    return false;
+  }
+};
+
+/**
  * Tells if a task is in the future.
  *
  * @param task a task
