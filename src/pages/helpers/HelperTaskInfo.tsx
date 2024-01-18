@@ -153,7 +153,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
           <SpacedTypography variant="subtitle2">
             Reminder: after signing up for a task you will be unable to cancel.
             If you want to cancel a shift, first find a replacement, then notify
-            Lajos Cseppentő by e-mail, who will administer the change (and CC
+            Lajos Cseppentő by email, who will administer the change (and CC
             your replacement).
           </SpacedTypography>
         </>
