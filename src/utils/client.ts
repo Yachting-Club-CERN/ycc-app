@@ -56,23 +56,23 @@ class Client {
   //
   getHelperTaskCategories = async (signal?: AbortSignal) =>
     await this.getData<HelperTaskCategories>(
-      '/api/v0/helpers/task-categories',
+      '/api/v1/helpers/task-categories',
       null,
       signal
     );
 
   getHelperTasks = async (signal?: AbortSignal) =>
-    await this.getData<HelperTasks>('/api/v0/helpers/tasks', null, signal);
+    await this.getData<HelperTasks>('/api/v1/helpers/tasks', null, signal);
 
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
-    await this.getData<HelperTask>(`/api/v0/helpers/tasks/${id}`, null, signal);
+    await this.getData<HelperTask>(`/api/v1/helpers/tasks/${id}`, null, signal);
 
   createHelperTask = async (
     task: HelperTaskMutationRequestDto,
     signal?: AbortSignal
   ) =>
     await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
-      '/api/v0/helpers/tasks',
+      '/api/v1/helpers/tasks',
       null,
       task,
       signal
@@ -84,7 +84,7 @@ class Client {
     signal?: AbortSignal
   ) =>
     await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
-      `/api/v0/helpers/tasks/${id}`,
+      `/api/v1/helpers/tasks/${id}`,
       null,
       task,
       signal
@@ -92,7 +92,7 @@ class Client {
 
   signUpForHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
-      `/api/v0/helpers/tasks/${id}/sign-up-as-captain`,
+      `/api/v1/helpers/tasks/${id}/sign-up-as-captain`,
       null,
       {},
       signal
@@ -100,7 +100,7 @@ class Client {
 
   signUpForHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
-      `/api/v0/helpers/tasks/${id}/sign-up-as-helper`,
+      `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
       signal
@@ -111,7 +111,7 @@ class Client {
   //
   getLicenceInfos = async (signal?: AbortSignal) =>
     await this.getData<LicenceDetailedInfos>(
-      '/api/v0/licence-infos',
+      '/api/v1/licence-infos',
       null,
       signal
     );
@@ -121,7 +121,7 @@ class Client {
   //
   getMembers = async (year: number, signal?: AbortSignal) =>
     await this.getData<MemberPublicInfos>(
-      '/api/v0/members',
+      '/api/v1/members',
       {year: year},
       signal
     );
