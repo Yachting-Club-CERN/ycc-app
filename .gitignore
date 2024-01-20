@@ -1,6 +1,12 @@
 build/
 /public/tinymce/
 
+# Playwright
+/blob-report/
+/playwright/.cache/
+/playwright-report/
+/test-results/
+
 # Created by https://www.toptal.com/developers/gitignore/api/git,node,react,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=git,node,react,visualstudiocode
 

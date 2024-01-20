@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CTRL/SHIFT + click on a task in the list opens the task in a new tab/window
 
+### Added
+
+- End-to-end tests using Playwright
+
 ### Changed
 
 - Display ongoing shifts on the helper tasks page

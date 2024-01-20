@@ -15,7 +15,12 @@ type Params = {
 
 const MemberInfoDialog = ({member, onClose}: Params) => {
   return (
-    <Dialog open={!!member} onClose={onClose} maxWidth="sm">
+    <Dialog
+      open={!!member}
+      onClose={onClose}
+      maxWidth="sm"
+      className="ycc-member-info-dialog"
+    >
       {member && (
         <>
           <DialogTitle>{`${member.firstName} ${member.lastName}`}</DialogTitle>

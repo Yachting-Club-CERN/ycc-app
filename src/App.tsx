@@ -30,7 +30,7 @@ const App = () => {
                   <AppRoutes />
                 </Box>
                 <Divider sx={{mt: 2}} />
-                <Box component="div">
+                <Box component="div" className="ycc-footer">
                   <Footer />
                 </Box>
               </Stack>

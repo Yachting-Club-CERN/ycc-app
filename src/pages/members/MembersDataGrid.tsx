@@ -112,6 +112,7 @@ const MembersDataGrid = ({year, search}: Props) => {
             minHeight: '215px',
             height: 'calc(100vh - 270px)',
           }}
+          className="ycc-members-data-grid"
         />
       )}
 

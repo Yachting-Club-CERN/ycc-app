@@ -44,6 +44,21 @@ pnpm lint
 pnpm fix
 ```
 
+You can run the end-to-end tests using Playwright:
+
+```sh
+pnpm exec playwright test --ui
+```
+
+This needs the full stack running, preferably with test data. There are several ways doing so:
+
+- Run the tests on the DEV instance
+- Run YCC App locally, connect it to the DEV environment
+- Run YCC App and YCC Hull locally, connect both to the DEV environment
+- Run all components locally (YCC App, YCC Hull, Keycloak server and the DB)
+
+When writing end-to-end tests fewer longer ones are preferred over many short ones. This is because the first load of the page is slow. Also note that the tests are not isolated, they share the same database and backend.
+
 ## Usage
 
 Deployed on CERN OKD, built SPA served by `serve`.

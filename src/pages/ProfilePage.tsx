@@ -20,7 +20,7 @@ const ProfilePage = () => {
     <ReadingFriendlyBox>
       <PageTitle value="Profile" />
       <TableContainer component={Paper}>
-        <Table>
+        <Table className="ycc-profile-table">
           <TableBody>
             <TableRow>
               <TableCell>Username:</TableCell>
@@ -35,7 +35,7 @@ const ProfilePage = () => {
               <TableCell>{currentUser.lastName}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>E-mail:</TableCell>
+              <TableCell>Email:</TableCell>
               <TableCell>{currentUser.email}</TableCell>
             </TableRow>
             <TableRow>
