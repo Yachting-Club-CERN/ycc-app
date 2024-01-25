@@ -18,6 +18,10 @@ export default defineConfig({
       use: {...devices['Desktop Chrome']},
     },
     {
+      name: 'Desktop: Chrome - French',
+      use: {...devices['Desktop Chrome'], locale: 'fr-FR'},
+    },
+    {
       name: 'Desktop: Edge',
       use: {...devices['Desktop Edge']},
     },
@@ -34,8 +38,16 @@ export default defineConfig({
       use: {...devices['Pixel 5']},
     },
     {
+      name: 'Mobile: Pixel 5 (Android) - French',
+      use: {...devices['Pixel 5'], locale: 'fr-FR'},
+    },
+    {
       name: 'Mobile: iPhone 12 (iOS)',
       use: {...devices['iPhone 12']},
+    },
+    {
+      name: 'Mobile: iPhone 12 (iOS) - French',
+      use: {...devices['iPhone 12'], locale: 'fr-FR'},
     },
   ],
 });
