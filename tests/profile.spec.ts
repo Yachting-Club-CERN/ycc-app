@@ -1,6 +1,6 @@
 import {Page, expect, test} from '@playwright/test';
 
-import {clickFirstVisible, loadPage, openMenuIfMobile} from './test-utils';
+import {app, ui} from './test-utils';
 
 const verifyProfilePage = async (page: Page) => {
   const table = page.locator('.ycc-profile-table');
@@ -19,16 +19,16 @@ const verifyProfilePage = async (page: Page) => {
 };
 
 test('Profile: Page shows when navigating', async ({page}) => {
-  await loadPage(page);
+  await app.loadPage(page, '/', {expectSignIn: true});
 
-  await openMenuIfMobile(page);
-  await clickFirstVisible(await page.getByTestId('AccountCircleIcon').all());
+  await app.openMenuIfMobile(page);
+  await ui.clickFirstVisible(await page.getByTestId('AccountCircleIcon').all());
 
   await verifyProfilePage(page);
 });
 
 test('Profile: Page shows when loading directly', async ({page}) => {
-  await loadPage(page, '/profile');
+  await app.loadPage(page, '/profile', {expectSignIn: true});
 
   await verifyProfilePage(page);
 });

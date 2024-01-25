@@ -1,6 +1,6 @@
 import {Locator, expect, test} from '@playwright/test';
 
-import {loadPage, openMenuIfMobile} from './test-utils';
+import {app} from './test-utils';
 
 const getDisplayedRows = async (displayedRows: Locator) => {
   const displayedRowsText = await displayedRows.textContent();
@@ -8,10 +8,10 @@ const getDisplayedRows = async (displayedRows: Locator) => {
 };
 
 test('Member List: Find member & info dialog & filter', async ({page}) => {
-  await loadPage(page);
+  await app.loadPage(page, '/', {expectSignIn: true});
 
   // Navigate to the member list
-  await openMenuIfMobile(page);
+  await app.openMenuIfMobile(page);
   await page.getByRole('link', {name: 'Member List'}).click();
 
   // Wait for the grid to load

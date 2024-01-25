@@ -1,9 +1,9 @@
 import {expect, test} from '@playwright/test';
 
-import {loadPage} from './test-utils';
+import {app} from './test-utils';
 
 test('Home: Page shows', async ({page}) => {
-  await loadPage(page);
+  await app.loadPage(page, '/', {expectSignIn: true});
 
   await expect(page).toHaveTitle('YCC App');
   await expect(page.locator('main')).toContainText(
