@@ -47,7 +47,7 @@ export const ui = {
       await dialog.locator('input').fill(date);
       await dialog.getByRole('button', {name: 'OK'}).click();
     } else {
-      // On desktop the field is editable and a calendar only pops up when the icon is clicked.
+      // On desktop the field is editable and the dialog only pops up when the calendar icon is clicked.
       await locator.fill(date);
     }
   },
