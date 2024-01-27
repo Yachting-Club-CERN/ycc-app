@@ -8,7 +8,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
+    // Run tests on the LOCAL instance
     baseURL: 'http://localhost:3000',
+    // Run tests on the DEV instance
+    // baseURL: 'https://ycc-dev.app.cern.ch',
     trace: 'on-first-retry',
   },
 

@@ -36,6 +36,7 @@ const Sidebar = (props: SidebarProps) => {
           display: {xs: 'block', sm: 'block', lg: 'none'},
           ...commonDrawerSx,
         }}
+        className="ycc-sidebar-mobile"
       >
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>{sidebarMenu}</Box>
@@ -47,6 +48,7 @@ const Sidebar = (props: SidebarProps) => {
           display: {xs: 'none', sm: 'none', lg: 'block'},
           ...commonDrawerSx,
         }}
+        className="ycc-sidebar"
       >
         <Toolbar />
         <Box sx={{overflow: 'auto'}}>{sidebarMenu}</Box>

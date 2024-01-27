@@ -1,6 +1,18 @@
-import {Locator, Page} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 
 const ADMIN_USER = 'MHUFF';
+
+const waitForAuthPage = async (page: Page) => {
+  console.log('[test] waitForAuthPage()');
+  await page.waitForURL('**/protocol/openid-connect/auth**');
+};
+
+const waitForNonAuthPage = async (page: Page) => {
+  console.log('[test] waitForNonAuthPage()');
+  await page.waitForFunction(
+    () => !window.location.href.includes('/openid-connect/')
+  );
+};
 
 export const ui = {
   getFirstVisible: async (locators: Locator[]) => {
@@ -23,9 +35,21 @@ export const ui = {
     await locator.getByText(option).click();
   },
 
-  selectDateTime: async (locator: Locator, date: string) => {
+  selectDateTime: async (page: Page, locator: Locator, date: string) => {
     await locator.click();
-    await locator.fill(date);
+
+    const dialog = page.getByRole('dialog');
+    const penIcon = dialog.getByTestId('PenIcon');
+
+    if (await penIcon.isVisible()) {
+      // On mobile the field is not editable and a dialog pops up when the field is clicked.
+      await penIcon.click();
+      await dialog.locator('input').fill(date);
+      await dialog.getByRole('button', {name: 'OK'}).click();
+    } else {
+      // On desktop the field is editable and a calendar only pops up when the icon is clicked.
+      await locator.fill(date);
+    }
   },
 };
 
@@ -39,6 +63,9 @@ export const app = {
     const menuIcon = page.getByTestId('MenuIcon');
     if (await menuIcon.isVisible()) {
       await menuIcon.click();
+      return true;
+    } else {
+      return false;
     }
   },
 
@@ -56,28 +83,29 @@ export const app = {
       user?: string;
     }
   ) => {
-    await page.goto(path);
-    await page.waitForTimeout(500);
-    console.log(page.url());
-    // Sign in if needed
-    if (page.url().includes('/protocol/openid-connect/auth')) {
-      if (!options.expectSignIn) {
-        throw new Error('Unexpected sign in');
-      }
+    console.log('[test] loadPage()', path, options);
 
-      console.log('Sign in...');
+    await page.goto(path);
+
+    if (options.expectSignIn) {
+      console.log('[test] Expecting sign in');
+      await waitForAuthPage(page);
       const user = options.user || ADMIN_USER;
+      console.log('[test] Sign in', user);
+
       await page.fill('#username', user);
       await page.fill('#password', user);
       await page.click('#kc-login');
-    } else if (options.expectSignIn) {
-      throw new Error('Expected sign in');
+    } else {
+      console.log('[test] Not expecting sign in');
     }
+
+    await waitForNonAuthPage(page);
 
     // Wait for load to complete
     await page.waitForSelector('.ycc-footer');
 
-    console.log('Page loaded', path);
+    console.log('[test] Page loaded', path);
   },
 
   /**
@@ -85,9 +113,14 @@ export const app = {
    * @param page - Playwright Page object.
    */
   signOut: async (page: Page) => {
-    await app.openMenuIfMobile(page);
+    console.log('[test] signOut()');
 
-    await page.getByTestId('LogoutIcon').click();
-    expect(page.url()).toContain('/protocol/openid-connect/auth');
+    const sidebar = (await app.openMenuIfMobile(page))
+      ? page.locator('.ycc-sidebar-mobile')
+      : page.locator('.ycc-sidebar');
+
+    await sidebar.getByTestId('LogoutIcon').click();
+    await waitForAuthPage(page);
+    await expect(page.url()).toContain('/protocol/openid-connect/auth');
   },
 };

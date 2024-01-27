@@ -192,9 +192,21 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
       </SpacedTypography>
       <SpacedBox>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <DateTimePickerElement name="startsAt" label="Start" />
-          <DateTimePickerElement name="endsAt" label="End" />
-          <DateTimePickerElement name="deadline" label="Deadline" />
+          <DateTimePickerElement
+            name="startsAt"
+            label="Start"
+            className="ycc-helper-task-starts-at-input"
+          />
+          <DateTimePickerElement
+            name="endsAt"
+            label="End"
+            className="ycc-helper-task-ends-at-input"
+          />
+          <DateTimePickerElement
+            name="deadline"
+            label="Deadline"
+            className="ycc-helper-task-deadline-input"
+          />
         </Stack>
       </SpacedBox>
 

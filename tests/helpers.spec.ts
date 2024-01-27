@@ -18,11 +18,12 @@ const createTask = async (page: Page) => {
   await ui.selectOption(page.getByLabel('Contact'), 'PHUGHES'); // Next one in the list
 
   await ui.selectDateTime(
-    page.getByLabel('Deadline'),
+    page,
+    page.locator('.ycc-helper-task-deadline-input * input'),
     now.add(3, 'day').format('DD/MM/YYYY HH:mm')
   );
 
-  await page.getByLabel('Max. Helpers').fill('1');
+  await page.getByLabel('Max. Helpers').fill('2');
 
   await page.getByRole('button', {name: 'Submit'}).click();
 
@@ -46,7 +47,10 @@ test('Helpers: Create task and sign up as captain', async ({page}) => {
   await expect(page.locator('main')).toContainText('Captain: MHUFF');
 });
 
-test('Helpers: Create task and sign up as helper', async ({page}) => {
+test('Helpers: Create task and sign up as helper', async ({browser}) => {
+  let context = await browser.newContext();
+  let page = await context.newPage();
+
   await app.loadPage(page, '/helpers', {expectSignIn: true});
 
   await page.getByRole('link', {name: 'New Task'}).click();
@@ -61,6 +65,9 @@ test('Helpers: Create task and sign up as helper', async ({page}) => {
 
   await app.signOut(page);
 
+  context = await browser.newContext();
+  page = await context.newPage();
+
   await app.loadPage(page, `/helpers/tasks/${id}`, {
     expectSignIn: true,
     user: 'TMCDONAL',
@@ -68,5 +75,5 @@ test('Helpers: Create task and sign up as helper', async ({page}) => {
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
   await page.getByRole('button', {name: 'Sign up as Helper'}).click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator('main')).toContainText('Helpers: MHUFF');
+  await expect(page.locator('main')).toContainText('Helpers: MHUFF TMCDONAL');
 });
