@@ -38,7 +38,7 @@ import {
 } from './helpers-utils';
 
 const StyledDataGrid = styled(DataGrid)(({theme}) => ({
-  [`& .${gridClasses.row}.urgent`]: {
+  [`& .${gridClasses.row}.ycc-urgent`]: {
     backgroundColor: lighten(theme.palette.error.main, 0.85),
     '&:hover, &.Mui-hovered': {
       backgroundColor: lighten(theme.palette.error.main, 0.6),
@@ -323,7 +323,7 @@ const HelperTasksDataGrid = () => {
             disableColumnFilter={true}
             rowsPerPageOptions={[10, 25, 50, 100]}
             getRowClassName={(params: GridRowParams) =>
-              (params.row as HelperTask).urgent ? 'urgent' : ''
+              (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
             }
             rowHeight={78}
             sx={{

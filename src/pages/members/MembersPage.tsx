@@ -40,6 +40,7 @@ const MembersPage = () => {
           sx={{
             width: 230,
           }}
+          className="ycc-members-search-input"
         />
         <TextField
           onChange={onKeySearch}
