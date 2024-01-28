@@ -8,7 +8,7 @@ import 'dayjs/locale/en-gb';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { auth } from '@app/context/AuthenticationContext';
+import {auth} from '@app/context/AuthenticationContext';
 
 import App from './App';
 
