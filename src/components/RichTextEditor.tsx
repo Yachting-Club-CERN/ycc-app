@@ -33,7 +33,7 @@ const RichTextEditor = ({
 }: Props) => {
   return (
     <EditorComponent
-      tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
+      tinymceScriptSrc={import.meta.env.BASE_URL + 'tinymce/tinymce.min.js'}
       initialValue={initialContent ? prefix + initialContent : prefix}
       init={{
         height: height,
