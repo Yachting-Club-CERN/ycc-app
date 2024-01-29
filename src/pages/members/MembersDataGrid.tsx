@@ -8,11 +8,11 @@ import SharedDataContext from '@app/context/SharedDataContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
 
-const renderEmail = (params: GridCellParams<string | null>) => {
+const renderEmail = (params: GridCellParams<any, string | null>) => {
   return toEmailLink(params.value);
 };
 
-const renderPhoneNumber = (params: GridCellParams<string | null>) => {
+const renderPhoneNumber = (params: GridCellParams<any, string | null>) => {
   return toTelLink(params.value);
 };
 
@@ -106,7 +106,7 @@ const MembersDataGrid = ({year, search}: Props) => {
           getRowId={getRowId}
           onCellClick={handleGridClick}
           disableColumnFilter={true}
-          rowsPerPageOptions={[10, 25, 50, 100]}
+          pageSizeOptions={[10, 25, 50, 100]}
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: '215px',

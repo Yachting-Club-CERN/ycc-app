@@ -22,8 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrate build from CRA to Vite
 - Dependency upgrades (2024-01), notable:
   - TypeScript 5.3
-  - React TODO
-  - Material UI TODO
+  - Material UI X 6
 
 ## [0.4.0] - 2023-06-26
 
