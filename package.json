@@ -1,6 +1,7 @@
 {
   "name": "ycc-app",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -54,6 +55,6 @@
     "compile": "tsc",
     "lint": "gts lint",
     "fix": "gts fix",
-    "postinstall": "node ./postinstall.js"
+    "postinstall": "node ./postinstall.cjs"
   }
 }

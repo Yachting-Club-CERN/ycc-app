@@ -3,7 +3,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Typography from '@mui/material/Typography';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs/esm/index.js';
 import 'dayjs/locale/en-gb';
 import React from 'react';
 import ReactDOM from 'react-dom/client';

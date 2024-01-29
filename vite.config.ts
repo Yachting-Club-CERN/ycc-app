@@ -1,7 +1,7 @@
 // eslint-disable-next-line node/no-unpublished-import
 import react from '@vitejs/plugin-react';
 // eslint-disable-next-line node/no-unpublished-import
-import {defineConfig} from 'vite';
+import {defineConfig, splitVendorChunkPlugin} from 'vite';
 // eslint-disable-next-line node/no-unpublished-import
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -13,6 +13,7 @@ export default defineConfig({
       babel: {plugins: ['@emotion/babel-plugin']},
     }),
     tsconfigPaths(),
+    splitVendorChunkPlugin(),
   ],
   server: {
     open: true,
