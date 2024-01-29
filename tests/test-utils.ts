@@ -50,7 +50,9 @@ export const ui = {
       const month = parseInt(date.substring(3, 5));
 
       // Only future dates, good enough
-      const click = 12*(year - new Date().getFullYear()) + (month - new Date().getMonth() + 1);
+      const click =
+        12 * (year - new Date().getFullYear()) +
+        (month - new Date().getMonth() + 1);
       for (let i = 0; i < click; i++) {
         console.log('[test] Clicking next month', month);
         await nextMonthIcon.click();
@@ -58,20 +60,34 @@ export const ui = {
 
       // Select day
       const dayStr = parseInt(date.substring(0, 2)).toString(); // Strip leading '0'
-      await dialog.getByRole('gridcell', {name: dayStr, exact: true}).last().click();
+      await dialog
+        .getByRole('gridcell', {name: dayStr, exact: true})
+        .last()
+        .click();
 
       // Select hour
       const hour = parseInt(date.substring(11, 13));
       const hourStr = hour === 0 ? '00' : hour.toString();
-      await dialog.getByRole('option', {name: hourStr + ' hours', exact: true}).tap({force: true});
+      await dialog
+        .getByRole('option', {name: hourStr + ' hours', exact: true})
+        .tap({force: true});
 
       // Select minute
       const minute = parseInt(date.substring(14, 16));
-      const closest5Minute = Math.round(minute / 5)*5; // Round to 5, good enough
-      const closest5MinuteStr = closest5Minute <10 ? '0' + closest5Minute.toString() : closest5Minute.toString();
+      const closest5Minute = Math.round(minute / 5) * 5; // Round to 5, good enough
+      const closest5MinuteStr =
+        closest5Minute < 10
+          ? '0' + closest5Minute.toString()
+          : closest5Minute.toString();
 
-      await dialog.getByRole('option', {name: closest5MinuteStr + ' minutes', exact: true}).tap({force: true});
+      await dialog
+        .getByRole('option', {
+          name: closest5MinuteStr + ' minutes',
+          exact: true,
+        })
+        .tap({force: true});
 
+      // Select OK
       await dialog.getByRole('button', {name: 'OK'}).click();
     } else {
       // On desktop the field is editable and the dialog only pops up when the calendar icon is clicked.
