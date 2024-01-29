@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2024-01-30
+
 ### Fixed
 
 - CTRL/SHIFT + click on a task in the list opens the task in a new tab/window
@@ -69,7 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - YCC Hull integration
 - Deployment on CERN OKD TEST
 
-[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.0.0
 [0.4.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.2.0
