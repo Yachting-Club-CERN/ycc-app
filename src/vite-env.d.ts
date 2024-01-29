@@ -12,7 +12,6 @@ interface ImportMetaEnv {
   readonly VITE_APP_YCC_HULL_URL?: string;
 }
 
-
 interface ImportMeta {
-  readonly env: ImportMetaEnv
+  readonly env: ImportMetaEnv;
 }

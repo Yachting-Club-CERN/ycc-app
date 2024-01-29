@@ -72,7 +72,8 @@ const config: Config = {
     import.meta.env.VITE_APP_KEYCLOAK_REALM || DEFAULT_CONFIG.keycloakRealm,
   keycloakClient:
     import.meta.env.VITE_APP_KEYCLOAK_CLIENT || DEFAULT_CONFIG.keycloakClient,
-  yccHullUrl: import.meta.env.VITE_APP_YCC_HULL_URL || DEFAULT_CONFIG.yccHullUrl,
+  yccHullUrl:
+    import.meta.env.VITE_APP_YCC_HULL_URL || DEFAULT_CONFIG.yccHullUrl,
 };
 
 export {Environment};

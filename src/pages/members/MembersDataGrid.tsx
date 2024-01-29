@@ -8,10 +8,12 @@ import SharedDataContext from '@app/context/SharedDataContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const renderEmail = (params: GridCellParams<any, string | null>) => {
   return toEmailLink(params.value);
 };
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const renderPhoneNumber = (params: GridCellParams<any, string | null>) => {
   return toTelLink(params.value);
 };
