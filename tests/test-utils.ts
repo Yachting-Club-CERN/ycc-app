@@ -77,7 +77,7 @@ export const ui = {
       const closest5Minute = Math.round(minute / 5) * 5; // Round to 5, good enough
         const closest5MinuteStr =
            closest5Minute < 10
-             ? '0' + closest5Minute.toString()
+                ? '0' + closest5Minute.toString()
              : closest5Minute.toString();
 
       await dialog
