@@ -1,4 +1,4 @@
-ARG NODE_VERSION="16"
+ARG NODE_VERSION="20"
 
 ARG VITE_APP_ENVIRONMENT
 ARG VITE_APP_KEYCLOAK_SERVER_URL
@@ -33,7 +33,7 @@ FROM registry.access.redhat.com/ubi9/nodejs-$NODE_VERSION-minimal
 
 WORKDIR "/opt/app-root/src"
 RUN npm install -g serve
-COPY --chown=1001:0 --from=builder "/opt/app-root/src/build" "/opt/app-root/src/build"
+COPY --chown=1001:0 --from=builder "/opt/app-root/src/dist" "/opt/app-root/src/dist"
 
 EXPOSE 8080
-ENTRYPOINT ["serve", "--no-clipboard", "-s", "-p", "8080", "build"]
+ENTRYPOINT ["serve", "--no-clipboard", "-s", "-p", "8080", "dist"]

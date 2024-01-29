@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unpublished-import
 import {defineConfig, devices} from '@playwright/test';
 
 export default defineConfig({
@@ -14,7 +15,7 @@ export default defineConfig({
     // baseURL: 'https://ycc-dev.app.cern.ch',
     trace: 'on-first-retry',
   },
-
+  timeout: 120000,
   projects: [
     {
       name: 'Desktop: Chrome',

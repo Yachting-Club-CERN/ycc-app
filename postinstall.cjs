@@ -1,10 +1,13 @@
 // See https://www.tiny.cloud/docs/tinymce/6/react-pm-host/
 
+// eslint-disable-next-line node/no-unpublished-require
 const fse = require('fs-extra');
 const path = require('path');
 
 // Realpath for pnpm links
-const source = fse.realpathSync(path.join(__dirname, 'node_modules', 'tinymce'));
+const source = fse.realpathSync(
+  path.join(__dirname, 'node_modules', 'tinymce')
+);
 const target = path.join(__dirname, 'public', 'tinymce');
 
 const shouldCopy = file => {

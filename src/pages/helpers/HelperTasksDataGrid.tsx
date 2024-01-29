@@ -321,7 +321,7 @@ const HelperTasksDataGrid = () => {
             getRowId={getRowId}
             onCellClick={handleGridClick}
             disableColumnFilter={true}
-            rowsPerPageOptions={[10, 25, 50, 100]}
+            pageSizeOptions={[10, 25, 50, 100]}
             getRowClassName={(params: GridRowParams) =>
               (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
             }

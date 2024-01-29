@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs/esm/index.js';
 
 export const formatDate = (date: Date | string) => {
   return dayjs(date).format('DD/MM/YYYY');
