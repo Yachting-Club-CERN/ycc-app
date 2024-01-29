@@ -4,8 +4,8 @@ const fse = require('fs-extra');
 const path = require('path');
 
 // Realpath for pnpm links
-source = fse.realpathSync(path.join(__dirname, 'node_modules', 'tinymce'));
-target = path.join(__dirname, 'public', 'tinymce');
+const source = fse.realpathSync(path.join(__dirname, 'node_modules', 'tinymce'));
+const target = path.join(__dirname, 'public', 'tinymce');
 
 const shouldCopy = file => {
   if (file.endsWith('.js')) {

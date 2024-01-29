@@ -69,7 +69,7 @@ You can test the build locally. If you do not want to run the instance, but only
 
 You can test the build with this command:
 
-`docker build . -t ycc-app-local-test --build-arg REACT_APP_ENVIRONMENT=DEVELOPMENT`
+`docker build . -t ycc-app-local-test --build-arg VITE_APP_ENVIRONMENT=DEVELOPMENT`
 
 Then start a new container from the image:
 

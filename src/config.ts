@@ -63,16 +63,16 @@ const DEFAULT_CONFIG = LOCAL_CONFIG;
 const config: Config = {
   environment:
     Environment[
-      process.env.REACT_APP_ENVIRONMENT as keyof typeof Environment
+      import.meta.env.VITE_APP_ENVIRONMENT as keyof typeof Environment
     ] || DEFAULT_CONFIG.environment,
   keycloakServerUrl:
-    process.env.REACT_APP_KEYCLOAK_SERVER_URL ||
+    import.meta.env.VITE_APP_KEYCLOAK_SERVER_URL ||
     DEFAULT_CONFIG.keycloakServerUrl,
   keycloakRealm:
-    process.env.REACT_APP_KEYCLOAK_REALM || DEFAULT_CONFIG.keycloakRealm,
+    import.meta.env.VITE_APP_KEYCLOAK_REALM || DEFAULT_CONFIG.keycloakRealm,
   keycloakClient:
-    process.env.REACT_APP_KEYCLOAK_CLIENT || DEFAULT_CONFIG.keycloakClient,
-  yccHullUrl: process.env.REACT_APP_YCC_HULL_URL || DEFAULT_CONFIG.yccHullUrl,
+    import.meta.env.VITE_APP_KEYCLOAK_CLIENT || DEFAULT_CONFIG.keycloakClient,
+  yccHullUrl: import.meta.env.VITE_APP_YCC_HULL_URL || DEFAULT_CONFIG.yccHullUrl,
 };
 
 export {Environment};

@@ -153,7 +153,7 @@ const SidebarMenu = () => {
         <Box
           component="img"
           sx={{height: 192}}
-          src={process.env.PUBLIC_URL + '/logo192.png'}
+          src={import.meta.env.BASE_URL + 'logo192.png'}
           alt="YCC Logo"
         />
       </Box>
