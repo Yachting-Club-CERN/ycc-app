@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency upgrades (2024-01), notable:
   - TypeScript 5.3
   - Material UI X 6
+  - `ubi9/nodejs-20-minimal` image for production
 
 ## [0.4.0] - 2023-06-26
 
