@@ -59,6 +59,12 @@ This needs the full stack running with test data. There are several ways doing s
 
 When writing end-to-end tests fewer longer ones are preferred over many short ones. This is because the first load of the page is slow. Also note that the tests share the same database and backend.
 
+Note that you can run the app locally in different ways:
+
+- Development mode (`pnpm start`)
+- Preview mode (`pnpm build && pnpm preview`)
+- Docker container (see below)
+
 ## Usage
 
 Deployed on CERN OKD, built SPA served by `serve`.
