@@ -89,7 +89,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
       {task.longDescription && (
         <>
-          <SpacedTypography>
+          <SpacedTypography component="div">
             {sanitiseHtmlForReact(task.longDescription)}
           </SpacedTypography>
           <Divider sx={{mt: 2}} />

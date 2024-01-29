@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Display ongoing shifts on the helper tasks page
 - Upgrade to YCC Hull API v1
+- Migrate build from CRA to Vite
 - Dependency upgrades (2024-01), notable:
   - TypeScript 5.3
   - React TODO
