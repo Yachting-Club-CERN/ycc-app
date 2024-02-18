@@ -14,7 +14,7 @@ import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
 import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
-import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
+import PageTitleWithNewTaskButton from './PageTitleWithTaskActions';
 import {
   canSignUpAsCaptain,
   canSignUpAsHelper,

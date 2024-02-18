@@ -1,12 +1,21 @@
 import axios, {Axios, AxiosResponse, Method} from 'axios';
 import config from 'config';
-import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
+import {
+  LicenceDetailedInfos,
+  LicenceDetailedInfosSchema,
+  MemberPublicInfos,
+  MemberPublicInfosSchema,
+} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
+  HelperTaskCategoriesSchema,
   HelperTaskMutationRequestDto,
+  HelperTaskSchema,
   HelperTasks,
+  HelperTasksSchema,
 } from 'model/helpers-dtos';
+import {z} from 'zod';
 
 enum ClientErrorCode {
   Cancelled = 'CANCELLED',
@@ -56,16 +65,27 @@ class Client {
   //
   getHelperTaskCategories = async (signal?: AbortSignal) =>
     await this.getData<HelperTaskCategories>(
+      HelperTaskCategoriesSchema,
       '/api/v1/helpers/task-categories',
       null,
       signal
     );
 
   getHelperTasks = async (signal?: AbortSignal) =>
-    await this.getData<HelperTasks>('/api/v1/helpers/tasks', null, signal);
+    await this.getData<HelperTasks>(
+      HelperTasksSchema,
+      '/api/v1/helpers/tasks',
+      null,
+      signal
+    );
 
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
-    await this.getData<HelperTask>(`/api/v1/helpers/tasks/${id}`, null, signal);
+    await this.getData<HelperTask>(
+      HelperTaskSchema,
+      `/api/v1/helpers/tasks/${id}`,
+      null,
+      signal
+    );
 
   createHelperTask = async (
     task: HelperTaskMutationRequestDto,
@@ -111,6 +131,7 @@ class Client {
   //
   getLicenceInfos = async (signal?: AbortSignal) =>
     await this.getData<LicenceDetailedInfos>(
+      LicenceDetailedInfosSchema,
       '/api/v1/licence-infos',
       null,
       signal
@@ -121,6 +142,7 @@ class Client {
   //
   getMembers = async (year: number, signal?: AbortSignal) =>
     await this.getData<MemberPublicInfos>(
+      MemberPublicInfosSchema,
       '/api/v1/members',
       {year: year},
       signal
@@ -130,10 +152,14 @@ class Client {
   // General
   //
   private getData = async <T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     signal?: AbortSignal
-  ) => (await this.get<T>(path, params, signal)).data;
+  ): Promise<T> => {
+    const response = await this.get<T>(path, params, signal);
+    return schema.parse(response.data);
+  };
 
   private get = async <T>(
     path: string,

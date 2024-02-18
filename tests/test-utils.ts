@@ -1,4 +1,5 @@
 import {Locator, Page, expect} from '@playwright/test';
+import dayjs from 'dayjs';
 
 const ADMIN_USER = 'MHUFF';
 
@@ -50,9 +51,7 @@ export const ui = {
       const month = parseInt(date.substring(3, 5));
 
       // Only future dates, good enough
-      const click =
-        12 * (year - new Date().getFullYear()) +
-        (month - new Date().getMonth() + 1);
+      const click = 12 * (year - dayjs().year()) + (month - dayjs().month());
       for (let i = 0; i < click; i++) {
         console.log('[test] Clicking next month', month);
         await nextMonthIcon.click();

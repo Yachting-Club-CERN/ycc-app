@@ -24,18 +24,24 @@ import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useDelay from '@app/hooks/useDelay';
 import client from '@app/utils/client';
-import {sanitiseInputDate} from '@app/utils/date-utils';
 
 import {canEditTask, getTaskLocation} from './helpers-utils';
 
 type Props = {
   task?: HelperTask;
+  newTask: boolean;
   categories: HelperTaskCategories;
   members: MemberPublicInfos;
   licenceInfos: LicenceDetailedInfos;
 };
 
-const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
+const HelpersTaskForm = ({
+  task,
+  newTask,
+  categories,
+  members,
+  licenceInfos,
+}: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const [error, setError] = useState<unknown>();
   const [longDescription, setLongDescriptionImmediately] = useState(
@@ -48,7 +54,7 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
   const navigate = useNavigate();
   // Some components may be already loaded at this point
   useEffect(() => {
-    if (task && !canEditTask(task, currentUser)) {
+    if (task && !newTask && !canEditTask(task, currentUser)) {
       alert(
         'Hello there! No idea how you got here! You cannot edit this task, sorry :-('
       );
@@ -61,7 +67,9 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
     title: task?.title ?? '',
     shortDescription: task?.shortDescription ?? '',
     longDescription: task?.longDescription ?? null,
-    contactId: task?.contact.id ?? currentUser.memberId,
+    contactId: newTask
+      ? currentUser.memberId
+      : task?.contact.id ?? currentUser.memberId,
     startsAt: task?.startsAt ?? null,
     endsAt: task?.endsAt ?? null,
     deadline: task?.deadline ?? null,
@@ -71,23 +79,23 @@ const HelpersTaskForm = ({task, categories, members, licenceInfos}: Props) => {
     helperMaxCount: task?.helperMaxCount ?? 2,
     published: true,
   };
+  console.log('task', task);
+  console.log('initialData', initialData);
 
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
     // TODO #20 This is very basic
     try {
       setError(undefined);
       const dataToSend = {...data};
-      dataToSend.longDescription = longDescription;
-      dataToSend.startsAt = sanitiseInputDate(dataToSend.startsAt);
-      dataToSend.endsAt = sanitiseInputDate(dataToSend.endsAt);
-      dataToSend.deadline = sanitiseInputDate(dataToSend.deadline);
+      dataToSend.longDescription = longDescription ?? null;
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
         dataToSend.captainRequiredLicenceInfoId = null;
       }
 
-      const mutatedTask = task
-        ? await client.updateHelperTask(task.id, dataToSend)
-        : await client.createHelperTask(dataToSend);
+      const mutatedTask =
+        task && !newTask
+          ? await client.updateHelperTask(task.id, dataToSend)
+          : await client.createHelperTask(dataToSend);
       navigate(getTaskLocation(mutatedTask.id));
     } catch (error) {
       setError(error);

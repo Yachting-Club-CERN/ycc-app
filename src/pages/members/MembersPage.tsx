@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import dayjs from 'dayjs/esm/index.js';
 import React, {useState} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
@@ -10,7 +11,7 @@ import MembersDataGrid from './MembersDataGrid';
 
 const MembersPage = () => {
   const [search, setSearch] = useState<string>('');
-  const currentYear = new Date().getFullYear();
+  const currentYear = dayjs().year();
   const onSearch = useDelay(
     100,
     (event: React.ChangeEvent<HTMLInputElement>) => {
