@@ -92,6 +92,7 @@ class Client {
     signal?: AbortSignal
   ) =>
     await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
+      HelperTaskSchema,
       '/api/v1/helpers/tasks',
       null,
       task,
@@ -104,6 +105,7 @@ class Client {
     signal?: AbortSignal
   ) =>
     await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}`,
       null,
       task,
@@ -112,6 +114,7 @@ class Client {
 
   signUpForHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-captain`,
       null,
       {},
@@ -120,6 +123,7 @@ class Client {
 
   signUpForHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
@@ -168,11 +172,15 @@ class Client {
   ) => await this.request<T, undefined>('GET', path, params, undefined, signal);
 
   private postForData = async <T, D = T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
     signal?: AbortSignal
-  ) => (await this.post<T, D>(path, params, requestData, signal)).data;
+  ) => {
+    const response = await this.post<T, D>(path, params, requestData, signal);
+    return schema.parse(response.data);
+  };
 
   private post = async <T, D = T>(
     path: string,
@@ -182,11 +190,15 @@ class Client {
   ) => await this.request<T, D>('POST', path, params, requestData, signal);
 
   private putForData = async <T, D = T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
     signal?: AbortSignal
-  ) => (await this.put<T, D>(path, params, requestData, signal)).data;
+  ) => {
+    const response = await this.put<T, D>(path, params, requestData, signal);
+    return schema.parse(response.data);
+  };
 
   private put = async <T, D = T>(
     path: string,
