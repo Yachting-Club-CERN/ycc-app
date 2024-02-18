@@ -3,7 +3,7 @@ import React from 'react';
 import SpacedTypography from '@app/components/SpacedTypography';
 
 import HelperTasksDataGrid from './HelperTasksDataGrid';
-import PageTitleWithNewTaskButton from './PageTitleWithNewTaskButton';
+import PageTitleWithNewTaskButton from './PageTitleWithTaskActions';
 
 const HelpersPage = () => {
   return (

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Task cloning
+- Data validation using Zod
+
+### Changed
+
+- Use Day.js over Date
+
 ## [1.0.0] - 2024-01-30
 
 ### Fixed

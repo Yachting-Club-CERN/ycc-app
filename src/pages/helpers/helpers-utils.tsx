@@ -1,3 +1,4 @@
+import dayjs from 'dayjs/esm/index.js';
 import {HelperTask} from 'model/helpers-dtos';
 import React from 'react';
 
@@ -27,15 +28,24 @@ export const getTaskEditLocation = (taskId: number) =>
   `${getTaskLocation(taskId)}/edit`;
 
 /**
+ * Returns the location of a task's clone page.
+ *
+ * @param taskId task id
+ * @returns task clone location
+ */
+export const getTaskCloneLocation = (taskId: number) =>
+  `/helpers/tasks/new?from=${taskId}`;
+
+/**
  * Tells if a shift is happening right now.
  *
  * @param task a task
  * @returns true if the task is a shift and it is happening right now, false otherwise
  */
 export const isHappeningNow = (task: HelperTask): boolean => {
-  const now = new Date();
+  const now = dayjs();
   if (task.startsAt && task.endsAt) {
-    return new Date(task.startsAt) <= now && now <= new Date(task.endsAt);
+    return now.isAfter(task.startsAt) && now.isBefore(task.endsAt);
   } else {
     return false;
   }
@@ -48,12 +58,12 @@ export const isHappeningNow = (task: HelperTask): boolean => {
  * @returns true if the task is in the future, false otherwise
  */
 export const isUpcoming = (task: HelperTask): boolean => {
-  const now = new Date();
+  const now = dayjs();
   const startInFutureOrMissing = task.startsAt
-    ? new Date(task.startsAt) > now
+    ? task.startsAt.isAfter(now)
     : true;
   const deadlineInFutureOrMissing = task.deadline
-    ? new Date(task.deadline) > now
+    ? task.deadline.isAfter(now)
     : true;
   return startInFutureOrMissing && deadlineInFutureOrMissing;
 };
@@ -192,8 +202,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
       </>
     );
   } else if (task.startsAt && task.endsAt) {
-    const sameDayEnd =
-      new Date(task.startsAt).getDate() === new Date(task.endsAt).getDate();
+    const sameDayEnd = task.startsAt.isSame(task.endsAt, 'day');
     if (sameDayEnd) {
       return (
         <>
@@ -222,9 +231,13 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     // Fallback for inconsistent data
     return (
       <>
-        <SpanBlockBox>Start: {task.startsAt ?? '-'}</SpanBlockBox>
-        <SpanBlockBox>End: {task.endsAt ?? '-'}</SpanBlockBox>
-        <SpanBlockBox>Deadline: {task.deadline ?? '-'}</SpanBlockBox>
+        <SpanBlockBox>
+          Start: {formatDateTime(task.startsAt) ?? '-'}
+        </SpanBlockBox>
+        <SpanBlockBox>End: {formatDateTime(task.endsAt) ?? '-'}</SpanBlockBox>
+        <SpanBlockBox>
+          Deadline: {formatDateTime(task.deadline) ?? '-'}
+        </SpanBlockBox>
       </>
     );
   }

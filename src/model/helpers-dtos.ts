@@ -1,59 +1,70 @@
-import {LicenceInfo, MemberPublicInfo} from './dtos';
+import {z} from 'zod';
 
-export type HelperTaskCategory = {
-  id: number;
-  title: string;
-  shortDescription: string;
-  longDescription?: string | null;
-};
+import {
+  LicenceInfoSchema,
+  MemberPublicInfoSchema,
+  zodTransformDate,
+} from './dtos';
 
-export type HelperTaskCategories = HelperTaskCategory[];
+export const HelperTaskCategorySchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  shortDescription: z.string(),
+  longDescription: z.string().nullable(),
+});
+export type HelperTaskCategory = z.infer<typeof HelperTaskCategorySchema>;
 
-export type HelperTask = {
-  id: number;
-  category: HelperTaskCategory;
-  title: string;
-  shortDescription: string;
-  longDescription?: string | null;
-  contact: MemberPublicInfo;
-  // TODO #19 These could be already Date objects at this point
-  startsAt?: string | null;
-  endsAt?: string | null;
-  deadline?: string | null;
-  urgent: boolean;
-  captainRequiredLicenceInfo?: LicenceInfo | null;
-  helperMinCount: number;
-  helperMaxCount: number;
-  published: boolean;
+export const HelperTaskCategoriesSchema = z.array(HelperTaskCategorySchema);
+export type HelperTaskCategories = z.infer<typeof HelperTaskCategoriesSchema>;
 
-  captain?: HelperTaskHelper | null;
-  helpers: HelperTaskHelpers;
-};
+export const HelperTaskHelperSchema = z.object({
+  member: MemberPublicInfoSchema,
+  signedUpAt: z.string().transform(zodTransformDate),
+});
+export type HelperTaskHelper = z.infer<typeof HelperTaskHelperSchema>;
 
-export type HelperTasks = HelperTask[];
+export const HelperTaskHelpersSchema = z.array(HelperTaskHelperSchema);
+export type HelperTaskHelpers = z.infer<typeof HelperTaskHelpersSchema>;
 
-export type HelperTaskHelper = {
-  member: MemberPublicInfo;
-  // TODO #19 This could be already Date object at this point
-  signedUpAt: string;
-};
+export const HelperTaskSchema = z.object({
+  id: z.number(),
+  category: HelperTaskCategorySchema,
+  title: z.string(),
+  shortDescription: z.string(),
+  longDescription: z.string().nullable(),
+  contact: MemberPublicInfoSchema,
+  startsAt: z.string().transform(zodTransformDate).nullable(),
+  endsAt: z.string().transform(zodTransformDate).nullable(),
+  deadline: z.string().transform(zodTransformDate).nullable(),
+  urgent: z.boolean(),
+  captainRequiredLicenceInfo: LicenceInfoSchema.nullable(),
+  helperMinCount: z.number(),
+  helperMaxCount: z.number(),
+  published: z.boolean(),
+  captain: HelperTaskHelperSchema.nullable(),
+  helpers: HelperTaskHelpersSchema,
+});
+export type HelperTask = z.infer<typeof HelperTaskSchema>;
 
-export type HelperTaskHelpers = HelperTaskHelper[];
+export const HelperTasksSchema = z.array(HelperTaskSchema);
+export type HelperTasks = z.infer<typeof HelperTasksSchema>;
 
 // TODO Add client side validation for better UX
-export type HelperTaskMutationRequestDto = {
-  categoryId: number;
-  title: string;
-  shortDescription: string;
-  longDescription?: string | null;
-  contactId: number;
-  // TODO #19 These could be Date (kept to be consistent with HelperTask)
-  startsAt?: string | null;
-  endsAt?: string | null;
-  deadline?: string | null;
-  urgent: boolean;
-  captainRequiredLicenceInfoId?: number | null;
-  helperMinCount: number;
-  helperMaxCount: number;
-  published: boolean;
-};
+export const HelperTaskMutationRequestDtoSchema = z.object({
+  categoryId: z.number(),
+  title: z.string(),
+  shortDescription: z.string(),
+  longDescription: z.string().nullable(),
+  contactId: z.number(),
+  startsAt: z.string().transform(zodTransformDate).nullable(),
+  endsAt: z.string().transform(zodTransformDate).nullable(),
+  deadline: z.string().transform(zodTransformDate).nullable(),
+  urgent: z.boolean(),
+  captainRequiredLicenceInfoId: z.number().nullable(),
+  helperMinCount: z.number(),
+  helperMaxCount: z.number(),
+  published: z.boolean(),
+});
+export type HelperTaskMutationRequestDto = z.infer<
+  typeof HelperTaskMutationRequestDtoSchema
+>;

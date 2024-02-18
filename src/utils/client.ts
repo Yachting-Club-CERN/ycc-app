@@ -1,12 +1,21 @@
 import axios, {Axios, AxiosResponse, Method} from 'axios';
 import config from 'config';
-import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
+import {
+  LicenceDetailedInfos,
+  LicenceDetailedInfosSchema,
+  MemberPublicInfos,
+  MemberPublicInfosSchema,
+} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
+  HelperTaskCategoriesSchema,
   HelperTaskMutationRequestDto,
+  HelperTaskSchema,
   HelperTasks,
+  HelperTasksSchema,
 } from 'model/helpers-dtos';
+import {z} from 'zod';
 
 enum ClientErrorCode {
   Cancelled = 'CANCELLED',
@@ -56,22 +65,34 @@ class Client {
   //
   getHelperTaskCategories = async (signal?: AbortSignal) =>
     await this.getData<HelperTaskCategories>(
+      HelperTaskCategoriesSchema,
       '/api/v1/helpers/task-categories',
       null,
       signal
     );
 
   getHelperTasks = async (signal?: AbortSignal) =>
-    await this.getData<HelperTasks>('/api/v1/helpers/tasks', null, signal);
+    await this.getData<HelperTasks>(
+      HelperTasksSchema,
+      '/api/v1/helpers/tasks',
+      null,
+      signal
+    );
 
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
-    await this.getData<HelperTask>(`/api/v1/helpers/tasks/${id}`, null, signal);
+    await this.getData<HelperTask>(
+      HelperTaskSchema,
+      `/api/v1/helpers/tasks/${id}`,
+      null,
+      signal
+    );
 
   createHelperTask = async (
     task: HelperTaskMutationRequestDto,
     signal?: AbortSignal
   ) =>
     await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
+      HelperTaskSchema,
       '/api/v1/helpers/tasks',
       null,
       task,
@@ -84,6 +105,7 @@ class Client {
     signal?: AbortSignal
   ) =>
     await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}`,
       null,
       task,
@@ -92,6 +114,7 @@ class Client {
 
   signUpForHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-captain`,
       null,
       {},
@@ -100,6 +123,7 @@ class Client {
 
   signUpForHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
     await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
@@ -111,6 +135,7 @@ class Client {
   //
   getLicenceInfos = async (signal?: AbortSignal) =>
     await this.getData<LicenceDetailedInfos>(
+      LicenceDetailedInfosSchema,
       '/api/v1/licence-infos',
       null,
       signal
@@ -121,6 +146,7 @@ class Client {
   //
   getMembers = async (year: number, signal?: AbortSignal) =>
     await this.getData<MemberPublicInfos>(
+      MemberPublicInfosSchema,
       '/api/v1/members',
       {year: year},
       signal
@@ -130,10 +156,14 @@ class Client {
   // General
   //
   private getData = async <T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     signal?: AbortSignal
-  ) => (await this.get<T>(path, params, signal)).data;
+  ): Promise<T> => {
+    const response = await this.get<T>(path, params, signal);
+    return schema.parse(response.data);
+  };
 
   private get = async <T>(
     path: string,
@@ -142,11 +172,15 @@ class Client {
   ) => await this.request<T, undefined>('GET', path, params, undefined, signal);
 
   private postForData = async <T, D = T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
     signal?: AbortSignal
-  ) => (await this.post<T, D>(path, params, requestData, signal)).data;
+  ) => {
+    const response = await this.post<T, D>(path, params, requestData, signal);
+    return schema.parse(response.data);
+  };
 
   private post = async <T, D = T>(
     path: string,
@@ -156,11 +190,15 @@ class Client {
   ) => await this.request<T, D>('POST', path, params, requestData, signal);
 
   private putForData = async <T, D = T>(
+    schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
     signal?: AbortSignal
-  ) => (await this.put<T, D>(path, params, requestData, signal)).data;
+  ) => {
+    const response = await this.put<T, D>(path, params, requestData, signal);
+    return schema.parse(response.data);
+  };
 
   private put = async <T, D = T>(
     path: string,
