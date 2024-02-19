@@ -6,6 +6,7 @@ import React, {useState} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
 import useDelay from '@app/hooks/useDelay';
+import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
 import MembersDataGrid from './MembersDataGrid';
 
@@ -13,13 +14,13 @@ const MembersPage = () => {
   const [search, setSearch] = useState<string>('');
   const currentYear = dayjs().year();
   const onSearch = useDelay(
-    100,
+    SEARCH_DELAY_MS,
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(event.target.value);
     }
   );
 
-  const onKeySearch = useDelay(100, () => {
+  const onKeySearch = useDelay(SEARCH_DELAY_MS, () => {
     alert('Coming soon... ;-)');
   });
 
