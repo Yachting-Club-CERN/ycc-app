@@ -1,6 +1,3 @@
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import {lighten, styled} from '@mui/material/styles';
@@ -14,7 +11,7 @@ import {
 } from '@mui/x-data-grid';
 import {MemberPublicInfo} from 'model/dtos';
 import {HelperTask, HelperTaskHelper, HelperTasks} from 'model/helpers-dtos';
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import PromiseStatus from '@app/components/PromiseStatus';
@@ -23,6 +20,10 @@ import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
+import {
+  searchAnyStringProperty,
+  searchMemberUsernameOrName,
+} from '@app/utils/search-utils';
 
 import {
   canSignUp,
@@ -49,40 +50,78 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
   },
 })) as typeof DataGrid;
 
-const HelperTasksDataGrid = () => {
+type Props = {
+  search: string;
+  showOnlyUpcoming: boolean;
+  showOnlyContactOrSignedUp: boolean;
+  showOnlyAvailable: boolean;
+  showOnlyUnpublished: boolean;
+};
+
+const HelperTasksDataGrid = ({
+  search,
+  showOnlyUpcoming,
+  showOnlyContactOrSignedUp,
+  showOnlyAvailable,
+  showOnlyUnpublished,
+}: Props) => {
   const tasks = usePromise(client.getHelperTasks);
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
 
-  const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(true);
-  const [showOnlyContactOrSignedUp, setShowOnlyContactOrSignedUp] =
-    useState(false);
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [showOnlyUnpublished, setShowOnlyUnpublished] = useState(false);
   const {memberInfoDialogComponent, openMemberInfoDialog} =
     useMemberInfoDialog();
 
   const getRowId = (task: HelperTask) => task.id;
-  const filter = (tasks: HelperTasks) => {
-    return tasks
-      .filter(task =>
-        showOnlyUpcoming ? isHappeningNow(task) || isUpcoming(task) : true
-      )
-      .filter(task =>
-        showOnlyContactOrSignedUp
-          ? isContact(task, currentUser) || isSignedUp(task, currentUser)
-          : true
-      )
-      .filter(task => (showOnlyAvailable ? canSignUp(task, currentUser) : true))
-      .filter(task => (showOnlyUnpublished ? !task.published : true));
+
+  const filterSearchMember = (searchToken: string, member?: MemberPublicInfo) =>
+    (member && searchMemberUsernameOrName(searchToken, member)) ?? false;
+
+  const filterSearch = (search: string, tasks: HelperTasks) => {
+    // The user might want to search for a combination of things such as "J80 maintenance jib" or "MicMac Tim"
+    const searchTokens = search
+      .toLowerCase()
+      .trim()
+      .split(/\s+/)
+      .map(s => s.trim())
+      .filter(s => s);
+
+    if (searchTokens) {
+      return tasks.filter(task => {
+        return searchTokens.every(token => {
+          return (
+            task.category.title.toLowerCase().includes(token) ||
+            filterSearchMember(token, task.contact) ||
+            filterSearchMember(token, task.captain?.member) ||
+            task.helpers.some(helper =>
+              filterSearchMember(token, helper.member)
+            ) ||
+            searchAnyStringProperty(token, task)
+          );
+        });
+      });
+    } else {
+      return tasks;
+    }
   };
 
-  const handleCheckboxChange = (
-    event: React.SyntheticEvent,
-    handler: (checked: boolean) => void
-  ) => {
-    const {checked} = event.target as HTMLInputElement;
-    handler(checked);
+  const filter = (search: string, tasks: HelperTasks) => {
+    return filterSearch(
+      search,
+      tasks
+        .filter(task =>
+          showOnlyUpcoming ? isHappeningNow(task) || isUpcoming(task) : true
+        )
+        .filter(task =>
+          showOnlyContactOrSignedUp
+            ? isContact(task, currentUser) || isSignedUp(task, currentUser)
+            : true
+        )
+        .filter(task =>
+          showOnlyAvailable ? canSignUp(task, currentUser) : true
+        )
+        .filter(task => (showOnlyUnpublished ? !task.published : true))
+    );
   };
 
   const handleGridClick = (
@@ -252,87 +291,23 @@ const HelperTasksDataGrid = () => {
   return (
     <>
       {tasks.result && (
-        <>
-          <Box>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showOnlyUpcoming}
-                  onChange={event =>
-                    handleCheckboxChange(event, checked =>
-                      setShowOnlyUpcoming(checked)
-                    )
-                  }
-                />
-              }
-              label="Only upcoming"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showOnlyContactOrSignedUp}
-                  onChange={event =>
-                    handleCheckboxChange(event, checked => {
-                      setShowOnlyContactOrSignedUp(checked);
-                      if (checked) {
-                        setShowOnlyAvailable(false);
-                      }
-                    })
-                  }
-                />
-              }
-              label="Only mine"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showOnlyAvailable}
-                  onChange={event =>
-                    handleCheckboxChange(event, checked => {
-                      setShowOnlyAvailable(checked);
-                      if (checked) {
-                        setShowOnlyContactOrSignedUp(false);
-                      }
-                    })
-                  }
-                />
-              }
-              label="Only available"
-            />
-            {currentUser.helpersAppAdminOrEditor && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={showOnlyUnpublished}
-                    onChange={event =>
-                      handleCheckboxChange(event, checked =>
-                        setShowOnlyUnpublished(checked)
-                      )
-                    }
-                  />
-                }
-                label="Only unpublished"
-              />
-            )}
-          </Box>
-          <StyledDataGrid
-            columns={columns}
-            rows={filter(tasks.result)}
-            getRowId={getRowId}
-            onCellClick={handleGridClick}
-            disableColumnFilter={true}
-            pageSizeOptions={[10, 25, 50, 100]}
-            getRowClassName={(params: GridRowParams) =>
-              (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
-            }
-            rowHeight={78}
-            sx={{
-              // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
-              minHeight: '265px',
-              height: 'calc(100vh - 340px)',
-            }}
-          />
-        </>
+        <StyledDataGrid
+          columns={columns}
+          rows={filter(search, tasks.result)}
+          getRowId={getRowId}
+          onCellClick={handleGridClick}
+          disableColumnFilter={true}
+          pageSizeOptions={[10, 25, 50, 100]}
+          getRowClassName={(params: GridRowParams) =>
+            (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
+          }
+          rowHeight={78}
+          sx={{
+            // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
+            minHeight: '265px',
+            height: 'calc(100vh - 340px)',
+          }}
+        />
       )}
 
       <PromiseStatus outcomes={[tasks]} />

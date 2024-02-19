@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Task cloning
+- Task search
 - Data validation using Zod
 
 ### Changed

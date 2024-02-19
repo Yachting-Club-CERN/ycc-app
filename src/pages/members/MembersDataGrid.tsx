@@ -7,6 +7,10 @@ import {toEmailLink, toTelLink} from '@app/components/links';
 import SharedDataContext from '@app/context/SharedDataContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import usePromise from '@app/hooks/usePromise';
+import {
+  searchAnyStringProperty,
+  searchMemberUsernameOrName,
+} from '@app/utils/search-utils';
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const renderEmail = (params: GridCellParams<any, string | null>) => {
@@ -87,12 +91,13 @@ const MembersDataGrid = ({year, search}: Props) => {
   };
 
   const filter = (search: string, members: MemberPublicInfos) => {
-    if (search && members) {
-      const s = search.toLowerCase();
-      return members.filter(member =>
-        Object.values(member).some(
-          value => typeof value === 'string' && value.toLowerCase().includes(s)
-        )
+    // User typically wants to search for one thing, e.g., name or phone number
+    const s = search.toLowerCase().trim();
+    if (s && members) {
+      return members.filter(
+        member =>
+          searchMemberUsernameOrName(s, member) ||
+          searchAnyStringProperty(s, member)
       );
     } else {
       return members;
