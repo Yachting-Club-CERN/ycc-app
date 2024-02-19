@@ -74,6 +74,7 @@ const HelpersPage = () => {
           }
           label="Only upcoming"
         />
+
         <FormControlLabel
           control={
             <Checkbox
@@ -90,6 +91,7 @@ const HelpersPage = () => {
           }
           label="Only mine"
         />
+
         <FormControlLabel
           control={
             <Checkbox
@@ -106,6 +108,7 @@ const HelpersPage = () => {
           }
           label="Only available"
         />
+
         {currentUser.helpersAppAdminOrEditor && (
           <FormControlLabel
             control={
