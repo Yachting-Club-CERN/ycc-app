@@ -174,7 +174,9 @@ const HelpersTaskForm = ({
 
       <SpacedBox>
         <RichTextEditor
-          initialContent={task?.longDescription}
+          initialContent={
+            task ? task.longDescription : '<p>Please describe the task here</p>'
+          }
           onBlur={setLongDescriptionImmediately}
           onInit={setLongDescriptionImmediately}
           onChange={setLongDescriptionWithDelay}
