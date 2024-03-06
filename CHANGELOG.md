@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Task cloning
 - Task search
 - Data validation using Zod
+- Year-aware helper task list
 
 ### Changed
 

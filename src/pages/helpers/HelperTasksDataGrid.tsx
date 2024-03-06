@@ -51,6 +51,7 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
 })) as typeof DataGrid;
 
 type Props = {
+  year: number | null;
   search: string;
   showOnlyUpcoming: boolean;
   showOnlyContactOrSignedUp: boolean;
@@ -59,13 +60,17 @@ type Props = {
 };
 
 const HelperTasksDataGrid = ({
+  year,
   search,
   showOnlyUpcoming,
   showOnlyContactOrSignedUp,
   showOnlyAvailable,
   showOnlyUnpublished,
 }: Props) => {
-  const tasks = usePromise(client.getHelperTasks);
+  const tasks = usePromise(
+    (signal?: AbortSignal) => client.getHelperTasks(year, signal),
+    [year]
+  );
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
 

@@ -79,8 +79,6 @@ const HelpersTaskForm = ({
     helperMaxCount: task?.helperMaxCount ?? 2,
     published: true,
   };
-  console.log('task', task);
-  console.log('initialData', initialData);
 
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
     // TODO #20 This is very basic

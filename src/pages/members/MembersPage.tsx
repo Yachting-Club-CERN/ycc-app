@@ -11,8 +11,9 @@ import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 import MembersDataGrid from './MembersDataGrid';
 
 const MembersPage = () => {
-  const [search, setSearch] = useState<string>('');
   const currentYear = dayjs().year();
+
+  const [search, setSearch] = useState<string>('');
   const onSearch = useDelay(
     SEARCH_DELAY_MS,
     (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs/esm/index.js';
 import React, {useContext} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import AuthenticationContext from '@app/context/AuthenticationContext';
 import SharedDataContext from '@app/context/SharedDataContext';
 import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
+import {getCurrentYear} from '@app/utils/date-utils';
 
 import HelpersTaskForm from './HelpersTaskForm';
 
@@ -32,7 +32,7 @@ const HelpersEditTaskPage = () => {
   const sharedData = useContext(SharedDataContext);
   const helperTaskCategories = usePromise(sharedData.getHelperTaskCategories);
   const members = usePromise((signal?: AbortSignal) =>
-    sharedData.getMembers(dayjs().year(), signal)
+    sharedData.getMembers(getCurrentYear(), signal)
   );
   const licenceInfos = usePromise(sharedData.getLicenceInfos);
 

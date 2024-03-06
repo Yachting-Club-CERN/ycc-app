@@ -71,11 +71,11 @@ class Client {
       signal
     );
 
-  getHelperTasks = async (signal?: AbortSignal) =>
+  getHelperTasks = async (year: number | null = null, signal?: AbortSignal) =>
     await this.getData<HelperTasks>(
       HelperTasksSchema,
       '/api/v1/helpers/tasks',
-      null,
+      {year: year},
       signal
     );
 
@@ -214,7 +214,7 @@ class Client {
     requestData?: D,
     signal?: AbortSignal
   ) => {
-    console.debug(`[client] ${method} ${path} ...`);
+    console.debug(`[client] ${method} ${path} ...`, params);
 
     try {
       const request = this._http.request<T, AxiosResponse<T>, D>({

@@ -21,3 +21,5 @@ export const formatDateTime = (
 
   return dayjs(date).format('D/M/YYYY, HH:mm');
 };
+
+export const getCurrentYear = () => dayjs().year();
