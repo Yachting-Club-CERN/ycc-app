@@ -93,7 +93,6 @@ const HelpersPage = () => {
           label="Category, person, text..."
           size="small"
           sx={{
-            height: 40,
             width: 200,
           }}
           className="ycc-helpers-search-input"
