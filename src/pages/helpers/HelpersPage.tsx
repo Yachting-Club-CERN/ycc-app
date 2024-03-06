@@ -58,7 +58,12 @@ const HelpersPage = () => {
     <>
       <PageTitleWithTaskActions value="Helper Tasks" />
 
-      {/* TODO make the layout mobile friendly */}
+      <SpacedTypography>
+        On this page you can sign up for surveillance and maintenance tasks.
+        Captain means Q-boat driver or the person who is organising the
+        execution of the task.
+      </SpacedTypography>
+
       <Stack direction="row" alignItems="center" spacing={1} mt={2} mb={2}>
         {currentUser.helpersAppAdminOrEditor && (
           <>
