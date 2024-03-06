@@ -69,7 +69,7 @@ const HelpersPage = () => {
           <>
             <SpacedTypography>Year:</SpacedTypography>
             <Select
-              defaultValue={currentYear}
+              defaultValue={currentYear.toString()}
               onChange={onYearChange}
               variant="outlined"
               size="small"
