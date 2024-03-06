@@ -54,7 +54,6 @@ const HelpersPage = () => {
     handler(checked);
   };
 
-
   return (
     <>
       <PageTitleWithTaskActions value="Helper Tasks" />
