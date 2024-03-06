@@ -29,6 +29,11 @@ const HelpersPage = () => {
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [showOnlyUnpublished, setShowOnlyUnpublished] = useState(false);
 
+  const years = Array.from(
+    {length: currentYear - firstHelperAppYear + 1},
+    (_, i) => firstHelperAppYear + i
+  );
+
   const onYearChange = (event: SelectChangeEvent) => {
     setYear(event.target.value === 'ALL' ? null : parseInt(event.target.value));
     setShowOnlyUpcoming(false);
@@ -49,10 +54,6 @@ const HelpersPage = () => {
     handler(checked);
   };
 
-  const years = Array.from(
-    {length: currentYear - firstHelperAppYear + 1},
-    (_, i) => firstHelperAppYear + i
-  );
 
   return (
     <>
