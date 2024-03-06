@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,7 +14,7 @@ import {getCurrentYear} from '@app/utils/date-utils';
 import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
 import HelperTasksDataGrid from './HelperTasksDataGrid';
-import PageTitleWithNewAndCloneTaskButtons from './PageTitleWithTaskActions';
+import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 
 const HelpersPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
@@ -57,7 +56,7 @@ const HelpersPage = () => {
 
   return (
     <>
-      <PageTitleWithNewAndCloneTaskButtons value="Helper Tasks" />
+      <PageTitleWithTaskActions value="Helper Tasks" />
 
       {/* TODO make the layout mobile friendly */}
       <Stack direction="row" alignItems="center" spacing={1} mt={2} mb={2}>
