@@ -14,7 +14,7 @@ import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
 import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
-import PageTitleWithNewTaskButton from './PageTitleWithTaskActions';
+import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {
   canSignUpAsCaptain,
   canSignUpAsHelper,
@@ -65,7 +65,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
 
   return (
     <>
-      <PageTitleWithNewTaskButton value={task.title} task={task} />
+      <PageTitleWithTaskActions value={task.title} task={task} />
       <SpacedTypography variant="h3">
         Category: {task.category.title}
       </SpacedTypography>

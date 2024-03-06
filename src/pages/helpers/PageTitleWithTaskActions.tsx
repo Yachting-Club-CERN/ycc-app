@@ -18,7 +18,7 @@ type Props = PageTitleProps & {
   task?: HelperTask;
 };
 
-const PageTitleWithNewTaskButton = (props: Props) => {
+const PageTitleWithTaskActions = (props: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
 
   return (
@@ -59,4 +59,4 @@ const PageTitleWithNewTaskButton = (props: Props) => {
   );
 };
 
-export default PageTitleWithNewTaskButton;
+export default PageTitleWithTaskActions;
