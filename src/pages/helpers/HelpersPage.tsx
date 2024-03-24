@@ -24,7 +24,9 @@ import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {doneEmoji, validatedEmoji} from './helpers-utils';
 
 const defaultFilterOptions = {
-  year: () => getCurrentYear(),
+  get year() {
+    return getCurrentYear();
+  },
   search: '',
   showOnlyUpcoming: true,
   showOnlyContactOrSignedUp: false,
@@ -38,7 +40,7 @@ const HelpersPage = () => {
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
-  const [year, setYear] = useState<number | null>(defaultFilterOptions.year());
+  const [year, setYear] = useState<number | null>(defaultFilterOptions.year);
   const [search, setSearch] = useState<string>(defaultFilterOptions.search);
   const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(
     defaultFilterOptions.showOnlyUpcoming
@@ -67,7 +69,7 @@ const HelpersPage = () => {
   );
 
   const onReset = () => {
-    setYear(defaultFilterOptions.year());
+    setYear(defaultFilterOptions.year);
     setSearch(defaultFilterOptions.search);
     setShowOnlyUpcoming(defaultFilterOptions.showOnlyUpcoming);
     setShowOnlyContactOrSignedUp(
