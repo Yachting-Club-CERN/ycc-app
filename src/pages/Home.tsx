@@ -17,7 +17,7 @@ const Home = () => {
           meantime, ⛵ life is as usual.
         </SpacedTypography>
         <SpacedTypography variant="h3">
-          Interested in helping? Let us know!
+          Interested in YCC App Development? Let us know!
         </SpacedTypography>
         <SpacedTypography>
           We need Helpers for various tasks, such as design (drawing on a piece

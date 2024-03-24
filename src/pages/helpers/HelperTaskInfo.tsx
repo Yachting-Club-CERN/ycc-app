@@ -1,36 +1,58 @@
 import Button from '@mui/material/Button';
+import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import {MemberPublicInfo} from 'model/dtos';
-import {HelperTask} from 'model/helpers-dtos';
-import React, {useContext} from 'react';
+import {
+  HelperTask,
+  HelperTaskHelper,
+  HelperTaskState,
+} from 'model/helpers-dtos';
+import React, {useContext, useRef} from 'react';
 import {useErrorBoundary} from 'react-error-boundary';
 import {Link as RouterLink} from 'react-router-dom';
 
+import RichTextEditor from '@app/components/RichTextEditor';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
+import useConfirmationDialog from '@app/hooks/useConfirmationDialog';
+import useDelayedRef from '@app/hooks/useDelayedRef';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
 import client from '@app/utils/client';
+import {formatDateTime} from '@app/utils/date-utils';
 import {sanitiseHtmlForReact} from '@app/utils/html-utils';
 
 import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {
+  canMarkTaskAsDone,
   canSignUpAsCaptain,
   canSignUpAsHelper,
+  canValidate,
   createTimingInfoFragment,
 } from './helpers-utils';
 
-type Params = {
+type Props = {
   task: HelperTask;
   refreshTask: (task: HelperTask) => void;
 };
 
-const HelperTaskInfo = ({task, refreshTask}: Params) => {
+const HelperTaskInfo = ({task, refreshTask}: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const {showBoundary} = useErrorBoundary();
   const {memberInfoDialogComponent, openMemberInfoDialog} =
     useMemberInfoDialog();
+  const {confirmationDialogComponent, openConfirmationDialog} =
+    useConfirmationDialog();
+
+  const confirmationDialogComment = useDelayedRef('');
+
+  const validation = {
+    helpersToValidate: useRef<HelperTaskHelper[]>([]),
+    helpersToRemove: useRef<HelperTaskHelper[]>([]),
+  };
 
   const createMemberDialogLink = (member: MemberPublicInfo) => {
     return (
@@ -40,27 +62,147 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
     );
   };
 
+  const confirmationDialogCommentComponent = (
+    <RichTextEditor
+      onBlur={confirmationDialogComment.setImmediately}
+      onInit={confirmationDialogComment.setImmediately}
+      onChange={confirmationDialogComment.setWithDelay}
+      height={150}
+    />
+  );
+  const helperValidationComponent = (
+    <>
+      <DialogContentText>
+        Please unmark the helpers who did not show up.
+      </DialogContentText>
+      {task.helpers.map(helper => (
+        <FormControlLabel
+          key={helper.member.id}
+          control={
+            <Switch
+              defaultChecked={true}
+              onChange={e => {
+                const [add, remove] = e.target.checked
+                  ? [validation.helpersToValidate, validation.helpersToRemove]
+                  : [validation.helpersToRemove, validation.helpersToValidate];
+
+                add.current.push(helper);
+
+                remove.current = remove.current.filter(
+                  h => h.member.id !== helper.member.id
+                );
+              }}
+            />
+          }
+          label={`${helper.member.firstName} ${helper.member.lastName}`}
+        />
+      ))}
+    </>
+  );
+
   const showSignUpAsCaptain = canSignUpAsCaptain(task, currentUser);
   const showSignUpAsHelper = canSignUpAsHelper(task, currentUser);
+  const showMarkAsDone = canMarkTaskAsDone(task, currentUser);
+  const showValidate = canValidate(task, currentUser);
 
   const signUpAsCaptain = async () => {
-    // TODO #20 This is very basic
-    try {
-      const newTask = await client.signUpForHelperTaskAsCaptain(task.id);
-      refreshTask(newTask);
-    } catch (ex) {
-      showBoundary(ex);
-    }
+    openConfirmationDialog(
+      'Sign Up As Captain',
+      [
+        'Are you sure you want to sign up as captain?',
+        'As a captain you will take lead and make sure that the task is carried out, e.g., driving the Q-Boat, organising other helpers signed up for the task, etc.',
+        'After signing up you cannot cancel unless you provide a replacement!',
+      ],
+      async () => {
+        try {
+          const newTask = await client.signUpForHelperTaskAsCaptain(task.id);
+          refreshTask(newTask);
+        } catch (ex) {
+          showBoundary(ex);
+        }
+      }
+    );
   };
 
   const signUpAsHelper = async () => {
-    // TODO #20 This is very basic
-    try {
-      const newTask = await client.signUpForHelperTaskAsHelper(task.id);
-      refreshTask(newTask);
-    } catch (ex) {
-      showBoundary(ex);
-    }
+    openConfirmationDialog(
+      'Sign Up As Helper',
+      [
+        'Are you sure you want to sign up as helper?',
+        'After signing up you cannot cancel unless you provide a replacement!',
+      ],
+      async () => {
+        try {
+          const newTask = await client.signUpForHelperTaskAsHelper(task.id);
+          refreshTask(newTask);
+        } catch (ex) {
+          showBoundary(ex);
+        }
+      }
+    );
+  };
+
+  const markAsDone = async () => {
+    confirmationDialogComment.setImmediately('');
+
+    openConfirmationDialog(
+      'Mark As Done',
+      <>
+        <DialogContentText mb={2}>
+          Are you sure you want to mark the task as done?
+        </DialogContentText>
+        <DialogContentText mb={2}>
+          This will notify the contact that task is done to and it can be
+          validated.
+        </DialogContentText>
+        <DialogContentText mb={2}>Comment (e.g., no shows):</DialogContentText>
+        {confirmationDialogCommentComponent}
+      </>,
+      async () => {
+        try {
+          const newTask = await client.markHelperTaskAsDone(task.id, {
+            comment: confirmationDialogComment.get(),
+          });
+          refreshTask(newTask);
+        } catch (ex) {
+          showBoundary(ex);
+        }
+      }
+    );
+  };
+
+  const validate = async () => {
+    confirmationDialogComment.setImmediately('');
+    validation.helpersToValidate.current = task.helpers;
+    validation.helpersToRemove.current = [];
+
+    openConfirmationDialog(
+      'Validate',
+      <>
+        <DialogContentText mb={2}>
+          Are you sure you want to validate the task?
+        </DialogContentText>
+        {task.helpers.length ? (
+          helperValidationComponent
+        ) : (
+          <DialogContentText mb={2}>(No helpers to validate)</DialogContentText>
+        )}
+        <DialogContentText mb={2}>Comment:</DialogContentText>
+        {confirmationDialogCommentComponent}
+      </>,
+      async () => {
+        try {
+          const newTask = await client.validateHelperTask(task.id, {
+            helpersToValidate: validation.helpersToValidate.current,
+            helpersToRemove: validation.helpersToRemove.current,
+            comment: confirmationDialogComment.get(),
+          });
+          refreshTask(newTask);
+        } catch (ex) {
+          showBoundary(ex);
+        }
+      }
+    );
   };
 
   return (
@@ -127,7 +269,41 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
         </SpacedTypography>
       )}
 
-      {(showSignUpAsCaptain || showSignUpAsHelper) && (
+      {task.state !== HelperTaskState.Pending && (
+        <>
+          <Divider sx={{mt: 2}} />
+          <SpacedTypography variant="h6" color="success">
+            Update @ {formatDateTime(task.markedAsDoneAt)}:{' '}
+            {createMemberDialogLink(task.markedAsDoneBy!)} marked the task as
+            done
+          </SpacedTypography>
+          {task.markedAsDoneComment && (
+            <SpacedTypography component="div" ml={4}>
+              {sanitiseHtmlForReact(task.markedAsDoneComment)}
+            </SpacedTypography>
+          )}
+        </>
+      )}
+
+      {task.state === HelperTaskState.Validated && (
+        <>
+          <Divider sx={{mt: 2}} />
+          <SpacedTypography variant="h6" color="success">
+            Update @ {formatDateTime(task.validatedAt)}:{' '}
+            {createMemberDialogLink(task.validatedBy!)} validated the task
+          </SpacedTypography>
+          {task.validationComment && (
+            <SpacedTypography component="div" ml={4}>
+              {sanitiseHtmlForReact(task.validationComment)}
+            </SpacedTypography>
+          )}
+        </>
+      )}
+
+      {(showSignUpAsCaptain ||
+        showSignUpAsHelper ||
+        showMarkAsDone ||
+        showValidate) && (
         <>
           <Stack direction="row" spacing={2}>
             {showSignUpAsCaptain && (
@@ -136,7 +312,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
                 color="primary"
                 onClick={signUpAsCaptain}
               >
-                Sign up as Captain
+                Sign Up As Captain
               </Button>
             )}
 
@@ -146,7 +322,19 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
                 color="primary"
                 onClick={signUpAsHelper}
               >
-                Sign up as Helper
+                Sign Up As Helper
+              </Button>
+            )}
+
+            {showMarkAsDone && (
+              <Button variant="contained" color="warning" onClick={markAsDone}>
+                Mark As Done
+              </Button>
+            )}
+
+            {showValidate && (
+              <Button variant="contained" color="success" onClick={validate}>
+                Validate
               </Button>
             )}
           </Stack>
@@ -160,6 +348,7 @@ const HelperTaskInfo = ({task, refreshTask}: Params) => {
       )}
 
       {memberInfoDialogComponent}
+      {confirmationDialogComponent}
     </>
   );
 };

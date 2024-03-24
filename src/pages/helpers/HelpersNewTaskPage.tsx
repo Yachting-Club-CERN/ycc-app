@@ -11,7 +11,7 @@ import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
 import {getCurrentYear} from '@app/utils/date-utils';
 
-import HelpersTaskForm from './HelpersTaskForm';
+import HelperTaskForm from './HelperTaskForm';
 
 const HelpersNewTaskPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
@@ -46,7 +46,7 @@ const HelpersNewTaskPage = () => {
         helperTaskCategories.result &&
         members.result &&
         licenceInfos.result && (
-          <HelpersTaskForm
+          <HelperTaskForm
             task={taskToClone.result ?? undefined}
             newTask={true}
             categories={helperTaskCategories.result}

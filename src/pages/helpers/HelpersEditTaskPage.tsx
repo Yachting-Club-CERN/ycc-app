@@ -10,7 +10,7 @@ import usePromise from '@app/hooks/usePromise';
 import client from '@app/utils/client';
 import {getCurrentYear} from '@app/utils/date-utils';
 
-import HelpersTaskForm from './HelpersTaskForm';
+import HelperTaskForm from './HelperTaskForm';
 
 const HelpersEditTaskPage = () => {
   const {id} = useParams();
@@ -43,7 +43,7 @@ const HelpersEditTaskPage = () => {
         helperTaskCategories.result &&
         members.result &&
         licenceInfos.result && (
-          <HelpersTaskForm
+          <HelperTaskForm
             task={task.result}
             newTask={false}
             categories={helperTaskCategories.result}

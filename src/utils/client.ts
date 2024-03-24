@@ -10,8 +10,10 @@ import {
   HelperTask,
   HelperTaskCategories,
   HelperTaskCategoriesSchema,
+  HelperTaskMarkAsDoneRequestDto,
   HelperTaskMutationRequestDto,
   HelperTaskSchema,
+  HelperTaskValidationRequestDto,
   HelperTasks,
   HelperTasksSchema,
 } from 'model/helpers-dtos';
@@ -127,6 +129,32 @@ class Client {
       `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
+      signal
+    );
+
+  markHelperTaskAsDone = async (
+    id: number,
+    request: HelperTaskMarkAsDoneRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
+      `/api/v1/helpers/tasks/${id}/mark-as-done`,
+      null,
+      request,
+      signal
+    );
+
+  validateHelperTask = async (
+    id: number,
+    request: HelperTaskValidationRequestDto,
+    signal?: AbortSignal
+  ) =>
+    await this.postForData<HelperTask, {}>(
+      HelperTaskSchema,
+      `/api/v1/helpers/tasks/${id}/validate`,
+      null,
+      request,
       signal
     );
 

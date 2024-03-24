@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Task search
 - Data validation using Zod
 - Year-aware helper task list
+- Confirmation dialog when signing up to helper tasks
+- Task validation
 
 ### Changed
 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs/esm/index.js';
-import {HelperTask} from 'model/helpers-dtos';
+import {HelperTask, HelperTaskState} from 'model/helpers-dtos';
 import React from 'react';
 
 import SpanBlockBox from '@app/components/SpanBlockBox';
@@ -9,6 +9,19 @@ import {
   formatDateWithDay,
   formatTime,
 } from '@app/utils/date-utils';
+
+export const doneEmoji = '🚦';
+export const validatedEmoji = '✔️';
+
+export type HelperTaskFilterOptions = {
+  year: number | null;
+  search: string;
+  showOnlyUpcoming: boolean;
+  showOnlyContactOrSignedUp: boolean;
+  showOnlyAvailable: boolean;
+  showOnlyUnpublished: boolean;
+  states: HelperTaskState[];
+};
 
 /**
  * Returns the location of a task's page.
@@ -118,6 +131,7 @@ export const isSignedUp = (task: HelperTask, user: User): boolean =>
 export const canSignUpAsCaptain = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
   task.published &&
+  task.state === HelperTaskState.Pending &&
   !task.captain &&
   !isSignedUpAsHelper(task, user) &&
   (!task.captainRequiredLicenceInfo ||
@@ -133,6 +147,7 @@ export const canSignUpAsCaptain = (task: HelperTask, user: User): boolean =>
 export const canSignUpAsHelper = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
   task.published &&
+  task.state === HelperTaskState.Pending &&
   task.helpers.length < task.helperMaxCount &&
   !isSignedUpAsCaptain(task, user) &&
   !isSignedUpAsHelper(task, user);
@@ -158,6 +173,31 @@ export const canEditTask = (task: HelperTask, user: User): boolean =>
   user.helpersAppAdmin || (user.helpersAppEditor && isContact(task, user));
 
 /**
+ * Tells whether a user can mark a task as done.
+ *
+ * @param task  a task
+ * @param user  a user
+ * @returns  true if the user can mark the task as done, false otherwise
+ */
+export const canMarkTaskAsDone = (task: HelperTask, user: User): boolean =>
+  task.published &&
+  task.state === HelperTaskState.Pending &&
+  (user.helpersAppAdmin ||
+    (user.helpersAppEditor && isContact(task, user)) ||
+    isSignedUpAsCaptain(task, user));
+
+/**
+ *  Tells whether a user can validate a task.
+ * @param task  a task
+ * @param user  a user
+ * @returns  true if the user can validate the task, false otherwise
+ */
+export const canValidate = (task: HelperTask, user: User): boolean =>
+  task.published &&
+  task.state !== HelperTaskState.Validated &&
+  (user.helpersAppAdmin || (user.helpersAppEditor && isContact(task, user)));
+
+/**
  * Gives a "fake random" sign up text. Deterministic.
  *
  * @returns a sign up text
@@ -172,6 +212,22 @@ export const fakeRandomSignUpText = (taskId: number, captain: boolean) => {
     'I will do it!',
   ];
   return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length];
+};
+
+/**
+ * Returns the status emoji for a task.
+ *
+ * @param task a task
+ * @returns the status emoji, or empty string if the task is pending
+ */
+export const getStatusEmoji = (task: HelperTask): string => {
+  if (task.validatedAt) {
+    return validatedEmoji;
+  } else if (task.markedAsDoneAt) {
+    return doneEmoji;
+  } else {
+    return '';
+  }
 };
 
 /**
@@ -191,11 +247,17 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     extraTimingTitle = ` (${extraTimingTitle})`;
   }
 
+  let statusEmoji = getStatusEmoji(task);
+  if (statusEmoji) {
+    statusEmoji = ` ${statusEmoji}`;
+  }
+
   if (task.deadline && !task.startsAt && !task.endsAt) {
     return (
       <>
         <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
           Deadline{extraTimingTitle}
+          {statusEmoji}
         </SpanBlockBox>
         <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>
         <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
