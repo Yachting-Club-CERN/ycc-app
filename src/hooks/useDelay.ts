@@ -10,14 +10,14 @@ import {useRef} from 'react';
  * @returns a function that can be used to trigger the callback with the specified delay
  */
 const useDelay = <T>(delayMs: number, callback: (event: T) => void) => {
-  const typingTimeout = useRef<number>();
+  const timeout = useRef<number>();
 
   return (event: T) => {
-    if (typingTimeout.current) {
-      clearTimeout(typingTimeout.current);
+    if (timeout.current) {
+      clearTimeout(timeout.current);
     }
 
-    typingTimeout.current = window.setTimeout(() => {
+    timeout.current = window.setTimeout(() => {
       callback(event);
     }, delayMs);
   };

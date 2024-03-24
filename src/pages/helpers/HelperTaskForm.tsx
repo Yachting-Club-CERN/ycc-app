@@ -22,7 +22,7 @@ import RichTextEditor from '@app/components/RichTextEditor';
 import SpacedBox from '@app/components/SpacedBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
-import useDelay from '@app/hooks/useDelay';
+import useDelayedRef from '@app/hooks/useDelayedRef';
 import client from '@app/utils/client';
 
 import {canEditTask, getTaskLocation} from './helpers-utils';
@@ -35,7 +35,7 @@ type Props = {
   licenceInfos: LicenceDetailedInfos;
 };
 
-const HelpersTaskForm = ({
+const HelperTaskForm = ({
   task,
   newTask,
   categories,
@@ -44,12 +44,8 @@ const HelpersTaskForm = ({
 }: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const [error, setError] = useState<unknown>();
-  const [longDescription, setLongDescriptionImmediately] = useState(
+  const longDescription = useDelayedRef<string | null | undefined>(
     task?.longDescription
-  );
-  const setLongDescriptionWithDelay = useDelay(
-    500,
-    setLongDescriptionImmediately
   );
   const navigate = useNavigate();
   // Some components may be already loaded at this point
@@ -81,11 +77,10 @@ const HelpersTaskForm = ({
   };
 
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
-    // TODO #20 This is very basic
     try {
       setError(undefined);
       const dataToSend = {...data};
-      dataToSend.longDescription = longDescription ?? null;
+      dataToSend.longDescription = longDescription.get() ?? null;
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
         dataToSend.captainRequiredLicenceInfoId = null;
       }
@@ -175,9 +170,9 @@ const HelpersTaskForm = ({
           initialContent={
             task ? task.longDescription : '<p>Please describe the task here</p>'
           }
-          onBlur={setLongDescriptionImmediately}
-          onInit={setLongDescriptionImmediately}
-          onChange={setLongDescriptionWithDelay}
+          onBlur={longDescription.setImmediately}
+          onInit={longDescription.setImmediately}
+          onChange={longDescription.setWithDelay}
         />
       </SpacedBox>
 
@@ -301,4 +296,4 @@ const HelpersTaskForm = ({
   );
 };
 
-export default HelpersTaskForm;
+export default HelperTaskForm;

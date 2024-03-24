@@ -6,6 +6,12 @@ import {
   zodTransformDate,
 } from './dtos';
 
+export enum HelperTaskState {
+  Pending = 'Pending',
+  Done = 'Done',
+  Validated = 'Validated',
+}
+
 export const HelperTaskCategorySchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -26,24 +32,43 @@ export type HelperTaskHelper = z.infer<typeof HelperTaskHelperSchema>;
 export const HelperTaskHelpersSchema = z.array(HelperTaskHelperSchema);
 export type HelperTaskHelpers = z.infer<typeof HelperTaskHelpersSchema>;
 
-export const HelperTaskSchema = z.object({
-  id: z.number(),
-  category: HelperTaskCategorySchema,
-  title: z.string(),
-  shortDescription: z.string(),
-  longDescription: z.string().nullable(),
-  contact: MemberPublicInfoSchema,
-  startsAt: z.string().transform(zodTransformDate).nullable(),
-  endsAt: z.string().transform(zodTransformDate).nullable(),
-  deadline: z.string().transform(zodTransformDate).nullable(),
-  urgent: z.boolean(),
-  captainRequiredLicenceInfo: LicenceInfoSchema.nullable(),
-  helperMinCount: z.number(),
-  helperMaxCount: z.number(),
-  published: z.boolean(),
-  captain: HelperTaskHelperSchema.nullable(),
-  helpers: HelperTaskHelpersSchema,
-});
+export const HelperTaskSchema = z
+  .object({
+    id: z.number(),
+    category: HelperTaskCategorySchema,
+    title: z.string(),
+    shortDescription: z.string(),
+    longDescription: z.string().nullable(),
+    contact: MemberPublicInfoSchema,
+    startsAt: z.string().transform(zodTransformDate).nullable(),
+    endsAt: z.string().transform(zodTransformDate).nullable(),
+    deadline: z.string().transform(zodTransformDate).nullable(),
+    urgent: z.boolean(),
+    captainRequiredLicenceInfo: LicenceInfoSchema.nullable(),
+    helperMinCount: z.number(),
+    helperMaxCount: z.number(),
+    published: z.boolean(),
+    captain: HelperTaskHelperSchema.nullable(),
+    helpers: HelperTaskHelpersSchema,
+    markedAsDoneAt: z.string().transform(zodTransformDate).nullable(),
+    markedAsDoneBy: MemberPublicInfoSchema.nullable(),
+    markedAsDoneComment: z.string().nullable(),
+    validatedAt: z.string().transform(zodTransformDate).nullable(),
+    validatedBy: MemberPublicInfoSchema.nullable(),
+    validationComment: z.string().nullable(),
+  })
+  .transform(values => ({
+    ...values,
+    get state() {
+      if (values.validatedAt) {
+        return HelperTaskState.Validated;
+      } else if (values.markedAsDoneAt) {
+        return HelperTaskState.Done;
+      } else {
+        return HelperTaskState.Pending;
+      }
+    },
+  }));
 export type HelperTask = z.infer<typeof HelperTaskSchema>;
 
 export const HelperTasksSchema = z.array(HelperTaskSchema);
@@ -67,4 +92,22 @@ export const HelperTaskMutationRequestDtoSchema = z.object({
 });
 export type HelperTaskMutationRequestDto = z.infer<
   typeof HelperTaskMutationRequestDtoSchema
+>;
+
+export const HelperTaskMarkAsDoneRequestDtoSchema = z.object({
+  comment: z.string().nullable(),
+});
+
+export type HelperTaskMarkAsDoneRequestDto = z.infer<
+  typeof HelperTaskMarkAsDoneRequestDtoSchema
+>;
+
+export const HelperTaskValidationRequestDtoSchema = z.object({
+  helpersToValidate: z.array(HelperTaskHelperSchema),
+  helpersToRemove: z.array(HelperTaskHelperSchema),
+  comment: z.string().nullable(),
+});
+
+export type HelperTaskValidationRequestDto = z.infer<
+  typeof HelperTaskValidationRequestDtoSchema
 >;

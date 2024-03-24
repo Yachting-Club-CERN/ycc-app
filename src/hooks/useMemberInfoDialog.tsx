@@ -14,7 +14,7 @@ import MemberInfoDialog from '@app/components/MemberInfoDialog';
  *
  * @returns the component to render and the function to call to open the dialog
  */
-// TODO global render?
+// TODO Global render?
 const useMemberInfoDialog = () => {
   const [member, setMember] = useState<MemberPublicInfo | null>(null);
   const openMemberInfoDialog = (member: MemberPublicInfo) => {

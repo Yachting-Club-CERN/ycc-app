@@ -8,12 +8,12 @@ import React from 'react';
 
 import {toEmailLink, toTelLink} from '@app/components/links';
 
-type Params = {
+type Props = {
   member?: MemberPublicInfo | null;
   onClose: () => void;
 };
 
-const MemberInfoDialog = ({member, onClose}: Params) => {
+const MemberInfoDialog = ({member, onClose}: Props) => {
   return (
     <Dialog
       open={!!member}

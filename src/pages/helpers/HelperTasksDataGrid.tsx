@@ -26,6 +26,7 @@ import {
 } from '@app/utils/search-utils';
 
 import {
+  HelperTaskFilterOptions,
   canSignUp,
   canSignUpAsCaptain,
   canSignUpAsHelper,
@@ -51,25 +52,13 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
 })) as typeof DataGrid;
 
 type Props = {
-  year: number | null;
-  search: string;
-  showOnlyUpcoming: boolean;
-  showOnlyContactOrSignedUp: boolean;
-  showOnlyAvailable: boolean;
-  showOnlyUnpublished: boolean;
+  filterOptions: HelperTaskFilterOptions;
 };
 
-const HelperTasksDataGrid = ({
-  year,
-  search,
-  showOnlyUpcoming,
-  showOnlyContactOrSignedUp,
-  showOnlyAvailable,
-  showOnlyUnpublished,
-}: Props) => {
+const HelperTasksDataGrid = ({filterOptions}: Props) => {
   const tasks = usePromise(
-    (signal?: AbortSignal) => client.getHelperTasks(year, signal),
-    [year]
+    (signal?: AbortSignal) => client.getHelperTasks(filterOptions.year, signal),
+    [filterOptions.year]
   );
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
@@ -110,22 +99,27 @@ const HelperTasksDataGrid = ({
     }
   };
 
-  const filter = (search: string, tasks: HelperTasks) => {
+  const filter = (tasks: HelperTasks) => {
     return filterSearch(
-      search,
+      filterOptions.search,
       tasks
         .filter(task =>
-          showOnlyUpcoming ? isHappeningNow(task) || isUpcoming(task) : true
+          filterOptions.showOnlyUpcoming
+            ? isHappeningNow(task) || isUpcoming(task)
+            : true
         )
         .filter(task =>
-          showOnlyContactOrSignedUp
+          filterOptions.showOnlyContactOrSignedUp
             ? isContact(task, currentUser) || isSignedUp(task, currentUser)
             : true
         )
         .filter(task =>
-          showOnlyAvailable ? canSignUp(task, currentUser) : true
+          filterOptions.showOnlyAvailable ? canSignUp(task, currentUser) : true
         )
-        .filter(task => (showOnlyUnpublished ? !task.published : true))
+        .filter(task =>
+          filterOptions.showOnlyUnpublished ? !task.published : true
+        )
+        .filter(task => filterOptions.states.includes(task.state))
     );
   };
 
@@ -298,7 +292,7 @@ const HelperTasksDataGrid = ({
       {tasks.result && (
         <StyledDataGrid
           columns={columns}
-          rows={filter(search, tasks.result)}
+          rows={filter(tasks.result)}
           getRowId={getRowId}
           onCellClick={handleGridClick}
           disableColumnFilter={true}
@@ -310,7 +304,7 @@ const HelperTasksDataGrid = ({
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: '265px',
-            height: 'calc(100vh - 340px)',
+            height: 'calc(100vh - 370px)',
           }}
         />
       )}
