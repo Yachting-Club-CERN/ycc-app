@@ -77,7 +77,6 @@ const HelperTaskForm = ({
   };
 
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
-    // TODO #20 This is very basic
     try {
       setError(undefined);
       const dataToSend = {...data};
