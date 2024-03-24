@@ -155,7 +155,9 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
           This will notify the contact that task is done to and it can be
           validated.
         </DialogContentText>
-        <DialogContentText mb={2}>Comment (e.g., no shows):</DialogContentText>
+        <DialogContentText mb={2}>
+          Comment (optional, e.g., no shows):
+        </DialogContentText>
         {confirmationDialogCommentComponent}
       </>,
       async () => {
@@ -172,9 +174,9 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
   };
 
   const validate = async () => {
-    confirmationDialogComment.setImmediately('');
     validation.helpersToValidate.current = task.helpers;
     validation.helpersToRemove.current = [];
+    confirmationDialogComment.setImmediately('');
 
     openConfirmationDialog(
       'Validate',
@@ -187,7 +189,7 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         ) : (
           <DialogContentText mb={2}>(No helpers to validate)</DialogContentText>
         )}
-        <DialogContentText mb={2}>Comment:</DialogContentText>
+        <DialogContentText mb={2}>Comment (optional):</DialogContentText>
         {confirmationDialogCommentComponent}
       </>,
       async () => {

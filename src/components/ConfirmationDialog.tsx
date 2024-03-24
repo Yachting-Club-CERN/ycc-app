@@ -5,7 +5,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import React from 'react';
-import {FormContainer} from 'react-hook-form-mui';
 
 type ArrayOneOrMore<T> = {
   0: T;
@@ -43,32 +42,35 @@ const ConfirmationDialog = ({
       maxWidth="sm"
       className="ycc-confirmation-dialog"
     >
-      <FormContainer onSuccess={onConfirm}>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
-          {items.map((item, index) => {
-            const lastItem = index === items.length - 1;
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        {items.map((item, index) => {
+          const lastItem = index === items.length - 1;
 
-            if (typeof item === 'string') {
-              return (
-                <DialogContentText key={index} mb={lastItem ? 0 : 2}>
-                  {item}
-                </DialogContentText>
-              );
-            } else {
-              return <React.Fragment key={index}>{item}</React.Fragment>;
-            }
-          })}
-        </DialogContent>
-        <DialogActions sx={{paddingBottom: 2, paddingRight: 2}}>
-          <Button onClick={onClose} variant="text" color="error">
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" color="success" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </FormContainer>
+          if (typeof item === 'string') {
+            return (
+              <DialogContentText key={index} mb={lastItem ? 0 : 2}>
+                {item}
+              </DialogContentText>
+            );
+          } else {
+            return <React.Fragment key={index}>{item}</React.Fragment>;
+          }
+        })}
+      </DialogContent>
+      <DialogActions sx={{paddingBottom: 2, paddingRight: 2}}>
+        <Button onClick={onClose} variant="text" color="error">
+          Cancel
+        </Button>
+        <Button
+          onClick={onConfirm}
+          variant="contained"
+          color="success"
+          autoFocus
+        >
+          Confirm
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

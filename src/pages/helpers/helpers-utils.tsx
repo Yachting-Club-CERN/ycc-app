@@ -183,7 +183,7 @@ export const canMarkTaskAsDone = (task: HelperTask, user: User): boolean =>
   task.published &&
   task.state === HelperTaskState.Pending &&
   (user.helpersAppAdmin ||
-    (user.helpersAppEditor && isContact(task, user)) ||
+    isContact(task, user) ||
     isSignedUpAsCaptain(task, user));
 
 /**
@@ -195,7 +195,7 @@ export const canMarkTaskAsDone = (task: HelperTask, user: User): boolean =>
 export const canValidate = (task: HelperTask, user: User): boolean =>
   task.published &&
   task.state !== HelperTaskState.Validated &&
-  (user.helpersAppAdmin || (user.helpersAppEditor && isContact(task, user)));
+  (user.helpersAppAdmin || isContact(task, user));
 
 /**
  * Gives a "fake random" sign up text. Deterministic.

@@ -113,163 +113,159 @@ const HelpersPage = () => {
     <>
       <PageTitleWithTaskActions value="Helper Tasks" />
 
-      <Box>
-        <SpacedTypography>
-          On this page you can sign up for surveillance and maintenance tasks.
-          Captain means Q-boat driver or the person who is organising the
-          execution of the task.
-        </SpacedTypography>
+      <SpacedTypography>
+        On this page you can sign up for surveillance and maintenance tasks.
+        Captain means Q-boat driver or the person who is organising the
+        execution of the task.
+      </SpacedTypography>
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={1}
-          mt={2}
-          mb={0}
-          useFlexGap
-          flexWrap="wrap"
-        >
-          {currentUser.helpersAppAdminOrEditor && (
-            <>
-              <SpacedTypography>Year:</SpacedTypography>
-              <Select
-                defaultValue={currentYear.toString()}
-                onChange={onYearChange}
-                variant="outlined"
-                size="small"
-              >
-                {years.map(year => (
-                  <MenuItem key={year} value={year}>
-                    {year}
-                  </MenuItem>
-                ))}
-                <MenuItem key={9999} value="ALL">
-                  ALL
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        mt={2}
+        mb={0}
+        useFlexGap
+        flexWrap="wrap"
+      >
+        {currentUser.helpersAppAdminOrEditor && (
+          <>
+            <SpacedTypography>Year:</SpacedTypography>
+            <Select
+              defaultValue={currentYear.toString()}
+              onChange={onYearChange}
+              variant="outlined"
+              size="small"
+            >
+              {years.map(year => (
+                <MenuItem key={year} value={year}>
+                  {year}
                 </MenuItem>
-              </Select>
-            </>
-          )}
-
-          <Typography>Search:</Typography>
-          <TextField
-            onChange={onSearch}
-            variant="outlined"
-            label="Category, person, text..."
-            size="small"
-            sx={{
-              width: 200,
-            }}
-            className="ycc-helpers-search-input"
-          />
-
-          <SpacedTypography>State:</SpacedTypography>
-          <Select
-            multiple
-            value={states}
-            onChange={handleStateChange}
-            renderValue={values => (
-              <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                {values.map(value => (
-                  <Chip key={value} label={allStates[value]} />
-                ))}
-              </Box>
-            )}
-            size="small"
-          >
-            {Object.entries(allStates).map(([key, value]) => (
-              <MenuItem key={key} value={key}>
-                <Checkbox
-                  checked={states.indexOf(key as HelperTaskState) > -1}
-                />
-                <ListItemText primary={value} />
+              ))}
+              <MenuItem key={9999} value="ALL">
+                ALL
               </MenuItem>
-            ))}
-          </Select>
+            </Select>
+          </>
+        )}
 
-          <IconButton onClick={onReset} size="small">
-            <RestartAltIcon />
-          </IconButton>
-        </Stack>
+        <Typography>Search:</Typography>
+        <TextField
+          onChange={onSearch}
+          variant="outlined"
+          label="Category, person, text..."
+          size="small"
+          sx={{
+            width: 200,
+          }}
+          className="ycc-helpers-search-input"
+        />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={1}
-          mt={0}
-          mb={2}
-          useFlexGap
-          flexWrap="wrap"
+        <SpacedTypography>State:</SpacedTypography>
+        <Select
+          multiple
+          value={states}
+          onChange={handleStateChange}
+          renderValue={values => (
+            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+              {values.map(value => (
+                <Chip key={value} label={allStates[value]} />
+              ))}
+            </Box>
+          )}
+          size="small"
         >
+          {Object.entries(allStates).map(([key, value]) => (
+            <MenuItem key={key} value={key}>
+              <Checkbox checked={states.indexOf(key as HelperTaskState) > -1} />
+              <ListItemText primary={value} />
+            </MenuItem>
+          ))}
+        </Select>
+
+        <IconButton onClick={onReset} size="small">
+          <RestartAltIcon />
+        </IconButton>
+      </Stack>
+
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        mt={0}
+        mb={2}
+        useFlexGap
+        flexWrap="wrap"
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showOnlyUpcoming}
+              onChange={event =>
+                handleCheckboxChange(event, checked =>
+                  setShowOnlyUpcoming(checked)
+                )
+              }
+              size="small"
+            />
+          }
+          label="Only upcoming"
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showOnlyContactOrSignedUp}
+              onChange={event =>
+                handleCheckboxChange(event, checked => {
+                  setShowOnlyContactOrSignedUp(checked);
+                  if (checked) {
+                    setShowOnlyAvailable(false);
+                  }
+                })
+              }
+              size="small"
+            />
+          }
+          label="Only mine"
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showOnlyAvailable}
+              onChange={event =>
+                handleCheckboxChange(event, checked => {
+                  setShowOnlyAvailable(checked);
+                  if (checked) {
+                    setShowOnlyContactOrSignedUp(false);
+                    setStates([HelperTaskState.Pending]);
+                  }
+                })
+              }
+              size="small"
+            />
+          }
+          label="Only available"
+        />
+
+        {currentUser.helpersAppAdminOrEditor && (
           <FormControlLabel
             control={
               <Checkbox
-                checked={showOnlyUpcoming}
+                checked={showOnlyUnpublished}
                 onChange={event =>
                   handleCheckboxChange(event, checked =>
-                    setShowOnlyUpcoming(checked)
+                    setShowOnlyUnpublished(checked)
                   )
                 }
                 size="small"
               />
             }
-            label="Only upcoming"
+            label="Only unpublished"
           />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showOnlyContactOrSignedUp}
-                onChange={event =>
-                  handleCheckboxChange(event, checked => {
-                    setShowOnlyContactOrSignedUp(checked);
-                    if (checked) {
-                      setShowOnlyAvailable(false);
-                    }
-                  })
-                }
-                size="small"
-              />
-            }
-            label="Only mine"
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showOnlyAvailable}
-                onChange={event =>
-                  handleCheckboxChange(event, checked => {
-                    setShowOnlyAvailable(checked);
-                    if (checked) {
-                      setShowOnlyContactOrSignedUp(false);
-                      setStates([HelperTaskState.Pending]);
-                    }
-                  })
-                }
-                size="small"
-              />
-            }
-            label="Only available"
-          />
-
-          {currentUser.helpersAppAdminOrEditor && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showOnlyUnpublished}
-                  onChange={event =>
-                    handleCheckboxChange(event, checked =>
-                      setShowOnlyUnpublished(checked)
-                    )
-                  }
-                  size="small"
-                />
-              }
-              label="Only unpublished"
-            />
-          )}
-        </Stack>
-      </Box>
+        )}
+      </Stack>
 
       <HelperTasksDataGrid
         filterOptions={{
