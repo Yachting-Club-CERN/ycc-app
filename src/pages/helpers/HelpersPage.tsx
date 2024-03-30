@@ -43,6 +43,8 @@ const allStatesWithLabel = {
   [HelperTaskState.Validated]: `Validated ${validatedEmoji}`,
 };
 
+const allYearsLabel = 'ALL';
+
 const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   year: getCurrentYear(),
   search: '',
@@ -98,7 +100,9 @@ const HelpersPage = () => {
 
   const onYearChange = (event: SelectChangeEvent) => {
     const year =
-      event.target.value === 'ALL' ? null : parseInt(event.target.value);
+      event.target.value === allYearsLabel
+        ? null
+        : parseInt(event.target.value);
     const newFilterOptions: HelperTaskFilterOptions = {...filterOptions};
 
     newFilterOptions.year = year;
@@ -169,7 +173,7 @@ const HelpersPage = () => {
           <>
             <SpacedTypography>Year:</SpacedTypography>
             <Select
-              value={filterOptions.year?.toString() ?? 'ALL'}
+              value={filterOptions.year?.toString() ?? allYearsLabel}
               onChange={onYearChange}
               variant="outlined"
               size="small"
@@ -179,8 +183,8 @@ const HelpersPage = () => {
                   {year}
                 </MenuItem>
               ))}
-              <MenuItem key={9999} value="ALL">
-                ALL
+              <MenuItem key={9999} value="{allYearsLabel}">
+                {allYearsLabel}
               </MenuItem>
             </Select>
           </>
