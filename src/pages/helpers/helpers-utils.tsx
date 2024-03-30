@@ -253,6 +253,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
   }
 
   if (task.deadline && !task.startsAt && !task.endsAt) {
+    // Visual note: Max 3 <SpanBlockBox> should be used on each branch
     return (
       <>
         <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
@@ -270,6 +271,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
             Shift{extraTimingTitle}
+            {statusEmoji}
           </SpanBlockBox>
           <SpanBlockBox>{formatDateWithDay(task.startsAt)}</SpanBlockBox>
           <SpanBlockBox>
@@ -283,6 +285,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
             Multi-Day Shift{extraTimingTitle}
+            {statusEmoji}
           </SpanBlockBox>
           <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
           <SpanBlockBox>End: {formatDateTime(task.endsAt)}</SpanBlockBox>
@@ -295,6 +298,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
       <>
         <SpanBlockBox>
           Start: {formatDateTime(task.startsAt) ?? '-'}
+          {statusEmoji}
         </SpanBlockBox>
         <SpanBlockBox>End: {formatDateTime(task.endsAt) ?? '-'}</SpanBlockBox>
         <SpanBlockBox>
