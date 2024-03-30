@@ -213,9 +213,6 @@ const HelperTaskForm = ({
 
       <SpacedTypography variant="h3">Timing</SpacedTypography>
 
-      <SpacedTypography variant="subtitle1">
-        You need to specify either both start and end <em>or</em> a deadline.
-      </SpacedTypography>
       <SpacedBox>
         <Stack direction="row" spacing={2}>
           <ToggleButtonGroup
