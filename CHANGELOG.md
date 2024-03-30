@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Year-aware helper task list
 - Confirmation dialog when signing up to helper tasks
 - Task validation
+- Remember previous helper task filter options
 
 ### Changed
 

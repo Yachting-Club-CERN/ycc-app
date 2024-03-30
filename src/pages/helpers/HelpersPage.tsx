@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {HelperTaskState} from 'model/helpers-dtos';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
@@ -21,47 +21,71 @@ import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
 import HelperTasksDataGrid from './HelperTasksDataGrid';
 import PageTitleWithTaskActions from './PageTitleWithTaskActions';
-import {doneEmoji, validatedEmoji} from './helpers-utils';
+import {
+  HelperTaskFilterOptions,
+  doneEmoji,
+  validatedEmoji,
+} from './helpers-utils';
 
-const defaultFilterOptions = {
-  get year() {
-    return getCurrentYear();
-  },
+const checkArrayContainsAllElements = <T,>(states: T[], arr: T[]): boolean => {
+  return arr.every(state => states.includes(state));
+};
+
+const allStates = [
+  HelperTaskState.Pending,
+  HelperTaskState.Done,
+  HelperTaskState.Validated,
+];
+
+const allStatesWithLabel = {
+  [HelperTaskState.Pending]: 'Pending',
+  [HelperTaskState.Done]: `Done, but not validated ${doneEmoji}`,
+  [HelperTaskState.Validated]: `Validated ${validatedEmoji}`,
+};
+
+const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
+  year: getCurrentYear(),
   search: '',
   showOnlyUpcoming: true,
   showOnlyContactOrSignedUp: false,
   showOnlyAvailable: false,
   showOnlyUnpublished: false,
   states: [HelperTaskState.Pending],
-};
+});
+
+const filterOptionsSessionStorageKey = 'helpers.grid.filterOptions';
 
 const HelpersPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
-  const [year, setYear] = useState<number | null>(defaultFilterOptions.year);
-  const [search, setSearch] = useState<string>(defaultFilterOptions.search);
-  const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(
-    defaultFilterOptions.showOnlyUpcoming
+  const [filterOptions, setFilterOptions] = useState<HelperTaskFilterOptions>(
+    () => {
+      try {
+        const savedFilterOptions = sessionStorage.getItem(
+          filterOptionsSessionStorageKey
+        );
+        return savedFilterOptions
+          ? JSON.parse(savedFilterOptions)
+          : getDefaultFilterOptions();
+      } catch (error) {
+        console.error(
+          'Error parsing filter options from sessionStorage:',
+          error
+        );
+        return getDefaultFilterOptions();
+      }
+    }
   );
-  const [showOnlyContactOrSignedUp, setShowOnlyContactOrSignedUp] = useState(
-    defaultFilterOptions.showOnlyContactOrSignedUp
-  );
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(
-    defaultFilterOptions.showOnlyAvailable
-  );
-  const [showOnlyUnpublished, setShowOnlyUnpublished] = useState(
-    defaultFilterOptions.showOnlyUnpublished
-  );
-  const [states, setStates] = useState<HelperTaskState[]>(
-    defaultFilterOptions.states
-  );
-  const allStates = {
-    [HelperTaskState.Pending]: 'Pending',
-    [HelperTaskState.Done]: `Done, but not validated ${doneEmoji}`,
-    [HelperTaskState.Validated]: `Validated ${validatedEmoji}`,
-  };
+
+  useEffect(() => {
+    console.log('Save filter options to session storage', filterOptions);
+    sessionStorage.setItem(
+      filterOptionsSessionStorageKey,
+      JSON.stringify(filterOptions)
+    );
+  }, [filterOptions]);
 
   const years = Array.from(
     {length: currentYear - firstHelperAppYear + 1},
@@ -69,26 +93,36 @@ const HelpersPage = () => {
   );
 
   const onReset = () => {
-    setYear(defaultFilterOptions.year);
-    setSearch(defaultFilterOptions.search);
-    setShowOnlyUpcoming(defaultFilterOptions.showOnlyUpcoming);
-    setShowOnlyContactOrSignedUp(
-      defaultFilterOptions.showOnlyContactOrSignedUp
-    );
-    setShowOnlyAvailable(defaultFilterOptions.showOnlyAvailable);
-    setShowOnlyUnpublished(defaultFilterOptions.showOnlyUnpublished);
-    setStates(defaultFilterOptions.states);
+    setFilterOptions(getDefaultFilterOptions());
   };
 
   const onYearChange = (event: SelectChangeEvent) => {
-    setYear(event.target.value === 'ALL' ? null : parseInt(event.target.value));
-    setShowOnlyUpcoming(false);
+    const year =
+      event.target.value === 'ALL' ? null : parseInt(event.target.value);
+    const newFilterOptions: HelperTaskFilterOptions = {...filterOptions};
+
+    newFilterOptions.year = year;
+    if (year === currentYear) {
+      if (checkArrayContainsAllElements(newFilterOptions.states, allStates)) {
+        newFilterOptions.states = [HelperTaskState.Pending];
+      }
+    } else {
+      newFilterOptions.showOnlyUpcoming = false;
+      newFilterOptions.showOnlyAvailable = false;
+      newFilterOptions.showOnlyUnpublished = false;
+      newFilterOptions.states = allStates;
+    }
+
+    setFilterOptions(newFilterOptions);
   };
 
   const onSearch = useDelay(
     SEARCH_DELAY_MS,
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(event.target.value);
+      setFilterOptions({
+        ...filterOptions,
+        search: event.target.value,
+      });
     }
   );
 
@@ -104,9 +138,12 @@ const HelpersPage = () => {
     const value = event.target.value;
     const values = typeof value === 'string' ? value.split(',') : value;
 
-    setStates(
-      values.map(v => HelperTaskState[v as keyof typeof HelperTaskState])
-    );
+    setFilterOptions({
+      ...filterOptions,
+      states: values.map(
+        v => HelperTaskState[v as keyof typeof HelperTaskState]
+      ),
+    });
   };
 
   return (
@@ -132,7 +169,7 @@ const HelpersPage = () => {
           <>
             <SpacedTypography>Year:</SpacedTypography>
             <Select
-              defaultValue={currentYear.toString()}
+              value={filterOptions.year?.toString() ?? 'ALL'}
               onChange={onYearChange}
               variant="outlined"
               size="small"
@@ -164,20 +201,24 @@ const HelpersPage = () => {
         <SpacedTypography>State:</SpacedTypography>
         <Select
           multiple
-          value={states}
+          value={filterOptions.states}
           onChange={handleStateChange}
           renderValue={values => (
             <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
               {values.map(value => (
-                <Chip key={value} label={allStates[value]} />
+                <Chip key={value} label={allStatesWithLabel[value]} />
               ))}
             </Box>
           )}
           size="small"
         >
-          {Object.entries(allStates).map(([key, value]) => (
+          {Object.entries(allStatesWithLabel).map(([key, value]) => (
             <MenuItem key={key} value={key}>
-              <Checkbox checked={states.indexOf(key as HelperTaskState) > -1} />
+              <Checkbox
+                checked={
+                  filterOptions.states.indexOf(key as HelperTaskState) > -1
+                }
+              />
               <ListItemText primary={value} />
             </MenuItem>
           ))}
@@ -200,10 +241,13 @@ const HelpersPage = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={showOnlyUpcoming}
+              checked={filterOptions.showOnlyUpcoming}
               onChange={event =>
                 handleCheckboxChange(event, checked =>
-                  setShowOnlyUpcoming(checked)
+                  setFilterOptions({
+                    ...filterOptions,
+                    showOnlyUpcoming: checked,
+                  })
                 )
               }
               size="small"
@@ -215,13 +259,17 @@ const HelpersPage = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={showOnlyContactOrSignedUp}
+              checked={filterOptions.showOnlyContactOrSignedUp}
               onChange={event =>
                 handleCheckboxChange(event, checked => {
-                  setShowOnlyContactOrSignedUp(checked);
+                  const newFilterOptions: HelperTaskFilterOptions = {
+                    ...filterOptions,
+                  };
+                  newFilterOptions.showOnlyContactOrSignedUp = checked;
                   if (checked) {
-                    setShowOnlyAvailable(false);
+                    newFilterOptions.showOnlyAvailable = false;
                   }
+                  setFilterOptions(newFilterOptions);
                 })
               }
               size="small"
@@ -233,14 +281,18 @@ const HelpersPage = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={showOnlyAvailable}
+              checked={filterOptions.showOnlyAvailable}
               onChange={event =>
                 handleCheckboxChange(event, checked => {
-                  setShowOnlyAvailable(checked);
+                  const newFilterOptions: HelperTaskFilterOptions = {
+                    ...filterOptions,
+                  };
+                  newFilterOptions.showOnlyAvailable = checked;
                   if (checked) {
-                    setShowOnlyContactOrSignedUp(false);
-                    setStates([HelperTaskState.Pending]);
+                    newFilterOptions.showOnlyContactOrSignedUp = false;
+                    newFilterOptions.states = [HelperTaskState.Pending];
                   }
+                  setFilterOptions(newFilterOptions);
                 })
               }
               size="small"
@@ -253,10 +305,13 @@ const HelpersPage = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={showOnlyUnpublished}
+                checked={filterOptions.showOnlyUnpublished}
                 onChange={event =>
                   handleCheckboxChange(event, checked =>
-                    setShowOnlyUnpublished(checked)
+                    setFilterOptions({
+                      ...filterOptions,
+                      showOnlyUnpublished: checked,
+                    })
                   )
                 }
                 size="small"
@@ -267,17 +322,7 @@ const HelpersPage = () => {
         )}
       </Stack>
 
-      <HelperTasksDataGrid
-        filterOptions={{
-          year,
-          search,
-          showOnlyUpcoming,
-          showOnlyContactOrSignedUp,
-          showOnlyAvailable,
-          showOnlyUnpublished,
-          states,
-        }}
-      />
+      <HelperTasksDataGrid filterOptions={filterOptions} />
     </>
   );
 };
