@@ -1,5 +1,5 @@
 import dayjs from 'dayjs/esm/index.js';
-import {HelperTask, HelperTaskState} from 'model/helpers-dtos';
+import {HelperTask, HelperTaskState, HelperTaskType} from 'model/helpers-dtos';
 import React from 'react';
 
 import SpanBlockBox from '@app/components/SpanBlockBox';
@@ -57,7 +57,7 @@ export const getTaskCloneLocation = (taskId: number) =>
  */
 export const isHappeningNow = (task: HelperTask): boolean => {
   const now = dayjs();
-  if (task.startsAt && task.endsAt) {
+  if (task.type === HelperTaskType.Shift) {
     return now.isAfter(task.startsAt) && now.isBefore(task.endsAt);
   } else {
     return false;
@@ -252,20 +252,9 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     statusEmoji = ` ${statusEmoji}`;
   }
 
-  if (task.deadline && !task.startsAt && !task.endsAt) {
-    // Visual note: Max 3 <SpanBlockBox> should be used on each branch
-    return (
-      <>
-        <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
-          Deadline{extraTimingTitle}
-          {statusEmoji}
-        </SpanBlockBox>
-        <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>
-        <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
-      </>
-    );
-  } else if (task.startsAt && task.endsAt) {
-    const sameDayEnd = task.startsAt.isSame(task.endsAt, 'day');
+  // Visual note: Max 3 <SpanBlockBox> should be used on each branch
+  if (task.type === HelperTaskType.Shift) {
+    const sameDayEnd = task.startsAt!.isSame(task.endsAt, 'day');
     if (sameDayEnd) {
       return (
         <>
@@ -292,6 +281,17 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
         </>
       );
     }
+  } else if (task.type === HelperTaskType.Deadline) {
+    return (
+      <>
+        <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
+          Deadline{extraTimingTitle}
+          {statusEmoji}
+        </SpanBlockBox>
+        <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>
+        <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
+      </>
+    );
   } else {
     // Fallback for inconsistent data
     return (

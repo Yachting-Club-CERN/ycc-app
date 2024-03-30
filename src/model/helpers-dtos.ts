@@ -6,6 +6,12 @@ import {
   zodTransformDate,
 } from './dtos';
 
+export enum HelperTaskType {
+  Shift = 'Shift',
+  Deadline = 'Deadline',
+  Unknown = 'Unknown',
+}
+
 export enum HelperTaskState {
   Pending = 'Pending',
   Done = 'Done',
@@ -59,6 +65,15 @@ export const HelperTaskSchema = z
   })
   .transform(values => ({
     ...values,
+    get type() {
+      if (values.startsAt && values.endsAt && !values.deadline) {
+        return HelperTaskType.Shift;
+      } else if (!values.startsAt && !values.endsAt && values.deadline) {
+        return HelperTaskType.Deadline;
+      } else {
+        return HelperTaskType.Unknown;
+      }
+    },
     get state() {
       if (values.validatedAt) {
         return HelperTaskState.Validated;
