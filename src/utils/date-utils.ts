@@ -1,20 +1,32 @@
 import dayjs from 'dayjs/esm/index.js';
 
-export const formatDate = (date: dayjs.Dayjs | string) => {
+type OptionalDate = dayjs.Dayjs | string | null | undefined;
+
+export const formatDate = (date: OptionalDate) => {
+  if (date === null || date === undefined) {
+    return date;
+  }
+
   return dayjs(date).format('DD/MM/YYYY');
 };
 
-export const formatDateWithDay = (date: dayjs.Dayjs | string) => {
+export const formatDateWithDay = (date: OptionalDate) => {
+  if (date === null || date === undefined) {
+    return date;
+  }
+
   return dayjs(date).format('dddd, D MMMM YYYY ');
 };
 
-export const formatTime = (date: dayjs.Dayjs | string) => {
+export const formatTime = (date: OptionalDate) => {
+  if (date === null || date === undefined) {
+    return date;
+  }
+
   return dayjs(date).format('HH:mm');
 };
 
-export const formatDateTime = (
-  date: dayjs.Dayjs | string | null | undefined
-) => {
+export const formatDateTime = (date: OptionalDate) => {
   if (date === null || date === undefined) {
     return date;
   }

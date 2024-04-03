@@ -1,11 +1,14 @@
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
 import {
   HelperTask,
   HelperTaskCategories,
   HelperTaskMutationRequestDto,
+  HelperTaskType,
 } from 'model/helpers-dtos';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -47,6 +50,8 @@ const HelperTaskForm = ({
   const longDescription = useDelayedRef<string | null | undefined>(
     task?.longDescription
   );
+  const [type, setType] = useState(task?.type ?? HelperTaskType.Shift);
+
   const navigate = useNavigate();
   // Some components may be already loaded at this point
   useEffect(() => {
@@ -76,13 +81,30 @@ const HelperTaskForm = ({
     published: true,
   };
 
+  const onTypeChange = (
+    _: React.MouseEvent<HTMLElement>,
+    newType: HelperTaskType | null
+  ) => {
+    if (newType !== null) {
+      setType(newType);
+    }
+  };
+
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
     try {
       setError(undefined);
       const dataToSend = {...data};
+
       dataToSend.longDescription = longDescription.get() ?? null;
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
         dataToSend.captainRequiredLicenceInfoId = null;
+      }
+
+      if (type === HelperTaskType.Shift) {
+        dataToSend.deadline = null;
+      } else if (type === HelperTaskType.Deadline) {
+        dataToSend.startsAt = null;
+        dataToSend.endsAt = null;
       }
 
       const mutatedTask =
@@ -190,26 +212,42 @@ const HelperTaskForm = ({
       )}
 
       <SpacedTypography variant="h3">Timing</SpacedTypography>
-      <SpacedTypography variant="subtitle1">
-        You need to specify either both start and end <em>or</em> a deadline.
-      </SpacedTypography>
+
       <SpacedBox>
-        <Stack direction="row" spacing={2} justifyContent="center">
-          <DateTimePickerElement
-            name="startsAt"
-            label="Start"
-            className="ycc-helper-task-starts-at-input"
-          />
-          <DateTimePickerElement
-            name="endsAt"
-            label="End"
-            className="ycc-helper-task-ends-at-input"
-          />
-          <DateTimePickerElement
-            name="deadline"
-            label="Deadline"
-            className="ycc-helper-task-deadline-input"
-          />
+        <Stack direction="row" spacing={2}>
+          <ToggleButtonGroup
+            color="primary"
+            value={type}
+            exclusive
+            onChange={onTypeChange}
+          >
+            <ToggleButton value={HelperTaskType.Shift}>Shift</ToggleButton>
+            <ToggleButton value={HelperTaskType.Deadline}>
+              Deadline
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+          {type === HelperTaskType.Shift && (
+            <>
+              <DateTimePickerElement
+                name="startsAt"
+                label="Start"
+                className="ycc-helper-task-starts-at-input"
+              />
+              <DateTimePickerElement
+                name="endsAt"
+                label="End"
+                className="ycc-helper-task-ends-at-input"
+              />
+            </>
+          )}
+          {type === HelperTaskType.Deadline && (
+            <DateTimePickerElement
+              name="deadline"
+              label="Deadline"
+              className="ycc-helper-task-deadline-input"
+            />
+          )}
         </Stack>
       </SpacedBox>
 

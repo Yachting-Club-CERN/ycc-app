@@ -17,6 +17,7 @@ const createTask = async (page: Page) => {
 
   await ui.selectOption(page.getByLabel('Contact'), 'PHUGHES'); // Next one in the list
 
+  await page.getByRole('button', {name: 'Deadline'}).click();
   await ui.selectDateTime(
     page,
     page.locator('.ycc-helper-task-deadline-input * input'),
