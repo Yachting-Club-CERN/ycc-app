@@ -15,8 +15,9 @@ export default defineConfig({
     // baseURL: 'https://ycc-dev.app.cern.ch',
     trace: 'on-first-retry',
   },
+  timeout: 120000,
   // High timeout is useful when running tests locally in parallel
-  timeout: 300000,
+  // timeout: 300000,
   projects: [
     {
       name: 'Desktop: Chrome',
