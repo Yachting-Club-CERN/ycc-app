@@ -89,7 +89,7 @@ export type HelperTask = z.infer<typeof HelperTaskSchema>;
 export const HelperTasksSchema = z.array(HelperTaskSchema);
 export type HelperTasks = z.infer<typeof HelperTasksSchema>;
 
-// TODO Add client side validation for better UX
+// TODO #38 Add client side validation for better UX
 export const HelperTaskMutationRequestDtoSchema = z.object({
   categoryId: z.number(),
   title: z.string(),
