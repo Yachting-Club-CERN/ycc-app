@@ -1,11 +1,11 @@
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs/esm/index.js';
 import React, {useState} from 'react';
 
 import PageTitle from '@app/components/PageTitle';
 import useDelay from '@app/hooks/useDelay';
+import dayjs from '@app/utils/dayjs';
 import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
 import MembersDataGrid from './MembersDataGrid';

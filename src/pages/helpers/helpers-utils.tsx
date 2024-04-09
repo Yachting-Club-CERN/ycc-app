@@ -1,4 +1,3 @@
-import dayjs from 'dayjs/esm/index.js';
 import {HelperTask, HelperTaskState, HelperTaskType} from 'model/helpers-dtos';
 import React from 'react';
 
@@ -9,6 +8,7 @@ import {
   formatDateWithDay,
   formatTime,
 } from '@app/utils/date-utils';
+import dayjs from '@app/utils/dayjs';
 
 export const doneEmoji = '🚦';
 export const validatedEmoji = '✔️';

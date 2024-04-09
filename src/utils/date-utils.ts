@@ -1,4 +1,4 @@
-import dayjs from 'dayjs/esm/index.js';
+import dayjs, {TIMEZONE_ID as TIME_ZONE_ID} from '@app/utils/dayjs';
 
 type OptionalDate = dayjs.Dayjs | string | null | undefined;
 
@@ -7,7 +7,7 @@ export const formatDate = (date: OptionalDate) => {
     return date;
   }
 
-  return dayjs(date).format('DD/MM/YYYY');
+  return dayjs(date).tz(TIME_ZONE_ID).format('DD/MM/YYYY');
 };
 
 export const formatDateWithDay = (date: OptionalDate) => {
@@ -15,7 +15,7 @@ export const formatDateWithDay = (date: OptionalDate) => {
     return date;
   }
 
-  return dayjs(date).format('dddd, D MMMM YYYY ');
+  return dayjs(date).tz(TIME_ZONE_ID).format('dddd, D MMMM YYYY ');
 };
 
 export const formatTime = (date: OptionalDate) => {
@@ -23,7 +23,7 @@ export const formatTime = (date: OptionalDate) => {
     return date;
   }
 
-  return dayjs(date).format('HH:mm');
+  return dayjs(date).tz(TIME_ZONE_ID).format('HH:mm');
 };
 
 export const formatDateTime = (date: OptionalDate) => {
@@ -31,7 +31,7 @@ export const formatDateTime = (date: OptionalDate) => {
     return date;
   }
 
-  return dayjs(date).format('D/M/YYYY, HH:mm');
+  return dayjs(date).tz(TIME_ZONE_ID).format('D/M/YYYY, HH:mm');
 };
 
 export const getCurrentYear = () => dayjs().year();

@@ -3,17 +3,12 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs/esm/index.js';
-import 'dayjs/locale/en-gb';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import {auth} from '@app/context/AuthenticationContext';
 
 import App from './App';
-
-// Avoid funny results with an English page running on a French phone
-dayjs.locale('en-gb');
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
