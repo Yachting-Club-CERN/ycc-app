@@ -233,11 +233,13 @@ const HelperTaskForm = ({
                 name="startsAt"
                 label="Start"
                 className="ycc-helper-task-starts-at-input"
+                timezone="default"
               />
               <DateTimePickerElement
                 name="endsAt"
                 label="End"
                 className="ycc-helper-task-ends-at-input"
+                timezone="default"
               />
             </>
           )}
@@ -246,6 +248,7 @@ const HelperTaskForm = ({
               name="deadline"
               label="Deadline"
               className="ycc-helper-task-deadline-input"
+              timezone="default"
             />
           )}
         </Stack>

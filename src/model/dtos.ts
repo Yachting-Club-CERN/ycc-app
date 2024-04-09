@@ -1,5 +1,6 @@
-import dayjs from 'dayjs/esm/index.js';
 import {RefinementCtx, z} from 'zod';
+
+import dayjs from '@app/utils/dayjs';
 
 export const zodTransformDate = (
   value: unknown,
