@@ -15,7 +15,8 @@ export default defineConfig({
     // baseURL: 'https://ycc-dev.app.cern.ch',
     trace: 'on-first-retry',
   },
-  timeout: 120000,
+  // High timeout is useful when running tests locally in parallel
+  timeout: 300000,
   projects: [
     {
       name: 'Desktop: Chrome',
@@ -25,10 +26,11 @@ export default defineConfig({
       name: 'Desktop: Chrome - French',
       use: {...devices['Desktop Chrome'], locale: 'fr-FR'},
     },
-    {
-      name: 'Desktop: Edge',
-      use: {...devices['Desktop Edge']},
-    },
+    // For testing time zone support, e.g., https://github.com/Yachting-Club-CERN/ycc-app/issues/77
+    // {
+    //   name: 'Desktop: Edge - Japan time zone',
+    //   use: {...devices['Desktop Edge'], timezoneId: 'Asia/Tokyo'},
+    // },
     {
       name: 'Desktop: Firefox',
       use: {...devices['Desktop Firefox']},
