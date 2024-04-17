@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Task cloning
-- Task search
+- Helper task cloning
+- Helper task search
+  - By free text, state, year
+  - Remember previously selected search options
 - Data validation using Zod
 - Year-aware helper task list
 - Confirmation dialog when signing up to helper tasks
-- Task validation
-- Remember previous helper task filter options
+- Helper task validation
 
 ### Changed
 
