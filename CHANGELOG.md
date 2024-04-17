@@ -9,25 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Task cloning
-- Task search
+- Helper task cloning
+- Helper task search
+  - By free text, state, year
+  - Remember previously selected search options
 - Data validation using Zod
 - Year-aware helper task list
 - Confirmation dialog when signing up to helper tasks
-- Task validation
-- Remember previous helper task filter options
+- Helper task validation
 
 ### Changed
 
 - Use Day.js over Date
 - Always display and interpret dates in YCC time zone
-- Add task type selector when specifying helper task timing
+- Add helper task type selector when specifying helper task timing
 
 ## [1.0.0] - 2024-01-30
 
 ### Fixed
 
-- CTRL/SHIFT + click on a task in the list opens the task in a new tab/window
+- CTRL/SHIFT + click on a helper task in the list opens the task in a new tab/window
 
 ### Added
 
@@ -57,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improve filtering options on the task list page
+- Improve filtering options on the helper task list page
 
 ## [0.2.0] - 2023-04-12
 

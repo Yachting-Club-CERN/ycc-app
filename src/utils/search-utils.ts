@@ -15,7 +15,7 @@ export const searchMemberUsernameOrName = (
 ) => {
   const s = search.toLowerCase().trim();
   return (
-    member.username.includes(s) ||
+    member.username.toLowerCase().includes(s) ||
     (member.firstName + ' ' + member.lastName).toLowerCase().includes(s) ||
     (member.lastName + ' ' + member.firstName).toLowerCase().includes(s)
   );

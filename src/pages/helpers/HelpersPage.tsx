@@ -183,7 +183,7 @@ const HelpersPage = () => {
                   {year}
                 </MenuItem>
               ))}
-              <MenuItem key={9999} value="{allYearsLabel}">
+              <MenuItem key={9999} value={allYearsLabel}>
                 {allYearsLabel}
               </MenuItem>
             </Select>
@@ -192,6 +192,8 @@ const HelpersPage = () => {
 
         <Typography>Search:</Typography>
         <TextField
+          // Use defaultValue instead of value, because this field is controlled with a delay
+          defaultValue={filterOptions.search}
           onChange={onSearch}
           variant="outlined"
           label="Category, person, text..."
