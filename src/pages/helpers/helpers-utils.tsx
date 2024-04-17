@@ -13,9 +13,9 @@ import {
   formatDateTime,
   formatDateWithDay,
   formatTime,
+  getNow,
   isSameDay,
 } from '@app/utils/date-utils';
-import dayjs from '@app/utils/dayjs';
 
 export const doneEmoji = '🚦';
 export const validatedEmoji = '✔️';
@@ -75,7 +75,7 @@ export const isMultiDayShift = (
  * @returns true if the task is a shift and it is happening right now, false otherwise
  */
 export const isHappeningNow = (task: HelperTask): boolean => {
-  const now = dayjs();
+  const now = getNow();
   if (task.type === HelperTaskType.Shift) {
     return now.isAfter(task.startsAt) && now.isBefore(task.endsAt);
   } else {
@@ -90,7 +90,7 @@ export const isHappeningNow = (task: HelperTask): boolean => {
  * @returns true if the task is in the future, false otherwise
  */
 export const isUpcoming = (task: HelperTask): boolean => {
-  const now = dayjs();
+  const now = getNow();
   const startInFutureOrMissing = task.startsAt
     ? task.startsAt.isAfter(now)
     : true;
@@ -200,6 +200,7 @@ export const canEditTask = (task: HelperTask, user: User): boolean =>
  */
 export const canMarkTaskAsDone = (task: HelperTask, user: User): boolean =>
   task.published &&
+  !(task.type === HelperTaskType.Shift && isUpcoming(task)) &&
   task.state === HelperTaskState.Pending &&
   (user.helpersAppAdmin ||
     isContact(task, user) ||
@@ -213,6 +214,7 @@ export const canMarkTaskAsDone = (task: HelperTask, user: User): boolean =>
  */
 export const canValidate = (task: HelperTask, user: User): boolean =>
   task.published &&
+  !(task.type === HelperTaskType.Shift && isUpcoming(task)) &&
   task.state !== HelperTaskState.Validated &&
   (user.helpersAppAdmin || isContact(task, user));
 
