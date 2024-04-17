@@ -26,4 +26,9 @@ export const formatDateTime = (date: OptionalDate) => {
     : dayjs(date).tz(TIME_ZONE_ID).format('D/M/YYYY, HH:mm');
 };
 
+export const isSameDay = (date1: dayjs.Dayjs, date2: dayjs.Dayjs) =>
+  date1.isSame(date2, 'day');
+
 export const getCurrentYear = () => dayjs().year();
+
+export const getNow = () => dayjs();

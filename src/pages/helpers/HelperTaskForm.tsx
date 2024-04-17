@@ -25,10 +25,11 @@ import RichTextEditor from '@app/components/RichTextEditor';
 import SpacedBox from '@app/components/SpacedBox';
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
+import useConfirmationDialog from '@app/hooks/useConfirmationDialog';
 import useDelayedRef from '@app/hooks/useDelayedRef';
 import client from '@app/utils/client';
 
-import {canEditTask, getTaskLocation} from './helpers-utils';
+import {canEditTask, getTaskLocation, isMultiDayShift} from './helpers-utils';
 
 type Props = {
   task?: HelperTask;
@@ -51,6 +52,8 @@ const HelperTaskForm = ({
     task?.longDescription
   );
   const [type, setType] = useState(task?.type ?? HelperTaskType.Shift);
+  const {confirmationDialogComponent, openConfirmationDialog} =
+    useConfirmationDialog();
 
   const navigate = useNavigate();
   // Some components may be already loaded at this point
@@ -90,6 +93,14 @@ const HelperTaskForm = ({
     }
   };
 
+  const doSubmit = async (dataToSend: HelperTaskMutationRequestDto) => {
+    const mutatedTask =
+      task && !newTask
+        ? await client.updateHelperTask(task.id, dataToSend)
+        : await client.createHelperTask(dataToSend);
+    navigate(getTaskLocation(mutatedTask.id));
+  };
+
   const onSubmit = async (data: HelperTaskMutationRequestDto) => {
     try {
       setError(undefined);
@@ -107,11 +118,17 @@ const HelperTaskForm = ({
         dataToSend.endsAt = null;
       }
 
-      const mutatedTask =
-        task && !newTask
-          ? await client.updateHelperTask(task.id, dataToSend)
-          : await client.createHelperTask(dataToSend);
-      navigate(getTaskLocation(mutatedTask.id));
+      if (isMultiDayShift(dataToSend)) {
+        openConfirmationDialog(
+          'Are you sure you want to create a multi-day shift instead of a task with a deadline?',
+          'Please note that members will not be able to sign up for multi-day shifts after the shift has started.',
+          async () => {
+            await doSubmit(dataToSend);
+          }
+        );
+      } else {
+        await doSubmit(dataToSend);
+      }
     } catch (error) {
       setError(error);
     }
@@ -333,6 +350,8 @@ const HelperTaskForm = ({
       <SpacedBox>
         <>{error && <ErrorAlert error={error} />}</>
       </SpacedBox>
+
+      {confirmationDialogComponent}
     </FormContainer>
   );
 };

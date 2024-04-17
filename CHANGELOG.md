@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Data validation using Zod
 - Year-aware helper task list
 - Confirmation dialog when signing up to helper tasks
+- Confirmation dialog when posting multi-day shifts
 - Helper task validation
 
 ### Changed
