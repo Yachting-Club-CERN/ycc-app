@@ -3,7 +3,7 @@ import {useState} from 'react';
 import useDelay from './useDelay';
 
 /**
- * This hook is used to create a state pair, from which one reflects changes immediately and one with a delay.
+ * This hook is creates a state pair, from which one reflects changes immediately and one with a delay.
  *
  * This is particularly useful when one needs to reflect changes immediately on a form, but also wants to avoid e.g., grid filtering lag when the user is typing.
  *
