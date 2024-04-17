@@ -1,5 +1,7 @@
 import {z} from 'zod';
 
+import dayjs from '@app/utils/dayjs';
+
 import {
   LicenceInfoSchema,
   MemberPublicInfoSchema,
@@ -18,25 +20,56 @@ export enum HelperTaskState {
   Validated = 'Validated',
 }
 
-export const HelperTaskCategorySchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  shortDescription: z.string(),
-  longDescription: z.string().nullable(),
-});
+export const HelperTaskCategorySchema = z
+  .object({
+    id: z.number(),
+    title: z.string(),
+    shortDescription: z.string(),
+    longDescription: z.string().nullable(),
+  })
+  .readonly();
 export type HelperTaskCategory = z.infer<typeof HelperTaskCategorySchema>;
 
 export const HelperTaskCategoriesSchema = z.array(HelperTaskCategorySchema);
 export type HelperTaskCategories = z.infer<typeof HelperTaskCategoriesSchema>;
 
-export const HelperTaskHelperSchema = z.object({
-  member: MemberPublicInfoSchema,
-  signedUpAt: z.string().transform(zodTransformDate),
-});
+export const HelperTaskHelperSchema = z
+  .object({
+    member: MemberPublicInfoSchema,
+    signedUpAt: z.string().transform(zodTransformDate),
+  })
+  .readonly();
 export type HelperTaskHelper = z.infer<typeof HelperTaskHelperSchema>;
 
 export const HelperTaskHelpersSchema = z.array(HelperTaskHelperSchema);
 export type HelperTaskHelpers = z.infer<typeof HelperTaskHelpersSchema>;
+
+export const getHelperTaskType = (task: {
+  startsAt: dayjs.Dayjs | null;
+  endsAt: dayjs.Dayjs | null;
+  deadline: dayjs.Dayjs | null;
+}) => {
+  if (task.startsAt && task.endsAt && !task.deadline) {
+    return HelperTaskType.Shift;
+  } else if (!task.startsAt && !task.endsAt && task.deadline) {
+    return HelperTaskType.Deadline;
+  } else {
+    return HelperTaskType.Unknown;
+  }
+};
+
+export const getHelperTaskState = (task: {
+  validatedAt: dayjs.Dayjs | null;
+  markedAsDoneAt: dayjs.Dayjs | null;
+}) => {
+  if (task.validatedAt) {
+    return HelperTaskState.Validated;
+  } else if (task.markedAsDoneAt) {
+    return HelperTaskState.Done;
+  } else {
+    return HelperTaskState.Pending;
+  }
+};
 
 export const HelperTaskSchema = z
   .object({
@@ -46,9 +79,9 @@ export const HelperTaskSchema = z
     shortDescription: z.string(),
     longDescription: z.string().nullable(),
     contact: MemberPublicInfoSchema,
-    startsAt: z.string().transform(zodTransformDate).nullable(),
-    endsAt: z.string().transform(zodTransformDate).nullable(),
-    deadline: z.string().transform(zodTransformDate).nullable(),
+    startsAt: z.unknown().transform(zodTransformDate).nullable(),
+    endsAt: z.unknown().transform(zodTransformDate).nullable(),
+    deadline: z.unknown().transform(zodTransformDate).nullable(),
     urgent: z.boolean(),
     captainRequiredLicenceInfo: LicenceInfoSchema.nullable(),
     helperMinCount: z.number(),
@@ -56,34 +89,24 @@ export const HelperTaskSchema = z
     published: z.boolean(),
     captain: HelperTaskHelperSchema.nullable(),
     helpers: HelperTaskHelpersSchema,
-    markedAsDoneAt: z.string().transform(zodTransformDate).nullable(),
+    markedAsDoneAt: z.unknown().transform(zodTransformDate).nullable(),
     markedAsDoneBy: MemberPublicInfoSchema.nullable(),
     markedAsDoneComment: z.string().nullable(),
-    validatedAt: z.string().transform(zodTransformDate).nullable(),
+    validatedAt: z.unknown().transform(zodTransformDate).nullable(),
     validatedBy: MemberPublicInfoSchema.nullable(),
     validationComment: z.string().nullable(),
   })
   .transform(values => ({
     ...values,
     get type() {
-      if (values.startsAt && values.endsAt && !values.deadline) {
-        return HelperTaskType.Shift;
-      } else if (!values.startsAt && !values.endsAt && values.deadline) {
-        return HelperTaskType.Deadline;
-      } else {
-        return HelperTaskType.Unknown;
-      }
+      return getHelperTaskType(values);
     },
     get state() {
-      if (values.validatedAt) {
-        return HelperTaskState.Validated;
-      } else if (values.markedAsDoneAt) {
-        return HelperTaskState.Done;
-      } else {
-        return HelperTaskState.Pending;
-      }
+      return getHelperTaskState(values);
     },
-  }));
+  }))
+  // Make it readonly() since mutations would not update calculated properties
+  .readonly();
 export type HelperTask = z.infer<typeof HelperTaskSchema>;
 
 export const HelperTasksSchema = z.array(HelperTaskSchema);
@@ -96,9 +119,9 @@ export const HelperTaskMutationRequestDtoSchema = z.object({
   shortDescription: z.string(),
   longDescription: z.string().nullable(),
   contactId: z.number(),
-  startsAt: z.string().transform(zodTransformDate).nullable(),
-  endsAt: z.string().transform(zodTransformDate).nullable(),
-  deadline: z.string().transform(zodTransformDate).nullable(),
+  startsAt: z.unknown().transform(zodTransformDate).nullable(),
+  endsAt: z.unknown().transform(zodTransformDate).nullable(),
+  deadline: z.unknown().transform(zodTransformDate).nullable(),
   urgent: z.boolean(),
   captainRequiredLicenceInfoId: z.number().nullable(),
   helperMinCount: z.number(),

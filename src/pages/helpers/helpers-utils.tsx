@@ -1,4 +1,10 @@
-import {HelperTask, HelperTaskState, HelperTaskType} from 'model/helpers-dtos';
+import {
+  HelperTask,
+  HelperTaskMutationRequestDto,
+  HelperTaskState,
+  HelperTaskType,
+  getHelperTaskType,
+} from 'model/helpers-dtos';
 import React from 'react';
 
 import SpanBlockBox from '@app/components/SpanBlockBox';
@@ -7,6 +13,7 @@ import {
   formatDateTime,
   formatDateWithDay,
   formatTime,
+  isSameDay,
 } from '@app/utils/date-utils';
 import dayjs from '@app/utils/dayjs';
 
@@ -48,6 +55,18 @@ export const getTaskEditLocation = (taskId: number) =>
  */
 export const getTaskCloneLocation = (taskId: number) =>
   `/helpers/tasks/new?from=${taskId}`;
+
+/**
+ * Tells if a shift is multi-day shift.
+ *
+ * @param task a task
+ * @returns true if the task is a multi-day shift, false otherwise
+ */
+export const isMultiDayShift = (
+  task: HelperTask | HelperTaskMutationRequestDto
+): boolean =>
+  getHelperTaskType(task) === HelperTaskType.Shift &&
+  !isSameDay(task.startsAt!, task.endsAt!);
 
 /**
  * Tells if a shift is happening right now.
@@ -254,8 +273,18 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
 
   // Visual note: Max 3 <SpanBlockBox> should be used on each branch
   if (task.type === HelperTaskType.Shift) {
-    const sameDayEnd = task.startsAt!.isSame(task.endsAt, 'day');
-    if (sameDayEnd) {
+    if (isMultiDayShift(task)) {
+      return (
+        <>
+          <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
+            Multi-Day Shift{extraTimingTitle}
+            {statusEmoji}
+          </SpanBlockBox>
+          <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
+          <SpanBlockBox>End: {formatDateTime(task.endsAt)}</SpanBlockBox>
+        </>
+      );
+    } else {
       return (
         <>
           <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
@@ -266,18 +295,6 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
           <SpanBlockBox>
             {formatTime(task.startsAt)} -- {formatTime(task.endsAt)}
           </SpanBlockBox>
-        </>
-      );
-    } else {
-      // Note: this we did not have at all before 2023, not sure whether it would be used
-      return (
-        <>
-          <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
-            Multi-Day Shift{extraTimingTitle}
-            {statusEmoji}
-          </SpanBlockBox>
-          <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
-          <SpanBlockBox>End: {formatDateTime(task.endsAt)}</SpanBlockBox>
         </>
       );
     }
