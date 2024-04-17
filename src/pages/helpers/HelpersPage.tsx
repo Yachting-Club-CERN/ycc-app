@@ -11,11 +11,11 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {HelperTaskState} from 'model/helpers-dtos';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
-import useDelay from '@app/hooks/useDelay';
+import useDelayedState from '@app/hooks/useDelayedState';
 import {getCurrentYear} from '@app/utils/date-utils';
 import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
@@ -62,24 +62,24 @@ const HelpersPage = () => {
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
-  const [filterOptions, setFilterOptions] = useState<HelperTaskFilterOptions>(
-    () => {
-      try {
-        const savedFilterOptions = sessionStorage.getItem(
-          filterOptionsSessionStorageKey
-        );
-        return savedFilterOptions
-          ? JSON.parse(savedFilterOptions)
-          : getDefaultFilterOptions();
-      } catch (error) {
-        console.error(
-          'Error parsing filter options from sessionStorage:',
-          error
-        );
-        return getDefaultFilterOptions();
-      }
+  const [
+    filterOptions,
+    delayedFilterOptions,
+    setFilterOptionsImmediately,
+    setFilterOptionsWithDelay,
+  ] = useDelayedState(() => {
+    try {
+      const savedFilterOptions = sessionStorage.getItem(
+        filterOptionsSessionStorageKey
+      );
+      return savedFilterOptions
+        ? JSON.parse(savedFilterOptions)
+        : getDefaultFilterOptions();
+    } catch (error) {
+      console.error('Error parsing filter options from sessionStorage:', error);
+      return getDefaultFilterOptions();
     }
-  );
+  }, SEARCH_DELAY_MS);
 
   useEffect(() => {
     console.log('Save filter options to session storage', filterOptions);
@@ -87,7 +87,7 @@ const HelpersPage = () => {
       filterOptionsSessionStorageKey,
       JSON.stringify(filterOptions)
     );
-  }, [filterOptions]);
+  }, [delayedFilterOptions]);
 
   const years = Array.from(
     {length: currentYear - firstHelperAppYear + 1},
@@ -95,7 +95,7 @@ const HelpersPage = () => {
   );
 
   const onReset = () => {
-    setFilterOptions(getDefaultFilterOptions());
+    setFilterOptionsImmediately(getDefaultFilterOptions());
   };
 
   const onYearChange = (event: SelectChangeEvent) => {
@@ -117,18 +117,15 @@ const HelpersPage = () => {
       newFilterOptions.states = allStates;
     }
 
-    setFilterOptions(newFilterOptions);
+    setFilterOptionsImmediately(newFilterOptions);
   };
 
-  const onSearch = useDelay(
-    SEARCH_DELAY_MS,
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFilterOptions({
-        ...filterOptions,
-        search: event.target.value,
-      });
-    }
-  );
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterOptionsWithDelay({
+      ...filterOptions,
+      search: event.target.value,
+    });
+  };
 
   const handleCheckboxChange = (
     event: React.SyntheticEvent,
@@ -142,7 +139,7 @@ const HelpersPage = () => {
     const value = event.target.value;
     const values = typeof value === 'string' ? value.split(',') : value;
 
-    setFilterOptions({
+    setFilterOptionsImmediately({
       ...filterOptions,
       states: values.map(
         v => HelperTaskState[v as keyof typeof HelperTaskState]
@@ -192,8 +189,7 @@ const HelpersPage = () => {
 
         <Typography>Search:</Typography>
         <TextField
-          // Use defaultValue instead of value, because this field is controlled with a delay
-          defaultValue={filterOptions.search}
+          value={filterOptions.search}
           onChange={onSearch}
           variant="outlined"
           label="Category, person, text..."
@@ -250,7 +246,7 @@ const HelpersPage = () => {
               checked={filterOptions.showOnlyUpcoming}
               onChange={event =>
                 handleCheckboxChange(event, checked =>
-                  setFilterOptions({
+                  setFilterOptionsImmediately({
                     ...filterOptions,
                     showOnlyUpcoming: checked,
                   })
@@ -275,7 +271,7 @@ const HelpersPage = () => {
                   if (checked) {
                     newFilterOptions.showOnlyAvailable = false;
                   }
-                  setFilterOptions(newFilterOptions);
+                  setFilterOptionsImmediately(newFilterOptions);
                 })
               }
               size="small"
@@ -298,7 +294,7 @@ const HelpersPage = () => {
                     newFilterOptions.showOnlyContactOrSignedUp = false;
                     newFilterOptions.states = [HelperTaskState.Pending];
                   }
-                  setFilterOptions(newFilterOptions);
+                  setFilterOptionsImmediately(newFilterOptions);
                 })
               }
               size="small"
@@ -314,7 +310,7 @@ const HelpersPage = () => {
                 checked={filterOptions.showOnlyUnpublished}
                 onChange={event =>
                   handleCheckboxChange(event, checked =>
-                    setFilterOptions({
+                    setFilterOptionsImmediately({
                       ...filterOptions,
                       showOnlyUnpublished: checked,
                     })
@@ -328,7 +324,7 @@ const HelpersPage = () => {
         )}
       </Stack>
 
-      <HelperTasksDataGrid filterOptions={filterOptions} />
+      <HelperTasksDataGrid filterOptions={delayedFilterOptions} />
     </>
   );
 };

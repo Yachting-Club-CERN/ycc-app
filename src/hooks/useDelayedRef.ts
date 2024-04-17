@@ -7,7 +7,7 @@ import useDelay from './useDelay';
  *
  * @param initialValue the initial value
  * @param delay the delay in milliseconds
- * @returns an array containing the getter, the setter and the delayed setter
+ * @returns an object containing the getter, the setter and the delayed setter
  */
 const useDelayedRef = <T>(initialValue: T, delay = 500) => {
   const ref = useRef(initialValue);
