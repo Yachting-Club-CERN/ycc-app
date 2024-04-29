@@ -295,7 +295,8 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
           </SpanBlockBox>
           <SpanBlockBox>{formatDateWithDay(task.startsAt)}</SpanBlockBox>
           <SpanBlockBox>
-            {formatTime(task.startsAt)} -- {formatTime(task.endsAt)}
+            {/* That's an En Dash (U+2013) */}
+            {formatTime(task.startsAt)} – {formatTime(task.endsAt)}
           </SpanBlockBox>
         </>
       );

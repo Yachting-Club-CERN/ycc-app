@@ -127,14 +127,6 @@ const HelpersPage = () => {
     });
   };
 
-  const handleCheckboxChange = (
-    event: React.SyntheticEvent,
-    handler: (checked: boolean) => void
-  ) => {
-    const {checked} = event.target as HTMLInputElement;
-    handler(checked);
-  };
-
   const handleStateChange = (event: SelectChangeEvent<HelperTaskState[]>) => {
     const value = event.target.value;
     const values = typeof value === 'string' ? value.split(',') : value;
@@ -244,14 +236,12 @@ const HelpersPage = () => {
           control={
             <Checkbox
               checked={filterOptions.showOnlyUpcoming}
-              onChange={event =>
-                handleCheckboxChange(event, checked =>
-                  setFilterOptionsImmediately({
-                    ...filterOptions,
-                    showOnlyUpcoming: checked,
-                  })
-                )
-              }
+              onChange={(_, checked) => {
+                setFilterOptionsImmediately({
+                  ...filterOptions,
+                  showOnlyUpcoming: checked,
+                });
+              }}
               size="small"
             />
           }
@@ -262,18 +252,16 @@ const HelpersPage = () => {
           control={
             <Checkbox
               checked={filterOptions.showOnlyContactOrSignedUp}
-              onChange={event =>
-                handleCheckboxChange(event, checked => {
-                  const newFilterOptions: HelperTaskFilterOptions = {
-                    ...filterOptions,
-                  };
-                  newFilterOptions.showOnlyContactOrSignedUp = checked;
-                  if (checked) {
-                    newFilterOptions.showOnlyAvailable = false;
-                  }
-                  setFilterOptionsImmediately(newFilterOptions);
-                })
-              }
+              onChange={(_, checked) => {
+                const newFilterOptions: HelperTaskFilterOptions = {
+                  ...filterOptions,
+                };
+                newFilterOptions.showOnlyContactOrSignedUp = checked;
+                if (checked) {
+                  newFilterOptions.showOnlyAvailable = false;
+                }
+                setFilterOptionsImmediately(newFilterOptions);
+              }}
               size="small"
             />
           }
@@ -284,19 +272,17 @@ const HelpersPage = () => {
           control={
             <Checkbox
               checked={filterOptions.showOnlyAvailable}
-              onChange={event =>
-                handleCheckboxChange(event, checked => {
-                  const newFilterOptions: HelperTaskFilterOptions = {
-                    ...filterOptions,
-                  };
-                  newFilterOptions.showOnlyAvailable = checked;
-                  if (checked) {
-                    newFilterOptions.showOnlyContactOrSignedUp = false;
-                    newFilterOptions.states = [HelperTaskState.Pending];
-                  }
-                  setFilterOptionsImmediately(newFilterOptions);
-                })
-              }
+              onChange={(_, checked) => {
+                const newFilterOptions: HelperTaskFilterOptions = {
+                  ...filterOptions,
+                };
+                newFilterOptions.showOnlyAvailable = checked;
+                if (checked) {
+                  newFilterOptions.showOnlyContactOrSignedUp = false;
+                  newFilterOptions.states = [HelperTaskState.Pending];
+                }
+                setFilterOptionsImmediately(newFilterOptions);
+              }}
               size="small"
             />
           }
@@ -308,14 +294,12 @@ const HelpersPage = () => {
             control={
               <Checkbox
                 checked={filterOptions.showOnlyUnpublished}
-                onChange={event =>
-                  handleCheckboxChange(event, checked =>
-                    setFilterOptionsImmediately({
-                      ...filterOptions,
-                      showOnlyUnpublished: checked,
-                    })
-                  )
-                }
+                onChange={(_, checked) => {
+                  setFilterOptionsImmediately({
+                    ...filterOptions,
+                    showOnlyUnpublished: checked,
+                  });
+                }}
                 size="small"
               />
             }
