@@ -1,6 +1,8 @@
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
@@ -17,6 +19,7 @@ import {
   FormContainer,
   SwitchElement,
   TextFieldElement,
+  TimePickerElement,
 } from 'react-hook-form-mui';
 import {useNavigate} from 'react-router-dom';
 
@@ -28,6 +31,7 @@ import AuthenticationContext from '@app/context/AuthenticationContext';
 import useConfirmationDialog from '@app/hooks/useConfirmationDialog';
 import useDelayedRef from '@app/hooks/useDelayedRef';
 import client from '@app/utils/client';
+import dayjs from '@app/utils/dayjs';
 
 import {canEditTask, getTaskLocation, isMultiDayShift} from './helpers-utils';
 
@@ -37,6 +41,10 @@ type Props = {
   categories: HelperTaskCategories;
   members: MemberPublicInfos;
   licenceInfos: LicenceDetailedInfos;
+};
+
+type HelperTaskFormData = HelperTaskMutationRequestDto & {
+  endsAtTime: dayjs.Dayjs | null;
 };
 
 const HelperTaskForm = ({
@@ -52,6 +60,9 @@ const HelperTaskForm = ({
     task?.longDescription
   );
   const [type, setType] = useState(task?.type ?? HelperTaskType.Shift);
+  const [multiDayShift, setMultiDayShift] = useState(
+    task ? isMultiDayShift(task) : false
+  );
   const {confirmationDialogComponent, openConfirmationDialog} =
     useConfirmationDialog();
 
@@ -66,7 +77,7 @@ const HelperTaskForm = ({
     }
   });
 
-  const initialData: HelperTaskMutationRequestDto = {
+  const initialData: HelperTaskFormData = {
     categoryId: task?.category.id ?? -1,
     title: task?.title ?? '',
     shortDescription: task?.shortDescription ?? '',
@@ -76,6 +87,7 @@ const HelperTaskForm = ({
       : task?.contact.id ?? currentUser.memberId,
     startsAt: task?.startsAt ?? null,
     endsAt: task?.endsAt ?? null,
+    endsAtTime: task?.endsAt ?? null,
     deadline: task?.deadline ?? null,
     urgent: task?.urgent ?? false,
     captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
@@ -101,14 +113,21 @@ const HelperTaskForm = ({
     navigate(getTaskLocation(mutatedTask.id));
   };
 
-  const onSubmit = async (data: HelperTaskMutationRequestDto) => {
+  const onSubmit = async (data: HelperTaskFormData) => {
     try {
       setError(undefined);
-      const dataToSend = {...data};
+      const {endsAtTime, ...dataToSend} = {...data};
 
       dataToSend.longDescription = longDescription.get() ?? null;
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
         dataToSend.captainRequiredLicenceInfoId = null;
+      }
+
+      if (!multiDayShift && dataToSend.startsAt && endsAtTime) {
+        dataToSend.endsAt = endsAtTime
+          .year(dataToSend.startsAt.year())
+          .month(dataToSend.startsAt.month())
+          .date(dataToSend.startsAt.date());
       }
 
       if (type === HelperTaskType.Shift) {
@@ -232,6 +251,7 @@ const HelperTaskForm = ({
 
       <SpacedBox>
         <Stack direction="row" spacing={2}>
+          {/* This is not controlled by the FormContainer */}
           <ToggleButtonGroup
             color="primary"
             value={type}
@@ -252,11 +272,31 @@ const HelperTaskForm = ({
                 className="ycc-helper-task-starts-at-input"
                 timezone="default"
               />
-              <DateTimePickerElement
-                name="endsAt"
-                label="End"
-                className="ycc-helper-task-ends-at-input"
-                timezone="default"
+              {multiDayShift ? (
+                <DateTimePickerElement
+                  name="endsAt"
+                  label="End"
+                  className="ycc-helper-task-ends-at-input"
+                  timezone="default"
+                />
+              ) : (
+                <TimePickerElement
+                  name="endsAtTime"
+                  label="End"
+                  className="ycc-helper-task-ends-at-time-input"
+                  timezone="default"
+                  sx={{width: '7.5rem'}}
+                />
+              )}
+              {/* This is not controlled by the FormContainer */}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={multiDayShift}
+                    onChange={(_, checked) => setMultiDayShift(checked)}
+                  />
+                }
+                label="Multi-Day shift"
               />
             </>
           )}
@@ -335,12 +375,8 @@ const HelperTaskForm = ({
       </SpacedTypography>
       <SpacedBox>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <SwitchElement name="urgent" label="Urgent" labelPlacement="start" />
-          <SwitchElement
-            name="published"
-            label="Published"
-            labelPlacement="start"
-          />
+          <SwitchElement name="urgent" label="Urgent" />
+          <SwitchElement name="published" label="Published" />
 
           <Button type="submit" variant="contained">
             Submit
