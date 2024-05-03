@@ -23,6 +23,7 @@ import {
 } from 'react-hook-form-mui';
 import {useNavigate} from 'react-router-dom';
 
+import {ConfirmationDialogContent} from '@app/components/ConfirmationDialog';
 import ErrorAlert from '@app/components/ErrorAlert';
 import RichTextEditor from '@app/components/RichTextEditor';
 import SpacedBox from '@app/components/SpacedBox';
@@ -93,7 +94,7 @@ const HelperTaskForm = ({
     captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
     helperMinCount: task?.helperMinCount ?? 1,
     helperMaxCount: task?.helperMaxCount ?? 2,
-    published: true,
+    published: task?.published ?? true,
   };
 
   const onTypeChange = (
@@ -137,10 +138,22 @@ const HelperTaskForm = ({
         dataToSend.endsAt = null;
       }
 
+      const confirmations = [];
       if (isMultiDayShift(dataToSend)) {
+        confirmations.push(
+          'Are you sure that this task is a multi-day shift and not a task with a deadline? Please note that members will not be able to sign up for multi-day shifts after the shift has started.'
+        );
+      }
+      if (!dataToSend.published) {
+        confirmations.push(
+          'Are you sure you want this task to be unpublished?'
+        );
+      }
+
+      if (confirmations.length > 0) {
         openConfirmationDialog(
-          'Are you sure you want to create a multi-day shift instead of a task with a deadline?',
-          'Please note that members will not be able to sign up for multi-day shifts after the shift has started.',
+          'Please confirm the following',
+          confirmations as ConfirmationDialogContent,
           async () => {
             await doSubmit(dataToSend);
           }
