@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {HelperTaskState} from 'model/helpers-dtos';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import SpacedTypography from '@app/components/SpacedTypography';
 import AuthenticationContext from '@app/context/AuthenticationContext';
@@ -19,7 +19,7 @@ import useDelayedState from '@app/hooks/useDelayedState';
 import {getCurrentYear} from '@app/utils/date-utils';
 import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
 
-import HelperTasksDataGrid from './HelperTasksDataGrid';
+import HelperTasksView from './HelperTasksView';
 import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {
   HelperTaskFilterOptions,
@@ -80,6 +80,7 @@ const HelpersPage = () => {
       return getDefaultFilterOptions();
     }
   }, SEARCH_DELAY_MS);
+  const [display, setDisplay] = useState<'grid' | 'report'>('grid');
 
   useEffect(() => {
     console.log('Save filter options to session storage', filterOptions);
@@ -290,25 +291,40 @@ const HelpersPage = () => {
         />
 
         {currentUser.helpersAppAdminOrEditor && (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={filterOptions.showOnlyUnpublished}
-                onChange={(_, checked) => {
-                  setFilterOptionsImmediately({
-                    ...filterOptions,
-                    showOnlyUnpublished: checked,
-                  });
-                }}
-                size="small"
-              />
-            }
-            label="Only unpublished"
-          />
+          <>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={filterOptions.showOnlyUnpublished}
+                  onChange={(_, checked) => {
+                    setFilterOptionsImmediately({
+                      ...filterOptions,
+                      showOnlyUnpublished: checked,
+                    });
+                  }}
+                  size="small"
+                />
+              }
+              label="Only unpublished"
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={display === 'report'}
+                  onChange={(_, checked) => {
+                    setDisplay(checked ? 'report' : 'grid');
+                  }}
+                  size="small"
+                />
+              }
+              label="Report view"
+            />
+          </>
         )}
       </Stack>
 
-      <HelperTasksDataGrid filterOptions={delayedFilterOptions} />
+      <HelperTasksView display={display} filterOptions={delayedFilterOptions} />
     </>
   );
 };

@@ -252,6 +252,53 @@ export const getStatusEmoji = (task: HelperTask): string => {
 };
 
 /**
+ * Creates the timing info line for a task.
+ *
+ * @param task a task
+ * @returns the timing info line
+ */
+export const createTimingInfoLine = (task: HelperTask): string => {
+  let extraTimingTitle = [
+    task.urgent ? 'URGENT' : '',
+    task.published ? '' : 'HIDDEN',
+  ]
+    .filter(Boolean)
+    .join(', ');
+  if (extraTimingTitle !== '') {
+    extraTimingTitle = `${extraTimingTitle} `;
+  }
+
+  let statusEmoji = getStatusEmoji(task);
+  if (statusEmoji) {
+    statusEmoji = `${statusEmoji} `;
+  }
+
+  if (task.type === HelperTaskType.Shift) {
+    if (isMultiDayShift(task)) {
+      // That's an En Dash (U+2013)
+      return `${extraTimingTitle}${statusEmoji}Multi-Day Shift: ${formatDateTime(
+        task.startsAt
+      )} – ${formatDateTime(task.endsAt)}`;
+    } else {
+      // That's an En Dash (U+2013)
+      return `${extraTimingTitle}${statusEmoji}Shift: ${formatDateWithDay(
+        task.startsAt
+      )} ${formatTime(task.startsAt)} – ${formatTime(task.endsAt)}`;
+    }
+  } else if (task.type === HelperTaskType.Deadline) {
+    return `${extraTimingTitle}${statusEmoji}Deadline: ${formatDateWithDay(
+      task.deadline
+    )} ${formatTime(task.deadline)}`;
+  } else {
+    return `${extraTimingTitle}${statusEmoji}Start: ${
+      formatDateTime(task.startsAt) ?? '-'
+    } End: ${formatDateTime(task.endsAt) ?? '-'} Deadline: ${
+      formatDateTime(task.deadline) ?? '-'
+    }`;
+  }
+};
+
+/**
  * Creates the timing info fragment for a task.
  *
  * @param task a task

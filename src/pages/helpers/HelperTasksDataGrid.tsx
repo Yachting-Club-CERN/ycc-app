@@ -14,29 +14,16 @@ import {HelperTask, HelperTaskHelper, HelperTasks} from 'model/helpers-dtos';
 import React, {useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import PromiseStatus from '@app/components/PromiseStatus';
 import SpanBlockBox from '@app/components/SpanBlockBox';
 import AuthenticationContext from '@app/context/AuthenticationContext';
 import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
-import usePromise from '@app/hooks/usePromise';
-import client from '@app/utils/client';
-import {
-  searchAnyStringProperty,
-  searchMemberUsernameOrName,
-} from '@app/utils/search-utils';
 
 import {
-  HelperTaskFilterOptions,
-  canSignUp,
   canSignUpAsCaptain,
   canSignUpAsHelper,
   createTimingInfoFragment,
   fakeRandomSignUpText,
   getTaskLocation,
-  isContact,
-  isHappeningNow,
-  isSignedUp,
-  isUpcoming,
 } from './helpers-utils';
 
 const StyledDataGrid = styled(DataGrid)(({theme}) => ({
@@ -52,14 +39,10 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
 })) as typeof DataGrid;
 
 type Props = {
-  filterOptions: HelperTaskFilterOptions;
+  tasks: HelperTasks;
 };
 
-const HelperTasksDataGrid = ({filterOptions}: Props) => {
-  const tasks = usePromise(
-    (signal?: AbortSignal) => client.getHelperTasks(filterOptions.year, signal),
-    [filterOptions.year]
-  );
+const HelperTasksDataGrid = ({tasks}: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
 
@@ -67,61 +50,6 @@ const HelperTasksDataGrid = ({filterOptions}: Props) => {
     useMemberInfoDialog();
 
   const getRowId = (task: HelperTask) => task.id;
-
-  const filterSearchMember = (searchToken: string, member?: MemberPublicInfo) =>
-    (member && searchMemberUsernameOrName(searchToken, member)) ?? false;
-
-  const filterSearch = (search: string, tasks: HelperTasks) => {
-    // The user might want to search for a combination of things such as "J80 maintenance jib" or "MicMac Tim"
-    const searchTokens = search
-      .toLowerCase()
-      .trim()
-      .split(/\s+/)
-      .map(s => s.trim())
-      .filter(s => s);
-
-    if (searchTokens) {
-      return tasks.filter(task => {
-        return searchTokens.every(token => {
-          return (
-            task.category.title.toLowerCase().includes(token) ||
-            filterSearchMember(token, task.contact) ||
-            filterSearchMember(token, task.captain?.member) ||
-            task.helpers.some(helper =>
-              filterSearchMember(token, helper.member)
-            ) ||
-            searchAnyStringProperty(token, task)
-          );
-        });
-      });
-    } else {
-      return tasks;
-    }
-  };
-
-  const filter = (tasks: HelperTasks) => {
-    return filterSearch(
-      filterOptions.search,
-      tasks
-        .filter(task =>
-          filterOptions.showOnlyUpcoming
-            ? isHappeningNow(task) || isUpcoming(task)
-            : true
-        )
-        .filter(task =>
-          filterOptions.showOnlyContactOrSignedUp
-            ? isContact(task, currentUser) || isSignedUp(task, currentUser)
-            : true
-        )
-        .filter(task =>
-          filterOptions.showOnlyAvailable ? canSignUp(task, currentUser) : true
-        )
-        .filter(task =>
-          filterOptions.showOnlyUnpublished ? !task.published : true
-        )
-        .filter(task => filterOptions.states.includes(task.state))
-    );
-  };
 
   const handleGridClick = (
     params: GridCellParams,
@@ -289,27 +217,23 @@ const HelperTasksDataGrid = ({filterOptions}: Props) => {
 
   return (
     <>
-      {tasks.result && (
-        <StyledDataGrid
-          columns={columns}
-          rows={filter(tasks.result)}
-          getRowId={getRowId}
-          onCellClick={handleGridClick}
-          disableColumnFilter={true}
-          pageSizeOptions={[10, 25, 50, 100]}
-          getRowClassName={(params: GridRowParams) =>
-            (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
-          }
-          rowHeight={78}
-          sx={{
-            // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
-            minHeight: '265px',
-            height: 'calc(100vh - 370px)',
-          }}
-        />
-      )}
-
-      <PromiseStatus outcomes={[tasks]} />
+      <StyledDataGrid
+        columns={columns}
+        rows={tasks}
+        getRowId={getRowId}
+        onCellClick={handleGridClick}
+        disableColumnFilter={true}
+        pageSizeOptions={[10, 25, 50, 100]}
+        getRowClassName={(params: GridRowParams) =>
+          (params.row as HelperTask).urgent ? 'ycc-urgent' : ''
+        }
+        rowHeight={78}
+        sx={{
+          // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
+          minHeight: '265px',
+          height: 'calc(100vh - 370px)',
+        }}
+      />
 
       {memberInfoDialogComponent}
     </>
