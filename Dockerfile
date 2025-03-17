@@ -7,7 +7,7 @@ ARG VITE_APP_KEYCLOAK_CLIENT
 ARG VITE_APP_YCC_HULL_URL
 
 # Helper for resources
-FROM registry.access.redhat.com/ubi9/nodejs-$NODE_VERSION-minimal as builder
+FROM registry.access.redhat.com/ubi9/nodejs-$NODE_VERSION-minimal AS builder
 
 ARG VITE_APP_ENVIRONMENT
 ARG VITE_APP_KEYCLOAK_SERVER_URL
