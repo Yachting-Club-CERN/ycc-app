@@ -9,14 +9,14 @@ export default defineConfig({
   reporter: "html",
   use: {
     // Run tests on the LOCAL instance
-    baseURL: 'http://localhost:3000',
+    // baseURL: 'http://localhost:3000',
     // Run tests on the DEV instance
-    // baseURL: "https://ycc-dev.app.cern.ch",
+    baseURL: "https://ycc-dev.app.cern.ch",
     trace: "on-first-retry",
   },
-  // timeout: 120000,
+  timeout: 120000,
   // High timeout is useful when running tests locally in parallel
-  timeout: 300000,
+  // timeout: 300000,
   projects: [
     {
       name: "Desktop: Chrome",
