@@ -13,10 +13,9 @@ type Props = {
 const HelperTasksReport = ({ tasks }: Props) => {
   const navigate = useNavigate();
 
-  const handleClick = async (event: React.MouseEvent) => {
+  const handleClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    const a = event.currentTarget as HTMLAnchorElement;
-    await navigate(a.href);
+    await navigate(event.currentTarget.href);
   };
 
   return (

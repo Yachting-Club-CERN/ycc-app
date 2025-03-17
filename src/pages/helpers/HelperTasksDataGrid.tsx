@@ -65,7 +65,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     // Not an <a> but good enough
     if (event.ctrlKey) {
       // Note: blur/focus might not work depending on the browser
-      window.open(location, "_blank")?.blur();
+      window.open(location, "_blank")?.blur(); //NOSONAR
       window.focus();
     } else if (event.shiftKey) {
       // https://stackoverflow.com/a/726803
