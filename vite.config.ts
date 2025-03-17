@@ -10,6 +10,7 @@ export default defineConfig({
       babel: { plugins: ["@emotion/babel-plugin"] },
     }),
     tsconfigPaths(),
+    // See stats.html for chunk details (after running pnpm build)
     visualizer(),
   ],
   optimizeDeps: {
@@ -27,6 +28,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          // Some notes as quite bit of time was sent here:
+          // - Big chunks cause very slow loading on mobile devices
+          // - Tried to use a function, but it is error-prone that something get's package into the wrong location
+          // - This way Rollup.js is able to optimize the chunks better
+          // - Surprisingly as of 2025-03 react-router-dom actually get's packaged with the app into index*.js
           oh: [
             "axios",
             "html-react-parser",
