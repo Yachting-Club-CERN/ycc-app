@@ -1,27 +1,26 @@
-import React, {useContext} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {useSearchParams} from 'react-router-dom';
+import { useContext } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import PageTitle from '@app/components/PageTitle';
-import PromiseStatus from '@app/components/PromiseStatus';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import AuthenticationContext from '@app/context/AuthenticationContext';
-import SharedDataContext from '@app/context/SharedDataContext';
-import usePromise from '@app/hooks/usePromise';
-import client from '@app/utils/client';
-import {getCurrentYear} from '@app/utils/date-utils';
+import PageTitle from "@/components/PageTitle";
+import PromiseStatus from "@/components/PromiseStatus";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import SharedDataContext from "@/context/SharedDataContext";
+import usePromise from "@/hooks/usePromise";
+import client from "@/utils/client";
+import { getCurrentYear } from "@/utils/date-utils";
 
-import HelperTaskForm from './HelperTaskForm';
+import HelperTaskForm from "./HelperTaskForm";
 
 const HelpersNewTaskPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdminOrEditor) {
-    navigate('/helpers');
+    void navigate("/helpers");
   }
 
   const [searchParams] = useSearchParams();
-  const taskToCloneId = parseInt(searchParams.get('from') ?? 'NaN');
+  const taskToCloneId = parseInt(searchParams.get("from") ?? "NaN");
 
   const getHelperTask = (signal?: AbortSignal) => {
     if (isNaN(taskToCloneId)) {
@@ -35,7 +34,7 @@ const HelpersNewTaskPage = () => {
   const sharedData = useContext(SharedDataContext);
   const helperTaskCategories = usePromise(sharedData.getHelperTaskCategories);
   const members = usePromise((signal?: AbortSignal) =>
-    sharedData.getMembers(getCurrentYear(), signal)
+    sharedData.getMembers(getCurrentYear(), signal),
   );
   const licenceInfos = usePromise(sharedData.getLicenceInfos);
 

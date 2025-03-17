@@ -1,5 +1,5 @@
-import Typography from '@mui/material/Typography';
-import {styled} from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
 /**
  * A Typography component with default spacing.
@@ -7,10 +7,10 @@ import {styled} from '@mui/material/styles';
  * This is preferred over global styles, as the latter would affect all components including Typography components (such as ListItemText or DataGrid).
  */
 const SpacedTypography = styled(Typography)({
-  '&': {
-    marginTop: '1rem',
-    marginBottom: '1rem',
-    textAlign: 'justify',
+  "&": {
+    marginTop: "1rem",
+    marginBottom: "1rem",
+    textAlign: "justify",
   },
 }) as typeof Typography;
 

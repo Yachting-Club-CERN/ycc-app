@@ -1,10 +1,11 @@
-import config from 'config';
 import Keycloak, {
   KeycloakConfig,
   KeycloakProfile,
   KeycloakTokenParsed,
-} from 'keycloak-js';
-import {createContext} from 'react';
+} from "keycloak-js";
+import { createContext } from "react";
+
+import config from "@/config";
 
 const KEYCLOAK_CONFIG: KeycloakConfig = {
   url: config.keycloakServerUrl,
@@ -16,7 +17,7 @@ const KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY = 30;
 
 // Keycloak user info looks like this (information might be present on the access or the id token too):
 //
-// email: "Heather.Chang@mailinator.com"
+// email: "heather.chang@mailinator.com"
 // email_verified: false
 // family_name: "Chang"
 // given_name: "Heather"
@@ -52,23 +53,23 @@ class User {
     readonly firstName: string,
     readonly lastName: string,
     readonly groups: readonly string[],
-    readonly roles: readonly string[]
+    readonly roles: readonly string[],
   ) {}
 
   get activeMember(): boolean {
-    return this.roles.includes('ycc-member-active');
+    return this.roles.includes("ycc-member-active");
   }
 
   get committeeMember(): boolean {
-    return this.roles.includes('ycc-member-committee');
+    return this.roles.includes("ycc-member-committee");
   }
 
   get helpersAppAdmin(): boolean {
-    return this.roles.includes('ycc-helpers-app-admin');
+    return this.roles.includes("ycc-helpers-app-admin");
   }
 
   get helpersAppEditor(): boolean {
-    return this.roles.includes('ycc-helpers-app-editor');
+    return this.roles.includes("ycc-helpers-app-editor");
   }
 
   get helpersAppAdminOrEditor(): boolean {
@@ -86,56 +87,56 @@ class UserFactory {
     info?: KeycloakUserInfo,
     profile?: KeycloakProfile,
     accessToken?: KeycloakTokenParsed,
-    idToken?: KeycloakTokenParsed
+    idToken?: KeycloakTokenParsed,
   ): User {
     const keycloakId = UserFactory.parseAsString(
       profile?.id,
       info?.sub,
       accessToken?.sub,
-      idToken?.sub
+      idToken?.sub,
     );
 
     // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
-    const memberId = parseInt(keycloakId.split(':').slice(-1)[0]);
+    const memberId = parseInt(keycloakId.split(":").slice(-1)[0]);
 
     const username = UserFactory.parseAsString(
       profile?.username,
       info?.preferred_username,
       accessToken?.preferred_username,
-      idToken?.preferred_username
+      idToken?.preferred_username,
     );
 
     const email = UserFactory.parseAsString(
       profile?.email,
       info?.email,
       accessToken?.email,
-      idToken?.email
+      idToken?.email,
     );
 
     const firstName = UserFactory.parseAsString(
       profile?.firstName,
       info?.given_name,
       accessToken?.given_name,
-      idToken?.given_name
+      idToken?.given_name,
     );
 
     const lastName = UserFactory.parseAsString(
       profile?.lastName,
       info?.family_name,
       accessToken?.family_name,
-      idToken?.family_name
+      idToken?.family_name,
     );
 
     const groups = UserFactory.parseAsStringArray(
       info?.groups,
       accessToken?.groups,
-      idToken?.groups
+      idToken?.groups,
     );
 
     const roles = UserFactory.parseAsStringArray(
       info?.roles,
       accessToken?.roles,
-      idToken?.roles
+      idToken?.roles,
     );
 
     return new User(
@@ -146,31 +147,32 @@ class UserFactory {
       firstName,
       lastName,
       groups,
-      roles
+      roles,
     );
   }
 
   private static parseAsString(...potentialValues: unknown[]): string {
     return (
-      potentialValues.map(value => value?.toString()).find(value => value) ??
-      _UNKNOWN
+      potentialValues
+        .map((value) => value?.toString())
+        .find((value) => value) ?? _UNKNOWN
     );
   }
 
   private static parseAsStringArray(
     ...potentialValueArrays: unknown[]
   ): string[] {
-    const potentialValueArray = potentialValueArrays.find(value =>
-      Array.isArray(value)
+    const potentialValueArray = potentialValueArrays.find((value) =>
+      Array.isArray(value),
     ) as unknown[] | undefined;
     const valueArray = potentialValueArray
-      ?.map(el => el?.toString())
-      .filter(el => el) as string[] | undefined;
+      ?.map((el) => el?.toString())
+      .filter((el) => el) as string[] | undefined;
     return valueArray ?? [];
   }
 }
 
-const _UNKNOWN = '<unknown>';
+const _UNKNOWN = "<unknown>";
 
 const UNKNOWN_USER: User = new User(
   _UNKNOWN,
@@ -180,11 +182,11 @@ const UNKNOWN_USER: User = new User(
   _UNKNOWN,
   _UNKNOWN,
   [],
-  []
+  [],
 );
 
 class AuthenticationProvider {
-  private _keycloak: Keycloak;
+  private readonly _keycloak: Keycloak;
   private _user: User | null;
 
   public constructor() {
@@ -201,51 +203,51 @@ class AuthenticationProvider {
     return this._user || UNKNOWN_USER;
   }
 
-  init = async () => {
+  readonly init = async () => {
     this._keycloak.onTokenExpired = () => {
       this._keycloak
         .updateToken(KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY)
-        .then(refreshed => {
+        .then((refreshed) => {
           if (refreshed) {
             this.updateGlobalToken();
-            console.debug('[auth] Token was successfully refreshed');
+            console.debug("[auth] Token was successfully refreshed");
           } else {
-            console.debug('[auth] Token is still valid');
+            console.debug("[auth] Token is still valid");
           }
         })
-        .catch(() => {
+        .catch(async () => {
           console.info(
-            '[auth] Failed to refresh the token or the session has expired'
+            "[auth] Failed to refresh the token or the session has expired",
           );
-          this.logout();
+          await this.logout();
         });
     };
 
     try {
       const authenticated = await this._keycloak.init({
-        onLoad: 'login-required',
+        onLoad: "login-required",
       });
 
       if (authenticated) {
-        console.debug('[auth] Authenticated:', authenticated);
-        console.debug('[auth] Subject:', this._keycloak.subject);
+        console.debug("[auth] Authenticated:", authenticated);
+        console.debug("[auth] Subject:", this._keycloak.subject);
 
         const accessToken = this._keycloak.tokenParsed;
-        console.debug('[auth] Access token:', accessToken);
+        console.debug("[auth] Access token:", accessToken);
         const idToken = this._keycloak.idTokenParsed;
-        console.debug('[auth] ID token:', idToken);
+        console.debug("[auth] ID token:", idToken);
 
         const loadUserInfo = this._keycloak.loadUserInfo();
         loadUserInfo
-          .then(info => console.debug('[auth] User info', info))
-          .catch(() => console.error('[auth] Failed to load user info'));
+          .then((info) => console.debug("[auth] User info", info))
+          .catch(() => console.error("[auth] Failed to load user info"));
 
         // this._keycloak.
 
         const loadUserProfile = this._keycloak.loadUserProfile();
         loadUserProfile
-          .then(profile => console.debug('[auth] User profile', profile))
-          .catch(() => console.error('[auth] Failed to load user info'));
+          .then((profile) => console.debug("[auth] User profile", profile))
+          .catch(() => console.error("[auth] Failed to load user info"));
 
         return Promise.all([loadUserInfo, loadUserProfile])
           .then(([info, profile]) => {
@@ -253,39 +255,39 @@ class AuthenticationProvider {
               info,
               profile,
               accessToken,
-              idToken
+              idToken,
             );
             this.updateGlobalToken();
-            console.debug('[auth] User:', this._user);
+            console.debug("[auth] User:", this._user);
           })
           .catch(() => {
-            console.error('[auth] Failed to load user info and profile');
+            console.error("[auth] Failed to load user info and profile");
             this._user = null;
           });
       } else {
-        console.error('[auth] Not authenticated');
-        alert('Not authenticated, please log in');
-        this._keycloak.login();
-        return Promise.reject();
+        console.error("[auth] Not authenticated");
+        alert("Not authenticated, please log in");
+        await this._keycloak.login();
+        return Promise.reject(new Error("Not authenticated"));
       }
     } catch (error) {
-      return console.error('[auth] Authentication failed', error);
+      return console.error("[auth] Authentication failed", error);
     }
   };
 
-  public logout = () => {
-    console.debug('[auth] Logging out');
-    this._keycloak.logout();
+  public readonly logout = async () => {
+    console.debug("[auth] Logging out");
+    await this._keycloak.logout();
   };
 
-  private updateGlobalToken = () => {
+  private readonly updateGlobalToken = () => {
     window.oauth2Token = this._keycloak.token;
   };
 }
 
 const auth = new AuthenticationProvider();
 
-export {auth, User};
+export { auth, User };
 
 const AuthenticationContext = createContext<AuthenticationProvider>(auth);
 export default AuthenticationContext;

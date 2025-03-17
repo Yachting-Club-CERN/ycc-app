@@ -1,6 +1,6 @@
-import {useRef} from 'react';
+import { useRef } from "react";
 
-import useDelay from './useDelay';
+import useDelay from "./useDelay";
 
 /**
  * This hook is used to create a reference with a getter/setter/delayed setter.

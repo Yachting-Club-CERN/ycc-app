@@ -1,40 +1,42 @@
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import {LicenceDetailedInfos, MemberPublicInfos} from 'model/dtos';
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { useContext, useEffect, useState } from "react";
+import {
+  AutocompleteElement,
+  FormContainer,
+  SwitchElement,
+  TextFieldElement,
+} from "react-hook-form-mui";
+import {
+  DateTimePickerElement,
+  TimePickerElement,
+} from "react-hook-form-mui/date-pickers";
+import { useNavigate } from "react-router-dom";
+
+import { ConfirmationDialogContent } from "@/components/ConfirmationDialog";
+import ErrorAlert from "@/components/ErrorAlert";
+import RichTextEditor from "@/components/RichTextEditor";
+import SpacedBox from "@/components/SpacedBox";
+import SpacedTypography from "@/components/SpacedTypography";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import useConfirmationDialog from "@/hooks/useConfirmationDialog";
+import useDelayedRef from "@/hooks/useDelayedRef";
+import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
 import {
   HelperTask,
   HelperTaskCategories,
   HelperTaskMutationRequestDto,
   HelperTaskType,
-} from 'model/helpers-dtos';
-import React, {useContext, useEffect, useState} from 'react';
-import {
-  AutocompleteElement,
-  DateTimePickerElement,
-  FormContainer,
-  SwitchElement,
-  TextFieldElement,
-  TimePickerElement,
-} from 'react-hook-form-mui';
-import {useNavigate} from 'react-router-dom';
+} from "@/model/helpers-dtos";
+import client from "@/utils/client";
+import dayjs from "@/utils/dayjs";
 
-import {ConfirmationDialogContent} from '@app/components/ConfirmationDialog';
-import ErrorAlert from '@app/components/ErrorAlert';
-import RichTextEditor from '@app/components/RichTextEditor';
-import SpacedBox from '@app/components/SpacedBox';
-import SpacedTypography from '@app/components/SpacedTypography';
-import AuthenticationContext from '@app/context/AuthenticationContext';
-import useConfirmationDialog from '@app/hooks/useConfirmationDialog';
-import useDelayedRef from '@app/hooks/useDelayedRef';
-import client from '@app/utils/client';
-import dayjs from '@app/utils/dayjs';
-
-import {canEditTask, getTaskLocation, isMultiDayShift} from './helpers-utils';
+import { canEditTask, getTaskLocation, isMultiDayShift } from "./helpers-utils";
 
 type Props = {
   task?: HelperTask;
@@ -58,13 +60,13 @@ const HelperTaskForm = ({
   const currentUser = useContext(AuthenticationContext).currentUser;
   const [error, setError] = useState<unknown>();
   const longDescription = useDelayedRef<string | null | undefined>(
-    task?.longDescription
+    task?.longDescription,
   );
   const [type, setType] = useState(task?.type ?? HelperTaskType.Shift);
   const [multiDayShift, setMultiDayShift] = useState(
-    task ? isMultiDayShift(task) : false
+    task ? isMultiDayShift(task) : false,
   );
-  const {confirmationDialogComponent, openConfirmationDialog} =
+  const { confirmationDialogComponent, openConfirmationDialog } =
     useConfirmationDialog();
 
   const navigate = useNavigate();
@@ -72,20 +74,20 @@ const HelperTaskForm = ({
   useEffect(() => {
     if (task && !newTask && !canEditTask(task, currentUser)) {
       alert(
-        'Hello there! No idea how you got here! You cannot edit this task, sorry :-('
+        "Hello there! No idea how you got here! You cannot edit this task, sorry :-(",
       );
-      navigate(getTaskLocation(task.id));
+      void navigate(getTaskLocation(task.id));
     }
-  });
+  }, [task, newTask, currentUser]);
 
   const initialData: HelperTaskFormData = {
     categoryId: task?.category.id ?? -1,
-    title: task?.title ?? '',
-    shortDescription: task?.shortDescription ?? '',
+    title: task?.title ?? "",
+    shortDescription: task?.shortDescription ?? "",
     longDescription: task?.longDescription ?? null,
     contactId: newTask
       ? currentUser.memberId
-      : task?.contact.id ?? currentUser.memberId,
+      : (task?.contact.id ?? currentUser.memberId),
     startsAt: task?.startsAt ?? null,
     endsAt: task?.endsAt ?? null,
     endsAtTime: task?.endsAt ?? null,
@@ -99,7 +101,7 @@ const HelperTaskForm = ({
 
   const onTypeChange = (
     _: React.MouseEvent<HTMLElement>,
-    newType: HelperTaskType | null
+    newType: HelperTaskType | null,
   ) => {
     if (newType !== null) {
       setType(newType);
@@ -111,13 +113,13 @@ const HelperTaskForm = ({
       task && !newTask
         ? await client.updateHelperTask(task.id, dataToSend)
         : await client.createHelperTask(dataToSend);
-    navigate(getTaskLocation(mutatedTask.id));
+    await navigate(getTaskLocation(mutatedTask.id));
   };
 
   const onSubmit = async (data: HelperTaskFormData) => {
     try {
       setError(undefined);
-      const {endsAtTime, ...dataToSend} = {...data};
+      const { endsAtTime, ...dataToSend } = { ...data };
 
       dataToSend.longDescription = longDescription.get() ?? null;
       if (dataToSend.captainRequiredLicenceInfoId === -1) {
@@ -139,24 +141,26 @@ const HelperTaskForm = ({
       }
 
       const confirmations = [];
-      if (isMultiDayShift(dataToSend)) {
+      const wasMultiDayShift =
+        (task ? isMultiDayShift(task) : false) && !newTask;
+      if (!wasMultiDayShift && isMultiDayShift(dataToSend)) {
         confirmations.push(
-          'Are you sure that this task is a multi-day shift and not a task with a deadline? Please note that members will not be able to sign up for multi-day shifts after the shift has started.'
+          "Are you sure that this task is a multi-day shift and not a task with a deadline? Please note that members will not be able to sign up for multi-day shifts after the shift has started.",
         );
       }
       if (!dataToSend.published) {
         confirmations.push(
-          'Are you sure you want this task to be unpublished?'
+          "Are you sure you want this task to be unpublished?",
         );
       }
 
       if (confirmations.length > 0) {
         openConfirmationDialog(
-          'Please confirm the following',
+          "Please confirm the following",
           confirmations as ConfirmationDialogContent,
           async () => {
             await doSubmit(dataToSend);
-          }
+          },
         );
       } else {
         await doSubmit(dataToSend);
@@ -169,15 +173,15 @@ const HelperTaskForm = ({
   const categoryOptions = [
     {
       id: -1,
-      label: '(Select a category)',
+      label: "(Select a category)",
     },
-    ...categories.map(category => ({
+    ...categories.map((category) => ({
       id: category.id,
       label: category.title,
     })),
   ];
 
-  const memberOptions = members.map(member => ({
+  const memberOptions = members.map((member) => ({
     id: member.id,
     label: `${member.lastName.toUpperCase()} ${member.firstName} (${
       member.username
@@ -187,9 +191,9 @@ const HelperTaskForm = ({
   const captainRequiredLicenceInfoOptions = [
     {
       id: -1,
-      label: '(None)',
+      label: "(None)",
     },
-    ...licenceInfos.map(licenceInfo => ({
+    ...licenceInfos.map((licenceInfo) => ({
       id: licenceInfo.id,
       label: `${licenceInfo.licence} (${licenceInfo.description})`,
     })),
@@ -239,7 +243,7 @@ const HelperTaskForm = ({
       <SpacedBox>
         <RichTextEditor
           initialContent={
-            task ? task.longDescription : '<p>Please describe the task here</p>'
+            task ? task.longDescription : "<p>Please describe the task here</p>"
           }
           onBlur={longDescription.setImmediately}
           onInit={longDescription.setImmediately}
@@ -298,7 +302,7 @@ const HelperTaskForm = ({
                   label="End"
                   className="ycc-helper-task-ends-at-time-input"
                   timezone="default"
-                  sx={{width: '7.5rem'}}
+                  sx={{ width: "7.5rem" }}
                 />
               )}
               {/* This is not controlled by the FormContainer */}
@@ -349,8 +353,8 @@ const HelperTaskForm = ({
             options={captainRequiredLicenceInfoOptions}
             textFieldProps={{
               sx: {
-                minWidth: '15rem',
-                maxWidth: '20rem',
+                minWidth: "15rem",
+                maxWidth: "20rem",
               },
             }}
           />
@@ -358,11 +362,13 @@ const HelperTaskForm = ({
             name="helperMinCount"
             required
             label="Min. Helpers"
-            type={'number'}
-            inputProps={{
-              sx: {
-                textAlign: 'center',
-                width: '5rem',
+            type={"number"}
+            slotProps={{
+              input: {
+                sx: {
+                  textAlign: "center",
+                  width: "5rem",
+                },
               },
             }}
           />
@@ -370,17 +376,19 @@ const HelperTaskForm = ({
             name="helperMaxCount"
             required
             label="Max. Helpers"
-            type={'number'}
-            inputProps={{
-              sx: {
-                textAlign: 'center',
-                width: '5rem',
+            type={"number"}
+            slotProps={{
+              input: {
+                sx: {
+                  textAlign: "center",
+                  width: "5rem",
+                },
               },
             }}
           />
         </Stack>
       </SpacedBox>
-      <Divider sx={{mt: 2}} />
+      <Divider sx={{ mt: 2 }} />
       <SpacedTypography>
         Urgent tasks are highlighted at the top of the table, unpublished tasks
         are not shown to club members. After a member signs up for a task, you

@@ -1,20 +1,19 @@
-import React from 'react';
-import {useLocation} from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import SpacedTypography from '@app/components/SpacedTypography';
-import toJson from '@app/utils/toJson';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import SpacedTypography from "@/components/SpacedTypography";
+import toJson from "@/utils/toJson";
 
 const NotFoundPage = () => {
   const location = useLocation();
 
   const debug = {
-    problem: 'Page not found',
+    problem: "Page not found",
     windowLocation: window.location.href,
     routerLocation: location,
   };
-  console.debug('Debug info: ', debug);
+  console.debug("Debug info: ", debug);
 
   return (
     <ReadingFriendlyBox>
@@ -27,7 +26,7 @@ const NotFoundPage = () => {
       <SpacedTypography>
         If you feel the boogie you can send this to the IT Helpers:
       </SpacedTypography>
-      <SpacedTypography sx={{whiteSpace: 'pre-wrap'}}>
+      <SpacedTypography sx={{ whiteSpace: "pre-wrap" }}>
         {toJson(debug)}
       </SpacedTypography>
     </ReadingFriendlyBox>

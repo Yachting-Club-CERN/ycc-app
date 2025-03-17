@@ -1,19 +1,19 @@
-import Box from '@mui/material/Box';
-import {styled} from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+
+const BlockBox = styled(Box)({
+  "&": {
+    display: "block",
+  },
+}) as typeof Box;
 
 /**
- * A Box component with underlying component &lt;span%gt;.
+ * A Box component that renders as `<span>` with block display.
+ *
+ * Useful when `<div>` is not allowed.
  */
-const SpanBlockBox = styled(Box)({
-  '&': {
-    display: 'block',
-  },
-});
+const SpanBlockBox = (props: React.ComponentProps<typeof Box>) => (
+  <BlockBox component="span" {...props} />
+);
 
-SpanBlockBox.defaultProps = {
-  component: 'span',
-};
-
-const SpanBlockBoxAsBox = SpanBlockBox as typeof Box;
-
-export default SpanBlockBoxAsBox;
+export default SpanBlockBox;

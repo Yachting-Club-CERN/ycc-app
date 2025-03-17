@@ -1,5 +1,4 @@
-import Link from '@mui/material/Link';
-import React from 'react';
+import Link from "@mui/material/Link";
 
 export const toEmailLink = (value?: string | null) => {
   return value ? (

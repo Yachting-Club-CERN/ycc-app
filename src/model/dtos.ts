@@ -1,12 +1,12 @@
-import {RefinementCtx, z} from 'zod';
+import { RefinementCtx, z } from "zod";
 
-import dayjs from '@app/utils/dayjs';
+import dayjs from "@/utils/dayjs";
 
 export const zodTransformDate = (
   value: unknown,
-  ctx: RefinementCtx
+  ctx: RefinementCtx,
 ): dayjs.Dayjs => {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const date = dayjs(value);
     if (date.isValid()) {
       return date;
@@ -17,7 +17,7 @@ export const zodTransformDate = (
 
   ctx.addIssue({
     code: z.ZodIssueCode.custom,
-    message: 'Invalid date',
+    message: "Invalid date",
   });
   return z.NEVER;
 };

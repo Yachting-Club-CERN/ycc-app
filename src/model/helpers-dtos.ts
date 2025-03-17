@@ -1,23 +1,23 @@
-import {z} from 'zod';
+import { z } from "zod";
 
-import dayjs from '@app/utils/dayjs';
+import dayjs from "@/utils/dayjs";
 
 import {
   LicenceInfoSchema,
   MemberPublicInfoSchema,
   zodTransformDate,
-} from './dtos';
+} from "./dtos";
 
 export enum HelperTaskType {
-  Shift = 'Shift',
-  Deadline = 'Deadline',
-  Unknown = 'Unknown',
+  Shift = "Shift",
+  Deadline = "Deadline",
+  Unknown = "Unknown",
 }
 
 export enum HelperTaskState {
-  Pending = 'Pending',
-  Done = 'Done',
-  Validated = 'Validated',
+  Pending = "Pending",
+  Done = "Done",
+  Validated = "Validated",
 }
 
 export const HelperTaskCategorySchema = z
@@ -96,7 +96,7 @@ export const HelperTaskSchema = z
     validatedBy: MemberPublicInfoSchema.nullable(),
     validationComment: z.string().nullable(),
   })
-  .transform(values => ({
+  .transform((values) => ({
     ...values,
     get type() {
       return getHelperTaskType(values);
@@ -112,7 +112,6 @@ export type HelperTask = z.infer<typeof HelperTaskSchema>;
 export const HelperTasksSchema = z.array(HelperTaskSchema);
 export type HelperTasks = z.infer<typeof HelperTasksSchema>;
 
-// TODO #38 Add client side validation for better UX
 export const HelperTaskMutationRequestDtoSchema = z.object({
   categoryId: z.number(),
   title: z.string(),

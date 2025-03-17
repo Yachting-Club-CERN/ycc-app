@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import { useState } from "react";
 
-import useDelay from './useDelay';
+import useDelay from "./useDelay";
 
 /**
  * This hook is creates a state pair, from which one reflects changes immediately and one with a delay.
@@ -11,7 +11,10 @@ import useDelay from './useDelay';
  * @param delay the delay in milliseconds
  * @returns an array containing the state pair and setters
  */
-const useDelayedState = <S>(initialState: S | (() => S), delay = 500) => {
+const useDelayedState = <S>(
+  initialState: S | (() => S),
+  delay = 500,
+): [S, S, (newState: S) => void, (newState: S) => void] => {
   const [state, setState] = useState(initialState);
   const [delayedState, setDelayedState] = useState(state);
   const setDelayedStateWithDelay = useDelay(delay, setDelayedState);

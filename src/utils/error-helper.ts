@@ -1,6 +1,37 @@
-import {AxiosError} from 'axios';
+import { AxiosError } from "axios";
 
-import toJson from './toJson';
+import toJson from "./toJson";
+
+const getErrorDetail = (error: AxiosError) => {
+  const data: unknown = error.response?.data;
+
+  if (data !== null && typeof data === "object") {
+    return (data as Record<string, unknown>)?.detail;
+  } else {
+    return undefined;
+  }
+};
+
+const getErrorDetailMsg = (detail: unknown) => {
+  if (detail !== null && typeof detail === "object") {
+    return (detail as Record<string, unknown>)?.msg;
+  } else {
+    return undefined;
+  }
+};
+
+const getText = (value: unknown) => {
+  if (value === undefined) {
+    return "<undefined>";
+  } else if (value === null) {
+    return "<null>";
+  } else if (typeof value === "function" || typeof value === "object") {
+    return toJson(value);
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    return value.toString();
+  }
+};
 
 /**
  * Gets error as string. If the error is an AxiosError, the detail will be included in the string.
@@ -11,23 +42,27 @@ import toJson from './toJson';
 const getErrorAsString = (error: Error): string => {
   if (error instanceof AxiosError) {
     const message = `${error.name}: ${error.message} [${error.code}]`;
-    const detail = error.response?.data?.detail;
+    const detail: unknown = getErrorDetail(error);
 
-    let str = '';
+    let detailStr = "";
     if (Array.isArray(detail)) {
-      const errors = detail
-        .map(d => d?.msg)
-        .filter(msg => msg)
-        .join(', ');
-      str += `${errors}\n\n`;
+      detailStr +=
+        detail
+          .map(getErrorDetailMsg)
+          .filter((msg) => msg)
+          .map(getText)
+          .join(", ") + "\n\n";
     }
 
     if (detail) {
-      str += `${toJson(detail)}\n\n`;
+      detailStr += `${getText(detail)}`;
     }
 
-    str += message;
-    return str;
+    if (detailStr) {
+      return `${detailStr}\n\n(${message})`;
+    } else {
+      return message;
+    }
   } else {
     return error.toString();
   }
@@ -46,10 +81,10 @@ export const getErrorChainAsStrings = (error: Error) => {
   let curr: unknown = error.cause;
   while (curr !== null && curr !== undefined) {
     if (curr instanceof Error) {
-      chain.push('Caused by: ' + getErrorAsString(curr));
+      chain.push(`Caused by: ${getErrorAsString(curr)}`);
       curr = curr.cause;
     } else {
-      chain.push('Caused by: ' + curr);
+      chain.push(`Caused by: ${getText(curr)}`);
       curr = null;
     }
   }
@@ -87,16 +122,10 @@ export const getErrorCauseChain = (error: Error) => {
  * @returns error text
  */
 export const getErrorText = (error: unknown): string => {
-  if (error === undefined) {
-    return '<undefined>';
-  } else if (error === null) {
-    return '<null>';
-  } else if (error instanceof Error) {
-    return getErrorChainAsStrings(error).join('\n');
-  } else if (typeof error === 'function' || typeof error === 'object') {
-    return toJson(error);
+  if (error instanceof Error) {
+    return getErrorChainAsStrings(error).join("\n");
   } else {
-    return error.toString();
+    return getText(error);
   }
 };
 

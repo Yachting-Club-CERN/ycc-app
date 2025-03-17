@@ -1,12 +1,14 @@
-import {check} from './toJson.test';
+import { test } from "vitest";
+
+import { check } from "./toJson.test";
 
 type Obj = {
   value: string;
   parent?: Obj;
 };
 
-test('Test simple circular reference', () => {
-  const obj: Obj = {value: 'obj'};
+test("Test simple circular reference", () => {
+  const obj: Obj = { value: "obj" };
   obj.parent = obj;
   check(
     obj,
@@ -15,14 +17,14 @@ test('Test simple circular reference', () => {
   "parent": {
     "$ref": "$"
   }
-}`
+}`,
   );
 });
 
-test('Test longer circular reference', () => {
-  const a: Obj = {value: 'a'};
-  const b: Obj = {value: 'b', parent: a};
-  const c: Obj = {value: 'c', parent: b};
+test("Test longer circular reference", () => {
+  const a: Obj = { value: "a" };
+  const b: Obj = { value: "b", parent: a };
+  const c: Obj = { value: "c", parent: b };
   a.parent = c;
   check(
     a,
@@ -37,7 +39,7 @@ test('Test longer circular reference', () => {
       }
     }
   }
-}`
+}`,
   );
   check(
     b,
@@ -52,7 +54,7 @@ test('Test longer circular reference', () => {
       }
     }
   }
-}`
+}`,
   );
   check(
     c,
@@ -67,17 +69,17 @@ test('Test longer circular reference', () => {
       }
     }
   }
-}`
+}`,
   );
 });
 
-test('Nested circular reference', () => {
-  const a: Obj = {value: 'a'};
-  const b: Obj = {value: 'b', parent: a};
-  const c: Obj = {value: 'c', parent: b};
+test("Nested circular reference", () => {
+  const a: Obj = { value: "a" };
+  const b: Obj = { value: "b", parent: a };
+  const c: Obj = { value: "c", parent: b };
   a.parent = c;
   check(
-    {root: a},
+    { root: a },
     `{
   "root": {
     "value": "a",
@@ -91,7 +93,7 @@ test('Nested circular reference', () => {
       }
     }
   }
-}`
+}`,
   );
 });
 
@@ -104,15 +106,15 @@ type Subclass = Superclass & {
 };
 
 class ToJSONSuperclass {
-  private field1: string;
+  private readonly field1: string;
 
   constructor(field1: string) {
     this.field1 = field1;
   }
 
-  public toJSON(): {} {
+  public toJSONObject(): Record<string, unknown> {
     return {
-      type: 'super',
+      type: "super",
       class: this.constructor.name,
       field1: this.field1,
     };
@@ -127,8 +129,8 @@ class ToJSONSubclass extends ToJSONSuperclass {
     this.field2 = field2;
   }
 
-  public override toJSON(): {} {
-    return {...super.toJSON(), type: 'sub', field2: this.field2};
+  public override toJSONObject(): Record<string, unknown> {
+    return { ...super.toJSONObject(), type: "sub", field2: this.field2 };
   }
 }
 
@@ -141,31 +143,31 @@ class ToJSONSubclassWithoutOverride extends ToJSONSuperclass {
   }
 }
 
-test('Test inheritance', () => {
-  const obj1: Superclass = {field1: 'Object 1'};
-  const obj2: Subclass = {field1: 'Object 2', field2: 42};
+test("Test inheritance", () => {
+  const obj1: Superclass = { field1: "Object 1" };
+  const obj2: Subclass = { field1: "Object 2", field2: 42 };
 
   check(
     obj1,
     `{
   "field1": "Object 1"
-}`
+}`,
   );
   check(
     obj2,
     `{
   "field1": "Object 2",
   "field2": 42
-}`
+}`,
   );
 });
 
-test('Test inheritance of classes implementing toJSON()', () => {
-  const obj1: ToJSONSuperclass = new ToJSONSuperclass('Object 1');
-  const obj2: ToJSONSubclass = new ToJSONSubclass('Object 2', 42);
+test("Test inheritance of classes implementing toJSONObject()", () => {
+  const obj1: ToJSONSuperclass = new ToJSONSuperclass("Object 1");
+  const obj2: ToJSONSubclass = new ToJSONSubclass("Object 2", 42);
   const obj3: ToJSONSubclassWithoutOverride = new ToJSONSubclassWithoutOverride(
-    'Object 3',
-    777
+    "Object 3",
+    777,
   );
 
   check(
@@ -174,7 +176,7 @@ test('Test inheritance of classes implementing toJSON()', () => {
   "type": "super",
   "class": "ToJSONSuperclass",
   "field1": "Object 1"
-}`
+}`,
   );
   check(
     obj2,
@@ -183,7 +185,7 @@ test('Test inheritance of classes implementing toJSON()', () => {
   "class": "ToJSONSubclass",
   "field1": "Object 2",
   "field2": 42
-}`
+}`,
   );
   check(
     obj3,
@@ -191,6 +193,6 @@ test('Test inheritance of classes implementing toJSON()', () => {
   "type": "super",
   "class": "ToJSONSubclassWithoutOverride",
   "field1": "Object 3"
-}`
+}`,
   );
 });

@@ -1,38 +1,39 @@
-import Link from '@mui/material/Link';
-import {HelperTasks} from 'model/helpers-dtos';
-import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import Link from "@mui/material/Link";
+import { useNavigate } from "react-router-dom";
 
-import SpacedTypography from '@app/components/SpacedTypography';
+import SpacedTypography from "@/components/SpacedTypography";
+import { HelperTasks } from "@/model/helpers-dtos";
 
-import {createTimingInfoLine, getTaskLocation} from './helpers-utils';
+import { createTimingInfoLine, getTaskLocation } from "./helpers-utils";
 
 type Props = {
   tasks: HelperTasks;
 };
 
-const HelperTasksReport = ({tasks}: Props) => {
+const HelperTasksReport = ({ tasks }: Props) => {
   const navigate = useNavigate();
+
+  const handleClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    await navigate(event.currentTarget.href);
+  };
 
   return (
     <>
       <SpacedTypography>
         This is a simple list of the filtered tasks, ready to be copied into
-        reminder emails.
+        e.g., emails.
       </SpacedTypography>
       <ul>
-        {tasks.map(task => {
+        {tasks.map((task) => {
           const taskLocation = getTaskLocation(task.id);
           return (
             <li key={task.id}>
               <Link
                 /* This is needed so we get a clickable link during copy-paste. */
-                href={getTaskLocation(task.id)}
+                href={taskLocation}
                 /* This is needed to avoid complete page reload on navigation. */
-                onClick={event => {
-                  event.preventDefault();
-                  navigate(taskLocation);
-                }}
+                onClick={handleClick}
               >
                 {createTimingInfoLine(task)} ({task.title})
               </Link>

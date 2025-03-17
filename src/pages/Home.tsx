@@ -1,10 +1,9 @@
-import Link from '@mui/material/Link';
-import React from 'react';
+import Link from "@mui/material/Link";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import SpacedTypography from '@app/components/SpacedTypography';
-import {externalUrls} from '@app/layouts/ExternalUrls';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import SpacedTypography from "@/components/SpacedTypography";
+import { externalUrls } from "@/layouts/ExternalUrls";
 
 const Home = () => {
   return (
@@ -29,7 +28,7 @@ const Home = () => {
           TypeScript, React, MUI, Python, FastAPI, SQLAlchemy, Keycloak, OKD,
           Java, Oracle DB (... of course no need for all the same time ... and
           whatever you would like, infra is ready to create standalone apps). We
-          are on{' '}
+          are on{" "}
           <Link href={externalUrls.yccGithub} target="_blank" rel="noopener">
             GitHub
           </Link>

@@ -1,21 +1,21 @@
-import Box from '@mui/material/Box';
-import React, {useState} from 'react';
+import Box from "@mui/material/Box";
+import { useState } from "react";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import RichTextEditor from '@app/components/RichTextEditor';
-import SpacedTypography from '@app/components/SpacedTypography';
-import {sanitiseHtmlForReact} from '@app/utils/html-utils';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import RichTextEditor from "@/components/RichTextEditor";
+import SpacedTypography from "@/components/SpacedTypography";
+import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
 const initialContent =
-  '<p>This is the <strong>initial</strong> content of the editor.</p>';
+  "<p>This is the <strong>initial</strong> content of the editor.</p>";
 
 const PlaygroundEditorPage = () => {
   const [html, setHtml] = useState(initialContent);
 
-  console.debug('HTML', html);
+  console.debug("HTML", html);
   const content = sanitiseHtmlForReact(html);
-  console.debug('Sanitised content', content);
+  console.debug("Sanitised content", content);
 
   return (
     <ReadingFriendlyBox>

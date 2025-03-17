@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import {HelperTask} from 'model/helpers-dtos';
-import React, {useContext} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { useContext } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-import PageTitle, {PageTitleProps} from '@app/components/PageTitle';
-import AuthenticationContext from '@app/context/AuthenticationContext';
+import PageTitle, { PageTitleProps } from "@/components/PageTitle";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import { HelperTask } from "@/model/helpers-dtos";
 
 import {
   canEditTask,
   getTaskCloneLocation,
   getTaskEditLocation,
-} from './helpers-utils';
+} from "./helpers-utils";
 
 type Props = PageTitleProps & {
   task?: HelperTask;
@@ -38,7 +38,7 @@ const PageTitleWithTaskActions = (props: Props) => {
               variant="contained"
               component={RouterLink}
               to={`${getTaskEditLocation(props.task.id)}`}
-              sx={{ml: 2}}
+              sx={{ ml: 2 }}
             >
               Edit Task
             </Button>
@@ -48,7 +48,7 @@ const PageTitleWithTaskActions = (props: Props) => {
               variant="contained"
               component={RouterLink}
               to={`${getTaskCloneLocation(props.task.id)}`}
-              sx={{ml: 2}}
+              sx={{ ml: 2 }}
             >
               Clone Task
             </Button>

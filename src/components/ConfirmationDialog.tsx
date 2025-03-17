@@ -1,10 +1,10 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import React from 'react';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import React, { JSX } from "react";
 
 type ArrayOneOrMore<T> = {
   0: T;
@@ -47,7 +47,7 @@ const ConfirmationDialog = ({
         {items.map((item, index) => {
           const lastItem = index === items.length - 1;
 
-          if (typeof item === 'string') {
+          if (typeof item === "string") {
             return (
               <DialogContentText key={index} mb={lastItem ? 0 : 2}>
                 {item}
@@ -58,7 +58,7 @@ const ConfirmationDialog = ({
           }
         })}
       </DialogContent>
-      <DialogActions sx={{paddingBottom: 2, paddingRight: 2}}>
+      <DialogActions sx={{ paddingBottom: 2, paddingRight: 2 }}>
         <Button onClick={onClose} variant="text" color="error">
           Cancel
         </Button>
