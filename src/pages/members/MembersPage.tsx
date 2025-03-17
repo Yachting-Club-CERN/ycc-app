@@ -1,31 +1,26 @@
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import React, {useState} from 'react';
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 
-import PageTitle from '@app/components/PageTitle';
-import useDelay from '@app/hooks/useDelay';
-import dayjs from '@app/utils/dayjs';
-import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
+import PageTitle from "@/components/PageTitle";
+import useDelay from "@/hooks/useDelay";
+import dayjs from "@/utils/dayjs";
+import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
-import MembersDataGrid from './MembersDataGrid';
+import MembersDataGrid from "./MembersDataGrid";
 
 const MembersPage = () => {
   const currentYear = dayjs().year();
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>("");
 
   const onSearch = useDelay(
     SEARCH_DELAY_MS,
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(event.target.value);
-    }
+    },
   );
 
-  const onKeySearch = useDelay(SEARCH_DELAY_MS, () => {
-    alert('Coming soon... ;-)');
-  });
-
-  // TODO Search by key (active licence, exact(!) match), but need to display key
   return (
     <>
       <PageTitle
@@ -44,15 +39,6 @@ const MembersPage = () => {
             width: 230,
           }}
           className="ycc-members-search-input"
-        />
-        <TextField
-          onChange={onKeySearch}
-          variant="outlined"
-          label="Key..."
-          size="small"
-          sx={{
-            width: 65,
-          }}
         />
       </Stack>
 

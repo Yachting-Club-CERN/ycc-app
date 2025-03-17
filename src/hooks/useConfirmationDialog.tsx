@@ -1,9 +1,8 @@
-import {useState} from 'react';
-import React from 'react';
+import { useState } from "react";
 
 import ConfirmationDialog, {
   ConfirmationDialogContent,
-} from '@app/components/ConfirmationDialog';
+} from "@/components/ConfirmationDialog";
 
 /**
  * Hook to open a confirmation dialog. Creates a `useState()` hook under the hood.
@@ -15,10 +14,9 @@ import ConfirmationDialog, {
  *
  * @returns the component to render and the function to call to open the dialog
  */
-// TODO Global render?
 const useConfirmationDialog = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState<ConfirmationDialogContent>('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState<ConfirmationDialogContent>("");
 
   const [open, setOpen] = useState(false);
   const [onConfirm, setOnConfirm] = useState(() => () => {}); // Keep callback as state
@@ -26,7 +24,7 @@ const useConfirmationDialog = () => {
   const openConfirmationDialog = (
     title: string,
     content: ConfirmationDialogContent,
-    onConfirm: () => void
+    onConfirm: () => void,
   ) => {
     setTitle(title);
     setContent(content);

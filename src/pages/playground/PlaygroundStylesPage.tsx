@@ -1,10 +1,8 @@
-import React from 'react';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import SpacedTypography from "@/components/SpacedTypography";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import SpacedTypography from '@app/components/SpacedTypography';
-
-import LoremIpsum from './LoremIpsum';
+import LoremIpsum from "./LoremIpsum";
 
 const PlaygroundStylesPage = () => {
   return (

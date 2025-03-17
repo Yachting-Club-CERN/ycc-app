@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
+import { useEffect } from "react";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import SpacedTypography from '@app/components/SpacedTypography';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import SpacedTypography from "@/components/SpacedTypography";
 
 const PlaygroundErrorPage = () => {
   useEffect(() => {
-    throw new Error('This is an error...', {
-      cause: '... and this is the cause',
+    throw new Error("This is an error...", {
+      cause: "... and this is the cause",
     });
   }, []);
 

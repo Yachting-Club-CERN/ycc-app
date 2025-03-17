@@ -1,15 +1,15 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import config, {Environment} from 'config';
-import React from 'react';
+import MenuIcon from "@mui/icons-material/Menu";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
-import {externalUrls} from './ExternalUrls';
+import config, { Environment } from "@/config";
+
+import { externalUrls } from "./ExternalUrls";
 
 type TopBarProps = {
   toggleDrawer: (event: React.SyntheticEvent) => void;
@@ -55,14 +55,17 @@ LOCAL:
     );
 
   return (
-    <AppBar position="fixed" sx={{zIndex: theme => theme.zIndex.drawer + 1}}>
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Toolbar>
         <IconButton
           size="large"
           edge="start"
           color="inherit"
           sx={{
-            display: {xs: 'block', sm: 'block', lg: 'none'},
+            display: { xs: "block", sm: "block", lg: "none" },
             mr: 2,
           }}
           onClick={props.toggleDrawer}
@@ -70,12 +73,12 @@ LOCAL:
           <MenuIcon />
         </IconButton>
         <Typography component="h1" variant="h6" flexGrow={2}>
-          YCC App{' '}
+          YCC App{" "}
           <Link
             href={externalUrls.yccBoatBooking}
             target="_blank"
             rel="noopener"
-            sx={{fontSize: '1.25rem'}}
+            sx={{ fontSize: "1.25rem" }}
           >
             ⛵
           </Link>

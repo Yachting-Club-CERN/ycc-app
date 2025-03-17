@@ -1,18 +1,16 @@
-import {MemberPublicInfo} from 'model/dtos';
-import {HelperTasks} from 'model/helpers-dtos';
-import React, {useContext} from 'react';
+import { useContext } from "react";
 
-import PromiseStatus from '@app/components/PromiseStatus';
-import AuthenticationContext from '@app/context/AuthenticationContext';
-import usePromise from '@app/hooks/usePromise';
-import client from '@app/utils/client';
+import PromiseStatus from "@/components/PromiseStatus";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import usePromise from "@/hooks/usePromise";
+import { MemberPublicInfo } from "@/model/dtos";
+import { HelperTasks } from "@/model/helpers-dtos";
+import client from "@/utils/client";
 import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
-} from '@app/utils/search-utils';
+} from "@/utils/search-utils";
 
-import HelperTasksDataGrid from './HelperTasksDataGrid';
-import HelperTasksReport from './HelperTasksReport';
 import {
   HelperTaskFilterOptions,
   canSignUp,
@@ -20,17 +18,19 @@ import {
   isHappeningNow,
   isSignedUp,
   isUpcoming,
-} from './helpers-utils';
+} from "./helpers-utils";
+import HelperTasksDataGrid from "./HelperTasksDataGrid";
+import HelperTasksReport from "./HelperTasksReport";
 
 type Props = {
-  display: 'grid' | 'report';
+  display: "grid" | "report";
   filterOptions: HelperTaskFilterOptions;
 };
 
-const HelperTasksView = ({display, filterOptions}: Props) => {
+const HelperTasksView = ({ display, filterOptions }: Props) => {
   const tasks = usePromise(
     (signal?: AbortSignal) => client.getHelperTasks(filterOptions.year, signal),
-    [filterOptions.year]
+    [filterOptions.year],
   );
   const currentUser = useContext(AuthenticationContext).currentUser;
 
@@ -43,18 +43,18 @@ const HelperTasksView = ({display, filterOptions}: Props) => {
       .toLowerCase()
       .trim()
       .split(/\s+/)
-      .map(s => s.trim())
-      .filter(s => s);
+      .map((s) => s.trim())
+      .filter((s) => s);
 
     if (searchTokens) {
-      return tasks.filter(task => {
-        return searchTokens.every(token => {
+      return tasks.filter((task) => {
+        return searchTokens.every((token) => {
           return (
             task.category.title.toLowerCase().includes(token) ||
             filterSearchMember(token, task.contact) ||
             filterSearchMember(token, task.captain?.member) ||
-            task.helpers.some(helper =>
-              filterSearchMember(token, helper.member)
+            task.helpers.some((helper) =>
+              filterSearchMember(token, helper.member),
             ) ||
             searchAnyStringProperty(token, task)
           );
@@ -69,23 +69,23 @@ const HelperTasksView = ({display, filterOptions}: Props) => {
     return filterSearch(
       filterOptions.search,
       tasks
-        .filter(task =>
+        .filter((task) =>
           filterOptions.showOnlyUpcoming
             ? isHappeningNow(task) || isUpcoming(task)
-            : true
+            : true,
         )
-        .filter(task =>
+        .filter((task) =>
           filterOptions.showOnlyContactOrSignedUp
             ? isContact(task, currentUser) || isSignedUp(task, currentUser)
-            : true
+            : true,
         )
-        .filter(task =>
-          filterOptions.showOnlyAvailable ? canSignUp(task, currentUser) : true
+        .filter((task) =>
+          filterOptions.showOnlyAvailable ? canSignUp(task, currentUser) : true,
         )
-        .filter(task =>
-          filterOptions.showOnlyUnpublished ? !task.published : true
+        .filter((task) =>
+          filterOptions.showOnlyUnpublished ? !task.published : true,
         )
-        .filter(task => filterOptions.states.includes(task.state))
+        .filter((task) => filterOptions.states.includes(task.state)),
     );
   };
 
@@ -93,10 +93,10 @@ const HelperTasksView = ({display, filterOptions}: Props) => {
 
   return (
     <>
-      {filteredTasks && display === 'grid' && (
+      {filteredTasks && display === "grid" && (
         <HelperTasksDataGrid tasks={filteredTasks} />
       )}
-      {filteredTasks && display === 'report' && (
+      {filteredTasks && display === "report" && (
         <HelperTasksReport tasks={filteredTasks} />
       )}
 

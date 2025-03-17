@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Confirmation dialog when posting multi-day shifts
+- Helper tasks report view
+
+### Changed
+
+- Dependency upgrades (2025-03), notable:
+  - Node.js 22
+  - TypeScript 5.8
+  - React 19
+  - Material UI 6
+  - Material UI X 7
+  - TinyMCE 7
+- Replace gts with plain ESLint & Prettier (gts has a history of lagging behind with TypeScript versions)
+- Prepare for Keycloak 26
+
+## [1.1.0] - 2024-04-09
+
+### Added
+
 - Helper task cloning
 - Helper task search
   - By free text, state, year
@@ -16,9 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Data validation using Zod
 - Year-aware helper task list
 - Confirmation dialog when signing up to helper tasks
-- Confirmation dialog when posting multi-day shifts
 - Helper task validation
-- Helper tasks report view
 
 ### Changed
 
@@ -90,7 +107,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - YCC Hull integration
 - Deployment on CERN OKD TEST
 
-[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.1.0
 [1.0.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.0.0
 [0.4.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.3.0

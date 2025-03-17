@@ -1,72 +1,79 @@
-import {DataGrid, GridCellParams, GridColDef} from '@mui/x-data-grid';
-import {MemberPublicInfo, MemberPublicInfos} from 'model/dtos';
-import React, {useContext} from 'react';
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRenderCellParams,
+} from "@mui/x-data-grid";
+import { useContext } from "react";
 
-import PromiseStatus from '@app/components/PromiseStatus';
-import {toEmailLink, toTelLink} from '@app/components/links';
-import SharedDataContext from '@app/context/SharedDataContext';
-import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
-import usePromise from '@app/hooks/usePromise';
+import { toEmailLink, toTelLink } from "@/components/links";
+import PromiseStatus from "@/components/PromiseStatus";
+import SharedDataContext from "@/context/SharedDataContext";
+import useMemberInfoDialog from "@/hooks/useMemberInfoDialog";
+import usePromise from "@/hooks/usePromise";
+import { MemberPublicInfo, MemberPublicInfos } from "@/model/dtos";
 import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
-} from '@app/utils/search-utils';
+} from "@/utils/search-utils";
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const renderEmail = (params: GridCellParams<any, string | null>) => {
+const renderEmail = (
+  params: GridRenderCellParams<MemberPublicInfo, string | null>,
+) => {
   return toEmailLink(params.value);
 };
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-const renderPhoneNumber = (params: GridCellParams<any, string | null>) => {
+const renderPhoneNumber = (
+  params: GridRenderCellParams<MemberPublicInfo, string | null>,
+) => {
   return toTelLink(params.value);
 };
 
 const columns: GridColDef[] = [
   {
-    field: 'lastName',
-    headerName: 'Last name',
+    field: "lastName",
+    headerName: "Last name",
     flex: 1,
     minWidth: 150,
-    valueFormatter: params => (params.value as string).toUpperCase(),
+    valueFormatter: (value) => (value as string).toUpperCase(),
   },
   {
-    field: 'firstName',
-    headerName: 'First Name',
+    field: "firstName",
+    headerName: "First Name",
     flex: 1,
     minWidth: 100,
   },
   {
-    field: 'email',
-    headerName: 'Email',
+    field: "email",
+    headerName: "Email",
     flex: 2,
     renderCell: renderEmail,
     minWidth: 250,
   },
   {
-    field: 'mobilePhone',
-    headerName: 'Mobile Phone',
+    field: "mobilePhone",
+    headerName: "Mobile Phone",
     flex: 1,
     renderCell: renderPhoneNumber,
     minWidth: 120,
   },
   {
-    field: 'homePhone',
-    headerName: 'Home Phone',
+    field: "homePhone",
+    headerName: "Home Phone",
     flex: 1,
     renderCell: renderPhoneNumber,
     minWidth: 120,
   },
   {
-    field: 'workPhone',
-    headerName: 'Work Phone',
+    field: "workPhone",
+    headerName: "Work Phone",
     flex: 1,
     renderCell: renderPhoneNumber,
     minWidth: 120,
   },
   {
-    field: 'username',
-    headerName: 'Username',
+    field: "username",
+    headerName: "Username",
     flex: 1,
     minWidth: 100,
   },
@@ -77,12 +84,12 @@ type Props = {
   search: string;
 };
 
-const MembersDataGrid = ({year, search}: Props) => {
+const MembersDataGrid = ({ year, search }: Props) => {
   const sharedData = useContext(SharedDataContext);
   const getMembersForYear = (signal?: AbortSignal) =>
     sharedData.getMembers(year, signal);
   const members = usePromise(getMembersForYear);
-  const {memberInfoDialogComponent, openMemberInfoDialog} =
+  const { memberInfoDialogComponent, openMemberInfoDialog } =
     useMemberInfoDialog();
 
   const getRowId = (member: MemberPublicInfo) => member.username;
@@ -95,9 +102,9 @@ const MembersDataGrid = ({year, search}: Props) => {
     const s = search.toLowerCase().trim();
     if (s && members) {
       return members.filter(
-        member =>
+        (member) =>
           searchMemberUsernameOrName(s, member) ||
-          searchAnyStringProperty(s, member)
+          searchAnyStringProperty(s, member),
       );
     } else {
       return members;
@@ -116,8 +123,8 @@ const MembersDataGrid = ({year, search}: Props) => {
           pageSizeOptions={[10, 25, 50, 100]}
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
-            minHeight: '215px',
-            height: 'calc(100vh - 270px)',
+            minHeight: "215px",
+            height: "calc(100vh - 270px)",
           }}
           className="ycc-members-data-grid"
         />

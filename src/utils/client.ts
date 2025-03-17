@@ -1,11 +1,13 @@
-import axios, {Axios, AxiosResponse, Method} from 'axios';
-import config from 'config';
+import axios, { Axios, AxiosResponse, Method } from "axios";
+import { z } from "zod";
+
+import config from "@/config";
 import {
   LicenceDetailedInfos,
   LicenceDetailedInfosSchema,
   MemberPublicInfos,
   MemberPublicInfosSchema,
-} from 'model/dtos';
+} from "@/model/dtos";
 import {
   HelperTask,
   HelperTaskCategories,
@@ -16,12 +18,11 @@ import {
   HelperTaskValidationRequestDto,
   HelperTasks,
   HelperTasksSchema,
-} from 'model/helpers-dtos';
-import {z} from 'zod';
+} from "@/model/helpers-dtos";
 
 enum ClientErrorCode {
-  Cancelled = 'CANCELLED',
-  Failed = 'FAILED',
+  Cancelled = "CANCELLED",
+  Failed = "FAILED",
 }
 
 class ClientError<T = unknown> extends Error {
@@ -31,11 +32,12 @@ class ClientError<T = unknown> extends Error {
     super(message);
     this.cause = cause;
     this.code = code;
+    this.name = "ClientError";
   }
 }
 
 class Client {
-  private _http: Axios;
+  private readonly _http: Axios;
 
   constructor() {
     this._http = Client.initHttp();
@@ -47,16 +49,16 @@ class Client {
     });
 
     http.interceptors.request.use(
-      config => {
+      (config) => {
         const token = window.oauth2Token;
         if (token) {
-          config.headers['Authorization'] = 'Bearer ' + token;
+          config.headers["Authorization"] = `Bearer ${token}`;
         }
         return config;
       },
-      error => {
+      (error: Error) => {
         return Promise.reject(error);
-      }
+      },
     );
 
     return http;
@@ -68,17 +70,17 @@ class Client {
   getHelperTaskCategories = async (signal?: AbortSignal) =>
     await this.getData<HelperTaskCategories>(
       HelperTaskCategoriesSchema,
-      '/api/v1/helpers/task-categories',
+      "/api/v1/helpers/task-categories",
       null,
-      signal
+      signal,
     );
 
   getHelperTasks = async (year: number | null = null, signal?: AbortSignal) =>
     await this.getData<HelperTasks>(
       HelperTasksSchema,
-      '/api/v1/helpers/tasks',
-      {year: year},
-      signal
+      "/api/v1/helpers/tasks",
+      { year: year },
+      signal,
     );
 
   getHelperTaskById = async (id: number, signal?: AbortSignal) =>
@@ -86,76 +88,76 @@ class Client {
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}`,
       null,
-      signal
+      signal,
     );
 
   createHelperTask = async (
     task: HelperTaskMutationRequestDto,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) =>
     await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
       HelperTaskSchema,
-      '/api/v1/helpers/tasks',
+      "/api/v1/helpers/tasks",
       null,
       task,
-      signal
+      signal,
     );
 
   updateHelperTask = async (
     id: number,
     task: HelperTaskMutationRequestDto,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) =>
     await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}`,
       null,
       task,
-      signal
+      signal,
     );
 
   signUpForHelperTaskAsCaptain = async (id: number, signal?: AbortSignal) =>
-    await this.postForData<HelperTask, {}>(
+    await this.postForData<HelperTask, object>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-captain`,
       null,
       {},
-      signal
+      signal,
     );
 
   signUpForHelperTaskAsHelper = async (id: number, signal?: AbortSignal) =>
-    await this.postForData<HelperTask, {}>(
+    await this.postForData<HelperTask, object>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
       null,
       {},
-      signal
+      signal,
     );
 
   markHelperTaskAsDone = async (
     id: number,
     request: HelperTaskMarkAsDoneRequestDto,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) =>
-    await this.postForData<HelperTask, {}>(
+    await this.postForData<HelperTask, object>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/mark-as-done`,
       null,
       request,
-      signal
+      signal,
     );
 
   validateHelperTask = async (
     id: number,
     request: HelperTaskValidationRequestDto,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) =>
-    await this.postForData<HelperTask, {}>(
+    await this.postForData<HelperTask, object>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}/validate`,
       null,
       request,
-      signal
+      signal,
     );
 
   //
@@ -164,9 +166,9 @@ class Client {
   getLicenceInfos = async (signal?: AbortSignal) =>
     await this.getData<LicenceDetailedInfos>(
       LicenceDetailedInfosSchema,
-      '/api/v1/licence-infos',
+      "/api/v1/licence-infos",
       null,
-      signal
+      signal,
     );
 
   //
@@ -175,72 +177,72 @@ class Client {
   getMembers = async (year: number, signal?: AbortSignal) =>
     await this.getData<MemberPublicInfos>(
       MemberPublicInfosSchema,
-      '/api/v1/members',
-      {year: year},
-      signal
+      "/api/v1/members",
+      { year: year },
+      signal,
     );
 
   //
   // General
   //
-  private getData = async <T>(
+  private readonly getData = async <T>(
     schema: z.ZodType,
     path: string,
     params: unknown,
-    signal?: AbortSignal
-  ): Promise<T> => {
+    signal?: AbortSignal,
+  ) => {
     const response = await this.get<T>(path, params, signal);
-    return schema.parse(response.data);
+    return schema.parse(response.data) as T;
   };
 
-  private get = async <T>(
+  private readonly get = async <T>(
     path: string,
     params: unknown,
-    signal?: AbortSignal
-  ) => await this.request<T, undefined>('GET', path, params, undefined, signal);
+    signal?: AbortSignal,
+  ) => await this.request<T, undefined>("GET", path, params, undefined, signal);
 
-  private postForData = async <T, D = T>(
+  private readonly postForData = async <T, D = T>(
     schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) => {
     const response = await this.post<T, D>(path, params, requestData, signal);
-    return schema.parse(response.data);
+    return schema.parse(response.data) as T;
   };
 
-  private post = async <T, D = T>(
+  private readonly post = async <T, D = T>(
     path: string,
     params: unknown,
     requestData: D,
-    signal?: AbortSignal
-  ) => await this.request<T, D>('POST', path, params, requestData, signal);
+    signal?: AbortSignal,
+  ) => await this.request<T, D>("POST", path, params, requestData, signal);
 
-  private putForData = async <T, D = T>(
+  private readonly putForData = async <T, D = T>(
     schema: z.ZodType,
     path: string,
     params: unknown,
     requestData: D,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) => {
     const response = await this.put<T, D>(path, params, requestData, signal);
-    return schema.parse(response.data);
+    return schema.parse(response.data) as T;
   };
 
-  private put = async <T, D = T>(
+  private readonly put = async <T, D = T>(
     path: string,
     params: unknown,
     requestData: D,
-    signal?: AbortSignal
-  ) => await this.request<T, D>('PUT', path, params, requestData, signal);
+    signal?: AbortSignal,
+  ) => await this.request<T, D>("PUT", path, params, requestData, signal);
 
-  private request = async <T, D = T>(
+  private readonly request = async <T, D = T>(
     method: Method,
     path: string,
     params?: unknown,
     requestData?: D,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ) => {
     console.debug(`[client] ${method} ${path} ...`, params);
 
@@ -256,7 +258,7 @@ class Client {
       const response = await request;
 
       console.debug(
-        `[client] ${method} ${path} - ${response.status} ${response.statusText}`
+        `[client] ${method} ${path} - ${response.status} ${response.statusText}`,
       );
 
       return response;
@@ -265,23 +267,27 @@ class Client {
     }
   };
 
-  private handleError = (method: string, path: string, error: unknown) => {
+  private readonly handleError = (
+    method: string,
+    path: string,
+    error: unknown,
+  ): ClientError => {
     if (axios.isCancel(error)) {
-      console.debug('[client] Request cancelled', method.toUpperCase(), path);
+      console.debug("[client] Request cancelled", method.toUpperCase(), path);
 
       throw new ClientError(
-        'Request cancelled',
+        "Request cancelled",
         error,
-        ClientErrorCode.Cancelled
+        ClientErrorCode.Cancelled,
       );
     } else {
       console.error(
-        '[client] Request failed',
+        "[client] Request failed",
         method.toUpperCase(),
         path,
-        error
+        error,
       );
-      throw new ClientError('Request failed', error, ClientErrorCode.Failed);
+      throw new ClientError("Request failed", error, ClientErrorCode.Failed);
     }
   };
 }

@@ -1,7 +1,6 @@
-import {Variant} from '@mui/material/styles/createTypography';
-import React from 'react';
+import { Variant } from "@mui/material/styles/createTypography";
 
-import SpacedTypography from '@app/components/SpacedTypography';
+import SpacedTypography from "@/components/SpacedTypography";
 
 type Props = {
   title: string;
@@ -9,7 +8,7 @@ type Props = {
   variant?: Variant;
 };
 
-const LoremIpsum = ({title, titleVariant, variant}: Props) => {
+const LoremIpsum = ({ title, titleVariant, variant }: Props) => {
   return (
     <>
       <SpacedTypography variant={titleVariant}>{title}</SpacedTypography>

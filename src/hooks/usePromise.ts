@@ -1,4 +1,4 @@
-import {DependencyList, useEffect, useState} from 'react';
+import { DependencyList, useEffect, useState } from "react";
 
 type PromiseOutcome<T> = {
   result: T | undefined;
@@ -15,7 +15,7 @@ type PromiseOutcome<T> = {
  */
 const usePromise = <T>(
   promise: (signal?: AbortSignal) => Promise<T>,
-  deps?: DependencyList
+  deps?: DependencyList,
 ): PromiseOutcome<T> => {
   const [result, setResult] = useState<T>();
   const [error, setError] = useState<unknown>();
@@ -27,38 +27,34 @@ const usePromise = <T>(
     setPending(true);
   };
 
-  useEffect(
-    () => {
-      const abortController = new AbortController();
+  useEffect(() => {
+    const abortController = new AbortController();
+    doReset();
+
+    promise(abortController.signal)
+      .then((result) => {
+        if (!abortController.signal.aborted) {
+          setResult(result);
+          setError(null);
+          setPending(false);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!abortController.signal.aborted) {
+          setResult(undefined);
+          setError(error);
+          setPending(false);
+        }
+      });
+
+    return () => {
+      abortController.abort();
       doReset();
+    };
+  }, deps ?? []);
 
-      promise
-        .call(null, abortController.signal)
-        .then(result => {
-          if (!abortController.signal.aborted) {
-            setResult(result);
-            setError(null);
-            setPending(false);
-          }
-        })
-        .catch((error: unknown) => {
-          if (!abortController.signal.aborted) {
-            setResult(undefined);
-            setError(error);
-            setPending(false);
-          }
-        });
-
-      return () => {
-        abortController.abort();
-        doReset();
-      };
-    },
-    deps === undefined ? [] : deps
-  );
-
-  return {result, error, pending};
+  return { result, error, pending };
 };
 
-export type {PromiseOutcome};
+export type { PromiseOutcome };
 export default usePromise;

@@ -1,17 +1,17 @@
-import {Locator, Page, expect} from '@playwright/test';
-import dayjs from 'dayjs';
+import { Locator, Page, expect } from "@playwright/test";
+import dayjs from "dayjs";
 
-const ADMIN_USER = 'MHUFF';
+const ADMIN_USER = "MHUFF";
 
 const waitForAuthPage = async (page: Page) => {
-  console.log('[test] waitForAuthPage()');
-  await page.waitForURL('**/protocol/openid-connect/auth**');
+  console.log("[test] waitForAuthPage()");
+  await page.waitForURL("**/protocol/openid-connect/auth**");
 };
 
 const waitForNonAuthPage = async (page: Page) => {
-  console.log('[test] waitForNonAuthPage()');
+  console.log("[test] waitForNonAuthPage()");
   await page.waitForFunction(
-    () => !window.location.href.includes('/openid-connect/')
+    () => !window.location.href.includes("/openid-connect/"),
   );
 };
 
@@ -23,7 +23,7 @@ export const ui = {
       }
     }
 
-    throw new Error('No visible locator found');
+    throw new Error("No visible locator found");
   },
 
   clickFirstVisible: async (locators: Locator[]) => {
@@ -40,8 +40,8 @@ export const ui = {
     // Date format: DD/MM/YYYY HH:MM
     await locator.click();
 
-    const dialog = page.getByRole('dialog');
-    const nextMonthIcon = dialog.getByTestId('ArrowRightIcon');
+    const dialog = page.getByRole("dialog");
+    const nextMonthIcon = dialog.getByTestId("ArrowRightIcon");
 
     if (await nextMonthIcon.isVisible()) {
       // On mobile the field is not editable and a dialog pops up when the field is clicked.
@@ -53,41 +53,39 @@ export const ui = {
       // Only future dates, good enough
       const click = 12 * (year - dayjs().year()) + (month - dayjs().month());
       for (let i = 0; i < click; i++) {
-        console.log('[test] Clicking next month', month);
+        console.log("[test] Clicking next month", month);
         await nextMonthIcon.click();
       }
 
       // Select day
       const dayStr = parseInt(date.substring(0, 2)).toString(); // Strip leading '0'
       await dialog
-        .getByRole('gridcell', {name: dayStr, exact: true})
+        .getByRole("gridcell", { name: dayStr, exact: true })
         .last()
         .click();
 
       // Select hour
       const hour = parseInt(date.substring(11, 13));
-      const hourStr = hour === 0 ? '00' : hour.toString();
+      const hourStr = hour === 0 ? "00" : hour.toString();
       await dialog
-        .getByRole('option', {name: hourStr + ' hours', exact: true})
-        .tap({force: true});
+        .getByRole("option", { name: `${hourStr} hours`, exact: true })
+        .tap({ force: true });
 
       // Select minute
       const minute = parseInt(date.substring(14, 16));
       const closest5Minute = (Math.round(minute / 5) * 5) % 60; // Round to 5, good enough
       const closest5MinuteStr =
-        closest5Minute < 10
-          ? '0' + closest5Minute.toString()
-          : closest5Minute.toString();
+        closest5Minute < 10 ? `0${closest5Minute}` : closest5Minute.toString();
 
       await dialog
-        .getByRole('option', {
-          name: closest5MinuteStr + ' minutes',
+        .getByRole("option", {
+          name: `${closest5MinuteStr} minutes`,
           exact: true,
         })
-        .tap({force: true});
+        .tap({ force: true });
 
       // Select OK
-      await dialog.getByRole('button', {name: 'OK'}).click();
+      await dialog.getByRole("button", { name: "OK" }).click();
     } else {
       // On desktop the field is editable and the dialog only pops up when the calendar icon is clicked.
       await locator.fill(date);
@@ -102,7 +100,7 @@ export const app = {
    * @param page - Playwright Page object.
    */
   openMenuIfMobile: async (page: Page) => {
-    const menuIcon = page.getByTestId('MenuIcon');
+    const menuIcon = page.getByTestId("MenuIcon");
     if (await menuIcon.isVisible()) {
       await menuIcon.click();
       return true;
@@ -123,31 +121,31 @@ export const app = {
     options: {
       expectSignIn: boolean;
       user?: string;
-    }
+    },
   ) => {
-    console.log('[test] loadPage()', path, options);
+    console.log("[test] loadPage()", path, options);
 
     await page.goto(path);
 
     if (options.expectSignIn) {
-      console.log('[test] Expecting sign in');
+      console.log("[test] Expecting sign in");
       await waitForAuthPage(page);
-      const user = options.user || ADMIN_USER;
-      console.log('[test] Sign in', user);
+      const user = options.user ?? ADMIN_USER;
+      console.log("[test] Sign in", user);
 
-      await page.fill('#username', user);
-      await page.fill('#password', user);
-      await page.click('#kc-login');
+      await page.fill("#username", user);
+      await page.fill("#password", user);
+      await page.click("#kc-login");
     } else {
-      console.log('[test] Not expecting sign in');
+      console.log("[test] Not expecting sign in");
     }
 
     await waitForNonAuthPage(page);
 
     // Wait for load to complete
-    await page.waitForSelector('.ycc-footer');
+    await page.waitForSelector(".ycc-footer");
 
-    console.log('[test] Page loaded', path);
+    console.log("[test] Page loaded", path);
   },
 
   /**
@@ -155,14 +153,14 @@ export const app = {
    * @param page - Playwright Page object.
    */
   signOut: async (page: Page) => {
-    console.log('[test] signOut()');
+    console.log("[test] signOut()");
 
     const sidebar = (await app.openMenuIfMobile(page))
-      ? page.locator('.ycc-sidebar-mobile')
-      : page.locator('.ycc-sidebar');
+      ? page.locator(".ycc-sidebar-mobile")
+      : page.locator(".ycc-sidebar");
 
-    await sidebar.getByTestId('LogoutIcon').click();
+    await sidebar.getByTestId("LogoutIcon").click();
     await waitForAuthPage(page);
-    await expect(page.url()).toContain('/protocol/openid-connect/auth');
+    expect(page.url()).toContain("/protocol/openid-connect/auth");
   },
 };

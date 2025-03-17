@@ -1,26 +1,28 @@
-import {Element as DOMElement, Text as DOMText} from 'html-react-parser';
-import HTMLReactParser from 'html-react-parser';
-import React from 'react';
+import HTMLReactParser, {
+  Element as DOMElement,
+  Text as DOMText,
+} from "html-react-parser";
+import React from "react";
 
 const forbiddenTags = [
-  'base',
-  'button',
-  'canvas',
-  'embed',
-  'form',
-  'frame',
-  'frameset',
-  'iframe',
-  'input',
-  'link',
-  'meta',
-  'object',
-  'select',
-  'script',
-  'style',
-  'svg',
-  'textarea',
-  'title',
+  "base",
+  "button",
+  "canvas",
+  "embed",
+  "form",
+  "frame",
+  "frameset",
+  "iframe",
+  "input",
+  "link",
+  "meta",
+  "object",
+  "select",
+  "script",
+  "style",
+  "svg",
+  "textarea",
+  "title",
 ];
 
 /**
@@ -32,7 +34,7 @@ const forbiddenTags = [
 export const sanitiseHtmlForReact = (html: string) => {
   const reactDom = HTMLReactParser(html, {
     // We trust our backend+React+TinyMCE, but you never know...
-    replace: domNode => {
+    replace: (domNode) => {
       if (domNode instanceof DOMText) {
         // Always keep text
         return domNode;
@@ -40,12 +42,12 @@ export const sanitiseHtmlForReact = (html: string) => {
         if (!forbiddenTags.includes(domNode.name)) {
           return null;
         } else if (
-          domNode.name === 'h1' ||
-          domNode.name === 'h2' ||
-          domNode.name === 'h3'
+          domNode.name === "h1" ||
+          domNode.name === "h2" ||
+          domNode.name === "h3"
         ) {
           // Does not look good
-          domNode.name = 'h4';
+          domNode.name = "h4";
         }
 
         return domNode;
@@ -56,7 +58,7 @@ export const sanitiseHtmlForReact = (html: string) => {
     },
   });
 
-  return typeof reactDom === 'string'
-    ? React.createElement('p', {}, reactDom)
+  return typeof reactDom === "string"
+    ? React.createElement("p", {}, reactDom)
     : reactDom;
 };

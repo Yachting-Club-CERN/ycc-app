@@ -1,88 +1,87 @@
-import toJson from '../toJson';
+import { test, expect } from "vitest";
+
+import toJson from "../toJson";
 
 export const check = (value: unknown, expected: string, format?: boolean) => {
   expect(toJson(value, format)).toEqual(expected);
 };
 
-test('Test general data types', () => {
-  // booleans
-  check(false, 'false');
-  check(true, 'true');
+test("Test general data types", () => {
+  // Booleans
+  check(false, "false");
+  check(true, "true");
 
-  // numbers
-  check(0, '0');
-  check(1, '1');
+  // Numbers
+  check(0, "0");
+  check(1, "1");
 
-  // special numbers
+  // Special numbers
   check(
     NaN,
     `{
   "$specialValue": "NaN"
-}`
+}`,
   );
   check(
     -Infinity,
     `{
   "$specialValue": "-Infinity"
-}`
+}`,
   );
   check(Infinity, '{"$specialValue":"Infinity"}', false);
-  // eslint-disable-next-line node/no-unsupported-features/es-builtins
   check(BigInt(123), '{"$specialValue":"BigInt(123)"}', false);
 
-  // strings
-  check('a', '"a"');
-  check('bc\nd', '"bc\\nd"');
+  // Strings
+  check("a", '"a"');
+  check("bc\nd", '"bc\\nd"');
 
-  // specials
-  check(null, 'null');
+  // Specials
+  check(null, "null");
   check(
     undefined,
     `{
   "$specialValue": "undefined"
-}`
+}`,
   );
   check(
-    Symbol('sym'),
+    Symbol("sym"),
     `{
   "$specialValue": "Symbol(sym)"
-}`
+}`,
   );
   check(
-    // eslint-disable-next-line prefer-arrow-callback
     function () {},
     `{
-  "$specialValue": "function () { }"
-}`
+  "$specialValue": "function() {\\n    }"
+}`,
   );
   check(
-    // eslint-disable-next-line prefer-arrow-callback
     function (a: number, b: number) {
       return a + b;
     },
     `{
-  "$specialValue": "function (a, b) {\\n        return a + b;\\n    }"
-}`
+  "$specialValue": "function(a, b) {\\n      return a + b;\\n    }"
+}`,
   );
   check(
     (c: number, d: number) => c + d,
     `{
-  "$specialValue": "function (c, d) { return c + d; }"
-}`
+  "$specialValue": "(c, d) => c + d"
+}`,
   );
 
-  // errors
+  // Errors
   check(
-    Error('Error', {cause: Error('Cause')}),
+    Error("Error", { cause: Error("Cause") }),
     `{
   "$error": "Error: Error",
   "$causeChain": [
     "Error: Cause"
   ]
-}`
+}`,
   );
   check(
-    new Error('Error 2', {cause: new Error('Cause 2', {cause: NaN})}),
+    new Error("Error 2", { cause: new Error("Cause 2", { cause: NaN }) }),
     `{
   "$error": "Error: Error 2",
   "$causeChain": [
@@ -91,22 +90,21 @@ test('Test general data types', () => {
       "$specialValue": "NaN"
     }
   ]
-}`
+}`,
   );
 });
 
-test('Test complex object with special values', () => {
+test("Test complex object with special values", () => {
   check(
     {
       booleans: [false, true],
       numbers: [0, 1],
-      // eslint-disable-next-line node/no-unsupported-features/es-builtins
       specialNumbers: [NaN, -Infinity, Infinity, BigInt(123)],
-      strings: ['a', ' bc\nd '],
+      strings: ["a", " bc\nd "],
       specials: [
         null,
         undefined,
-        Symbol('sym'),
+        Symbol("sym"),
         function () {},
         function (a: number, b: number) {
           return a + b;
@@ -114,8 +112,8 @@ test('Test complex object with special values', () => {
         (c: number, d: number) => c + d,
       ],
       errors: [
-        Error('Error', {cause: Error('Cause')}),
-        new Error('Error 2', {cause: new Error('Cause 2', {cause: NaN})}),
+        Error("Error", { cause: Error("Cause") }),
+        new Error("Error 2", { cause: new Error("Cause 2", { cause: NaN }) }),
       ],
     },
     `{
@@ -154,13 +152,13 @@ test('Test complex object with special values', () => {
       "$specialValue": "Symbol(sym)"
     },
     {
-      "$specialValue": "function () { }"
+      "$specialValue": "function() {\\n        }"
     },
     {
-      "$specialValue": "function (a, b) {\\n                return a + b;\\n            }"
+      "$specialValue": "function(a, b) {\\n          return a + b;\\n        }"
     },
     {
-      "$specialValue": "function (c, d) { return c + d; }"
+      "$specialValue": "(c, d) => c + d"
     }
   ],
   "errors": [
@@ -180,6 +178,6 @@ test('Test complex object with special values', () => {
       ]
     }
   ]
-}`
+}`,
   );
 });

@@ -1,34 +1,34 @@
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import Chip from '@mui/material/Chip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import {HelperTaskState} from 'model/helpers-dtos';
-import React, {useContext, useEffect, useState} from 'react';
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useContext, useEffect, useState } from "react";
 
-import SpacedTypography from '@app/components/SpacedTypography';
-import AuthenticationContext from '@app/context/AuthenticationContext';
-import useDelayedState from '@app/hooks/useDelayedState';
-import {getCurrentYear} from '@app/utils/date-utils';
-import {SEARCH_DELAY_MS} from '@app/utils/search-utils';
+import SpacedTypography from "@/components/SpacedTypography";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import useDelayedState from "@/hooks/useDelayedState";
+import { HelperTaskState } from "@/model/helpers-dtos";
+import { getCurrentYear } from "@/utils/date-utils";
+import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
-import HelperTasksView from './HelperTasksView';
-import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {
   HelperTaskFilterOptions,
   doneEmoji,
   validatedEmoji,
-} from './helpers-utils';
+} from "./helpers-utils";
+import HelperTasksView from "./HelperTasksView";
+import PageTitleWithTaskActions from "./PageTitleWithTaskActions";
 
 const checkArrayContainsAllElements = <T,>(states: T[], arr: T[]): boolean => {
-  return arr.every(state => states.includes(state));
+  return arr.every((state) => states.includes(state));
 };
 
 const allStates = [
@@ -38,16 +38,16 @@ const allStates = [
 ];
 
 const allStatesWithLabel = {
-  [HelperTaskState.Pending]: 'Pending',
+  [HelperTaskState.Pending]: "Pending",
   [HelperTaskState.Done]: `Done, but not validated ${doneEmoji}`,
   [HelperTaskState.Validated]: `Validated ${validatedEmoji}`,
 };
 
-const allYearsLabel = 'ALL';
+const allYearsLabel = "ALL";
 
 const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   year: getCurrentYear(),
-  search: '',
+  search: "",
   showOnlyUpcoming: true,
   showOnlyContactOrSignedUp: false,
   showOnlyAvailable: false,
@@ -55,7 +55,7 @@ const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   states: [HelperTaskState.Pending],
 });
 
-const filterOptionsSessionStorageKey = 'helpers.grid.filterOptions';
+const filterOptionsSessionStorageKey = "helpers.grid.filterOptions";
 
 const HelpersPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
@@ -67,32 +67,32 @@ const HelpersPage = () => {
     delayedFilterOptions,
     setFilterOptionsImmediately,
     setFilterOptionsWithDelay,
-  ] = useDelayedState(() => {
+  ] = useDelayedState<HelperTaskFilterOptions>(() => {
     try {
       const savedFilterOptions = sessionStorage.getItem(
-        filterOptionsSessionStorageKey
+        filterOptionsSessionStorageKey,
       );
       return savedFilterOptions
-        ? JSON.parse(savedFilterOptions)
+        ? (JSON.parse(savedFilterOptions) as HelperTaskFilterOptions)
         : getDefaultFilterOptions();
     } catch (error) {
-      console.error('Error parsing filter options from sessionStorage:', error);
+      console.error("Error parsing filter options from sessionStorage:", error);
       return getDefaultFilterOptions();
     }
   }, SEARCH_DELAY_MS);
-  const [display, setDisplay] = useState<'grid' | 'report'>('grid');
+  const [display, setDisplay] = useState<"grid" | "report">("grid");
 
   useEffect(() => {
-    console.log('Save filter options to session storage', filterOptions);
+    console.log("Save filter options to session storage", filterOptions);
     sessionStorage.setItem(
       filterOptionsSessionStorageKey,
-      JSON.stringify(filterOptions)
+      JSON.stringify(filterOptions),
     );
   }, [delayedFilterOptions]);
 
   const years = Array.from(
-    {length: currentYear - firstHelperAppYear + 1},
-    (_, i) => firstHelperAppYear + i
+    { length: currentYear - firstHelperAppYear + 1 },
+    (_, i) => firstHelperAppYear + i,
   );
 
   const onReset = () => {
@@ -104,7 +104,7 @@ const HelpersPage = () => {
       event.target.value === allYearsLabel
         ? null
         : parseInt(event.target.value);
-    const newFilterOptions: HelperTaskFilterOptions = {...filterOptions};
+    const newFilterOptions: HelperTaskFilterOptions = { ...filterOptions };
 
     newFilterOptions.year = year;
     if (year === currentYear) {
@@ -130,12 +130,12 @@ const HelpersPage = () => {
 
   const handleStateChange = (event: SelectChangeEvent<HelperTaskState[]>) => {
     const value = event.target.value;
-    const values = typeof value === 'string' ? value.split(',') : value;
+    const values = typeof value === "string" ? value.split(",") : value;
 
     setFilterOptionsImmediately({
       ...filterOptions,
       states: values.map(
-        v => HelperTaskState[v as keyof typeof HelperTaskState]
+        (v) => HelperTaskState[v as keyof typeof HelperTaskState],
       ),
     });
   };
@@ -168,7 +168,7 @@ const HelpersPage = () => {
               variant="outlined"
               size="small"
             >
-              {years.map(year => (
+              {years.map((year) => (
                 <MenuItem key={year} value={year}>
                   {year}
                 </MenuItem>
@@ -198,9 +198,9 @@ const HelpersPage = () => {
           multiple
           value={filterOptions.states}
           onChange={handleStateChange}
-          renderValue={values => (
-            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-              {values.map(value => (
+          renderValue={(values) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {values.map((value) => (
                 <Chip key={value} label={allStatesWithLabel[value]} />
               ))}
             </Box>
@@ -311,9 +311,9 @@ const HelpersPage = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={display === 'report'}
+                  checked={display === "report"}
                   onChange={(_, checked) => {
-                    setDisplay(checked ? 'report' : 'grid');
+                    setDisplay(checked ? "report" : "grid");
                   }}
                   size="small"
                 />

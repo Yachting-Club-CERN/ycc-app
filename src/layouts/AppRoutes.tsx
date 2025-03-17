@@ -1,20 +1,19 @@
-import React from 'react';
-import {ErrorBoundary} from 'react-error-boundary';
-import {Route, Routes, useLocation} from 'react-router-dom';
+import { ErrorBoundary } from "react-error-boundary";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import Home from '@app/pages/Home';
-import NotFoundPage from '@app/pages/NotFoundPage';
-import ProfilePage from '@app/pages/ProfilePage';
-import HelperTaskPage from '@app/pages/helpers/HelperTaskPage';
-import HelpersEditTaskPage from '@app/pages/helpers/HelpersEditTaskPage';
-import HelpersNewTaskPage from '@app/pages/helpers/HelpersNewTaskPage';
-import HelpersPage from '@app/pages/helpers/HelpersPage';
-import MembersPage from '@app/pages/members/MembersPage';
-import PlaygroundEditorPage from '@app/pages/playground/PlaygroundEditorPage';
-import PlaygroundErrorPage from '@app/pages/playground/PlaygroundErrorPage';
-import PlaygroundStylesPage from '@app/pages/playground/PlaygroundStylesPage';
+import HelpersEditTaskPage from "@/pages/helpers/HelpersEditTaskPage";
+import HelpersNewTaskPage from "@/pages/helpers/HelpersNewTaskPage";
+import HelpersPage from "@/pages/helpers/HelpersPage";
+import HelperTaskPage from "@/pages/helpers/HelperTaskPage";
+import Home from "@/pages/Home";
+import MembersPage from "@/pages/members/MembersPage";
+import NotFoundPage from "@/pages/NotFoundPage";
+import PlaygroundEditorPage from "@/pages/playground/PlaygroundEditorPage";
+import PlaygroundErrorPage from "@/pages/playground/PlaygroundErrorPage";
+import PlaygroundStylesPage from "@/pages/playground/PlaygroundStylesPage";
+import ProfilePage from "@/pages/ProfilePage";
 
-import ErrorFallback from './ErrorFallback';
+import ErrorFallback from "./ErrorFallback";
 
 const AppRoutes = () => {
   const location = useLocation();

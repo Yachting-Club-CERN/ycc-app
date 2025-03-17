@@ -1,8 +1,7 @@
-import {MemberPublicInfo} from 'model/dtos';
-import {useState} from 'react';
-import React from 'react';
+import { useState } from "react";
 
-import MemberInfoDialog from '@app/components/MemberInfoDialog';
+import MemberInfoDialog from "@/components/MemberInfoDialog";
+import { MemberPublicInfo } from "@/model/dtos";
 
 /**
  * Hook to open a dialog with information about a member. Creates a `useState()` hook under the hood.
@@ -14,7 +13,6 @@ import MemberInfoDialog from '@app/components/MemberInfoDialog';
  *
  * @returns the component to render and the function to call to open the dialog
  */
-// TODO Global render?
 const useMemberInfoDialog = () => {
   const [member, setMember] = useState<MemberPublicInfo | null>(null);
   const openMemberInfoDialog = (member: MemberPublicInfo) => {

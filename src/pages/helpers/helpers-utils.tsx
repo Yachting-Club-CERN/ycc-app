@@ -1,24 +1,24 @@
+import { JSX } from "react";
+
+import SpanBlockBox from "@/components/SpanBlockBox";
+import { User } from "@/context/AuthenticationContext";
 import {
   HelperTask,
   HelperTaskMutationRequestDto,
   HelperTaskState,
   HelperTaskType,
   getHelperTaskType,
-} from 'model/helpers-dtos';
-import React from 'react';
-
-import SpanBlockBox from '@app/components/SpanBlockBox';
-import {User} from '@app/context/AuthenticationContext';
+} from "@/model/helpers-dtos";
 import {
   formatDateTime,
   formatDateWithDay,
   formatTime,
   getNow,
   isSameDay,
-} from '@app/utils/date-utils';
+} from "@/utils/date-utils";
 
-export const doneEmoji = '🚦';
-export const validatedEmoji = '✔️';
+export const doneEmoji = "🚦";
+export const validatedEmoji = "✔️";
 
 export type HelperTaskFilterOptions = {
   year: number | null;
@@ -63,7 +63,7 @@ export const getTaskCloneLocation = (taskId: number) =>
  * @returns true if the task is a multi-day shift, false otherwise
  */
 export const isMultiDayShift = (
-  task: HelperTask | HelperTaskMutationRequestDto
+  task: HelperTask | HelperTaskMutationRequestDto,
 ): boolean =>
   getHelperTaskType(task) === HelperTaskType.Shift &&
   !isSameDay(task.startsAt!, task.endsAt!);
@@ -128,7 +128,7 @@ export const isSignedUpAsCaptain = (task: HelperTask, user: User): boolean =>
  * @returns true if the user is signed up as helper, false otherwise
  */
 export const isSignedUpAsHelper = (task: HelperTask, user: User): boolean =>
-  task.helpers.some(helper => helper.member.username === user.username);
+  task.helpers.some((helper) => helper.member.username === user.username);
 
 /**
  * Tells if a user is signed up for a task.
@@ -226,11 +226,11 @@ export const canValidate = (task: HelperTask, user: User): boolean =>
 export const fakeRandomSignUpText = (taskId: number, captain: boolean) => {
   const texts = [
     // You want to keep the length of this array a prime number for best results
-    'Sign me up!',
-    'Sign me up!',
-    'I am in!',
-    'I will help!',
-    'I will do it!',
+    "Sign me up!",
+    "Sign me up!",
+    "I am in!",
+    "I will help!",
+    "I will do it!",
   ];
   return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length];
 };
@@ -247,7 +247,7 @@ export const getStatusEmoji = (task: HelperTask): string => {
   } else if (task.markedAsDoneAt) {
     return doneEmoji;
   } else {
-    return '';
+    return "";
   }
 };
 
@@ -259,12 +259,12 @@ export const getStatusEmoji = (task: HelperTask): string => {
  */
 export const createTimingInfoLine = (task: HelperTask): string => {
   let extraTimingTitle = [
-    task.urgent ? 'URGENT' : '',
-    task.published ? '' : 'HIDDEN',
+    task.urgent ? "URGENT" : "",
+    task.published ? "" : "HIDDEN",
   ]
     .filter(Boolean)
-    .join(', ');
-  if (extraTimingTitle !== '') {
+    .join(", ");
+  if (extraTimingTitle !== "") {
     extraTimingTitle = `${extraTimingTitle} `;
   }
 
@@ -277,23 +277,23 @@ export const createTimingInfoLine = (task: HelperTask): string => {
     if (isMultiDayShift(task)) {
       // That's an En Dash (U+2013)
       return `${extraTimingTitle}${statusEmoji}Multi-Day Shift: ${formatDateTime(
-        task.startsAt
+        task.startsAt,
       )} – ${formatDateTime(task.endsAt)}`;
     } else {
       // That's an En Dash (U+2013)
       return `${extraTimingTitle}${statusEmoji}Shift: ${formatDateWithDay(
-        task.startsAt
+        task.startsAt,
       )} ${formatTime(task.startsAt)} – ${formatTime(task.endsAt)}`;
     }
   } else if (task.type === HelperTaskType.Deadline) {
     return `${extraTimingTitle}${statusEmoji}Deadline: ${formatDateWithDay(
-      task.deadline
+      task.deadline,
     )} ${formatTime(task.deadline)}`;
   } else {
     return `${extraTimingTitle}${statusEmoji}Start: ${
-      formatDateTime(task.startsAt) ?? '-'
-    } End: ${formatDateTime(task.endsAt) ?? '-'} Deadline: ${
-      formatDateTime(task.deadline) ?? '-'
+      formatDateTime(task.startsAt) ?? "-"
+    } End: ${formatDateTime(task.endsAt) ?? "-"} Deadline: ${
+      formatDateTime(task.deadline) ?? "-"
     }`;
   }
 };
@@ -306,12 +306,12 @@ export const createTimingInfoLine = (task: HelperTask): string => {
  */
 export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
   let extraTimingTitle = [
-    task.urgent ? 'Urgent' : '',
-    task.published ? '' : 'Hidden',
+    task.urgent ? "Urgent" : "",
+    task.published ? "" : "Hidden",
   ]
     .filter(Boolean)
-    .join(', ');
-  if (extraTimingTitle !== '') {
+    .join(", ");
+  if (extraTimingTitle !== "") {
     extraTimingTitle = ` (${extraTimingTitle})`;
   }
 
@@ -325,7 +325,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     if (isMultiDayShift(task)) {
       return (
         <>
-          <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
+          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
             Multi-Day Shift{extraTimingTitle}
             {statusEmoji}
           </SpanBlockBox>
@@ -336,7 +336,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     } else {
       return (
         <>
-          <SpanBlockBox sx={{color: 'info.main', fontWeight: 'bold'}}>
+          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
             Shift{extraTimingTitle}
             {statusEmoji}
           </SpanBlockBox>
@@ -351,7 +351,7 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
   } else if (task.type === HelperTaskType.Deadline) {
     return (
       <>
-        <SpanBlockBox sx={{color: 'warning.main', fontWeight: 'bold'}}>
+        <SpanBlockBox sx={{ color: "warning.main", fontWeight: "bold" }}>
           Deadline{extraTimingTitle}
           {statusEmoji}
         </SpanBlockBox>
@@ -364,12 +364,12 @@ export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
     return (
       <>
         <SpanBlockBox>
-          Start: {formatDateTime(task.startsAt) ?? '-'}
+          Start: {formatDateTime(task.startsAt) ?? "-"}
           {statusEmoji}
         </SpanBlockBox>
-        <SpanBlockBox>End: {formatDateTime(task.endsAt) ?? '-'}</SpanBlockBox>
+        <SpanBlockBox>End: {formatDateTime(task.endsAt) ?? "-"}</SpanBlockBox>
         <SpanBlockBox>
-          Deadline: {formatDateTime(task.deadline) ?? '-'}
+          Deadline: {formatDateTime(task.deadline) ?? "-"}
         </SpanBlockBox>
       </>
     );

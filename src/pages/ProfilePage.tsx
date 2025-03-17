@@ -1,19 +1,21 @@
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import React, {useContext} from 'react';
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import { useContext } from "react";
 
-import PageTitle from '@app/components/PageTitle';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import AuthenticationContext from '@app/context/AuthenticationContext';
+import PageTitle from "@/components/PageTitle";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import AuthenticationContext from "@/context/AuthenticationContext";
 
 const ProfilePage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const yccOnly = (array: readonly string[]) => {
-    return array.filter(el => el.startsWith('ycc')).sort();
+    return array
+      .filter((el) => el.startsWith("ycc"))
+      .sort((a, b) => a.localeCompare(b));
   };
 
   return (
@@ -40,11 +42,11 @@ const ProfilePage = () => {
             </TableRow>
             <TableRow>
               <TableCell>Groups:</TableCell>
-              <TableCell>{yccOnly(currentUser.groups).join(', ')}</TableCell>
+              <TableCell>{yccOnly(currentUser.groups).join(", ")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Roles:</TableCell>
-              <TableCell>{yccOnly(currentUser.roles).join(', ')}</TableCell>
+              <TableCell>{yccOnly(currentUser.roles).join(", ")}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

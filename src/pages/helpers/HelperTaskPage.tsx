@@ -1,20 +1,20 @@
-import {HelperTask} from 'model/helpers-dtos';
-import React, {useState} from 'react';
-import {useParams} from 'react-router-dom';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
-import PromiseStatus from '@app/components/PromiseStatus';
-import ReadingFriendlyBox from '@app/components/ReadingFriendlyBox';
-import usePromise from '@app/hooks/usePromise';
-import client from '@app/utils/client';
+import PromiseStatus from "@/components/PromiseStatus";
+import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import usePromise from "@/hooks/usePromise";
+import { HelperTask } from "@/model/helpers-dtos";
+import client from "@/utils/client";
 
-import HelperTaskInfo from './HelperTaskInfo';
+import HelperTaskInfo from "./HelperTaskInfo";
 
 const HelperTaskPage = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const getHelperTask = (signal?: AbortSignal) => {
-    const task_id = parseInt(id ?? 'NaN');
+    const task_id = parseInt(id ?? "NaN");
     if (isNaN(task_id)) {
-      throw new Error('Invalid task ID');
+      throw new Error("Invalid task ID");
     } else {
       return client.getHelperTaskById(task_id, signal);
     }

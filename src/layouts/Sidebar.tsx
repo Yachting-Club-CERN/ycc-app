@@ -1,10 +1,9 @@
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Toolbar from '@mui/material/Toolbar';
-import React from 'react';
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Toolbar from "@mui/material/Toolbar";
 
-import SidebarMenu from './SidebarMenu';
+import SidebarMenu from "./SidebarMenu";
 
 const drawerWidth = 240;
 
@@ -18,9 +17,9 @@ const Sidebar = (props: SidebarProps) => {
   const commonDrawerSx = {
     width: drawerWidth,
     flexShrink: 0,
-    '& .MuiDrawer-paper': {
+    "& .MuiDrawer-paper": {
       width: drawerWidth,
-      boxSizing: 'border-box',
+      boxSizing: "border-box",
     },
   };
 
@@ -31,27 +30,27 @@ const Sidebar = (props: SidebarProps) => {
         open={props.mobileOpen}
         onOpen={props.toggleDrawer(true)}
         onClose={props.toggleDrawer(false)}
-        ModalProps={{keepMounted: true}}
+        ModalProps={{ keepMounted: true }}
         sx={{
-          display: {xs: 'block', sm: 'block', lg: 'none'},
+          display: { xs: "block", sm: "block", lg: "none" },
           ...commonDrawerSx,
         }}
         className="ycc-sidebar-mobile"
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>{sidebarMenu}</Box>
+        <Box sx={{ overflow: "auto" }}>{sidebarMenu}</Box>
       </SwipeableDrawer>
 
       <Drawer
         variant="permanent"
         sx={{
-          display: {xs: 'none', sm: 'none', lg: 'block'},
+          display: { xs: "none", sm: "none", lg: "block" },
           ...commonDrawerSx,
         }}
         className="ycc-sidebar"
       >
         <Toolbar />
-        <Box sx={{overflow: 'auto'}}>{sidebarMenu}</Box>
+        <Box sx={{ overflow: "auto" }}>{sidebarMenu}</Box>
       </Drawer>
     </Box>
   );

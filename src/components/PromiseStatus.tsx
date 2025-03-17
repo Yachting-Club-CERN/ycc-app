@@ -1,17 +1,16 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import React from 'react';
+import CircularProgress from "@mui/material/CircularProgress";
 
-import {PromiseOutcome} from '@app/hooks/usePromise';
+import { PromiseOutcome } from "@/hooks/usePromise";
 
-import ErrorAlert from './ErrorAlert';
+import ErrorAlert from "./ErrorAlert";
 
 type Props = {
   outcomes: PromiseOutcome<unknown>[];
 };
 
-const PromiseStatus = ({outcomes}: Props) => {
-  const pending = outcomes.some(outcome => outcome.pending);
-  const error = outcomes.find(outcome => outcome.error)?.error;
+const PromiseStatus = ({ outcomes }: Props) => {
+  const pending = outcomes.some((outcome) => outcome.pending);
+  const error = outcomes.find((outcome) => outcome.error)?.error;
 
   return (
     <>

@@ -1,53 +1,53 @@
-import Button from '@mui/material/Button';
-import DialogContentText from '@mui/material/DialogContentText';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import {MemberPublicInfo} from 'model/dtos';
+import Button from "@mui/material/Button";
+import DialogContentText from "@mui/material/DialogContentText";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import React, { useContext, useRef } from "react";
+import { useErrorBoundary } from "react-error-boundary";
+import { Link as RouterLink } from "react-router-dom";
+
+import RichTextEditor from "@/components/RichTextEditor";
+import SpacedTypography from "@/components/SpacedTypography";
+import AuthenticationContext from "@/context/AuthenticationContext";
+import useConfirmationDialog from "@/hooks/useConfirmationDialog";
+import useDelayedRef from "@/hooks/useDelayedRef";
+import useMemberInfoDialog from "@/hooks/useMemberInfoDialog";
+import { MemberPublicInfo } from "@/model/dtos";
 import {
   HelperTask,
   HelperTaskHelper,
   HelperTaskState,
-} from 'model/helpers-dtos';
-import React, {useContext, useRef} from 'react';
-import {useErrorBoundary} from 'react-error-boundary';
-import {Link as RouterLink} from 'react-router-dom';
+} from "@/model/helpers-dtos";
+import client from "@/utils/client";
+import { formatDateTime } from "@/utils/date-utils";
+import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
-import RichTextEditor from '@app/components/RichTextEditor';
-import SpacedTypography from '@app/components/SpacedTypography';
-import AuthenticationContext from '@app/context/AuthenticationContext';
-import useConfirmationDialog from '@app/hooks/useConfirmationDialog';
-import useDelayedRef from '@app/hooks/useDelayedRef';
-import useMemberInfoDialog from '@app/hooks/useMemberInfoDialog';
-import client from '@app/utils/client';
-import {formatDateTime} from '@app/utils/date-utils';
-import {sanitiseHtmlForReact} from '@app/utils/html-utils';
-
-import PageTitleWithTaskActions from './PageTitleWithTaskActions';
 import {
   canMarkTaskAsDone,
   canSignUpAsCaptain,
   canSignUpAsHelper,
   canValidate,
   createTimingInfoFragment,
-} from './helpers-utils';
+} from "./helpers-utils";
+import PageTitleWithTaskActions from "./PageTitleWithTaskActions";
 
 type Props = {
   task: HelperTask;
   refreshTask: (task: HelperTask) => void;
 };
 
-const HelperTaskInfo = ({task, refreshTask}: Props) => {
+const HelperTaskInfo = ({ task, refreshTask }: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
-  const {showBoundary} = useErrorBoundary();
-  const {memberInfoDialogComponent, openMemberInfoDialog} =
+  const { showBoundary } = useErrorBoundary();
+  const { memberInfoDialogComponent, openMemberInfoDialog } =
     useMemberInfoDialog();
-  const {confirmationDialogComponent, openConfirmationDialog} =
+  const { confirmationDialogComponent, openConfirmationDialog } =
     useConfirmationDialog();
 
-  const confirmationDialogComment = useDelayedRef('');
+  const confirmationDialogComment = useDelayedRef("");
 
   const validation = {
     helpersToValidate: useRef<HelperTaskHelper[]>([]),
@@ -75,13 +75,13 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
       <DialogContentText>
         Please unmark the helpers who did not show up.
       </DialogContentText>
-      {task.helpers.map(helper => (
+      {task.helpers.map((helper) => (
         <FormControlLabel
           key={helper.member.id}
           control={
             <Switch
               defaultChecked={true}
-              onChange={e => {
+              onChange={(e) => {
                 const [add, remove] = e.target.checked
                   ? [validation.helpersToValidate, validation.helpersToRemove]
                   : [validation.helpersToRemove, validation.helpersToValidate];
@@ -89,7 +89,7 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
                 add.current.push(helper);
 
                 remove.current = remove.current.filter(
-                  h => h.member.id !== helper.member.id
+                  (h) => h.member.id !== helper.member.id,
                 );
               }}
             />
@@ -105,13 +105,13 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
   const showMarkAsDone = canMarkTaskAsDone(task, currentUser);
   const showValidate = canValidate(task, currentUser);
 
-  const signUpAsCaptain = async () => {
+  const signUpAsCaptain = () => {
     openConfirmationDialog(
-      'Sign Up As Captain',
+      "Sign Up As Captain",
       [
-        'Are you sure you want to sign up as captain?',
-        'As a captain you will take lead and make sure that the task is carried out, e.g., driving the Q-Boat, organising other helpers signed up for the task, etc.',
-        'After signing up you cannot cancel unless you provide a replacement!',
+        "Are you sure you want to sign up as captain?",
+        "As a captain you will take lead and make sure that the task is carried out, e.g., driving the Q-Boat, organising other helpers signed up for the task, etc.",
+        "After signing up you cannot cancel unless you provide a replacement!",
       ],
       async () => {
         try {
@@ -120,16 +120,16 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         } catch (ex) {
           showBoundary(ex);
         }
-      }
+      },
     );
   };
 
-  const signUpAsHelper = async () => {
+  const signUpAsHelper = () => {
     openConfirmationDialog(
-      'Sign Up As Helper',
+      "Sign Up As Helper",
       [
-        'Are you sure you want to sign up as helper?',
-        'After signing up you cannot cancel unless you provide a replacement!',
+        "Are you sure you want to sign up as helper?",
+        "After signing up you cannot cancel unless you provide a replacement!",
       ],
       async () => {
         try {
@@ -138,15 +138,15 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         } catch (ex) {
           showBoundary(ex);
         }
-      }
+      },
     );
   };
 
-  const markAsDone = async () => {
-    confirmationDialogComment.setImmediately('');
+  const markAsDone = () => {
+    confirmationDialogComment.setImmediately("");
 
     openConfirmationDialog(
-      'Mark As Done',
+      "Mark As Done",
       <>
         <DialogContentText mb={2}>
           Are you sure you want to mark the task as done?
@@ -169,17 +169,17 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         } catch (ex) {
           showBoundary(ex);
         }
-      }
+      },
     );
   };
 
-  const validate = async () => {
+  const validate = () => {
     validation.helpersToValidate.current = task.helpers;
     validation.helpersToRemove.current = [];
-    confirmationDialogComment.setImmediately('');
+    confirmationDialogComment.setImmediately("");
 
     openConfirmationDialog(
-      'Validate',
+      "Validate",
       <>
         <DialogContentText mb={2}>
           Are you sure you want to validate the task?
@@ -203,7 +203,7 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         } catch (ex) {
           showBoundary(ex);
         }
-      }
+      },
     );
   };
 
@@ -225,18 +225,18 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         </SpacedTypography>
       )}
 
-      <Divider sx={{mt: 2}} />
+      <Divider sx={{ mt: 2 }} />
 
       <SpacedTypography>{task.shortDescription}</SpacedTypography>
 
-      <Divider sx={{mt: 2}} />
+      <Divider sx={{ mt: 2 }} />
 
       {task.longDescription && (
         <>
           <SpacedTypography component="div">
             {sanitiseHtmlForReact(task.longDescription)}
           </SpacedTypography>
-          <Divider sx={{mt: 2}} />
+          <Divider sx={{ mt: 2 }} />
         </>
       )}
 
@@ -249,7 +249,7 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
         </SpacedTypography>
       )}
       <SpacedTypography>
-        Helpers needed (apart from captain):{' '}
+        Helpers needed (apart from captain):{" "}
         {task.helperMinCount === task.helperMaxCount
           ? task.helperMinCount
           : `${task.helperMinCount} - ${task.helperMaxCount}`}
@@ -262,9 +262,9 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
       {task.helpers.length > 0 && (
         <SpacedTypography>
           Helpers:
-          {task.helpers.map(helper => (
+          {task.helpers.map((helper) => (
             <React.Fragment key={helper.member.id}>
-              {' '}
+              {" "}
               {createMemberDialogLink(helper.member)}
             </React.Fragment>
           ))}
@@ -273,9 +273,9 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
 
       {task.state !== HelperTaskState.Pending && (
         <>
-          <Divider sx={{mt: 2}} />
+          <Divider sx={{ mt: 2 }} />
           <SpacedTypography variant="h6" color="success">
-            Update @ {formatDateTime(task.markedAsDoneAt)}:{' '}
+            Update @ {formatDateTime(task.markedAsDoneAt)}:{" "}
             {createMemberDialogLink(task.markedAsDoneBy!)} marked the task as
             done
           </SpacedTypography>
@@ -289,9 +289,9 @@ const HelperTaskInfo = ({task, refreshTask}: Props) => {
 
       {task.state === HelperTaskState.Validated && (
         <>
-          <Divider sx={{mt: 2}} />
+          <Divider sx={{ mt: 2 }} />
           <SpacedTypography variant="h6" color="success">
-            Update @ {formatDateTime(task.validatedAt)}:{' '}
+            Update @ {formatDateTime(task.validatedAt)}:{" "}
             {createMemberDialogLink(task.validatedBy!)} validated the task
           </SpacedTypography>
           {task.validationComment && (
