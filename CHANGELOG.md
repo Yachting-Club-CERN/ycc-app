@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-03-17
+
 ### Added
 
 - Confirmation dialog when posting multi-day shifts
@@ -107,7 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - YCC Hull integration
 - Deployment on CERN OKD TEST
 
-[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/Yachting-Club-CERN/ycc-app/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.2.0
 [1.1.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.1.0
 [1.0.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v1.0.0
 [0.4.0]: https://github.com/Yachting-Club-CERN/ycc-app/releases/tag/v0.4.0
