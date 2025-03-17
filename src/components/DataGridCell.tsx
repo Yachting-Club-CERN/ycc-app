@@ -8,6 +8,6 @@ const DataGridCell = styled(Box)({
     width: "100%",
     height: "100%",
   },
-});
+}) as typeof Box;
 
 export default DataGridCell;

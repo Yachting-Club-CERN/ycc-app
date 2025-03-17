@@ -5,7 +5,7 @@ const BlockBox = styled(Box)({
   "&": {
     display: "block",
   },
-});
+}) as typeof Box;
 
 /**
  * A Box component that renders as `<span>` with block display.
@@ -13,7 +13,7 @@ const BlockBox = styled(Box)({
  * Useful when `<div>` is not allowed.
  */
 const SpanBlockBox = (props: React.ComponentProps<typeof Box>) => (
-  <BlockBox as="span" {...props} />
+  <BlockBox component="span" {...props} />
 );
 
 export default SpanBlockBox;
