@@ -21,7 +21,7 @@ const HelperTaskPage = () => {
   };
   const task = usePromise(getHelperTask, [id]);
   const [updatedTask, setUpdatedTask] = useState<HelperTask>();
-  const taskToDisplay = updatedTask ? updatedTask : task.result;
+  const taskToDisplay = updatedTask ?? task.result;
 
   return (
     <ReadingFriendlyBox>
