@@ -23,7 +23,7 @@ export const formatTime = (date: OptionalDate) => {
 export const formatDateTime = (date: OptionalDate) => {
   return date === null || date === undefined
     ? date
-    : dayjs(date).tz(TIME_ZONE_ID).format("D/M/YYYY, HH:mm");
+    : dayjs(date).tz(TIME_ZONE_ID).format("DD/MM/YYYY HH:mm");
 };
 
 export const isSameDay = (date1: dayjs.Dayjs, date2: dayjs.Dayjs) =>
