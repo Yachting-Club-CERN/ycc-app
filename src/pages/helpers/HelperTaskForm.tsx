@@ -1,3 +1,4 @@
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -5,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
 import { useContext, useEffect, useState } from "react";
 import {
   AutocompleteElement,
@@ -18,7 +20,10 @@ import {
 } from "react-hook-form-mui/date-pickers";
 import { useNavigate } from "react-router-dom";
 
-import { ConfirmationDialogContent } from "@/components/ConfirmationDialog";
+import {
+  ConfirmationDialogContent,
+  StringOrElement,
+} from "@/components/ConfirmationDialog";
 import ErrorAlert from "@/components/ErrorAlert";
 import RichTextEditor from "@/components/RichTextEditor";
 import SpacedBox from "@/components/SpacedBox";
@@ -30,8 +35,10 @@ import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
 import {
   HelperTask,
   HelperTaskCategories,
-  HelperTaskMutationRequestDto,
+  HelperTaskCreationRequest,
+  HelperTaskMutationRequestBase,
   HelperTaskType,
+  HelperTaskUpdateRequest,
 } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import dayjs from "@/utils/dayjs";
@@ -46,8 +53,25 @@ type Props = {
   licenceInfos: LicenceDetailedInfos;
 };
 
-type HelperTaskFormData = HelperTaskMutationRequestDto & {
-  endsAtTime: dayjs.Dayjs | null;
+type HelperTaskCreationRequestExtra = Omit<
+  HelperTaskCreationRequest,
+  keyof HelperTaskMutationRequestBase
+>;
+
+type HelperTaskUpdateRequestExtra = Omit<
+  HelperTaskUpdateRequest,
+  keyof HelperTaskMutationRequestBase
+>;
+
+type HelperTaskFormData = {
+  base: HelperTaskMutationRequestBase;
+
+  creation: HelperTaskCreationRequestExtra;
+  update: HelperTaskUpdateRequestExtra;
+
+  uiOnly: {
+    endsAtTime: dayjs.Dayjs | null;
+  };
 };
 
 const HelperTaskForm = ({
@@ -81,22 +105,30 @@ const HelperTaskForm = ({
   }, [task, newTask, currentUser]);
 
   const initialData: HelperTaskFormData = {
-    categoryId: task?.category.id ?? -1,
-    title: task?.title ?? "",
-    shortDescription: task?.shortDescription ?? "",
-    longDescription: task?.longDescription ?? null,
-    contactId: newTask
-      ? currentUser.memberId
-      : (task?.contact.id ?? currentUser.memberId),
-    startsAt: task?.startsAt ?? null,
-    endsAt: task?.endsAt ?? null,
-    endsAtTime: task?.endsAt ?? null,
-    deadline: task?.deadline ?? null,
-    urgent: task?.urgent ?? false,
-    captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
-    helperMinCount: task?.helperMinCount ?? 1,
-    helperMaxCount: task?.helperMaxCount ?? 2,
-    published: task?.published ?? true,
+    base: {
+      categoryId: task?.category.id ?? -1,
+      title: task?.title ?? "",
+      shortDescription: task?.shortDescription ?? "",
+      longDescription: task?.longDescription ?? null,
+      contactId: newTask
+        ? currentUser.memberId
+        : (task?.contact.id ?? currentUser.memberId),
+      startsAt: task?.startsAt ?? null,
+      endsAt: task?.endsAt ?? null,
+      deadline: task?.deadline ?? null,
+      urgent: task?.urgent ?? false,
+      captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
+      helperMinCount: task?.helperMinCount ?? 1,
+      helperMaxCount: task?.helperMaxCount ?? 2,
+      published: task?.published ?? true,
+    },
+    creation: {},
+    update: {
+      notifySignedUpMembers: true,
+    },
+    uiOnly: {
+      endsAtTime: task?.endsAt ?? null,
+    },
   };
 
   const onTypeChange = (
@@ -108,65 +140,110 @@ const HelperTaskForm = ({
     }
   };
 
-  const doSubmit = async (dataToSend: HelperTaskMutationRequestDto) => {
-    const mutatedTask =
-      task && !newTask
-        ? await client.updateHelperTask(task.id, dataToSend)
-        : await client.createHelperTask(dataToSend);
-    await navigate(getTaskLocation(mutatedTask.id));
+  const doSubmit = async (
+    base: HelperTaskMutationRequestBase,
+    creation: HelperTaskCreationRequestExtra,
+    update: HelperTaskUpdateRequestExtra,
+  ) => {
+    try {
+      const mutatedTask =
+        !newTask && task
+          ? await client.updateHelperTask(task.id, {
+              ...base,
+              ...update,
+            })
+          : await client.createHelperTask({
+              ...base,
+              ...creation,
+            });
+
+      await navigate(getTaskLocation(mutatedTask.id));
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const onSubmit = async (data: HelperTaskFormData) => {
-    try {
-      setError(undefined);
-      const { endsAtTime, ...dataToSend } = { ...data };
+    setError(undefined);
+    const {
+      base,
+      creation,
+      update,
+      uiOnly: { endsAtTime },
+    } = data;
 
-      dataToSend.longDescription = longDescription.get() ?? null;
-      if (dataToSend.captainRequiredLicenceInfoId === -1) {
-        dataToSend.captainRequiredLicenceInfoId = null;
-      }
+    base.longDescription = longDescription.get() ?? null;
+    if (base.captainRequiredLicenceInfoId === -1) {
+      base.captainRequiredLicenceInfoId = null;
+    }
 
-      if (!multiDayShift && dataToSend.startsAt && endsAtTime) {
-        dataToSend.endsAt = endsAtTime
-          .year(dataToSend.startsAt.year())
-          .month(dataToSend.startsAt.month())
-          .date(dataToSend.startsAt.date());
-      }
+    if (!multiDayShift && base.startsAt && endsAtTime) {
+      base.endsAt = endsAtTime
+        .year(base.startsAt.year())
+        .month(base.startsAt.month())
+        .date(base.startsAt.date());
+    }
 
-      if (type === HelperTaskType.Shift) {
-        dataToSend.deadline = null;
-      } else if (type === HelperTaskType.Deadline) {
-        dataToSend.startsAt = null;
-        dataToSend.endsAt = null;
-      }
+    if (type === HelperTaskType.Shift) {
+      base.deadline = null;
+    } else if (type === HelperTaskType.Deadline) {
+      base.startsAt = null;
+      base.endsAt = null;
+    }
 
-      const confirmations = [];
-      const wasMultiDayShift =
-        (task ? isMultiDayShift(task) : false) && !newTask;
-      if (!wasMultiDayShift && isMultiDayShift(dataToSend)) {
-        confirmations.push(
-          "Are you sure that this task is a multi-day shift and not a task with a deadline? Please note that members will not be able to sign up for multi-day shifts after the shift has started.",
-        );
-      }
-      if (!dataToSend.published) {
-        confirmations.push(
-          "Are you sure you want this task to be unpublished?",
-        );
-      }
+    const confirmations: StringOrElement[] = [];
 
-      if (confirmations.length > 0) {
-        openConfirmationDialog(
-          "Please confirm the following",
-          confirmations as ConfirmationDialogContent,
-          async () => {
-            await doSubmit(dataToSend);
-          },
-        );
-      } else {
-        await doSubmit(dataToSend);
-      }
-    } catch (error) {
-      setError(error);
+    if (!newTask) {
+      confirmations.push(
+        update.notifySignedUpMembers ? (
+          <>
+            Are you sure <strong>you want to notify</strong> signed-up members
+            about this change?
+          </>
+        ) : (
+          <>
+            Are you sure <strong>you do NOT want to notify</strong> signed-up
+            members about this change?
+          </>
+        ),
+      );
+    }
+
+    const wasMultiDayShift = (task ? isMultiDayShift(task) : false) && !newTask;
+    if (!wasMultiDayShift && isMultiDayShift(base)) {
+      confirmations.push(
+        <>
+          Are you sure that{" "}
+          <strong>
+            this task is a multi-day shift and NOT a task with a deadline
+          </strong>
+          {"?"} Please note that members will not be able to sign up for
+          multi-day shifts after the shift has started.
+        </>,
+      );
+    }
+
+    if (!base.published) {
+      confirmations.push(
+        <>
+          Are you sure you want this task to be <strong>unpublished</strong>?
+          Members do not see and cannot sign up for unpublished tasks.
+        </>,
+      );
+    }
+
+    if (confirmations.length > 0) {
+      openConfirmationDialog({
+        title: "Please confirm the following:",
+        content: confirmations as ConfirmationDialogContent,
+        displayContentAsDialogContentText: true,
+        shouldDelayConfirm: true,
+        onConfirm: async () => {
+          await doSubmit(base, creation, update);
+        },
+      });
+    } else {
+      await doSubmit(base, creation, update);
     }
   };
 
@@ -220,7 +297,7 @@ const HelperTaskForm = ({
 
       <SpacedBox>
         <AutocompleteElement
-          name="categoryId"
+          name="base.categoryId"
           label="Category"
           matchId
           options={categoryOptions}
@@ -228,14 +305,14 @@ const HelperTaskForm = ({
       </SpacedBox>
 
       <SpacedBox>
-        <TextFieldElement name="title" required label="Title" fullWidth />
+        <TextFieldElement name="base.title" required label="Title" fullWidth />
       </SpacedBox>
 
       <SpacedBox>
         <TextFieldElement
-          name="shortDescription"
+          name="base.shortDescription"
           required
-          label="Short Description"
+          label="Short Description (included in emails)"
           fullWidth
         />
       </SpacedBox>
@@ -243,7 +320,9 @@ const HelperTaskForm = ({
       <SpacedBox>
         <RichTextEditor
           initialContent={
-            task ? task.longDescription : "<p>Please describe the task here</p>"
+            task
+              ? task.longDescription
+              : "<p>Please describe the task here. Please note that this long description will be not included in emails.</p>"
           }
           onBlur={longDescription.setImmediately}
           onInit={longDescription.setImmediately}
@@ -253,7 +332,7 @@ const HelperTaskForm = ({
 
       {currentUser.helpersAppAdmin ? (
         <AutocompleteElement
-          name="contactId"
+          name="base.contactId"
           label="Contact"
           matchId
           options={memberOptions}
@@ -265,6 +344,27 @@ const HelperTaskForm = ({
       )}
 
       <SpacedTypography variant="h3">Timing</SpacedTypography>
+
+      {!newTask && type == HelperTaskType.Shift && (
+        <Alert severity="warning" sx={{ mt: 2 }}>
+          <Typography>
+            If you change the time of a task and some of the helpers are not
+            available in the new time,{" "}
+            <strong>they should be awarded the task</strong>
+            {"."} If this is the case, the best is to:
+            <ol>
+              <li>Validate (and therefore close) the current task</li>
+              <li>
+                Create a new task (you can use the <code>Clone</code> button for
+                this)
+              </li>
+            </ol>
+            However, if you kindly ask members about the time change and they
+            are available in the new time as well, feel free to go ahead editing
+            the current task.
+          </Typography>
+        </Alert>
+      )}
 
       <SpacedBox>
         <Stack direction="row" spacing={2}>
@@ -284,21 +384,21 @@ const HelperTaskForm = ({
           {type === HelperTaskType.Shift && (
             <>
               <DateTimePickerElement
-                name="startsAt"
+                name="base.startsAt"
                 label="Start"
                 className="ycc-helper-task-starts-at-input"
                 timezone="default"
               />
               {multiDayShift ? (
                 <DateTimePickerElement
-                  name="endsAt"
+                  name="base.endsAt"
                   label="End"
                   className="ycc-helper-task-ends-at-input"
                   timezone="default"
                 />
               ) : (
                 <TimePickerElement
-                  name="endsAtTime"
+                  name="uiOnly.endsAtTime"
                   label="End"
                   className="ycc-helper-task-ends-at-time-input"
                   timezone="default"
@@ -319,7 +419,7 @@ const HelperTaskForm = ({
           )}
           {type === HelperTaskType.Deadline && (
             <DateTimePickerElement
-              name="deadline"
+              name="base.deadline"
               label="Deadline"
               className="ycc-helper-task-deadline-input"
               timezone="default"
@@ -347,7 +447,7 @@ const HelperTaskForm = ({
       <SpacedBox>
         <Stack direction="row" spacing={2}>
           <AutocompleteElement
-            name="captainRequiredLicenceInfoId"
+            name="base.captainRequiredLicenceInfoId"
             label="Captain required licence"
             matchId
             options={captainRequiredLicenceInfoOptions}
@@ -359,7 +459,7 @@ const HelperTaskForm = ({
             }}
           />
           <TextFieldElement
-            name="helperMinCount"
+            name="base.helperMinCount"
             required
             label="Min. Helpers"
             type={"number"}
@@ -373,7 +473,7 @@ const HelperTaskForm = ({
             }}
           />
           <TextFieldElement
-            name="helperMaxCount"
+            name="base.helperMaxCount"
             required
             label="Max. Helpers"
             type={"number"}
@@ -394,10 +494,30 @@ const HelperTaskForm = ({
         are not shown to club members. After a member signs up for a task, you
         will be limited in modifications (e.g, you cannot change the timing).
       </SpacedTypography>
+      {!newTask && (
+        <Alert severity="warning">
+          <Typography>
+            <strong>
+              If you choose to notify signed up members, they will be emailed
+              about this change.
+            </strong>{" "}
+            It is recommended to do so if you change the time, location or
+            requirements of the task. change. However, please do not use this
+            for minor edits or typo fixes.
+          </Typography>
+        </Alert>
+      )}
       <SpacedBox>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <SwitchElement name="urgent" label="Urgent" />
-          <SwitchElement name="published" label="Published" />
+          <SwitchElement name="base.urgent" label="Urgent" />
+          <SwitchElement name="base.published" label="Published" />
+
+          {!newTask && (
+            <SwitchElement
+              name="update.notifySignedUpMembers"
+              label="Notify signed-up members about this change"
+            />
+          )}
 
           <Button type="submit" variant="contained">
             Submit

@@ -1,11 +1,11 @@
 import Typography from "@mui/material/Typography";
 
-type PageTitleProps = {
+type Props = {
   value: string;
   mobileValue?: string;
 };
 
-const PageTitle = ({ value, mobileValue }: PageTitleProps) => {
+const PageTitle = ({ value, mobileValue }: Props) => {
   // Do not duplicate the title in the DOM if the mobile value is the same as the value
   return !mobileValue || value === mobileValue ? (
     <Typography variant="h2" className="ycc-page-title">
@@ -31,5 +31,4 @@ const PageTitle = ({ value, mobileValue }: PageTitleProps) => {
   );
 };
 
-export type { PageTitleProps };
 export default PageTitle;

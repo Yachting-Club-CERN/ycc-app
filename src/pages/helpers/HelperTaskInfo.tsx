@@ -73,7 +73,9 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
   const helperValidationComponent = (
     <>
       <DialogContentText>
-        Please unmark the helpers who did not show up.
+        Please unmark any helpers who did not show up. If a helper was available
+        but missed the task due to a change on your part (e.g., you changed the
+        time after they signed up), they should still be marked as present.
       </DialogContentText>
       {task.helpers.map((helper) => (
         <FormControlLabel
@@ -105,15 +107,27 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
   const showMarkAsDone = canMarkTaskAsDone(task, currentUser);
   const showValidate = canValidate(task, currentUser);
 
+  const cannotCancelEl = (
+    <>
+      After signing up <strong>you CANNOT cancel</strong> unless you provide a
+      replacement!
+    </>
+  );
+
   const signUpAsCaptain = () => {
-    openConfirmationDialog(
-      "Sign Up As Captain",
-      [
-        "Are you sure you want to sign up as captain?",
-        "As a captain you will take lead and make sure that the task is carried out, e.g., driving the Q-Boat, organising other helpers signed up for the task, etc.",
-        "After signing up you cannot cancel unless you provide a replacement!",
+    openConfirmationDialog({
+      title: "Are you sure you want to sign up as captain?",
+      content: [
+        <>
+          As a captain <strong>you will take lead</strong> and make sure that
+          the task is carried out, e.g., driving the Q-Boat, organising other
+          helpers signed up for the task, etc.
+        </>,
+        cannotCancelEl,
       ],
-      async () => {
+      displayContentAsDialogContentText: true,
+      confirmButtonText: "Sign Up As Captain",
+      onConfirm: async () => {
         try {
           const newTask = await client.signUpForHelperTaskAsCaptain(task.id);
           refreshTask(newTask);
@@ -121,17 +135,16 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           showBoundary(ex);
         }
       },
-    );
+    });
   };
 
   const signUpAsHelper = () => {
-    openConfirmationDialog(
-      "Sign Up As Helper",
-      [
-        "Are you sure you want to sign up as helper?",
-        "After signing up you cannot cancel unless you provide a replacement!",
-      ],
-      async () => {
+    openConfirmationDialog({
+      title: "Are you sure you want to sign up as helper?",
+      content: cannotCancelEl,
+      displayContentAsDialogContentText: true,
+      confirmButtonText: "Sign Up As Helper",
+      onConfirm: async () => {
         try {
           const newTask = await client.signUpForHelperTaskAsHelper(task.id);
           refreshTask(newTask);
@@ -139,28 +152,28 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           showBoundary(ex);
         }
       },
-    );
+    });
   };
 
   const markAsDone = () => {
     confirmationDialogComment.setImmediately("");
 
-    openConfirmationDialog(
-      "Mark As Done",
-      <>
-        <DialogContentText mb={2}>
-          Are you sure you want to mark the task as done?
-        </DialogContentText>
-        <DialogContentText mb={2}>
-          This will notify the contact that task is done to and it can be
-          validated.
-        </DialogContentText>
-        <DialogContentText mb={2}>
-          Comment (optional, e.g., no shows):
-        </DialogContentText>
-        {confirmationDialogCommentComponent}
-      </>,
-      async () => {
+    openConfirmationDialog({
+      title: "Are you sure you want to mark the task as done?",
+      content: (
+        <>
+          <DialogContentText mb={2}>
+            This will notify the contact that task is done to and it can be
+            validated.
+          </DialogContentText>
+          <DialogContentText mb={2}>
+            Comment (optional, e.g., no shows):
+          </DialogContentText>
+          {confirmationDialogCommentComponent}
+        </>
+      ),
+      confirmButtonText: "Mark As Done",
+      onConfirm: async () => {
         try {
           const newTask = await client.markHelperTaskAsDone(task.id, {
             comment: confirmationDialogComment.get(),
@@ -170,7 +183,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           showBoundary(ex);
         }
       },
-    );
+    });
   };
 
   const validate = () => {
@@ -178,21 +191,17 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
     validation.helpersToRemove.current = [];
     confirmationDialogComment.setImmediately("");
 
-    openConfirmationDialog(
-      "Validate",
-      <>
-        <DialogContentText mb={2}>
-          Are you sure you want to validate the task?
-        </DialogContentText>
-        {task.helpers.length ? (
-          helperValidationComponent
-        ) : (
-          <DialogContentText mb={2}>(No helpers to validate)</DialogContentText>
-        )}
-        <DialogContentText mb={2}>Comment (optional):</DialogContentText>
-        {confirmationDialogCommentComponent}
-      </>,
-      async () => {
+    openConfirmationDialog({
+      title: "Are you sure you want to validate the task?",
+      content: (
+        <>
+          {task.helpers.length > 0 && helperValidationComponent}
+          <DialogContentText mb={2}>Comment (optional):</DialogContentText>
+          {confirmationDialogCommentComponent}
+        </>
+      ),
+      confirmButtonText: "Validate",
+      onConfirm: async () => {
         try {
           const newTask = await client.validateHelperTask(task.id, {
             helpersToValidate: validation.helpersToValidate.current,
@@ -204,7 +213,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           showBoundary(ex);
         }
       },
-    );
+    });
   };
 
   return (

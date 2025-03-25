@@ -4,7 +4,7 @@ import SpanBlockBox from "@/components/SpanBlockBox";
 import { User } from "@/context/AuthenticationContext";
 import {
   HelperTask,
-  HelperTaskMutationRequestDto,
+  HelperTaskMutationRequestBase,
   HelperTaskState,
   HelperTaskType,
   getHelperTaskType,
@@ -63,7 +63,7 @@ export const getTaskCloneLocation = (taskId: number) =>
  * @returns true if the task is a multi-day shift, false otherwise
  */
 export const isMultiDayShift = (
-  task: HelperTask | HelperTaskMutationRequestDto,
+  task: HelperTask | HelperTaskMutationRequestBase,
 ): boolean =>
   getHelperTaskType(task) === HelperTaskType.Shift &&
   !isSameDay(task.startsAt!, task.endsAt!);

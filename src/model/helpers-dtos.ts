@@ -112,7 +112,7 @@ export type HelperTask = z.infer<typeof HelperTaskSchema>;
 export const HelperTasksSchema = z.array(HelperTaskSchema);
 export type HelperTasks = z.infer<typeof HelperTasksSchema>;
 
-export const HelperTaskMutationRequestDtoSchema = z.object({
+export const HelperTaskMutationRequestBaseSchema = z.object({
   categoryId: z.number(),
   title: z.string(),
   shortDescription: z.string(),
@@ -127,16 +127,33 @@ export const HelperTaskMutationRequestDtoSchema = z.object({
   helperMaxCount: z.number(),
   published: z.boolean(),
 });
-export type HelperTaskMutationRequestDto = z.infer<
-  typeof HelperTaskMutationRequestDtoSchema
+
+export type HelperTaskMutationRequestBase = z.infer<
+  typeof HelperTaskMutationRequestBaseSchema
 >;
 
-export const HelperTaskMarkAsDoneRequestDtoSchema = z.object({
+export const HelperTaskCreationRequestSchema =
+  HelperTaskMutationRequestBaseSchema;
+
+export type HelperTaskCreationRequest = z.infer<
+  typeof HelperTaskCreationRequestSchema
+>;
+
+export const HelperTaskUpdateRequestSchema =
+  HelperTaskMutationRequestBaseSchema.extend({
+    notifySignedUpMembers: z.boolean(),
+  });
+
+export type HelperTaskUpdateRequest = z.infer<
+  typeof HelperTaskUpdateRequestSchema
+>;
+
+export const HelperTaskMarkAsDoneRequestSchema = z.object({
   comment: z.string().nullable(),
 });
 
-export type HelperTaskMarkAsDoneRequestDto = z.infer<
-  typeof HelperTaskMarkAsDoneRequestDtoSchema
+export type HelperTaskMarkAsDoneRequest = z.infer<
+  typeof HelperTaskMarkAsDoneRequestSchema
 >;
 
 export const HelperTaskValidationRequestDtoSchema = z.object({
@@ -145,6 +162,6 @@ export const HelperTaskValidationRequestDtoSchema = z.object({
   comment: z.string().nullable(),
 });
 
-export type HelperTaskValidationRequestDto = z.infer<
+export type HelperTaskValidationRequest = z.infer<
   typeof HelperTaskValidationRequestDtoSchema
 >;
