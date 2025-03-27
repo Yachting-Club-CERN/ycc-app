@@ -502,8 +502,8 @@ const HelperTaskForm = ({
               about this change.
             </strong>{" "}
             It is recommended to do so if you change the time, location or
-            requirements of the task. change. However, please do not use this
-            for minor edits or typo fixes.
+            requirements of the task. However, please do not use this for minor
+            edits or typo fixes.
           </Typography>
         </Alert>
       )}
