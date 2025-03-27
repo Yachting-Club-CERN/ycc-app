@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update confirmation dialog texts
+- Allow admin/editors to choose whether to send notification when updating helper tasks
+
 ## [1.2.0] - 2025-03-17
 
 ### Added
