@@ -498,7 +498,7 @@ const HelperTaskForm = ({
         <Alert severity="warning">
           <Typography>
             <strong>
-              If you choose to notify signed up members, they will be emailed
+              If you choose to notify signed-up members, they will be emailed
               about this change.
             </strong>{" "}
             It is recommended to do so if you change the time, location or

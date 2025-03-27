@@ -121,7 +121,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
         <>
           As a captain <strong>you will take lead</strong> and make sure that
           the task is carried out, e.g., driving the Q-Boat, organising other
-          helpers signed up for the task, etc.
+          helpers who signed up for the task, etc.
         </>,
         cannotCancelEl,
       ],
