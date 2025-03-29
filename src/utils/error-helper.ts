@@ -125,8 +125,8 @@ export const getErrorCauseChain = (error: Error) => {
  */
 export const getErrorText = (error: unknown): string => {
   if (error instanceof Error) {
-    if (error.cause instanceof AxiosError) {
-      const cause = error.cause as AxiosError;
+    const cause = error.cause;
+    if (cause instanceof AxiosError) {
       const status = cause.response?.status;
       const errorDetail = getErrorDetail(cause);
 
