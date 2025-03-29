@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update confirmation dialog texts
 - Allow admin/editors to choose whether to send notification when updating helper tasks
+- Nicer error reporting for HTTP 401, 403, 404 and 409 errors
 
 ## [1.2.0] - 2025-03-17
 
@@ -45,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Remember previously selected search options
 - Data validation using Zod
 - Year-aware helper task list
-- Confirmation dialog when signing up to helper tasks
+- Confirmation dialog when signing up for helper tasks
 - Helper task validation
 
 ### Changed
