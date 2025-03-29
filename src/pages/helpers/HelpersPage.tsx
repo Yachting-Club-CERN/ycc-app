@@ -91,7 +91,8 @@ const HelpersPage = () => {
   }, [delayedFilterOptions]);
 
   const years = Array.from(
-    { length: currentYear - firstHelperAppYear + 1 },
+    // Add the next year too
+    { length: currentYear - firstHelperAppYear + 2 },
     (_, i) => firstHelperAppYear + i,
   );
 

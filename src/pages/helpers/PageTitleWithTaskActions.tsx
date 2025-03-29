@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useContext } from "react";
+import { ComponentProps, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import PageTitle, { PageTitleProps } from "@/components/PageTitle";
+import PageTitle from "@/components/PageTitle";
 import AuthenticationContext from "@/context/AuthenticationContext";
 import { HelperTask } from "@/model/helpers-dtos";
 
@@ -14,7 +14,7 @@ import {
   getTaskEditLocation,
 } from "./helpers-utils";
 
-type Props = PageTitleProps & {
+type Props = ComponentProps<typeof PageTitle> & {
   task?: HelperTask;
 };
 

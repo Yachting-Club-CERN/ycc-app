@@ -11,11 +11,11 @@ import config, { Environment } from "@/config";
 
 import { externalUrls } from "./ExternalUrls";
 
-type TopBarProps = {
+type Props = {
   toggleDrawer: (event: React.SyntheticEvent) => void;
 };
 
-const TopBar = (props: TopBarProps) => {
+const TopBar = (props: Props) => {
   const alertEnvironmentInfo = () => {
     alert(`Current environment: ${config.environment}
 

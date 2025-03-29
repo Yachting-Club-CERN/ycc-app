@@ -4,6 +4,15 @@ import ConfirmationDialog, {
   ConfirmationDialogContent,
 } from "@/components/ConfirmationDialog";
 
+type OpenConfirmationDialogProps = {
+  title: string;
+  content: ConfirmationDialogContent;
+  displayContentAsDialogContentText?: boolean;
+  confirmButtonText?: string;
+  shouldDelayConfirm?: boolean;
+  onConfirm: () => void | Promise<void>;
+};
+
 /**
  * Hook to open a confirmation dialog. Creates a `useState()` hook under the hood.
  *
@@ -15,31 +24,37 @@ import ConfirmationDialog, {
  * @returns the component to render and the function to call to open the dialog
  */
 const useConfirmationDialog = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState<ConfirmationDialogContent>("");
+  const [openConfirmationDialogProps, setOpenConfirmationDialogProps] =
+    useState<OpenConfirmationDialogProps>({
+      title: "",
+      content: "",
+      onConfirm: () => {},
+    });
 
   const [open, setOpen] = useState(false);
-  const [onConfirm, setOnConfirm] = useState(() => () => {}); // Keep callback as state
+  const [confirming, setConfirming] = useState(false);
 
-  const openConfirmationDialog = (
-    title: string,
-    content: ConfirmationDialogContent,
-    onConfirm: () => void,
-  ) => {
-    setTitle(title);
-    setContent(content);
+  const openConfirmationDialog = (props: OpenConfirmationDialogProps) => {
+    setOpenConfirmationDialogProps(props);
     setOpen(true);
-    setOnConfirm(() => onConfirm); // Keep callback as state
   };
+
+  const { onConfirm, ...dialogPropsWithoutOnConfirm } =
+    openConfirmationDialogProps;
 
   const confirmationDialogComponent = (
     <ConfirmationDialog
-      title={title}
-      content={content}
+      {...dialogPropsWithoutOnConfirm}
       open={open}
-      onConfirm={() => {
-        onConfirm();
-        setOpen(false);
+      confirming={confirming}
+      onConfirm={async () => {
+        try {
+          setConfirming(true);
+          await onConfirm();
+        } finally {
+          setConfirming(false);
+          setOpen(false);
+        }
       }}
       onClose={() => setOpen(false)}
     />

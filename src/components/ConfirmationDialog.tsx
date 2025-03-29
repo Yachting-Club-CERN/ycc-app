@@ -4,22 +4,77 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import React, { JSX } from "react";
+import React, { JSX, useEffect, useState } from "react";
 
 type ArrayOneOrMore<T> = {
   0: T;
 } & Array<T>;
 
-type StringOrElement = string | JSX.Element;
+export type StringOrElement = string | JSX.Element;
 
 export type ConfirmationDialogContent =
   | StringOrElement
   | ArrayOneOrMore<StringOrElement>;
 
+const CONFIRM_BUTTON_DELAY_SECONDS = 3;
+
+type ConfirmButtonProps = {
+  onConfirm: () => void;
+  loading: boolean;
+  text?: string;
+  shouldDelay?: boolean;
+};
+
+const ConfirmButton = (props: ConfirmButtonProps) => {
+  const { onConfirm, loading } = props;
+  const text = props.text ?? "Confirm";
+  const shouldDelay = props.shouldDelay ?? false;
+
+  const [enabled, setEnabled] = useState(!shouldDelay);
+  const [countdown, setCountdown] = useState(CONFIRM_BUTTON_DELAY_SECONDS);
+
+  useEffect(() => {
+    if (!shouldDelay) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCountdown((c) => c - 1);
+    }, 1000);
+
+    const timeout = setTimeout(() => {
+      setEnabled(true);
+      clearInterval(interval);
+    }, CONFIRM_BUTTON_DELAY_SECONDS * 1000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, []);
+
+  return (
+    <Button
+      onClick={onConfirm}
+      variant="contained"
+      color="success"
+      autoFocus
+      disabled={!enabled}
+      loading={loading}
+    >
+      {enabled ? text : `${text} (${countdown}s)`}
+    </Button>
+  );
+};
+
 type Props = {
   title: string;
   content: ConfirmationDialogContent;
   open: boolean;
+  confirming: boolean;
+  displayContentAsDialogContentText?: boolean;
+  confirmButtonText?: string;
+  shouldDelayConfirm?: boolean;
   onConfirm: () => void;
   onClose: () => void;
 };
@@ -28,6 +83,10 @@ const ConfirmationDialog = ({
   title,
   content,
   open,
+  confirming,
+  displayContentAsDialogContentText,
+  confirmButtonText,
+  shouldDelayConfirm,
   onConfirm,
   onClose,
 }: Props) => {
@@ -47,7 +106,7 @@ const ConfirmationDialog = ({
         {items.map((item, index) => {
           const lastItem = index === items.length - 1;
 
-          if (typeof item === "string") {
+          if (displayContentAsDialogContentText || typeof item === "string") {
             return (
               <DialogContentText key={index} mb={lastItem ? 0 : 2}>
                 {item}
@@ -62,14 +121,12 @@ const ConfirmationDialog = ({
         <Button onClick={onClose} variant="text" color="error">
           Cancel
         </Button>
-        <Button
-          onClick={onConfirm}
-          variant="contained"
-          color="success"
-          autoFocus
-        >
-          Confirm
-        </Button>
+        <ConfirmButton
+          onConfirm={onConfirm}
+          loading={confirming}
+          text={confirmButtonText}
+          shouldDelay={shouldDelayConfirm}
+        />
       </DialogActions>
     </Dialog>
   );

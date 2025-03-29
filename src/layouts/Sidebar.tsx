@@ -7,12 +7,12 @@ import SidebarMenu from "./SidebarMenu";
 
 const drawerWidth = 240;
 
-type SidebarProps = {
+type Props = {
   mobileOpen: boolean;
   toggleDrawer: (open: boolean) => (event: React.SyntheticEvent) => void;
 };
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = (props: Props) => {
   const sidebarMenu = <SidebarMenu />;
   const commonDrawerSx = {
     width: drawerWidth,

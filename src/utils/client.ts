@@ -12,10 +12,11 @@ import {
   HelperTask,
   HelperTaskCategories,
   HelperTaskCategoriesSchema,
-  HelperTaskMarkAsDoneRequestDto,
-  HelperTaskMutationRequestDto,
+  HelperTaskCreationRequest,
+  HelperTaskMarkAsDoneRequest,
   HelperTaskSchema,
-  HelperTaskValidationRequestDto,
+  HelperTaskUpdateRequest,
+  HelperTaskValidationRequest,
   HelperTasks,
   HelperTasksSchema,
 } from "@/model/helpers-dtos";
@@ -92,10 +93,10 @@ class Client {
     );
 
   createHelperTask = async (
-    task: HelperTaskMutationRequestDto,
+    task: HelperTaskCreationRequest,
     signal?: AbortSignal,
   ) =>
-    await this.postForData<HelperTask, HelperTaskMutationRequestDto>(
+    await this.postForData<HelperTask, HelperTaskCreationRequest>(
       HelperTaskSchema,
       "/api/v1/helpers/tasks",
       null,
@@ -105,10 +106,10 @@ class Client {
 
   updateHelperTask = async (
     id: number,
-    task: HelperTaskMutationRequestDto,
+    task: HelperTaskUpdateRequest,
     signal?: AbortSignal,
   ) =>
-    await this.putForData<HelperTask, HelperTaskMutationRequestDto>(
+    await this.putForData<HelperTask, HelperTaskUpdateRequest>(
       HelperTaskSchema,
       `/api/v1/helpers/tasks/${id}`,
       null,
@@ -136,7 +137,7 @@ class Client {
 
   markHelperTaskAsDone = async (
     id: number,
-    request: HelperTaskMarkAsDoneRequestDto,
+    request: HelperTaskMarkAsDoneRequest,
     signal?: AbortSignal,
   ) =>
     await this.postForData<HelperTask, object>(
@@ -149,7 +150,7 @@ class Client {
 
   validateHelperTask = async (
     id: number,
-    request: HelperTaskValidationRequestDto,
+    request: HelperTaskValidationRequest,
     signal?: AbortSignal,
   ) =>
     await this.postForData<HelperTask, object>(

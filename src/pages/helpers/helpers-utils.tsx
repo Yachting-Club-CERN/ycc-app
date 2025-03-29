@@ -4,7 +4,7 @@ import SpanBlockBox from "@/components/SpanBlockBox";
 import { User } from "@/context/AuthenticationContext";
 import {
   HelperTask,
-  HelperTaskMutationRequestDto,
+  HelperTaskMutationRequestBase,
   HelperTaskState,
   HelperTaskType,
   getHelperTaskType,
@@ -63,7 +63,7 @@ export const getTaskCloneLocation = (taskId: number) =>
  * @returns true if the task is a multi-day shift, false otherwise
  */
 export const isMultiDayShift = (
-  task: HelperTask | HelperTaskMutationRequestDto,
+  task: HelperTask | HelperTaskMutationRequestBase,
 ): boolean =>
   getHelperTaskType(task) === HelperTaskType.Shift &&
   !isSameDay(task.startsAt!, task.endsAt!);
@@ -131,21 +131,21 @@ export const isSignedUpAsHelper = (task: HelperTask, user: User): boolean =>
   task.helpers.some((helper) => helper.member.username === user.username);
 
 /**
- * Tells if a user is signed up for a task.
+ * Tells if a user has signed up for a task.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user is signed up, false otherwise
+ * @returns true if the user has signed up, false otherwise
  */
 export const isSignedUp = (task: HelperTask, user: User): boolean =>
   isSignedUpAsCaptain(task, user) || isSignedUpAsHelper(task, user);
 
 /**
- * Tells whether a user can signed up for a task as captain.
+ * Tells whether a user can sign up for a task as captain.
  *
  * @param task a task
  * @param user a user
- * @returns true if the user can signed up as captain, false otherwise
+ * @returns true if the user can sign up as captain, false otherwise
  */
 export const canSignUpAsCaptain = (task: HelperTask, user: User): boolean =>
   isUpcoming(task) &&
