@@ -524,9 +524,14 @@ const HelperTaskForm = ({
           </Button>
         </Stack>
       </SpacedBox>
-      <SpacedBox>
-        <>{error && <ErrorAlert error={error} />}</>
-      </SpacedBox>
+
+      <>
+        {error && (
+          <SpacedBox>
+            <ErrorAlert error={error} />
+          </SpacedBox>
+        )}
+      </>
 
       {confirmationDialogComponent}
     </FormContainer>

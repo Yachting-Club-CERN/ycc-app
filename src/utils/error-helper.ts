@@ -118,11 +118,28 @@ export const getErrorCauseChain = (error: Error) => {
 /**
  * Extracts the text representation for an error.
  *
+ * For straightforward errors, the text representation is the error message.
+ *
  * @param error an error
  * @returns error text
  */
 export const getErrorText = (error: unknown): string => {
   if (error instanceof Error) {
+    if (error.cause instanceof AxiosError) {
+      const cause = error.cause as AxiosError;
+      const status = cause.response?.status;
+      const errorDetail = getErrorDetail(cause);
+
+      if (
+        status &&
+        [401, 403, 404, 409].includes(status) &&
+        errorDetail &&
+        typeof errorDetail === "string"
+      ) {
+        return errorDetail;
+      }
+    }
+
     return getErrorChainAsStrings(error).join("\n");
   } else {
     return getText(error);

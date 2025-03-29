@@ -5,11 +5,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import React, { useContext, useRef } from "react";
-import { useErrorBoundary } from "react-error-boundary";
+import React, { useContext, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
+import ErrorAlert from "@/components/ErrorAlert";
 import RichTextEditor from "@/components/RichTextEditor";
+import SpacedBox from "@/components/SpacedBox";
 import SpacedTypography from "@/components/SpacedTypography";
 import AuthenticationContext from "@/context/AuthenticationContext";
 import useConfirmationDialog from "@/hooks/useConfirmationDialog";
@@ -41,7 +42,7 @@ type Props = {
 
 const HelperTaskInfo = ({ task, refreshTask }: Props) => {
   const currentUser = useContext(AuthenticationContext).currentUser;
-  const { showBoundary } = useErrorBoundary();
+  const [error, setError] = useState<unknown>();
   const { memberInfoDialogComponent, openMemberInfoDialog } =
     useMemberInfoDialog();
   const { confirmationDialogComponent, openConfirmationDialog } =
@@ -132,7 +133,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           const newTask = await client.signUpForHelperTaskAsCaptain(task.id);
           refreshTask(newTask);
         } catch (ex) {
-          showBoundary(ex);
+          setError(ex);
         }
       },
     });
@@ -149,7 +150,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           const newTask = await client.signUpForHelperTaskAsHelper(task.id);
           refreshTask(newTask);
         } catch (ex) {
-          showBoundary(ex);
+          setError(ex);
         }
       },
     });
@@ -180,7 +181,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           });
           refreshTask(newTask);
         } catch (ex) {
-          showBoundary(ex);
+          setError(ex);
         }
       },
     });
@@ -210,7 +211,7 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
           });
           refreshTask(newTask);
         } catch (ex) {
-          showBoundary(ex);
+          setError(ex);
         }
       },
     });
@@ -349,6 +350,13 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
               </Button>
             )}
           </Stack>
+
+          {error && (
+            <SpacedBox>
+              <ErrorAlert error={error} />
+            </SpacedBox>
+          )}
+
           <SpacedTypography variant="subtitle2">
             Reminder: after signing up for a task you will be unable to cancel.
             If you want to cancel a shift, first find a replacement, then notify
