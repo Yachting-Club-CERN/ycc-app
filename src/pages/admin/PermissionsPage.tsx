@@ -10,7 +10,7 @@ const PermissionsPage = () => {
   const currentUser = useContext(AuthenticationContext).currentUser;
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdmin) {
-    void navigate("/helpers");
+    void navigate("/");
   }
 
   return (

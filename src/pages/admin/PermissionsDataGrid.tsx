@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
   },
   {
     field: "member.lastName",
-    headerName: "Last name",
+    headerName: "Last Name",
     flex: 1,
     minWidth: 150,
     valueGetter: (_, permission: HelpersAppPermission) =>
