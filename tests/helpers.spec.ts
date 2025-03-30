@@ -44,7 +44,10 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await expect(page.locator("main")).not.toContainText("Captain: MHUFF");
 
   await page.getByRole("button", { name: "Sign up as Captain" }).click();
-  await page.getByRole("button", { name: "Confirm" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Sign up as Captain" })
+    .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
   await expect(page.locator("main")).toContainText("Captain: MHUFF");
 });
@@ -62,7 +65,10 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await expect(page.locator("main")).not.toContainText("Helpers: MHUFF");
 
   await page.getByRole("button", { name: "Sign up as Helper" }).click();
-  await page.getByRole("button", { name: "Confirm" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Sign up as Helper" })
+    .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
   await expect(page.locator("main")).toContainText("Helpers: MHUFF");
 
@@ -77,7 +83,10 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   });
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
   await page.getByRole("button", { name: "Sign up as Helper" }).click();
-  await page.getByRole("button", { name: "Confirm" }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Sign up as Helper" })
+    .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
   await expect(page.locator("main")).toContainText("Helpers: MHUFF IMCDOWEL");
 });
