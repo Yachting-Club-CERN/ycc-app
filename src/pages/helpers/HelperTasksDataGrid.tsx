@@ -81,10 +81,10 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
 
   const openMemberInfoDialogFromGrid = (
     event: React.SyntheticEvent,
-    memberInfo: MemberPublicInfo,
+    member: MemberPublicInfo,
   ) => {
     event.stopPropagation();
-    openMemberInfoDialog(memberInfo);
+    openMemberInfoDialog({ member });
   };
 
   const createMemberDialogLink = (member: MemberPublicInfo) => {
@@ -98,8 +98,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderTimingCell = (params: GridCellParams) => {
-    const task = params.row as HelperTask;
+  const renderTimingCell = (params: GridCellParams<HelperTask>) => {
+    const task = params.row;
     return (
       <DataGridCell>
         <Typography variant="body2" align="center" width="100%">
@@ -109,8 +109,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderTaskCell = (params: GridCellParams) => {
-    const task = params.row as HelperTask;
+  const renderTaskCell = (params: GridCellParams<HelperTask>) => {
+    const task = params.row;
     return (
       <DataGridCell>
         <Typography variant="body2">
@@ -123,8 +123,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderContactCell = (params: GridCellParams) => {
-    const task = params.row as HelperTask;
+  const renderContactCell = (params: GridCellParams<HelperTask>) => {
+    const task = params.row;
 
     return (
       <DataGridCell>
@@ -135,8 +135,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderCaptainCell = (params: GridCellParams) => {
-    const task = params.row as HelperTask;
+  const renderCaptainCell = (params: GridCellParams<HelperTask>) => {
+    const task = params.row;
 
     if (task.captain) {
       return (
@@ -159,8 +159,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     }
   };
 
-  const renderHelpersCell = (params: GridCellParams) => {
-    const task = params.row as HelperTask;
+  const renderHelpersCell = (params: GridCellParams<HelperTask>) => {
+    const task = params.row;
 
     return (
       <DataGridCell>
@@ -240,8 +240,8 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
         onCellClick={handleGridClick}
         disableColumnFilter={true}
         pageSizeOptions={[10, 25, 50, 100]}
-        getRowClassName={(params: GridRowParams) =>
-          (params.row as HelperTask).urgent ? "ycc-urgent" : ""
+        getRowClassName={(params: GridRowParams<HelperTask>) =>
+          params.row.urgent ? "ycc-urgent" : ""
         }
         rowHeight={78}
         sx={{

@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type PromiseOutcome<T> = {
   result: T | undefined;
@@ -15,7 +15,7 @@ type PromiseOutcome<T> = {
  */
 const usePromise = <T>(
   promise: (signal?: AbortSignal) => Promise<T>,
-  deps?: DependencyList,
+  deps?: React.DependencyList,
 ): PromiseOutcome<T> => {
   const [result, setResult] = useState<T>();
   const [error, setError] = useState<unknown>();

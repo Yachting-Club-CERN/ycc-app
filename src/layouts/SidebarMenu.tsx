@@ -4,6 +4,7 @@ import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import ErrorIcon from "@mui/icons-material/Error";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import HomeIcon from "@mui/icons-material/Home";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LanguageIcon from "@mui/icons-material/Language";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
@@ -31,62 +32,73 @@ type SidebarItem = {
   icon: JSX.Element;
 };
 
-const items: SidebarItem[][] = [
-  [{ title: "Home", path: "/", icon: <HomeIcon /> }],
-  [
-    {
-      title: "Reserve a boat",
-      path: externalUrls.yccBoatBooking,
-      icon: <SailingIcon />,
-    },
-    {
-      title: "Help the Club!",
-      path: "/helpers",
-      icon: <AccessibilityNewIcon />,
-    },
-    {
-      title: "Member List",
-      path: "/members",
-      icon: <PeopleIcon />,
-    },
-  ],
-  [
-    {
-      title: "Go to the website",
-      path: externalUrls.yccWebsite,
-      icon: <LanguageIcon />,
-    },
-  ],
-];
-
-if (config.environment === Environment.LOCAL) {
-  items.push([
-    {
-      title: "Playground: 404",
-      path: "/playground/this-page-is-definitely-not-declared-in-the-routes",
-      icon: <ErrorIcon />,
-    },
-    {
-      title: "Playground: Editor",
-      path: "/playground/editor",
-      icon: <AutoFixHighIcon />,
-    },
-    {
-      title: "Playground: Error",
-      path: "/playground/error",
-      icon: <ErrorIcon />,
-    },
-    {
-      title: "Playground: Styles",
-      path: "/playground/styles",
-      icon: <FormatColorFillIcon />,
-    },
-  ]);
-}
-
 const SidebarMenu = () => {
   const location = useLocation();
   const auth = useContext(AuthenticationContext);
+  const currentUser = auth.currentUser;
+
+  const items: SidebarItem[][] = [
+    [{ title: "Home", path: "/", icon: <HomeIcon /> }],
+    [
+      {
+        title: "Reserve a boat",
+        path: externalUrls.yccBoatBooking,
+        icon: <SailingIcon />,
+      },
+      {
+        title: "Help the Club!",
+        path: "/helpers",
+        icon: <AccessibilityNewIcon />,
+      },
+      {
+        title: "Member List",
+        path: "/members",
+        icon: <PeopleIcon />,
+      },
+    ],
+    [
+      {
+        title: "Go to the website",
+        path: externalUrls.yccWebsite,
+        icon: <LanguageIcon />,
+      },
+    ],
+  ];
+
+  if (currentUser.helpersAppAdmin) {
+    items.push([
+      {
+        title: "Permissions",
+        path: "/admin/permissions",
+        icon: <HowToRegIcon />,
+      },
+    ]);
+  }
+
+  if (config.environment === Environment.LOCAL) {
+    items.push([
+      {
+        title: "Playground: 404",
+        path: "/playground/this-page-is-definitely-not-declared-in-the-routes",
+        icon: <ErrorIcon />,
+      },
+      {
+        title: "Playground: Editor",
+        path: "/playground/editor",
+        icon: <AutoFixHighIcon />,
+      },
+      {
+        title: "Playground: Error",
+        path: "/playground/error",
+        icon: <ErrorIcon />,
+      },
+      {
+        title: "Playground: Styles",
+        path: "/playground/styles",
+        icon: <FormatColorFillIcon />,
+      },
+    ]);
+  }
 
   return (
     <>

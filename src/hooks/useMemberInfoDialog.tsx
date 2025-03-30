@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import MemberInfoDialog from "@/components/MemberInfoDialog";
-import { MemberPublicInfo } from "@/model/dtos";
+
+type Props = Omit<React.ComponentProps<typeof MemberInfoDialog>, "onClose">;
+const DEFAULT_PROPS = { member: null } as const;
 
 /**
  * Hook to open a dialog with information about a member. Creates a `useState()` hook under the hood.
@@ -14,13 +16,14 @@ import { MemberPublicInfo } from "@/model/dtos";
  * @returns the component to render and the function to call to open the dialog
  */
 const useMemberInfoDialog = () => {
-  const [member, setMember] = useState<MemberPublicInfo | null>(null);
-  const openMemberInfoDialog = (member: MemberPublicInfo) => {
-    setMember(member);
+  const [props, setProps] = useState<Props>(DEFAULT_PROPS);
+
+  const openMemberInfoDialog = (props: Props) => {
+    setProps(props);
   };
 
   const memberInfoDialogComponent = (
-    <MemberInfoDialog member={member} onClose={() => setMember(null)} />
+    <MemberInfoDialog {...props} onClose={() => setProps(DEFAULT_PROPS)} />
   );
 
   return {

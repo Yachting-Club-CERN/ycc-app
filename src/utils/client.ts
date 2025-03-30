@@ -19,6 +19,8 @@ import {
   HelperTaskValidationRequest,
   HelperTasks,
   HelperTasksSchema,
+  HelpersAppPermissions,
+  HelpersAppPermissionsSchema,
 } from "@/model/helpers-dtos";
 
 enum ClientErrorCode {
@@ -68,6 +70,14 @@ class Client {
   //
   // Helpers
   //
+  getHelpersAppPermissions = async (signal?: AbortSignal) =>
+    await this.getData<HelpersAppPermissions>(
+      HelpersAppPermissionsSchema,
+      "/api/v1/helpers/permissions",
+      null,
+      signal,
+    );
+
   getHelperTaskCategories = async (signal?: AbortSignal) =>
     await this.getData<HelperTaskCategories>(
       HelperTaskCategoriesSchema,

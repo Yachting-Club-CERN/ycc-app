@@ -20,6 +20,16 @@ export enum HelperTaskState {
   Validated = "Validated",
 }
 
+export const HelpersAppPermissionSchema = z.object({
+  member: MemberPublicInfoSchema,
+  permission: z.string(),
+  note: z.string().nullable(),
+});
+export type HelpersAppPermission = z.infer<typeof HelpersAppPermissionSchema>;
+
+export const HelpersAppPermissionsSchema = z.array(HelpersAppPermissionSchema);
+export type HelpersAppPermissions = z.infer<typeof HelpersAppPermissionsSchema>;
+
 export const HelperTaskCategorySchema = z
   .object({
     id: z.number(),

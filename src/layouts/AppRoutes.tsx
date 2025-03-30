@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import PermissionsPage from "@/pages/admin/PermissionsPage";
 import HelpersEditTaskPage from "@/pages/helpers/HelpersEditTaskPage";
 import HelpersNewTaskPage from "@/pages/helpers/HelpersNewTaskPage";
 import HelpersPage from "@/pages/helpers/HelpersPage";
@@ -33,6 +34,8 @@ const AppRoutes = () => {
           path="/helpers/tasks/:id/edit"
           element={<HelpersEditTaskPage />}
         />
+
+        <Route path="/admin/permissions" element={<PermissionsPage />} />
 
         <Route path="/playground/editor" element={<PlaygroundEditorPage />} />
         <Route path="/playground/error" element={<PlaygroundErrorPage />} />
