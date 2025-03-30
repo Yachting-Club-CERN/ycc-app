@@ -164,34 +164,10 @@ const HelperTaskForm = ({
     }
   };
 
-  const onSubmit = async (data: HelperTaskFormData) => {
-    setError(undefined);
-    const {
-      base,
-      creation,
-      update,
-      uiOnly: { endsAtTime },
-    } = data;
-
-    base.longDescription = longDescription.get() ?? null;
-    if (base.captainRequiredLicenceInfoId === -1) {
-      base.captainRequiredLicenceInfoId = null;
-    }
-
-    if (!multiDayShift && base.startsAt && endsAtTime) {
-      base.endsAt = endsAtTime
-        .year(base.startsAt.year())
-        .month(base.startsAt.month())
-        .date(base.startsAt.date());
-    }
-
-    if (type === HelperTaskType.Shift) {
-      base.deadline = null;
-    } else if (type === HelperTaskType.Deadline) {
-      base.startsAt = null;
-      base.endsAt = null;
-    }
-
+  const getConfirmations = (
+    base: HelperTaskMutationRequestBase,
+    update: HelperTaskUpdateRequestExtra,
+  ) => {
     const confirmations: StringOrElement[] = [];
 
     if (!newTask) {
@@ -276,6 +252,39 @@ const HelperTaskForm = ({
         </>,
       );
     }
+
+    return confirmations;
+  };
+
+  const onSubmit = async (data: HelperTaskFormData) => {
+    setError(undefined);
+    const {
+      base,
+      creation,
+      update,
+      uiOnly: { endsAtTime },
+    } = data;
+
+    base.longDescription = longDescription.get() ?? null;
+    if (base.captainRequiredLicenceInfoId === -1) {
+      base.captainRequiredLicenceInfoId = null;
+    }
+
+    if (!multiDayShift && base.startsAt && endsAtTime) {
+      base.endsAt = endsAtTime
+        .year(base.startsAt.year())
+        .month(base.startsAt.month())
+        .date(base.startsAt.date());
+    }
+
+    if (type === HelperTaskType.Shift) {
+      base.deadline = null;
+    } else if (type === HelperTaskType.Deadline) {
+      base.startsAt = null;
+      base.endsAt = null;
+    }
+
+    const confirmations = getConfirmations(base, update);
 
     if (confirmations.length > 0) {
       openConfirmationDialog({
