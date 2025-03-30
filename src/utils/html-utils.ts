@@ -33,7 +33,7 @@ const forbiddenTags = [
  */
 export const sanitiseHtmlForReact = (html: string) => {
   const reactDom = HTMLReactParser(html, {
-    // We trust our backend+React+TinyMCE, but you never know...
+    // We trust our backend + React + RichTextEditor, but you never know...
     replace: (domNode) => {
       if (domNode instanceof DOMText) {
         // Always keep text

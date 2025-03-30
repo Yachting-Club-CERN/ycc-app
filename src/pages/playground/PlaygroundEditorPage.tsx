@@ -22,10 +22,10 @@ const PlaygroundEditorPage = () => {
       <PageTitle value="Playground: Editor" />
       <Box mt={2}>
         <RichTextEditor
+          placeholder="Demo placeholder..."
           initialContent={initialContent}
-          onChange={setHtml}
           minHeight={200}
-          maxHeight={800}
+          onUpdate={setHtml}
         />
       </Box>
       <SpacedTypography variant="h3">

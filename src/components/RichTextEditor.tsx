@@ -1,70 +1,142 @@
-import { Editor as EditorComponent } from "@tinymce/tinymce-react";
+import Box from "@mui/material/Box";
+import Heading from "@tiptap/extension-heading";
+import Highlight from "@tiptap/extension-highlight";
+import Link from "@tiptap/extension-link";
+import PlaceHolder from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import {
+  LinkBubbleMenu,
+  LinkBubbleMenuHandler,
+  MenuButtonAddImage,
+  MenuButtonBold,
+  MenuButtonBulletedList,
+  MenuButtonEditLink,
+  MenuButtonHighlightToggle,
+  MenuButtonItalic,
+  MenuButtonOrderedList,
+  MenuButtonRedo,
+  MenuButtonRemoveFormatting,
+  MenuButtonStrikethrough,
+  MenuButtonUnderline,
+  MenuButtonUndo,
+  MenuControlsContainer,
+  MenuDivider,
+  MenuSelectHeading,
+  ResizableImage,
+  RichTextEditorProvider,
+  RichTextField,
+} from "mui-tiptap";
 
-const prefix =
-  "<!--\n" +
-  "  Be careful when you edit the HTML code. Some elements are forbidden for\n" +
-  "  security reasons, some others are not allowed in order to integrate best\n" +
-  "  with the rest of the application.\n" +
-  "\n" +
-  "  !!! YOUR INPUT WILL BE SANITISED !!!\n" +
-  "\n" +
-  "  To avoid surprises, try to stick to the features provided by the editor.\n" +
-  "-->\n";
+const DEFAULT_IMAGE_WIDTH = 400;
 
 type Props = {
-  initialContent?: string | null;
-  onBlur?: (html: string) => void;
-  onInit?: (html: string) => void;
-  onChange: (html: string) => void;
-  height?: number | string;
+  placeholder?: string;
+  initialContent?: string;
   minHeight?: number | string;
-  maxHeight?: number | string;
+  onBlur?: (html: string) => void;
+  onCreate?: (html: string) => void;
+  onUpdate: (html: string) => void;
 };
 
 const RichTextEditor = ({
   initialContent,
-  onBlur,
-  onChange,
-  onInit,
-  height,
+  placeholder,
   minHeight,
-  maxHeight,
+  onBlur,
+  onCreate,
+  onUpdate,
 }: Props) => {
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        blockquote: false,
+        code: false,
+        codeBlock: false,
+        heading: false,
+        horizontalRule: false,
+      }),
+      Heading.configure({ levels: [4, 5, 6] }),
+      Underline,
+      Highlight,
+      Link.configure({ defaultProtocol: "https" }),
+      ResizableImage,
+      LinkBubbleMenuHandler,
+      PlaceHolder.configure({
+        placeholder: placeholder ?? "",
+      }),
+    ],
+    content: initialContent,
+    onBlur: ({ editor }) => onBlur?.(editor.getHTML()),
+    onCreate: ({ editor }) => onCreate?.(editor.getHTML()),
+    onUpdate: ({ editor }) => onUpdate(editor.getHTML()),
+  });
+
+  const handleAddImageClick = () => {
+    const url = window.prompt("Image URL:");
+    if (!editor || !url) {
+      return;
+    }
+
+    editor.chain().focus().setImage({ src: url }).run();
+
+    // Wait for the image to be added to the DOM before updating its attributes
+    setTimeout(() => {
+      editor
+        .chain()
+        .focus()
+        .updateAttributes("image", {
+          width: DEFAULT_IMAGE_WIDTH,
+        })
+        .run();
+    }, 0);
+  };
+
   return (
-    <EditorComponent
-      tinymceScriptSrc={`${import.meta.env.BASE_URL}tinymce/tinymce.min.js`}
-      initialValue={initialContent ? prefix + initialContent : prefix}
-      init={{
-        height: height,
-        minHeight: minHeight,
-        maxHeight: maxHeight,
-        menubar: false,
-        plugins: [
-          "autolink",
-          "code",
-          "emoticons",
-          "image",
-          "link",
-          "lists",
-          "searchreplace",
-        ],
-        toolbar:
-          "undo redo | bold italic underline strikethrough | blocks | outdent indent | bullist numlist | " +
-          "forecolor backcolor removeformat | image link emoticons | searchreplace code",
-        block_formats: "Paragraph=p;Header=h4;Header=h5;Header=h6",
-      }}
-      onBlur={(_, editor) => {
-        if (onBlur) {
-          onBlur(editor.getContent());
-        }
-      }}
-      onEditorChange={onChange}
-      onInit={(_, editor) => {
-        if (onInit) {
-          onInit(editor.getContent());
-        }
-      }}
-    />
+    <Box sx={{ "& .ProseMirror": { minHeight } }}>
+      <RichTextEditorProvider editor={editor}>
+        <RichTextField
+          controls={
+            <MenuControlsContainer>
+              <MenuButtonUndo />
+              <MenuButtonRedo />
+              <MenuDivider />
+
+              <MenuButtonBold />
+              <MenuButtonItalic />
+              <MenuButtonUnderline />
+              <MenuButtonStrikethrough />
+              <MenuDivider />
+
+              <MenuSelectHeading
+                labels={{
+                  paragraph: "Paragraph",
+                  heading4: "Heading",
+                  heading5: "Heading",
+                  heading6: "Heading",
+                }}
+              />
+              <MenuDivider />
+
+              <MenuButtonBulletedList />
+              <MenuButtonOrderedList />
+              <MenuDivider />
+
+              <MenuButtonHighlightToggle />
+              <MenuDivider />
+
+              <MenuButtonAddImage onClick={handleAddImageClick} />
+              <MenuButtonEditLink />
+              <MenuDivider />
+
+              <MenuButtonRemoveFormatting />
+            </MenuControlsContainer>
+          }
+        />
+        <LinkBubbleMenu />
+      </RichTextEditorProvider>
+    </Box>
   );
 };
 
