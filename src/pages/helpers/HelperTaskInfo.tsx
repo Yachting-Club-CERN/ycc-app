@@ -229,11 +229,6 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
         </Link>
       </SpacedTypography>
       <SpacedTypography>{createTimingInfoFragment(task)}</SpacedTypography>
-      {task.urgent && (
-        <SpacedTypography variant="h6" color="error">
-          Urgent
-        </SpacedTypography>
-      )}
 
       <Divider sx={{ mt: 2 }} />
 
