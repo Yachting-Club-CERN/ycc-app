@@ -364,7 +364,6 @@ const HelperTaskForm = ({
       </SpacedBox>
 
       <SpacedBox>
-        z
         <SpacedTypography fontWeight="bold">
           Long description (not included in emails):
         </SpacedTypography>
