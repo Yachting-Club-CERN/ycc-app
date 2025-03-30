@@ -64,7 +64,7 @@ const RichTextEditor = ({
       ResizableImage,
       LinkBubbleMenuHandler,
       PlaceHolder.configure({
-        placeholder: placeholder,
+        placeholder: placeholder ?? "",
       }),
     ],
     content: initialContent,

@@ -22,6 +22,7 @@ export default defineConfig({
       "@mui/x-data-grid",
       "@mui/x-date-pickers",
       "react-hook-mui-form",
+      "mui-tiptap",
     ],
   },
   build: {
@@ -47,6 +48,7 @@ export default defineConfig({
           no: ["@mui/material", "@mui/icons-material"],
           nerd: ["@mui/x-data-grid"],
           alert: ["@mui/x-date-pickers", "react-hook-form-mui"],
+          exclamationMark: ["mui-tiptap"],
         },
       },
     },
