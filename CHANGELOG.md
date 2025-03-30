@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update confirmation dialog texts
 - Allow admin/editors to choose whether to send notification when updating helper tasks
 - Nicer error reporting for HTTP 401, 403, 404 and 409 errors
+- Replace TinyMCE with Tiptap
 
 ## [1.2.0] - 2025-03-17
 

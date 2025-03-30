@@ -1,6 +1,5 @@
 .git/
 .vscode/
 dist/
-public/tinymce/
 node_modules/
 .git*

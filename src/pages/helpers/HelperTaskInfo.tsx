@@ -65,10 +65,10 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
 
   const confirmationDialogCommentComponent = (
     <RichTextEditor
+      minHeight={100}
       onBlur={confirmationDialogComment.setImmediately}
-      onInit={confirmationDialogComment.setImmediately}
-      onChange={confirmationDialogComment.setWithDelay}
-      height={150}
+      onCreate={confirmationDialogComment.setImmediately}
+      onUpdate={confirmationDialogComment.setWithDelay}
     />
   );
   const helperValidationComponent = (

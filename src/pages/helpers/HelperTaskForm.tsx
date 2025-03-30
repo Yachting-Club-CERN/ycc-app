@@ -298,6 +298,7 @@ const HelperTaskForm = ({
       <SpacedBox>
         <AutocompleteElement
           name="base.categoryId"
+          required
           label="Category"
           matchId
           options={categoryOptions}
@@ -318,21 +319,23 @@ const HelperTaskForm = ({
       </SpacedBox>
 
       <SpacedBox>
+        <SpacedTypography fontWeight="bold">
+          Long description (not included in emails):
+        </SpacedTypography>
         <RichTextEditor
-          initialContent={
-            task
-              ? task.longDescription
-              : "<p>Please describe the task here. Please note that this long description will be not included in emails.</p>"
-          }
+          placeholder="Please describe the task here."
+          initialContent={task?.longDescription ?? undefined}
+          minHeight={250}
           onBlur={longDescription.setImmediately}
-          onInit={longDescription.setImmediately}
-          onChange={longDescription.setWithDelay}
+          onCreate={longDescription.setImmediately}
+          onUpdate={longDescription.setWithDelay}
         />
       </SpacedBox>
 
       {currentUser.helpersAppAdmin ? (
         <AutocompleteElement
           name="base.contactId"
+          required
           label="Contact"
           matchId
           options={memberOptions}
@@ -385,6 +388,7 @@ const HelperTaskForm = ({
             <>
               <DateTimePickerElement
                 name="base.startsAt"
+                required
                 label="Start"
                 className="ycc-helper-task-starts-at-input"
                 timezone="default"
@@ -392,6 +396,7 @@ const HelperTaskForm = ({
               {multiDayShift ? (
                 <DateTimePickerElement
                   name="base.endsAt"
+                  required
                   label="End"
                   className="ycc-helper-task-ends-at-input"
                   timezone="default"
@@ -399,6 +404,7 @@ const HelperTaskForm = ({
               ) : (
                 <TimePickerElement
                   name="uiOnly.endsAtTime"
+                  required
                   label="End"
                   className="ycc-helper-task-ends-at-time-input"
                   timezone="default"
@@ -420,6 +426,7 @@ const HelperTaskForm = ({
           {type === HelperTaskType.Deadline && (
             <DateTimePickerElement
               name="base.deadline"
+              required
               label="Deadline"
               className="ycc-helper-task-deadline-input"
               timezone="default"
