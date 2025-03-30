@@ -41,6 +41,7 @@ import {
   HelperTaskUpdateRequest,
 } from "@/model/helpers-dtos";
 import client from "@/utils/client";
+import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
 import { canEditTask, getTaskLocation, isMultiDayShift } from "./helpers-utils";
@@ -163,34 +164,10 @@ const HelperTaskForm = ({
     }
   };
 
-  const onSubmit = async (data: HelperTaskFormData) => {
-    setError(undefined);
-    const {
-      base,
-      creation,
-      update,
-      uiOnly: { endsAtTime },
-    } = data;
-
-    base.longDescription = longDescription.get() ?? null;
-    if (base.captainRequiredLicenceInfoId === -1) {
-      base.captainRequiredLicenceInfoId = null;
-    }
-
-    if (!multiDayShift && base.startsAt && endsAtTime) {
-      base.endsAt = endsAtTime
-        .year(base.startsAt.year())
-        .month(base.startsAt.month())
-        .date(base.startsAt.date());
-    }
-
-    if (type === HelperTaskType.Shift) {
-      base.deadline = null;
-    } else if (type === HelperTaskType.Deadline) {
-      base.startsAt = null;
-      base.endsAt = null;
-    }
-
+  const getConfirmations = (
+    base: HelperTaskMutationRequestBase,
+    update: HelperTaskUpdateRequestExtra,
+  ) => {
     const confirmations: StringOrElement[] = [];
 
     if (!newTask) {
@@ -223,14 +200,91 @@ const HelperTaskForm = ({
       );
     }
 
+    const now = getNow();
+    // Using the first meaningful date is good enough for the confirmation dialog
+    const taskDate = [base.startsAt, base.endsAt, base.deadline].find(
+      (value) => value !== null,
+    );
+    const taskYear = taskDate?.year();
+
+    if (taskYear && taskYear !== now.year()) {
+      confirmations.push(
+        <>
+          Are you sure that{" "}
+          <strong>this task is NOT in the current year</strong>
+          {"?"}
+        </>,
+      );
+    }
+
+    if (taskDate?.isBefore(now)) {
+      confirmations.push(
+        <>
+          Are you sure that <strong>this task is in the past</strong>
+          {"?"} Members cannot sign up for tasks in the past.
+        </>,
+      );
+    }
+
+    if (task?.validatedBy) {
+      confirmations.push(
+        <>
+          Are you sure that you want to{" "}
+          <strong>modify this validated task</strong>
+          {"?"}
+        </>,
+      );
+    } else if (task?.markedAsDoneBy) {
+      confirmations.push(
+        <>
+          Are you sure you want to modify{" "}
+          <strong>this task that has been marked as done</strong>
+          {"?"}
+        </>,
+      );
+    }
+
     if (!base.published) {
       confirmations.push(
         <>
-          Are you sure you want this task to be <strong>unpublished</strong>?
+          Are you sure you want <strong>this task to be unpublished</strong>?
           Members do not see and cannot sign up for unpublished tasks.
         </>,
       );
     }
+
+    return confirmations;
+  };
+
+  const onSubmit = async (data: HelperTaskFormData) => {
+    setError(undefined);
+    const {
+      base,
+      creation,
+      update,
+      uiOnly: { endsAtTime },
+    } = data;
+
+    base.longDescription = longDescription.get() ?? null;
+    if (base.captainRequiredLicenceInfoId === -1) {
+      base.captainRequiredLicenceInfoId = null;
+    }
+
+    if (!multiDayShift && base.startsAt && endsAtTime) {
+      base.endsAt = endsAtTime
+        .year(base.startsAt.year())
+        .month(base.startsAt.month())
+        .date(base.startsAt.date());
+    }
+
+    if (type === HelperTaskType.Shift) {
+      base.deadline = null;
+    } else if (type === HelperTaskType.Deadline) {
+      base.startsAt = null;
+      base.endsAt = null;
+    }
+
+    const confirmations = getConfirmations(base, update);
 
     if (confirmations.length > 0) {
       openConfirmationDialog({
