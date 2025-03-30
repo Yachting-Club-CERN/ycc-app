@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Share via Email and WhatsApp buttons on the helper task details page
 - Extra confirmation checks when updating helper tasks
+- Add permissions page for admins
 
 ### Changed
 

@@ -31,11 +31,16 @@ const renderPhoneNumber = (
 
 const columns: GridColDef[] = [
   {
+    field: "id",
+    headerName: "ID",
+    width: 70,
+  },
+  {
     field: "lastName",
     headerName: "Last name",
     flex: 1,
     minWidth: 150,
-    valueFormatter: (value) => (value as string).toUpperCase(),
+    valueFormatter: (value: string) => value.toUpperCase(),
   },
   {
     field: "firstName",
@@ -93,9 +98,8 @@ const MembersDataGrid = ({ year, search }: Props) => {
     useMemberInfoDialog();
 
   const getRowId = (member: MemberPublicInfo) => member.username;
-  const handleGridClick = (params: GridCellParams) => {
-    openMemberInfoDialog(params.row as MemberPublicInfo);
-  };
+  const handleGridClick = (params: GridCellParams<MemberPublicInfo>) =>
+    openMemberInfoDialog({ member: params.row });
 
   const filter = (search: string, members: MemberPublicInfos) => {
     // User typically wants to search for one thing, e.g., name or phone number
@@ -121,6 +125,13 @@ const MembersDataGrid = ({ year, search }: Props) => {
           onCellClick={handleGridClick}
           disableColumnFilter={true}
           pageSizeOptions={[10, 25, 50, 100]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                id: false,
+              },
+            },
+          }}
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: "215px",

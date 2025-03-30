@@ -1,4 +1,4 @@
-import dayjs, { TIMEZONE_ID as TIME_ZONE_ID } from "@/utils/dayjs";
+import dayjs, { TIME_ZONE_ID } from "@/utils/dayjs";
 
 type OptionalDate = dayjs.Dayjs | string | null | undefined;
 

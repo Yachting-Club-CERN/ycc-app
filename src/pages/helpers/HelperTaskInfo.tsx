@@ -57,8 +57,8 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
 
   const createMemberDialogLink = (member: MemberPublicInfo) => {
     return (
-      <Link onClick={() => openMemberInfoDialog(member)}>
-        {member.username}
+      <Link onClick={() => openMemberInfoDialog({ member })}>
+        {member.firstName} {member.lastName} ({member.username})
       </Link>
     );
   };

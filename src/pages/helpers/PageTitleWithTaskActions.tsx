@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { ComponentProps, useContext } from "react";
+import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import PageTitle from "@/components/PageTitle";
@@ -17,7 +17,7 @@ import {
   getTaskEditLocation,
 } from "./helpers-utils";
 
-type Props = ComponentProps<typeof PageTitle> & {
+type Props = React.ComponentProps<typeof PageTitle> & {
   task?: HelperTask;
 };
 

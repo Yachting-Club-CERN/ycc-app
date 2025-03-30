@@ -3,16 +3,18 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import React from "react";
 
 import { toEmailLink, toTelLink } from "@/components/links";
 import { MemberPublicInfo } from "@/model/dtos";
 
 type Props = {
   member?: MemberPublicInfo | null;
+  extra?: Record<string, string>;
   onClose: () => void;
 };
 
-const MemberInfoDialog = ({ member, onClose }: Props) => {
+const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
   return (
     <Dialog
       open={!!member}
@@ -71,6 +73,18 @@ const MemberInfoDialog = ({ member, onClose }: Props) => {
               Username:
             </Typography>
             <Typography>{member.username}</Typography>
+            {extra &&
+              Object.entries(extra).map(([key, value]) => (
+                <React.Fragment key={key}>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold", mt: 2 }}
+                  >
+                    {key}:
+                  </Typography>
+                  <Typography>{value}</Typography>
+                </React.Fragment>
+              ))}
             <Button onClick={onClose} sx={{ m: 2 }}>
               Close
             </Button>
