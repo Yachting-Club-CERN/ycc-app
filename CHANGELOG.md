@@ -12,13 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Share via Email and WhatsApp buttons on the helper task details page
 - Extra confirmation checks when updating helper tasks
 - Add permissions page for admins
+- Set/remove captain, add/remove helper functionality
+- Prefetch shared data for admins and editors
 
 ### Changed
 
 - Update confirmation dialog texts
 - Allow admin/editors to choose whether to send notification when updating helper tasks
+- Move new/edit/clone task buttons from the header to speed dial/floating action button
+- Improve mobile UX for the task view and edit pages
 - Nicer error reporting for HTTP 401, 403, 404 and 409 errors
 - Replace TinyMCE with Tiptap
+- Internal:
+  - Split helper task actions into components
+  - Organise components into subfolders
+  - Create components and hooks for common functionality
+  - Modularise the API client
 
 ## [1.2.0] - 2025-03-17
 

@@ -4,14 +4,13 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import { useContext } from "react";
 
-import PageTitle from "@/components/PageTitle";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import AuthenticationContext from "@/context/AuthenticationContext";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
 
 const ProfilePage = () => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const yccOnly = (array: readonly string[]) => {
     return array
       .filter((el) => el.startsWith("ycc"))
@@ -21,7 +20,7 @@ const ProfilePage = () => {
   return (
     <ReadingFriendlyBox>
       <PageTitle value="Profile" />
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table className="ycc-profile-table">
           <TableBody>
             <TableRow>
@@ -34,7 +33,7 @@ const ProfilePage = () => {
             </TableRow>
             <TableRow>
               <TableCell>Last name:</TableCell>
-              <TableCell>{currentUser.lastName}</TableCell>
+              <TableCell>{currentUser.lastName.toUpperCase()}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Email:</TableCell>

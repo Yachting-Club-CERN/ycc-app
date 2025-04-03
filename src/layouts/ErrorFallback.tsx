@@ -4,8 +4,8 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Link from "@mui/material/Link";
 import { FallbackProps } from "react-error-boundary";
 
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import SpacedTypography from "@/components/SpacedTypography";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 import getErrorText from "@/utils/error-helper";
 
 const ErrorFallback = (props: FallbackProps) => {

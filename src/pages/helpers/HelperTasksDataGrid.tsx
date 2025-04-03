@@ -9,13 +9,12 @@ import {
   MuiEvent,
   gridClasses,
 } from "@mui/x-data-grid";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DataGridCell from "@/components/DataGridCell";
-import SpanBlockBox from "@/components/SpanBlockBox";
-import AuthenticationContext from "@/context/AuthenticationContext";
-import useMemberInfoDialog from "@/hooks/useMemberInfoDialog";
+import SpanBlockBox from "@/components/layout/SpanBlockBox";
+import DataGridCell from "@/components/ui/DataGridCell";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
 import { MemberPublicInfo } from "@/model/dtos";
 import {
   HelperTask,
@@ -24,10 +23,12 @@ import {
 } from "@/model/helpers-dtos";
 
 import {
-  canSignUpAsCaptain,
-  canSignUpAsHelper,
   createTimingInfoFragment,
   fakeRandomSignUpText,
+} from "./helpers-format";
+import {
+  canSignUpAsCaptain,
+  canSignUpAsHelper,
   getTaskLocation,
 } from "./helpers-utils";
 
@@ -48,15 +49,14 @@ type Props = {
 };
 
 const HelperTasksDataGrid = ({ tasks }: Props) => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const navigate = useNavigate();
 
-  const { memberInfoDialogComponent, openMemberInfoDialog } =
-    useMemberInfoDialog();
+  const memberInfoDialog = useMemberInfoDialog();
 
   const getRowId = (task: HelperTask) => task.id;
 
-  const handleGridClick = async (
+  const handleGridCellClick = async (
     params: GridCellParams<MemberPublicInfo>,
     event: MuiEvent<React.MouseEvent<HTMLElement>>,
   ) => {
@@ -84,7 +84,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     member: MemberPublicInfo,
   ) => {
     event.stopPropagation();
-    openMemberInfoDialog({ member });
+    memberInfoDialog.open({ member });
   };
 
   const createMemberDialogLink = (member: MemberPublicInfo) => {
@@ -237,7 +237,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
         columns={columns}
         rows={tasks}
         getRowId={getRowId}
-        onCellClick={handleGridClick}
+        onCellClick={handleGridCellClick}
         disableColumnFilter={true}
         pageSizeOptions={[10, 25, 50, 100]}
         getRowClassName={(params: GridRowParams<HelperTask>) =>
@@ -251,7 +251,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
         }}
       />
 
-      {memberInfoDialogComponent}
+      {memberInfoDialog.component}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import SpacedTypography from "@/components/SpacedTypography";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 
 const Footer = () => {
   return (

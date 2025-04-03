@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Heading from "@tiptap/extension-heading";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
@@ -35,6 +35,7 @@ type Props = {
   placeholder?: string;
   initialContent?: string;
   minHeight?: number | string;
+  containerProps?: BoxProps;
   onBlur?: (html: string) => void;
   onCreate?: (html: string) => void;
   onUpdate: (html: string) => void;
@@ -44,6 +45,7 @@ const RichTextEditor = ({
   initialContent,
   placeholder,
   minHeight,
+  containerProps,
   onBlur,
   onCreate,
   onUpdate,
@@ -93,8 +95,16 @@ const RichTextEditor = ({
     }, 0);
   };
 
+  const boxProps = {
+    ...containerProps,
+    sx: {
+      ...containerProps?.sx,
+      "& .ProseMirror": { minHeight },
+    },
+  };
+
   return (
-    <Box sx={{ "& .ProseMirror": { minHeight } }}>
+    <Box {...boxProps}>
       <RichTextEditorProvider editor={editor}>
         <RichTextField
           controls={

@@ -3,7 +3,7 @@ import "dayjs/locale/en-gb";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
-export const TIME_ZONE_ID = "Europe/Zurich";
+import { TIME_ZONE_ID } from "./constants";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

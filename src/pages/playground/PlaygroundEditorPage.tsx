@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import { useState } from "react";
 
-import PageTitle from "@/components/PageTitle";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import RichTextEditor from "@/components/RichTextEditor";
-import SpacedTypography from "@/components/SpacedTypography";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import RichTextEditor from "@/components/ui/RichTextEditor";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
 const initialContent =

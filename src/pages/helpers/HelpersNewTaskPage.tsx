@@ -1,19 +1,20 @@
-import { useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import PageTitle from "@/components/PageTitle";
-import PromiseStatus from "@/components/PromiseStatus";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import AuthenticationContext from "@/context/AuthenticationContext";
-import SharedDataContext from "@/context/SharedDataContext";
-import usePromise from "@/hooks/usePromise";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import PromiseStatus from "@/components/ui/PromiseStatus";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useHelperTaskCategories from "@/hooks/shared-data/useHelperTaskCategories";
+import useLicenceInfos from "@/hooks/shared-data/useLicenceInfos";
+import useMembers from "@/hooks/shared-data/useMembers";
+import usePromise from "@/hooks/utils/usePromise";
 import client from "@/utils/client";
 import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
 const HelpersNewTaskPage = () => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdminOrEditor) {
     void navigate("/helpers");
@@ -26,17 +27,14 @@ const HelpersNewTaskPage = () => {
     if (isNaN(taskToCloneId)) {
       return Promise.resolve(null);
     } else {
-      return client.getHelperTaskById(taskToCloneId, signal);
+      return client.helpers.getTaskById(taskToCloneId, signal);
     }
   };
   const taskToClone = usePromise(getHelperTask, [taskToCloneId]);
 
-  const sharedData = useContext(SharedDataContext);
-  const helperTaskCategories = usePromise(sharedData.getHelperTaskCategories);
-  const members = usePromise((signal?: AbortSignal) =>
-    sharedData.getMembers(getCurrentYear(), signal),
-  );
-  const licenceInfos = usePromise(sharedData.getLicenceInfos);
+  const helperTaskCategories = useHelperTaskCategories();
+  const members = useMembers(getCurrentYear());
+  const licenceInfos = useLicenceInfos();
 
   return (
     <ReadingFriendlyBox>

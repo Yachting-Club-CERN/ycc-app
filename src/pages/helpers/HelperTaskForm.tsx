@@ -1,13 +1,13 @@
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
+import DialogContentText from "@mui/material/DialogContentText";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import { useContext, useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import {
   AutocompleteElement,
   FormContainer,
@@ -20,17 +20,14 @@ import {
 } from "react-hook-form-mui/date-pickers";
 import { useNavigate } from "react-router-dom";
 
-import {
-  ConfirmationDialogContent,
-  StringOrElement,
-} from "@/components/ConfirmationDialog";
-import ErrorAlert from "@/components/ErrorAlert";
-import RichTextEditor from "@/components/RichTextEditor";
-import SpacedBox from "@/components/SpacedBox";
-import SpacedTypography from "@/components/SpacedTypography";
-import AuthenticationContext from "@/context/AuthenticationContext";
-import useConfirmationDialog from "@/hooks/useConfirmationDialog";
-import useDelayedRef from "@/hooks/useDelayedRef";
+import RowStack from "@/components/layout/RowStack";
+import SpacedBox from "@/components/layout/SpacedBox";
+import ErrorAlert from "@/components/ui/ErrorAlert";
+import RichTextEditor from "@/components/ui/RichTextEditor";
+import SpacedTypography from "@/components/ui/SpacedTypography";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useConfirmationDialog from "@/hooks/dialogs/useConfirmationDialog";
+import useDelayedRef from "@/hooks/utils/useDelayedRef";
 import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
 import {
   HelperTask,
@@ -44,7 +41,8 @@ import client from "@/utils/client";
 import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
-import { canEditTask, getTaskLocation, isMultiDayShift } from "./helpers-utils";
+import { canEdit, getTaskLocation, isMultiDayShift } from "./helpers-utils";
+import { getFullNameAndUsername } from "../members/members-utils";
 
 type Props = {
   task?: HelperTask;
@@ -82,7 +80,7 @@ const HelperTaskForm = ({
   members,
   licenceInfos,
 }: Props) => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const [error, setError] = useState<unknown>();
   const longDescription = useDelayedRef<string | null | undefined>(
     task?.longDescription,
@@ -91,13 +89,12 @@ const HelperTaskForm = ({
   const [multiDayShift, setMultiDayShift] = useState(
     task ? isMultiDayShift(task) : false,
   );
-  const { confirmationDialogComponent, openConfirmationDialog } =
-    useConfirmationDialog();
+  const confirmationDialog = useConfirmationDialog();
 
   const navigate = useNavigate();
-  // Some components may be already loaded at this point
+  // Some components may already be loaded at this point
   useEffect(() => {
-    if (task && !newTask && !canEditTask(task, currentUser)) {
+    if (task && !newTask && !canEdit(task, currentUser)) {
       alert(
         "Hello there! No idea how you got here! You cannot edit this task, sorry :-(",
       );
@@ -132,7 +129,7 @@ const HelperTaskForm = ({
     },
   };
 
-  const onTypeChange = (
+  const handleTypeChange = (
     _: React.MouseEvent<HTMLElement>,
     newType: HelperTaskType | null,
   ) => {
@@ -149,11 +146,11 @@ const HelperTaskForm = ({
     try {
       const mutatedTask =
         !newTask && task
-          ? await client.updateHelperTask(task.id, {
+          ? await client.helpers.updateTask(task.id, {
               ...base,
               ...update,
             })
-          : await client.createHelperTask({
+          : await client.helpers.createTask({
               ...base,
               ...creation,
             });
@@ -168,20 +165,20 @@ const HelperTaskForm = ({
     base: HelperTaskMutationRequestBase,
     update: HelperTaskUpdateRequestExtra,
   ) => {
-    const confirmations: StringOrElement[] = [];
+    const confirmations: JSX.Element[] = [];
 
     if (!newTask) {
       confirmations.push(
         update.notifySignedUpMembers ? (
-          <>
+          <DialogContentText mb={2}>
             Are you sure <strong>you want to notify</strong> signed-up members
             about this change?
-          </>
+          </DialogContentText>
         ) : (
-          <>
+          <DialogContentText mb={2}>
             Are you sure <strong>you do NOT want to notify</strong> signed-up
             members about this change?
-          </>
+          </DialogContentText>
         ),
       );
     }
@@ -189,14 +186,14 @@ const HelperTaskForm = ({
     const wasMultiDayShift = (task ? isMultiDayShift(task) : false) && !newTask;
     if (!wasMultiDayShift && isMultiDayShift(base)) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure that{" "}
           <strong>
             this task is a multi-day shift and NOT a task with a deadline
           </strong>
           {"?"} Please note that members will not be able to sign up for
           multi-day shifts after the shift has started.
-        </>,
+        </DialogContentText>,
       );
     }
 
@@ -209,54 +206,54 @@ const HelperTaskForm = ({
 
     if (taskYear && taskYear !== now.year()) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure that{" "}
           <strong>this task is NOT in the current year</strong>
           {"?"}
-        </>,
+        </DialogContentText>,
       );
     }
 
     if (taskDate?.isBefore(now)) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure that <strong>this task is in the past</strong>
           {"?"} Members cannot sign up for tasks in the past.
-        </>,
+        </DialogContentText>,
       );
     }
 
     if (task?.validatedBy) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure that you want to{" "}
           <strong>modify this validated task</strong>
           {"?"}
-        </>,
+        </DialogContentText>,
       );
     } else if (task?.markedAsDoneBy) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure you want to modify{" "}
           <strong>this task that has been marked as done</strong>
           {"?"}
-        </>,
+        </DialogContentText>,
       );
     }
 
     if (!base.published) {
       confirmations.push(
-        <>
+        <DialogContentText mb={2}>
           Are you sure you want <strong>this task to be unpublished</strong>?
           Members do not see and cannot sign up for unpublished tasks.
-        </>,
+        </DialogContentText>,
       );
     }
 
     return confirmations;
   };
 
-  const onSubmit = async (data: HelperTaskFormData) => {
+  const handleSubmit = async (data: HelperTaskFormData) => {
     setError(undefined);
     const {
       base,
@@ -287,11 +284,18 @@ const HelperTaskForm = ({
     const confirmations = getConfirmations(base, update);
 
     if (confirmations.length > 0) {
-      openConfirmationDialog({
+      const content = (
+        <>
+          {confirmations.map((confirmation, index) => (
+            <React.Fragment key={index}>{confirmation}</React.Fragment>
+          ))}
+        </>
+      );
+
+      confirmationDialog.open({
         title: "Please confirm the following:",
-        content: confirmations as ConfirmationDialogContent,
-        displayContentAsDialogContentText: true,
-        shouldDelayConfirm: true,
+        content,
+        delayConfirm: true,
         onConfirm: async () => {
           await doSubmit(base, creation, update);
         },
@@ -314,9 +318,7 @@ const HelperTaskForm = ({
 
   const memberOptions = members.map((member) => ({
     id: member.id,
-    label: `${member.lastName.toUpperCase()} ${member.firstName} (${
-      member.username
-    })`,
+    label: getFullNameAndUsername(member),
   }));
 
   const captainRequiredLicenceInfoOptions = [
@@ -331,7 +333,7 @@ const HelperTaskForm = ({
   ];
 
   return (
-    <FormContainer defaultValues={initialData} onSuccess={onSubmit}>
+    <FormContainer defaultValues={initialData} onSuccess={handleSubmit}>
       <SpacedTypography>
         Here you can create/edit a helper task. This can be a surveillance
         shift, a maintenance task, a regatta helper shift, etc.
@@ -346,7 +348,7 @@ const HelperTaskForm = ({
       <SpacedTypography variant="h3">General</SpacedTypography>
 
       <SpacedTypography>
-        If you need a new category please let Lajos know.
+        If you need a new category please let an admin know.
       </SpacedTypography>
 
       <SpacedBox>
@@ -409,13 +411,14 @@ const HelperTaskForm = ({
             available in the new time,{" "}
             <strong>they should be awarded the task</strong>
             {"."} If this is the case, the best is to:
-            <ol>
+          </Typography>
+          <ol>
+            <Typography>
               <li>Validate (and therefore close) the current task</li>
-              <li>
-                Create a new task (you can use the <code>Clone</code> button for
-                this)
-              </li>
-            </ol>
+              <li>Create a new task (you can use the Clone functionality)</li>
+            </Typography>
+          </ol>
+          <Typography>
             However, if you kindly ask members about the time change and they
             are available in the new time as well, feel free to go ahead editing
             the current task.
@@ -424,13 +427,13 @@ const HelperTaskForm = ({
       )}
 
       <SpacedBox>
-        <Stack direction="row" spacing={2}>
+        <RowStack wrap={true}>
           {/* This is not controlled by the FormContainer */}
           <ToggleButtonGroup
             color="primary"
             value={type}
             exclusive
-            onChange={onTypeChange}
+            onChange={handleTypeChange}
           >
             <ToggleButton value={HelperTaskType.Shift}>Shift</ToggleButton>
             <ToggleButton value={HelperTaskType.Deadline}>
@@ -473,7 +476,7 @@ const HelperTaskForm = ({
                     onChange={(_, checked) => setMultiDayShift(checked)}
                   />
                 }
-                label="Multi-Day shift"
+                label="Multi-day shift"
               />
             </>
           )}
@@ -486,7 +489,7 @@ const HelperTaskForm = ({
               timezone="default"
             />
           )}
-        </Stack>
+        </RowStack>
       </SpacedBox>
 
       <SpacedTypography variant="h3">Helpers</SpacedTypography>
@@ -506,10 +509,10 @@ const HelperTaskForm = ({
       </SpacedTypography>
 
       <SpacedBox>
-        <Stack direction="row" spacing={2}>
+        <RowStack wrap={true}>
           <AutocompleteElement
             name="base.captainRequiredLicenceInfoId"
-            label="Captain required licence"
+            label="Captain Required Licence"
             matchId
             options={captainRequiredLicenceInfoOptions}
             textFieldProps={{
@@ -519,35 +522,38 @@ const HelperTaskForm = ({
               },
             }}
           />
-          <TextFieldElement
-            name="base.helperMinCount"
-            required
-            label="Min. Helpers"
-            type={"number"}
-            slotProps={{
-              input: {
-                sx: {
-                  textAlign: "center",
-                  width: "5rem",
+
+          <RowStack wrap={false}>
+            <TextFieldElement
+              name="base.helperMinCount"
+              required
+              label="Min. Helpers"
+              type={"number"}
+              slotProps={{
+                input: {
+                  sx: {
+                    textAlign: "center",
+                    width: "6.5rem",
+                  },
                 },
-              },
-            }}
-          />
-          <TextFieldElement
-            name="base.helperMaxCount"
-            required
-            label="Max. Helpers"
-            type={"number"}
-            slotProps={{
-              input: {
-                sx: {
-                  textAlign: "center",
-                  width: "5rem",
+              }}
+            />
+            <TextFieldElement
+              name="base.helperMaxCount"
+              required
+              label="Max. Helpers"
+              type={"number"}
+              slotProps={{
+                input: {
+                  sx: {
+                    textAlign: "center",
+                    width: "6.5rem",
+                  },
                 },
-              },
-            }}
-          />
-        </Stack>
+              }}
+            />
+          </RowStack>
+        </RowStack>
       </SpacedBox>
       <Divider sx={{ mt: 2 }} />
       <SpacedTypography>
@@ -569,7 +575,7 @@ const HelperTaskForm = ({
         </Alert>
       )}
       <SpacedBox>
-        <Stack direction="row" spacing={2} justifyContent="center">
+        <RowStack wrap={true} justifyContent="center">
           <SwitchElement name="base.urgent" label="Urgent" />
           <SwitchElement name="base.published" label="Published" />
 
@@ -583,7 +589,7 @@ const HelperTaskForm = ({
           <Button type="submit" variant="contained">
             Submit
           </Button>
-        </Stack>
+        </RowStack>
       </SpacedBox>
 
       <>
@@ -594,7 +600,7 @@ const HelperTaskForm = ({
         )}
       </>
 
-      {confirmationDialogComponent}
+      {confirmationDialog.component}
     </FormContainer>
   );
 };

@@ -13,8 +13,8 @@ const ShareViaWhatsAppIconButton = ({ message }: Props) => {
 
   return (
     <Tooltip title="Share via WhatsApp">
-      <IconButton color="success" onClick={handleClick}>
-        <WhatsAppIcon />
+      <IconButton color="success" sx={{ p: 0 }} onClick={handleClick}>
+        <WhatsAppIcon sx={{ fontSize: 36 }} />
       </IconButton>
     </Tooltip>
   );

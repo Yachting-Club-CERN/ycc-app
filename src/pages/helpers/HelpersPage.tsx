@@ -7,25 +7,23 @@ import IconButton from "@mui/material/IconButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import SpacedTypography from "@/components/SpacedTypography";
-import AuthenticationContext from "@/context/AuthenticationContext";
-import useDelayedState from "@/hooks/useDelayedState";
+import RowStack from "@/components/layout/RowStack";
+import PageTitle from "@/components/ui/PageTitle";
+import SpacedTypography from "@/components/ui/SpacedTypography";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useDelayedState from "@/hooks/utils/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
 import { getCurrentYear } from "@/utils/date-utils";
 import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
-import {
-  HelperTaskFilterOptions,
-  doneEmoji,
-  validatedEmoji,
-} from "./helpers-utils";
+import HelpersSpeedDial from "./components/HelpersSpeedDial";
+import { doneEmoji, validatedEmoji } from "./helpers-format";
+import { HelperTaskFilterOptions } from "./helpers-utils";
 import HelperTasksView from "./HelperTasksView";
-import PageTitleWithTaskActions from "./PageTitleWithTaskActions";
 
 const checkArrayContainsAllElements = <T,>(states: T[], arr: T[]): boolean => {
   return arr.every((state) => states.includes(state));
@@ -58,7 +56,7 @@ const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
 const filterOptionsSessionStorageKey = "helpers.grid.filterOptions";
 
 const HelpersPage = () => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
@@ -83,7 +81,7 @@ const HelpersPage = () => {
   const [display, setDisplay] = useState<"grid" | "report">("grid");
 
   useEffect(() => {
-    console.log("Save filter options to session storage", filterOptions);
+    console.info("Save filter options to session storage", filterOptions);
     sessionStorage.setItem(
       filterOptionsSessionStorageKey,
       JSON.stringify(filterOptions),
@@ -96,11 +94,11 @@ const HelpersPage = () => {
     (_, i) => firstHelperAppYear + i,
   );
 
-  const onReset = () => {
+  const handleReset = () => {
     setFilterOptionsImmediately(getDefaultFilterOptions());
   };
 
-  const onYearChange = (event: SelectChangeEvent) => {
+  const handleYearChange = (event: SelectChangeEvent) => {
     const year =
       event.target.value === allYearsLabel
         ? null
@@ -122,7 +120,7 @@ const HelpersPage = () => {
     setFilterOptionsImmediately(newFilterOptions);
   };
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterOptionsWithDelay({
       ...filterOptions,
       search: event.target.value,
@@ -143,7 +141,8 @@ const HelpersPage = () => {
 
   return (
     <>
-      <PageTitleWithTaskActions value="Helper Tasks" />
+      <PageTitle value="Helper Tasks" />
+      <HelpersSpeedDial />
 
       <SpacedTypography>
         On this page you can sign up for surveillance and maintenance tasks.
@@ -151,21 +150,13 @@ const HelpersPage = () => {
         execution of the task.
       </SpacedTypography>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
-        mt={2}
-        mb={0}
-        useFlexGap
-        flexWrap="wrap"
-      >
+      <RowStack wrap={true} compact={true} mt={2} mb={0}>
         {currentUser.helpersAppAdminOrEditor && (
           <>
             <SpacedTypography>Year:</SpacedTypography>
             <Select
               value={filterOptions.year?.toString() ?? allYearsLabel}
-              onChange={onYearChange}
+              onChange={handleYearChange}
               variant="outlined"
               size="small"
             >
@@ -184,7 +175,7 @@ const HelpersPage = () => {
         <Typography>Search:</Typography>
         <TextField
           value={filterOptions.search}
-          onChange={onSearch}
+          onChange={handleSearch}
           variant="outlined"
           label="Category, person, text..."
           size="small"
@@ -220,20 +211,12 @@ const HelpersPage = () => {
           ))}
         </Select>
 
-        <IconButton onClick={onReset} size="small">
+        <IconButton onClick={handleReset} size="small">
           <RestartAltIcon />
         </IconButton>
-      </Stack>
+      </RowStack>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
-        mt={0}
-        mb={2}
-        useFlexGap
-        flexWrap="wrap"
-      >
+      <RowStack wrap={true} compact={true} mt={0} mb={2}>
         <FormControlLabel
           control={
             <Checkbox
@@ -323,7 +306,7 @@ const HelpersPage = () => {
             />
           </>
         )}
-      </Stack>
+      </RowStack>
 
       <HelperTasksView display={display} filterOptions={delayedFilterOptions} />
     </>

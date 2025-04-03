@@ -1,8 +1,8 @@
 import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
-import PromiseStatus from "@/components/PromiseStatus";
-import useMemberInfoDialog from "@/hooks/useMemberInfoDialog";
-import usePromise from "@/hooks/usePromise";
+import PromiseStatus from "@/components/ui/PromiseStatus";
+import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
+import usePromise from "@/hooks/utils/usePromise";
 import { HelpersAppPermission } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
@@ -35,7 +35,7 @@ const columns: GridColDef[] = [
     flex: 1,
     minWidth: 100,
     valueGetter: (_, permission: HelpersAppPermission) =>
-      permission.member.username.toUpperCase(),
+      permission.member.username,
   },
   {
     field: "permission",
@@ -51,15 +51,16 @@ const columns: GridColDef[] = [
 
 const PermissionsDataGrid = () => {
   const permissions = usePromise((signal?: AbortSignal) =>
-    client.getHelpersAppPermissions(signal),
+    client.helpers.getPermissions(signal),
   );
-  const { memberInfoDialogComponent, openMemberInfoDialog } =
-    useMemberInfoDialog();
+  const memberInfoDialog = useMemberInfoDialog();
 
   const getRowId = (permission: HelpersAppPermission) =>
     permission.member.username;
-  const handleGridClick = (params: GridCellParams<HelpersAppPermission>) => {
-    openMemberInfoDialog({
+  const handleGridCellClick = (
+    params: GridCellParams<HelpersAppPermission>,
+  ) => {
+    memberInfoDialog.open({
       member: params.row.member,
       extra: {
         Permission: params.row.permission,
@@ -75,7 +76,7 @@ const PermissionsDataGrid = () => {
           columns={columns}
           rows={permissions.result}
           getRowId={getRowId}
-          onCellClick={handleGridClick}
+          onCellClick={handleGridCellClick}
           disableColumnFilter={true}
           pageSizeOptions={[10, 25, 50, 100]}
           sx={{
@@ -89,7 +90,7 @@ const PermissionsDataGrid = () => {
 
       <PromiseStatus outcomes={[permissions]} />
 
-      {memberInfoDialogComponent}
+      {memberInfoDialog.component}
     </>
   );
 };

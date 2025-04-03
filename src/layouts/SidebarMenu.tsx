@@ -18,11 +18,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import React, { JSX, useContext } from "react";
+import React, { JSX } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import config, { Environment } from "@/config";
-import AuthenticationContext from "@/context/AuthenticationContext";
+import useAuth from "@/hooks/auth/useAuth";
 
 import { externalUrls } from "./ExternalUrls";
 
@@ -34,14 +34,14 @@ type SidebarItem = {
 
 const SidebarMenu = () => {
   const location = useLocation();
-  const auth = useContext(AuthenticationContext);
+  const auth = useAuth();
   const currentUser = auth.currentUser;
 
   const items: SidebarItem[][] = [
     [{ title: "Home", path: "/", icon: <HomeIcon /> }],
     [
       {
-        title: "Reserve a boat",
+        title: "Reserve a Boat",
         path: externalUrls.yccBoatBooking,
         icon: <SailingIcon />,
       },
@@ -58,7 +58,7 @@ const SidebarMenu = () => {
     ],
     [
       {
-        title: "Go to the website",
+        title: "Go to the Website",
         path: externalUrls.yccWebsite,
         icon: <LanguageIcon />,
       },

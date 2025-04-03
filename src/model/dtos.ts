@@ -32,7 +32,7 @@ export const MemberPublicInfoSchema = z
     username: z.string(),
     firstName: z.string(),
     lastName: z.string(),
-    email: z.string().nullable(),
+    email: z.string(),
     mobilePhone: z.string().nullable(),
     homePhone: z.string().nullable(),
     workPhone: z.string().nullable(),

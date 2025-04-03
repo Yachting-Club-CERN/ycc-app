@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 const ADMIN_USER = "MHUFF";
 
 const waitForAuthPage = async (page: Page) => {
-  console.log("[test] waitForAuthPage()");
+  console.info("[test] waitForAuthPage()");
   await page.waitForURL("**/protocol/openid-connect/auth**");
 };
 
 const waitForNonAuthPage = async (page: Page) => {
-  console.log("[test] waitForNonAuthPage()");
+  console.info("[test] waitForNonAuthPage()");
   await page.waitForFunction(
     () => !window.location.href.includes("/openid-connect/"),
   );
@@ -53,7 +53,7 @@ export const ui = {
       // Only future dates, good enough
       const click = 12 * (year - dayjs().year()) + (month - dayjs().month());
       for (let i = 0; i < click; i++) {
-        console.log("[test] Clicking next month", month);
+        console.info("[test] Clicking next month", month);
         await nextMonthIcon.click();
       }
 
@@ -123,21 +123,21 @@ export const app = {
       user?: string;
     },
   ) => {
-    console.log("[test] loadPage()", path, options);
+    console.info("[test] loadPage()", path, options);
 
     await page.goto(path);
 
     if (options.expectSignIn) {
-      console.log("[test] Expecting sign in");
+      console.info("[test] Expecting sign in");
       await waitForAuthPage(page);
       const user = options.user ?? ADMIN_USER;
-      console.log("[test] Sign in", user);
+      console.info("[test] Sign in", user);
 
       await page.fill("#username", user);
       await page.fill("#password", user);
       await page.click("#kc-login");
     } else {
-      console.log("[test] Not expecting sign in");
+      console.info("[test] Not expecting sign in");
     }
 
     await waitForNonAuthPage(page);
@@ -145,7 +145,7 @@ export const app = {
     // Wait for load to complete
     await page.waitForSelector(".ycc-footer");
 
-    console.log("[test] Page loaded", path);
+    console.info("[test] Page loaded", path);
   },
 
   /**
@@ -153,7 +153,7 @@ export const app = {
    * @param page - Playwright Page object.
    */
   signOut: async (page: Page) => {
-    console.log("[test] signOut()");
+    console.info("[test] signOut()");
 
     const sidebar = (await app.openMenuIfMobile(page))
       ? page.locator(".ycc-sidebar-mobile")

@@ -1,6 +1,6 @@
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { PromiseOutcome } from "@/hooks/usePromise";
+import { PromiseOutcome } from "@/hooks/utils/usePromise";
 
 import ErrorAlert from "./ErrorAlert";
 

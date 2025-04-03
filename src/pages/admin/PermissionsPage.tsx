@@ -1,13 +1,12 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import PageTitle from "@/components/PageTitle";
-import AuthenticationContext from "@/context/AuthenticationContext";
+import PageTitle from "@/components/ui/PageTitle";
+import useCurrentUser from "@/hooks/auth/useCurrentUser";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 
 const PermissionsPage = () => {
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdmin) {
     void navigate("/");
