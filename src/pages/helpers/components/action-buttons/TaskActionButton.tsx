@@ -60,6 +60,7 @@ const TaskActionButton = ({
     openConfirmationDialog({
       title: dialogTitle,
       content: dialogContent,
+      confirmButtonText: buttonText,
       delayConfirm: dialogDelayConfirm,
       onConfirm: async () => {
         try {

@@ -21,7 +21,7 @@ const MarkAsDoneActionButton = ({ task, ...props }: TaskActionProps) => {
 
   return (
     <TaskActionButton
-      buttonText="Mark As Done"
+      buttonText="Mark as Done"
       buttonColor="warning"
       dialogTitle="Are you sure you want to mark the task as done?"
       dialogContent={

@@ -12,7 +12,6 @@ type Props = {
   content: JSX.Element | null; // No content has to be explicit
   confirmButtonText?: string;
   delayConfirm?: boolean;
-  fullWidth?: boolean;
 
   // State
   open: boolean;
@@ -27,7 +26,6 @@ const ConfirmationDialog = ({
   title,
   content,
   confirmButtonText,
-  fullWidth,
   open,
   confirming,
   delayConfirm,
@@ -39,7 +37,6 @@ const ConfirmationDialog = ({
       open={open}
       onClose={onClose}
       maxWidth="sm"
-      fullWidth={fullWidth}
       className="ycc-confirmation-dialog"
     >
       <DialogTitle>{title}</DialogTitle>

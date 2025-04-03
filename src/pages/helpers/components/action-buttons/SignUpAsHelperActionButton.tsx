@@ -14,7 +14,7 @@ const SignUpAsHelperActionButton = ({ task, ...props }: TaskActionProps) => {
 
   return (
     <TaskActionButton
-      buttonText="Sign Up As Helper"
+      buttonText="Sign up as Helper"
       buttonColor="primary"
       dialogTitle="Are you sure you want to sign up as helper?"
       dialogContent={<CannotCancelDialogNotice />}

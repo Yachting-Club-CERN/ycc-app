@@ -16,7 +16,7 @@ const SignUpAsCaptainActionButton = ({ task, ...props }: TaskActionProps) => {
 
   return (
     <TaskActionButton
-      buttonText="Sign Up As Captain"
+      buttonText="Sign up as Captain"
       buttonColor="primary"
       dialogTitle="Are you sure you want to sign up as captain?"
       dialogContent={
