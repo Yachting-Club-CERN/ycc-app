@@ -10,18 +10,9 @@ type Props = {
 >;
 
 const RowStack = ({ wrap, compact = false, children, ...rest }: Props) => {
-  // Detect if no children was passed to the component
-  if (
-    !React.Children.toArray(children).some(
-      (child) => child !== null && child !== undefined,
-    )
-  ) {
-    return null;
-  }
-
   // Dynamic way to detect if the children are empty (e.g., components which return null)
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hasVisibleContent, setHasVisibleContent] = useState(true); // avoid flicker on first render
+  const [hasVisibleContent, setHasVisibleContent] = useState(true);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -30,6 +21,15 @@ const RowStack = ({ wrap, compact = false, children, ...rest }: Props) => {
 
     setHasVisibleContent(containerRef.current.childNodes.length > 0);
   }, [children]);
+
+  // Detect if no children was passed to the component
+  if (
+    !React.Children.toArray(children).some(
+      (child) => child !== null && child !== undefined,
+    )
+  ) {
+    return null;
+  }
 
   return (
     <Stack

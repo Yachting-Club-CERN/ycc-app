@@ -31,7 +31,6 @@ const SmartSpeedDial = ({ actions }: Props) => {
     bottom: { xs: 16, md: 48 },
     right: { xs: 16, md: 48 },
   };
-  // const sxPosition = undefined;
 
   const singleAction = actions.length === 1;
 

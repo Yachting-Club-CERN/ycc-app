@@ -178,10 +178,6 @@ abstract class BaseClient {
 }
 
 class MembersClient extends BaseClient {
-  constructor(http: HttpClient) {
-    super(http);
-  }
-
   readonly getAll = async (year: number, signal?: AbortSignal) =>
     await this._http.request<MemberPublicInfos>({
       method: "GET",
@@ -193,10 +189,6 @@ class MembersClient extends BaseClient {
 }
 
 class LicenceInfosClient extends BaseClient {
-  constructor(http: HttpClient) {
-    super(http);
-  }
-
   readonly getAll = async (signal?: AbortSignal) =>
     await this._http.request<LicenceDetailedInfos>({
       method: "GET",
@@ -207,10 +199,6 @@ class LicenceInfosClient extends BaseClient {
 }
 
 class HelpersClient extends BaseClient {
-  constructor(http: HttpClient) {
-    super(http);
-  }
-
   readonly getPermissions = async (signal?: AbortSignal) =>
     await this._http.request<HelpersAppPermissions>({
       method: "GET",
