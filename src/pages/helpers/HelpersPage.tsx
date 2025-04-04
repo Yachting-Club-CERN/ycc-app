@@ -153,7 +153,7 @@ const HelpersPage = () => {
       <RowStack wrap={true} compact={true} mt={2} mb={0}>
         {currentUser.helpersAppAdminOrEditor && (
           <>
-            <SpacedTypography>Year:</SpacedTypography>
+            <Typography>Year:</Typography>
             <Select
               value={filterOptions.year?.toString() ?? allYearsLabel}
               onChange={handleYearChange}
@@ -185,7 +185,7 @@ const HelpersPage = () => {
           className="ycc-helpers-search-input"
         />
 
-        <SpacedTypography>State:</SpacedTypography>
+        <Typography>State:</Typography>
         <Select
           multiple
           value={filterOptions.states}
