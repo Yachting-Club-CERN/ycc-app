@@ -152,7 +152,7 @@ const HelpersPage = () => {
 
       <RowStack wrap={true} compact={true} mt={2} mb={0}>
         {currentUser.helpersAppAdminOrEditor && (
-          <>
+          <RowStack wrap={false} compact={true}>
             <Typography>Year:</Typography>
             <Select
               value={filterOptions.year?.toString() ?? allYearsLabel}
@@ -169,47 +169,51 @@ const HelpersPage = () => {
                 {allYearsLabel}
               </MenuItem>
             </Select>
-          </>
+          </RowStack>
         )}
 
-        <Typography>Search:</Typography>
-        <TextField
-          value={filterOptions.search}
-          onChange={handleSearch}
-          variant="outlined"
-          label="Category, person, text..."
-          size="small"
-          sx={{
-            width: 200,
-          }}
-          className="ycc-helpers-search-input"
-        />
+        <RowStack wrap={false} compact={true}>
+          <Typography>Search:</Typography>
+          <TextField
+            value={filterOptions.search}
+            onChange={handleSearch}
+            variant="outlined"
+            label="Category, person, text..."
+            size="small"
+            sx={{
+              width: 200,
+            }}
+            className="ycc-helpers-search-input"
+          />
+        </RowStack>
 
-        <Typography>State:</Typography>
-        <Select
-          multiple
-          value={filterOptions.states}
-          onChange={handleStateChange}
-          renderValue={(values) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {values.map((value) => (
-                <Chip key={value} label={allStatesWithLabel[value]} />
-              ))}
-            </Box>
-          )}
-          size="small"
-        >
-          {Object.entries(allStatesWithLabel).map(([key, value]) => (
-            <MenuItem key={key} value={key}>
-              <Checkbox
-                checked={
-                  filterOptions.states.indexOf(key as HelperTaskState) > -1
-                }
-              />
-              <ListItemText primary={value} />
-            </MenuItem>
-          ))}
-        </Select>
+        <RowStack wrap={false} compact={true}>
+          <Typography>State:</Typography>
+          <Select
+            multiple
+            value={filterOptions.states}
+            onChange={handleStateChange}
+            renderValue={(values) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {values.map((value) => (
+                  <Chip key={value} label={allStatesWithLabel[value]} />
+                ))}
+              </Box>
+            )}
+            size="small"
+          >
+            {Object.entries(allStatesWithLabel).map(([key, value]) => (
+              <MenuItem key={key} value={key}>
+                <Checkbox
+                  checked={
+                    filterOptions.states.indexOf(key as HelperTaskState) > -1
+                  }
+                />
+                <ListItemText primary={value} />
+              </MenuItem>
+            ))}
+          </Select>
+        </RowStack>
 
         <IconButton onClick={handleReset} size="small">
           <RestartAltIcon />

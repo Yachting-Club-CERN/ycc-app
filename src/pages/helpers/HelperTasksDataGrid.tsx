@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
-import DataGridCell from "@/components/ui/DataGridCell";
+import DataGridCell from "@/components/ui/DataGrid/DataGridCell";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { MemberPublicInfo } from "@/model/dtos";
 import {

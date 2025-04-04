@@ -1,10 +1,7 @@
 import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
-import PromiseStatus from "@/components/ui/PromiseStatus";
-import usePromise from "@/hooks/usePromise";
 import { HelpersAppPermission } from "@/model/helpers-dtos";
-import client from "@/utils/client";
 
 const columns: GridColDef[] = [
   {
@@ -45,14 +42,15 @@ const columns: GridColDef[] = [
   {
     field: "note",
     headerName: "Note",
-    flex: 2,
+    flex: 3,
   },
 ];
 
-const PermissionsDataGrid = () => {
-  const permissions = usePromise((signal?: AbortSignal) =>
-    client.helpers.getPermissions(signal),
-  );
+type Props = {
+  permissions: HelpersAppPermission[];
+};
+
+const PermissionsDataGrid = ({ permissions }: Props) => {
   const memberInfoDialog = useMemberInfoDialog();
 
   const getRowId = (permission: HelpersAppPermission) =>
@@ -71,24 +69,20 @@ const PermissionsDataGrid = () => {
 
   return (
     <>
-      {permissions.result && (
-        <DataGrid
-          columns={columns}
-          rows={permissions.result}
-          getRowId={getRowId}
-          onCellClick={handleGridCellClick}
-          disableColumnFilter={true}
-          pageSizeOptions={[10, 25, 50, 100]}
-          sx={{
-            // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
-            minHeight: "215px",
-            height: "calc(100vh - 270px)",
-          }}
-          className="ycc-permissions-data-grid"
-        />
-      )}
-
-      <PromiseStatus outcomes={[permissions]} />
+      <DataGrid
+        columns={columns}
+        rows={permissions}
+        getRowId={getRowId}
+        onCellClick={handleGridCellClick}
+        disableColumnFilter={true}
+        pageSizeOptions={[10, 25, 50, 100]}
+        sx={{
+          // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
+          minHeight: "215px",
+          height: "calc(100vh - 270px)",
+        }}
+        className="ycc-permissions-data-grid"
+      />
 
       {memberInfoDialog.component}
     </>

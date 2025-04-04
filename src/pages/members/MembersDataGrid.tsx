@@ -1,13 +1,10 @@
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
-import EmailLink from "@/components/ui/links/EmailLink";
-import PhoneLink from "@/components/ui/links/PhoneLink";
+import {
+  renderEmail,
+  renderPhoneNumber,
+} from "@/components/ui/DataGrid/render-utils";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo, MemberPublicInfos } from "@/model/dtos";
@@ -15,18 +12,6 @@ import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
 } from "@/utils/search-utils";
-
-const renderEmail = (
-  params: GridRenderCellParams<MemberPublicInfo, string | null>,
-) => {
-  return <EmailLink email={params.value} />;
-};
-
-const renderPhoneNumber = (
-  params: GridRenderCellParams<MemberPublicInfo, string | null>,
-) => {
-  return <PhoneLink phone={params.value} />;
-};
 
 const columns: GridColDef[] = [
   {
