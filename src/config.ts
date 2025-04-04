@@ -22,7 +22,7 @@ const DefaultConfigs = {
     yccHullUrl: "http://localhost:8000",
   },
   DEV_WITH_LOCAL_HULL: {
-    environment: Environment.DEVELOPMENT,
+    environment: Environment.LOCAL,
     keycloakServerUrl: "https://ycc-auth.web.cern.ch",
     keycloakRealm: "YCC-DEV",
     keycloakClient: "ycc-app-dev-local",
@@ -45,12 +45,12 @@ const DefaultConfigs = {
 } as const;
 
 // Use this configuration if you run everything locally
-const DEFAULT_CONFIG = DefaultConfigs.LOCAL;
+// const DEFAULT_CONFIG = DefaultConfigs.LOCAL;
 
 // Use this configuration if you run the backend locally, but you use KeyCloak YCC-DEV from CERN OKD
 //
 // Note: if you run YCC Hull locally, make sure that it connects to the same database at CERN as Keycloak realm YCC-DEV
-// const DEFAULT_CONFIG = DefaultConfigs.DEV_WITH_LOCAL_HULL;
+const DEFAULT_CONFIG = DefaultConfigs.DEV_WITH_LOCAL_HULL;
 
 // Use this configuration if you only run the frontend locally and you use KeyCloak YCC-DEV and YCC Hull from CERN OKD
 // const DEFAULT_CONFIG = DefaultConfigs.DEV;
