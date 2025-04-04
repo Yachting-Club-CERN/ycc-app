@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update confirmation dialog texts
 - Allow admin/editors to choose whether to send notification when updating helper tasks
-- Move new/edit/clone task buttons from the header to speed dial/floating action button
+- Move new/edit/clone task buttons from the header to a speed dial/floating action button
 - Improve mobile UX for the task view and edit pages
 - Nicer error reporting for HTTP 401, 403, 404 and 409 errors
 - Replace TinyMCE with Tiptap

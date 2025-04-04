@@ -17,7 +17,7 @@ type Props = {
 };
 
 /**
- * `SmartSpeedDial` is a responsive floating action button (FAB) that conditionally behaves like:
+ * SmartSpeedDial is a responsive floating action button (FAB) that conditionally behaves like:
  * - A simple FAB when only one action is provided
  * - A SpeedDial with multiple actions when more are given
  */

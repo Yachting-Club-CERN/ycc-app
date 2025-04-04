@@ -18,7 +18,7 @@ type Props = {
   confirming: boolean;
 
   // Callbacks
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   onClose: () => void;
 };
 
