@@ -1,33 +1,17 @@
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useContext } from "react";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
-import { toEmailLink, toTelLink } from "@/components/links";
-import PromiseStatus from "@/components/PromiseStatus";
-import SharedDataContext from "@/context/SharedDataContext";
-import useMemberInfoDialog from "@/hooks/useMemberInfoDialog";
-import usePromise from "@/hooks/usePromise";
+import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
+import {
+  renderEmail,
+  renderPhoneNumber,
+} from "@/components/ui/DataGrid/render-utils";
+import PromiseStatus from "@/components/ui/PromiseStatus";
+import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo, MemberPublicInfos } from "@/model/dtos";
 import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
 } from "@/utils/search-utils";
-
-const renderEmail = (
-  params: GridRenderCellParams<MemberPublicInfo, string | null>,
-) => {
-  return toEmailLink(params.value);
-};
-
-const renderPhoneNumber = (
-  params: GridRenderCellParams<MemberPublicInfo, string | null>,
-) => {
-  return toTelLink(params.value);
-};
 
 const columns: GridColDef[] = [
   {
@@ -37,7 +21,7 @@ const columns: GridColDef[] = [
   },
   {
     field: "lastName",
-    headerName: "Last name",
+    headerName: "Last Name",
     flex: 1,
     minWidth: 150,
     valueFormatter: (value: string) => value.toUpperCase(),
@@ -90,16 +74,13 @@ type Props = {
 };
 
 const MembersDataGrid = ({ year, search }: Props) => {
-  const sharedData = useContext(SharedDataContext);
-  const getMembersForYear = (signal?: AbortSignal) =>
-    sharedData.getMembers(year, signal);
-  const members = usePromise(getMembersForYear);
-  const { memberInfoDialogComponent, openMemberInfoDialog } =
-    useMemberInfoDialog();
+  const members = useMembers(year);
+
+  const memberInfoDialog = useMemberInfoDialog();
 
   const getRowId = (member: MemberPublicInfo) => member.username;
-  const handleGridClick = (params: GridCellParams<MemberPublicInfo>) =>
-    openMemberInfoDialog({ member: params.row });
+  const handleGridCellClick = (params: GridCellParams<MemberPublicInfo>) =>
+    memberInfoDialog.open({ member: params.row });
 
   const filter = (search: string, members: MemberPublicInfos) => {
     // User typically wants to search for one thing, e.g., name or phone number
@@ -122,7 +103,7 @@ const MembersDataGrid = ({ year, search }: Props) => {
           columns={columns}
           rows={filter(search, members.result)}
           getRowId={getRowId}
-          onCellClick={handleGridClick}
+          onCellClick={handleGridCellClick}
           disableColumnFilter={true}
           pageSizeOptions={[10, 25, 50, 100]}
           initialState={{
@@ -143,7 +124,7 @@ const MembersDataGrid = ({ year, search }: Props) => {
 
       <PromiseStatus outcomes={[members]} />
 
-      {memberInfoDialogComponent}
+      {memberInfoDialog.component}
     </>
   );
 };

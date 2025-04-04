@@ -1,10 +1,11 @@
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 
-import SpacedTypography from "@/components/SpacedTypography";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 import { HelperTasks } from "@/model/helpers-dtos";
 
-import { createTimingInfoLine, getTaskLocation } from "./helpers-utils";
+import { createTimingInfoLine } from "./helpers-format";
+import { getTaskLocation } from "./helpers-utils";
 
 type Props = {
   tasks: HelperTasks;

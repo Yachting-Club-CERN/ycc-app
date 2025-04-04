@@ -7,23 +7,25 @@ type Props = {
 
 const PageTitle = ({ value, mobileValue }: Props) => {
   // Do not duplicate the title in the DOM if the mobile value is the same as the value
+  const commonProps = {
+    variant: "h2",
+    className: "ycc-page-title",
+    mb: 2,
+  } as const;
+
   return !mobileValue || value === mobileValue ? (
-    <Typography variant="h2" className="ycc-page-title">
-      {value}
-    </Typography>
+    <Typography {...commonProps}>{value}</Typography>
   ) : (
     <>
       <Typography
-        variant="h2"
+        {...commonProps}
         sx={{ display: { xs: "block", sm: "none" } }}
-        className="ycc-page-title"
       >
         {mobileValue ?? value}
       </Typography>
       <Typography
-        variant="h2"
+        {...commonProps}
         sx={{ display: { xs: "none", sm: "block" } }}
-        className="ycc-page-title"
       >
         {value}
       </Typography>

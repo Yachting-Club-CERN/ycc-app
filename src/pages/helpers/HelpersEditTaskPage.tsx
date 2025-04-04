@@ -1,11 +1,12 @@
-import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import PageTitle from "@/components/PageTitle";
-import PromiseStatus from "@/components/PromiseStatus";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import AuthenticationContext from "@/context/AuthenticationContext";
-import SharedDataContext from "@/context/SharedDataContext";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import PromiseStatus from "@/components/ui/PromiseStatus";
+import useCurrentUser from "@/context/auth/useCurrentUser";
+import useHelperTaskCategories from "@/context/shared-data/useHelperTaskCategories";
+import useLicenceInfos from "@/context/shared-data/useLicenceInfos";
+import useMembers from "@/context/shared-data/useMembers";
 import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
 import { getCurrentYear } from "@/utils/date-utils";
@@ -14,27 +15,26 @@ import HelperTaskForm from "./HelperTaskForm";
 
 const HelpersEditTaskPage = () => {
   const { id } = useParams();
-  const getHelperTask = (signal?: AbortSignal) => {
-    const task_id = parseInt(id ?? "NaN");
-    if (isNaN(task_id)) {
-      throw new Error("Invalid task ID");
-    } else {
-      return client.getHelperTaskById(task_id, signal);
-    }
-  };
-  const task = usePromise(getHelperTask, [id]);
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const task = usePromise(
+    (signal?: AbortSignal) => {
+      const task_id = parseInt(id ?? "NaN");
+      if (isNaN(task_id)) {
+        throw new Error("Invalid task ID");
+      } else {
+        return client.helpers.getTaskById(task_id, signal);
+      }
+    },
+    [id],
+  );
+  const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdminOrEditor) {
     void navigate("/helpers");
   }
 
-  const sharedData = useContext(SharedDataContext);
-  const helperTaskCategories = usePromise(sharedData.getHelperTaskCategories);
-  const members = usePromise((signal?: AbortSignal) =>
-    sharedData.getMembers(getCurrentYear(), signal),
-  );
-  const licenceInfos = usePromise(sharedData.getLicenceInfos);
+  const helperTaskCategories = useHelperTaskCategories();
+  const members = useMembers(getCurrentYear());
+  const licenceInfos = useLicenceInfos();
 
   return (
     <ReadingFriendlyBox>

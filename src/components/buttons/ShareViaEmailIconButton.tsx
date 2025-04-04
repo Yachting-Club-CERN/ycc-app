@@ -14,8 +14,8 @@ const ShareViaEmailIconButton = ({ subject, body }: Props) => {
 
   return (
     <Tooltip title="Share via Email">
-      <IconButton color="primary" onClick={handleClick}>
-        <MailOutlineIcon />
+      <IconButton color="primary" sx={{ p: 0 }} onClick={handleClick}>
+        <MailOutlineIcon sx={{ fontSize: 36 }} />
       </IconButton>
     </Tooltip>
   );

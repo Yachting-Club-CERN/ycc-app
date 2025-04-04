@@ -1,6 +1,6 @@
 import { Variant } from "@mui/material/styles/createTypography";
 
-import SpacedTypography from "@/components/SpacedTypography";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 
 type Props = {
   title: string;

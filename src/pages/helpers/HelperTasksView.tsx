@@ -1,7 +1,5 @@
-import { useContext } from "react";
-
-import PromiseStatus from "@/components/PromiseStatus";
-import AuthenticationContext from "@/context/AuthenticationContext";
+import PromiseStatus from "@/components/ui/PromiseStatus";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import usePromise from "@/hooks/usePromise";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTasks } from "@/model/helpers-dtos";
@@ -29,10 +27,11 @@ type Props = {
 
 const HelperTasksView = ({ display, filterOptions }: Props) => {
   const tasks = usePromise(
-    (signal?: AbortSignal) => client.getHelperTasks(filterOptions.year, signal),
+    (signal?: AbortSignal) =>
+      client.helpers.getTasks(filterOptions.year, signal),
     [filterOptions.year],
   );
-  const currentUser = useContext(AuthenticationContext).currentUser;
+  const currentUser = useCurrentUser();
 
   const filterSearchMember = (searchToken: string, member?: MemberPublicInfo) =>
     (member && searchMemberUsernameOrName(searchToken, member)) ?? false;

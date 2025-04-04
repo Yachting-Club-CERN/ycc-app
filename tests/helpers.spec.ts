@@ -41,7 +41,9 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await page.waitForURL("/helpers/tasks/new");
 
   const id = await createTask(page);
-  await expect(page.locator("main")).not.toContainText("Captain: MHUFF");
+  await expect(page.locator("main")).not.toContainText(
+    "Captain:Michele HUFF (MHUFF)",
+  );
 
   await page.getByRole("button", { name: "Sign up as Captain" }).click();
   await page
@@ -49,7 +51,9 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
     .getByRole("button", { name: "Sign up as Captain" })
     .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText("Captain: MHUFF");
+  await expect(page.locator("main")).toContainText(
+    "Captain:Michele HUFF (MHUFF)",
+  );
 });
 
 test("Helpers: Create task and sign up as helper", async ({ browser }) => {
@@ -62,7 +66,9 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await page.waitForURL("/helpers/tasks/new");
 
   const id = await createTask(page);
-  await expect(page.locator("main")).not.toContainText("Helpers: MHUFF");
+  await expect(page.locator("main")).not.toContainText(
+    "Helpers:Michele HUFF (MHUFF)",
+  );
 
   await page.getByRole("button", { name: "Sign up as Helper" }).click();
   await page
@@ -70,7 +76,9 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
     .getByRole("button", { name: "Sign up as Helper" })
     .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText("Helpers: MHUFF");
+  await expect(page.locator("main")).toContainText(
+    "Helpers:Michele HUFF (MHUFF)",
+  );
 
   await app.signOut(page);
 
@@ -88,5 +96,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
     .getByRole("button", { name: "Sign up as Helper" })
     .click();
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText("Helpers: MHUFF IMCDOWEL");
+  await expect(page.locator("main")).toContainText(
+    "Helpers:Michele HUFF (MHUFF)Ian MCDOWELL (IMCDOWEL)",
+  );
 });

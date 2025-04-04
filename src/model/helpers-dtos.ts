@@ -167,8 +167,6 @@ export type HelperTaskMarkAsDoneRequest = z.infer<
 >;
 
 export const HelperTaskValidationRequestDtoSchema = z.object({
-  helpersToValidate: z.array(HelperTaskHelperSchema),
-  helpersToRemove: z.array(HelperTaskHelperSchema),
   comment: z.string().nullable(),
 });
 

@@ -1,6 +1,6 @@
-import PageTitle from "@/components/PageTitle";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import SpacedTypography from "@/components/SpacedTypography";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 
 import LoremIpsum from "./LoremIpsum";
 

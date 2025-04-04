@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { auth } from "@/context/AuthenticationContext";
+import { auth } from "@/context/auth/AuthenticationContext";
 
 import App from "./App";
 

@@ -9,12 +9,15 @@ class SharedData {
   private _licenceInfos?: LicenceDetailedInfos;
   private _members: { [year: number]: MemberPublicInfos } = {};
 
-  getHelperTaskCategories = async (signal?: AbortSignal) => {
+  readonly getHelperTaskCategories = async (signal?: AbortSignal) => {
     if (this._helperTaskCategories === undefined) {
       console.debug("[shared-data] Loading helper task categories");
-      this._helperTaskCategories = await client.getHelperTaskCategories(signal);
+      this._helperTaskCategories =
+        await client.helpers.getTaskCategories(signal);
       console.debug(
-        `[shared-data] Loaded ${this._helperTaskCategories.length} helper task categories`,
+        "[shared-data] Loaded",
+        this._helperTaskCategories.length,
+        "helper task categories",
       );
     } else {
       console.debug("[shared-data] Helper task categories already loaded");
@@ -23,12 +26,14 @@ class SharedData {
     return this._helperTaskCategories;
   };
 
-  getLicenceInfos = async (signal?: AbortSignal) => {
+  readonly getLicenceInfos = async (signal?: AbortSignal) => {
     if (this._licenceInfos === undefined) {
       console.debug("[shared-data] Loading licence infos");
-      this._licenceInfos = await client.getLicenceInfos(signal);
+      this._licenceInfos = await client.licenceInfos.getAll(signal);
       console.debug(
-        `[shared-data] Loaded ${this._licenceInfos.length} licence infos`,
+        "[shared-data] Loaded",
+        this._licenceInfos.length,
+        "licence infos",
       );
     } else {
       console.debug("[shared-data] Licence infos already loaded");
@@ -37,12 +42,15 @@ class SharedData {
     return this._licenceInfos;
   };
 
-  getMembers = async (year: number, signal?: AbortSignal) => {
+  readonly getMembers = async (year: number, signal?: AbortSignal) => {
     if (this._members[year] === undefined) {
       console.debug(`[shared-data] Loading members for ${year}`);
-      this._members[year] = await client.getMembers(year, signal);
+      this._members[year] = await client.members.getAll(year, signal);
       console.debug(
-        `[shared-data] Loaded ${this._members[year].length} members for ${year}`,
+        "[shared-data] Loaded",
+        this._members[year].length,
+        "members for",
+        year,
       );
     } else {
       console.debug("[shared-data] Members already loaded");

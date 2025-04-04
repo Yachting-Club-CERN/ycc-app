@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import PromiseStatus from "@/components/PromiseStatus";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PromiseStatus from "@/components/ui/PromiseStatus";
 import usePromise from "@/hooks/usePromise";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
@@ -16,7 +16,7 @@ const HelperTaskPage = () => {
     if (isNaN(task_id)) {
       throw new Error("Invalid task ID");
     } else {
-      return client.getHelperTaskById(task_id, signal);
+      return client.helpers.getTaskById(task_id, signal);
     }
   };
   const task = usePromise(getHelperTask, [id]);

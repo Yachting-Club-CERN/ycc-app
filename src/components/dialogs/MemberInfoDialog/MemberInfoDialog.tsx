@@ -1,15 +1,18 @@
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { toEmailLink, toTelLink } from "@/components/links";
+import EmailLink from "@/components/ui/links/EmailLink";
+import PhoneLink from "@/components/ui/links/PhoneLink";
 import { MemberPublicInfo } from "@/model/dtos";
+import { getFullName } from "@/pages/members/members-utils";
 
 type Props = {
-  member?: MemberPublicInfo | null;
+  member: MemberPublicInfo | null;
   extra?: Record<string, string>;
   onClose: () => void;
 };
@@ -24,18 +27,21 @@ const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
     >
       {member && (
         <>
-          <DialogTitle>{`${member.firstName} ${member.lastName}`}</DialogTitle>
+          <DialogTitle>{`${getFullName(member)}`}</DialogTitle>
           <DialogContent
             sx={{
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
+              pb: 0,
             }}
           >
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
               Email:
             </Typography>
-            <Typography>{toEmailLink(member.email) || "-"}</Typography>
+            <Typography>
+              <EmailLink email={member.email} />
+            </Typography>
             {member.mobilePhone && (
               <>
                 <Typography
@@ -44,7 +50,9 @@ const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
                 >
                   Mobile Phone:
                 </Typography>
-                <Typography>{toTelLink(member.mobilePhone)}</Typography>
+                <Typography>
+                  <PhoneLink phone={member.mobilePhone} />
+                </Typography>
               </>
             )}
             {member.homePhone && (
@@ -55,7 +63,9 @@ const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
                 >
                   Home Phone:
                 </Typography>
-                <Typography>{toTelLink(member.homePhone)}</Typography>
+                <Typography>
+                  <PhoneLink phone={member.homePhone} />
+                </Typography>
               </>
             )}
             {member.workPhone && (
@@ -66,7 +76,9 @@ const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
                 >
                   Work Phone:
                 </Typography>
-                <Typography>{toTelLink(member.workPhone)}</Typography>
+                <Typography>
+                  <PhoneLink phone={member.workPhone} />
+                </Typography>
               </>
             )}
             <Typography variant="subtitle1" sx={{ fontWeight: "bold", mt: 2 }}>
@@ -85,10 +97,10 @@ const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
                   <Typography>{value}</Typography>
                 </React.Fragment>
               ))}
-            <Button onClick={onClose} sx={{ m: 2 }}>
-              Close
-            </Button>
           </DialogContent>
+          <DialogActions>
+            <Button onClick={onClose}>Close</Button>
+          </DialogActions>
         </>
       )}
     </Dialog>

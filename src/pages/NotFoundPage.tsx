@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 
-import PageTitle from "@/components/PageTitle";
-import ReadingFriendlyBox from "@/components/ReadingFriendlyBox";
-import SpacedTypography from "@/components/SpacedTypography";
+import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import PageTitle from "@/components/ui/PageTitle";
+import SpacedTypography from "@/components/ui/SpacedTypography";
 import toJson from "@/utils/toJson";
 
 const NotFoundPage = () => {

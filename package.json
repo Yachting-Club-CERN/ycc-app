@@ -10,8 +10,8 @@
     "test": "vitest",
     "test:ci": "vitest --run",
     "coverage": "vitest --coverage",
-    "lint": "tsc --noEmit && eslint ./src ./tests --cache",
-    "fix": "tsc --noEmit && eslint ./src ./tests --fix --cache",
+    "lint": "eslint ./src ./tests --cache && tsc --noEmit",
+    "fix": "eslint ./src ./tests --fix --cache && tsc --noEmit",
     "format": "prettier --write '**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,json,css,md}'"
   },
   "dependencies": {

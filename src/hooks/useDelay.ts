@@ -10,7 +10,7 @@ import { useRef } from "react";
  * @returns a function that can be used to trigger the callback with the specified delay
  */
 const useDelay = <T>(delayMs: number, callback: (event: T) => void) => {
-  const timeout = useRef<number | null>(null);
+  const timeout = useRef<number>(undefined);
 
   return (event: T) => {
     if (timeout.current) {
