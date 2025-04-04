@@ -36,7 +36,7 @@ const columns: GridColDef[] = [
   },
   {
     field: "lastName",
-    headerName: "Last name",
+    headerName: "Last Name",
     flex: 1,
     minWidth: 150,
     valueFormatter: (value: string) => value.toUpperCase(),

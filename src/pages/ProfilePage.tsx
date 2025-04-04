@@ -28,11 +28,11 @@ const ProfilePage = () => {
               <TableCell>{currentUser.username}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>First name:</TableCell>
+              <TableCell>First Name:</TableCell>
               <TableCell>{currentUser.firstName}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Last name:</TableCell>
+              <TableCell>Last Name:</TableCell>
               <TableCell>{currentUser.lastName.toUpperCase()}</TableCell>
             </TableRow>
             <TableRow>
