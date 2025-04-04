@@ -1,6 +1,6 @@
 import DialogContentText from "@mui/material/DialogContentText";
 
-import useRichTextEditor from "@/components/ui/RIchTextEditor/useRichTextEditor";
+import useRichTextEditor from "@/components/ui/RichTextEditor/useRichTextEditor";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import client from "@/utils/client";
 

@@ -24,7 +24,7 @@ import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useCo
 import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
-import RichTextEditor from "@/components/ui/RIchTextEditor/RichTextEditor";
+import RichTextEditor from "@/components/ui/RichTextEditor/RichTextEditor";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedRef from "@/hooks/useDelayedRef";
