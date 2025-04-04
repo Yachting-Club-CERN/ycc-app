@@ -42,7 +42,7 @@ const columns: GridColDef[] = [
   {
     field: "note",
     headerName: "Note",
-    flex: 3,
+    flex: 2,
   },
 ];
 

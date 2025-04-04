@@ -35,7 +35,7 @@ const PermissionsPage = () => {
       
       <br /><br />
       Cheers,<br />
-      ${currentUser.firstName} ${currentUser.lastName}`;
+      ${currentUser.firstName}`;
 
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };

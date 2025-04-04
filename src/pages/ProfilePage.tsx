@@ -20,7 +20,7 @@ const ProfilePage = () => {
   return (
     <ReadingFriendlyBox>
       <PageTitle value="Profile" />
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer component={Paper}>
         <Table className="ycc-profile-table">
           <TableBody>
             <TableRow>
