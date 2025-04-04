@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import usePromise from "@/hooks/utils/usePromise";
+import usePromise from "@/hooks/usePromise";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 

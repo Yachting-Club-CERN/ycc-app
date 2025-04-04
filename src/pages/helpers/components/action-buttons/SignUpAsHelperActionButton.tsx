@@ -1,4 +1,4 @@
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import client from "@/utils/client";
 
 import CannotCancelDialogNotice from "./CannotCancelDialogNotice";

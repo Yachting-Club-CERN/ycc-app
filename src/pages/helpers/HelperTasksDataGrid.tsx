@@ -11,10 +11,10 @@ import {
 } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 
+import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import DataGridCell from "@/components/ui/DataGridCell";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
-import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { MemberPublicInfo } from "@/model/dtos";
 import {
   HelperTask,

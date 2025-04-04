@@ -3,7 +3,7 @@ import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { JSX } from "react";
 
-import { OpenConfirmationDialogProps } from "@/hooks/dialogs/useConfirmationDialog";
+import { OpenConfirmationDialogProps } from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import { HelperTask } from "@/model/helpers-dtos";
 
 type WithButtonProps = {

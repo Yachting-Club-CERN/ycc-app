@@ -1,5 +1,5 @@
 import ShareViaEmailIconButton from "@/components/buttons/ShareViaEmailIconButton";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
 
 import { createTimingInfoLine } from "../helpers-format";

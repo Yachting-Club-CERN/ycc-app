@@ -1,5 +1,6 @@
+import usePromise from "@/hooks/usePromise";
+
 import useSharedData from "./useSharedData";
-import usePromise from "../utils/usePromise";
 
 const useLicenceInfos = () => {
   const sharedData = useSharedData();

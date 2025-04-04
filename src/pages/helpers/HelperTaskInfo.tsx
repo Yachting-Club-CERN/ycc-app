@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
+import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
+import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import InlineFlexSpanBox from "@/components/layout/InlineFlexSpanBox";
 import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
@@ -12,8 +14,6 @@ import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
-import useConfirmationDialog from "@/hooks/dialogs/useConfirmationDialog";
-import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
 import { formatDateTime } from "@/utils/date-utils";

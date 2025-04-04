@@ -6,11 +6,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
+import EmailLink from "@/components/ui/links/EmailLink";
+import PhoneLink from "@/components/ui/links/PhoneLink";
 import { MemberPublicInfo } from "@/model/dtos";
 import { getFullName } from "@/pages/members/members-utils";
-
-import EmailLink from "../ui/links/EmailLink";
-import PhoneLink from "../ui/links/PhoneLink";
 
 type Props = {
   member: MemberPublicInfo | null;

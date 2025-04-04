@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ConfirmationDialog from "@/components/dialogs/ConfirmationDialog";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 export type OpenConfirmationDialogProps = Pick<
   React.ComponentProps<typeof ConfirmationDialog>,

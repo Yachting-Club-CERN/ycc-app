@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";
 
-import MemberAutocomplete from "../../components/ui/MemberAutocomplete";
+import MemberAutocomplete from "./MemberAutocomplete";
 
 const useMemberAutocomplete = (componentSx?: SxProps) => {
   const selectedMemberRef = useRef<MemberPublicInfo | null>(null);

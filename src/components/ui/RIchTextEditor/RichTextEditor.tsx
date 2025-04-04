@@ -25,8 +25,8 @@ import {
   MenuDivider,
   MenuSelectHeading,
   ResizableImage,
-  RichTextEditorProvider,
-  RichTextField,
+  RichTextEditorProvider as TipTapRichTextEditorProvider,
+  RichTextField as TipTapRichTextField,
 } from "mui-tiptap";
 
 const DEFAULT_IMAGE_WIDTH = 400;
@@ -105,8 +105,8 @@ const RichTextEditor = ({
 
   return (
     <Box {...boxProps}>
-      <RichTextEditorProvider editor={editor}>
-        <RichTextField
+      <TipTapRichTextEditorProvider editor={editor}>
+        <TipTapRichTextField
           controls={
             <MenuControlsContainer>
               <MenuButtonUndo />
@@ -145,7 +145,7 @@ const RichTextEditor = ({
           }
         />
         <LinkBubbleMenu />
-      </RichTextEditorProvider>
+      </TipTapRichTextEditorProvider>
     </Box>
   );
 };

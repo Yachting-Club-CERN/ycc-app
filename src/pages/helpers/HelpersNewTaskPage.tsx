@@ -3,11 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
-import useHelperTaskCategories from "@/hooks/shared-data/useHelperTaskCategories";
-import useLicenceInfos from "@/hooks/shared-data/useLicenceInfos";
-import useMembers from "@/hooks/shared-data/useMembers";
-import usePromise from "@/hooks/utils/usePromise";
+import useCurrentUser from "@/context/auth/useCurrentUser";
+import useHelperTaskCategories from "@/context/shared-data/useHelperTaskCategories";
+import useLicenceInfos from "@/context/shared-data/useLicenceInfos";
+import useMembers from "@/context/shared-data/useMembers";
+import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
 import { getCurrentYear } from "@/utils/date-utils";
 

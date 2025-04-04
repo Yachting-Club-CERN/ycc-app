@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
 import PageTitle from "@/components/ui/PageTitle";
-import RichTextEditor from "@/components/ui/RichTextEditor";
+import RichTextEditor from "@/components/ui/RIchTextEditor/RichTextEditor";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
 

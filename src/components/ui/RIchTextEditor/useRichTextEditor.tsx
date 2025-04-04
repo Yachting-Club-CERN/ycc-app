@@ -1,5 +1,6 @@
-import RichTextEditor from "@/components/ui/RichTextEditor";
-import useDelayedRef from "@/hooks/utils/useDelayedRef";
+import useDelayedRef from "@/hooks/useDelayedRef";
+
+import RichTextEditor from "./RichTextEditor";
 
 type Props = Pick<
   React.ComponentProps<typeof RichTextEditor>,

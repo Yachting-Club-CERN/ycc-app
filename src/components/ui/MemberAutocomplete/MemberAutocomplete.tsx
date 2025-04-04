@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useMembers from "@/hooks/shared-data/useMembers";
+import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo } from "@/model/dtos";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import { getCurrentYear } from "@/utils/date-utils";

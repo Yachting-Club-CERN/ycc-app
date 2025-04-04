@@ -1,6 +1,6 @@
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { MemberPublicInfo } from "@/model/dtos";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import client from "@/utils/client";

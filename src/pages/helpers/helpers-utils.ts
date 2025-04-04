@@ -1,4 +1,4 @@
-import { User } from "@/context/AuthenticationContext";
+import { User } from "@/context/auth/AuthenticationContext";
 import {
   HelperTask,
   HelperTaskMutationRequestBase,

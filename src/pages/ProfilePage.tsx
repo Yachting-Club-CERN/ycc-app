@@ -7,7 +7,7 @@ import TableRow from "@mui/material/TableRow";
 
 import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
 import PageTitle from "@/components/ui/PageTitle";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 
 const ProfilePage = () => {
   const currentUser = useCurrentUser();

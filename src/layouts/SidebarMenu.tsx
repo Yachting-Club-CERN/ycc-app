@@ -22,7 +22,7 @@ import React, { JSX } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import config, { Environment } from "@/config";
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/context/auth/useAuth";
 
 import { externalUrls } from "./ExternalUrls";
 

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import PageTitle from "@/components/ui/PageTitle";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 

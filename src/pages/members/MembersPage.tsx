@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
-import useDelay from "@/hooks/utils/useDelay";
+import useDelay from "@/hooks/useDelay";
 import dayjs from "@/utils/dayjs";
 import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 

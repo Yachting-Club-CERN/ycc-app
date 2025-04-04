@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { JSX } from "react";
 
-import ConfirmButton from "../buttons/ConfirmButton";
+import ConfirmButton from "@/components/buttons/ConfirmButton";
 
 type Props = {
   title: string;

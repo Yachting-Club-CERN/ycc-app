@@ -1,6 +1,6 @@
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
-import usePromise from "@/hooks/utils/usePromise";
+import useCurrentUser from "@/context/auth/useCurrentUser";
+import usePromise from "@/hooks/usePromise";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTasks } from "@/model/helpers-dtos";
 import client from "@/utils/client";

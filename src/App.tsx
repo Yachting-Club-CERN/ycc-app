@@ -14,8 +14,8 @@ import AppRoutes from "@/layouts/AppRoutes";
 import Footer from "@/layouts/Footer";
 import TopBarAndSidebar from "@/layouts/TopBarAndSidebar";
 
-import useCurrentUser from "./hooks/auth/useCurrentUser";
-import useSharedData from "./hooks/shared-data/useSharedData";
+import useCurrentUser from "./context/auth/useCurrentUser";
+import useSharedData from "./context/shared-data/useSharedData";
 import { theme } from "./Theme";
 import { getCurrentYear } from "./utils/date-utils";
 

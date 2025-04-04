@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import SharedDataContext from "@/context/SharedDataContext";
+import SharedDataContext from "@/context/shared-data/SharedDataContext";
 
 const useSharedData = () => useContext(SharedDataContext);
 

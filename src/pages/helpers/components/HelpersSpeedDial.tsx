@@ -3,7 +3,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import EditIcon from "@mui/icons-material/Edit";
 
 import SmartSpeedDial from "@/components/ui/SmartSpeedDial";
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
 
 import { getTaskCloneLocation, getTaskEditLocation } from "../helpers-utils";

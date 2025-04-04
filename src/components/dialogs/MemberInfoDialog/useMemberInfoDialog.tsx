@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-import MemberInfoDialog from "@/components/dialogs/MemberInfoDialog";
 import { MemberPublicInfo } from "@/model/dtos";
+
+import MemberInfoDialog from "./MemberInfoDialog";
 
 type Props = Pick<
   React.ComponentProps<typeof MemberInfoDialog>,

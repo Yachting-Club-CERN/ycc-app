@@ -1,7 +1,7 @@
 import DialogContentText from "@mui/material/DialogContentText";
 
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
-import useRichTextEditor from "@/hooks/ui/useRichTextEditor";
+import useRichTextEditor from "@/components/ui/RIchTextEditor/useRichTextEditor";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import client from "@/utils/client";
 
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";

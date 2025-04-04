@@ -5,11 +5,11 @@ import {
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 
+import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import EmailLink from "@/components/ui/links/EmailLink";
 import PhoneLink from "@/components/ui/links/PhoneLink";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
-import useMembers from "@/hooks/shared-data/useMembers";
+import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo, MemberPublicInfos } from "@/model/dtos";
 import {
   searchAnyStringProperty,

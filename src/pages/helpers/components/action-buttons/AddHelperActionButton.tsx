@@ -1,9 +1,9 @@
-import useCurrentUser from "@/hooks/auth/useCurrentUser";
+import useMemberAutocomplete from "@/components/ui/MemberAutocomplete/useMemberAutocomplete";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import client from "@/utils/client";
 
 import NotificationDialogNotice from "./NotificationDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import useMemberAutocomplete from "../../../../hooks/ui/useMemberAutocomplete";
 import { canAddHelper } from "../../helpers-utils";
 
 const AddHelperActionButton = ({ task, ...props }: TaskActionProps) => {

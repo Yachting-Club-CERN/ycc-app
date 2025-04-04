@@ -1,8 +1,8 @@
 import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
+import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useMemberInfoDialog from "@/hooks/dialogs/useMemberInfoDialog";
-import usePromise from "@/hooks/utils/usePromise";
+import usePromise from "@/hooks/usePromise";
 import { HelpersAppPermission } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
