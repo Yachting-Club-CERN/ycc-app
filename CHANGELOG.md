@@ -9,18 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Share via Email and WhatsApp buttons on the helper task details page
+- "My tasks" on the profile page
+- Card view for task list to complement the grid and report views
+- Helper task page:
+  - Set/remove captain, add/remove helper functionality
+  - Share via Email and WhatsApp buttons on the helper task details page
 - Extra confirmation checks when updating helper tasks
-- Add permissions page for admins
-- Set/remove captain, add/remove helper functionality
+- Permissions page for admins
 - Prefetch shared data for admins and editors
 
 ### Changed
 
+- Editing helper tasks:
 - Update confirmation dialog texts
 - Allow admin/editors to choose whether to send notification when updating helper tasks
 - Move new/edit/clone task buttons from the header to a speed dial/floating action button
-- Improve mobile UX for the task view and edit pages
+- Improve mobile UX
 - Nicer error reporting for HTTP 401, 403, 404 and 409 errors
 - Replace TinyMCE with Tiptap
 - Internal:
@@ -28,6 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Organise components into subfolders
   - Create components and hooks for common functionality
   - Modularise the API client
+
+### Removed
+
+- Home page (the profile page became the new default/home page)
+- Footer
 
 ## [1.2.0] - 2025-03-17
 

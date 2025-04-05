@@ -79,4 +79,5 @@ const HelperTaskTimingInfo = ({ task }: Props) => {
     );
   }
 };
+
 export default HelperTaskTimingInfo;
