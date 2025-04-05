@@ -231,7 +231,6 @@ const HelperTaskListPage = () => {
                   display: "flex",
                   flexWrap: "wrap",
                   gap: 0.5,
-                  padding: 0,
                 }}
               >
                 {values.map((value) => (
