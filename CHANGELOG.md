@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Card view for task list to complement the grid and report views
 - Helper task page:
   - Set/remove captain, add/remove helper functionality
-  - Share via Email and WhatsApp buttons on the helper task details page
+  - Share via Email and WhatsApp buttons
 - Extra confirmation checks when updating helper tasks
 - Permissions page for admins
 - Prefetch shared data for admins and editors
@@ -21,8 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Editing helper tasks:
-- Update confirmation dialog texts
-- Allow admin/editors to choose whether to send notification when updating helper tasks
+  - Update confirmation dialog texts
+  - Allow admin/editors to choose whether to send notification when updating helper tasks
 - Move new/edit/clone task buttons from the header to a speed dial/floating action button
 - Improve mobile UX
 - Nicer error reporting for HTTP 401, 403, 404 and 409 errors
