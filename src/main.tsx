@@ -10,20 +10,43 @@ import { auth } from "@/context/auth/AuthenticationContext";
 
 import App from "./App";
 
+console.info("[main] Starting YCC App...");
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
-// Hack to display something in case loading takes a while
-let authFinally = false;
-setTimeout(() => {
-  if (!authFinally) {
-    root.render(<Typography>Authenticating...</Typography>);
+const removeSplashScreen = () => {
+  console.debug("[main] Removing splash screen...");
+
+  const splashScreen = document.getElementById("splash-screen");
+  const splashLogo = document.getElementById("splash-logo");
+
+  if (!splashScreen) {
+    console.warn("[main] No splash screen found");
   }
-}, 2000);
+  if (!splashLogo) {
+    console.warn("[main] No splash logo found");
+  }
+
+  splashScreen?.addEventListener("animationend", () => {
+    splashScreen?.remove();
+    console.debug("[main] Splash screen removed");
+  });
+  setTimeout(() => {
+    splashScreen?.remove();
+    console.debug("[main] Splash screen removed (timeout)");
+  }, 1000);
+
+  splashScreen?.classList.add("splash-screen-fade-out");
+  splashLogo?.classList.add("splash-logo-fade-out");
+};
 
 void auth.init().finally(() => {
-  authFinally = true;
+  console.debug("[main] Authentication initialized");
+
+  removeSplashScreen();
+
   if (auth.authenticated) {
     if (auth.currentUser.activeMember) {
       root.render(

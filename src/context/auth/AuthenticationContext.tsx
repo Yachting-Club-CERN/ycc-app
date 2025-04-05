@@ -225,7 +225,9 @@ class AuthenticationProvider {
 
     try {
       const authenticated = await this._keycloak.init({
-        onLoad: "login-required",
+        onLoad: "check-sso",
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+        checkLoginIframe: false, // Prevents flickering during loading on Firefox
       });
 
       if (authenticated) {
@@ -266,7 +268,6 @@ class AuthenticationProvider {
           });
       } else {
         console.error("[auth] Not authenticated");
-        alert("Not authenticated, please log in");
         await this._keycloak.login();
         return Promise.reject(new Error("Not authenticated"));
       }

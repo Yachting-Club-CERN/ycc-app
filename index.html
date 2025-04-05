@@ -1,18 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
+
+    <link
+      rel="icon"
+      href="/favicon.ico"
+      sizes="16x16 32x32 48x48 64x64"
+      type="image/x-icon"
+    />
+    <link rel="icon" type="image/png" sizes="192x192" href="/logo192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/logo512.png" />
+    <link rel="icon" type="image/png" sizes="1024x1024" href="/logo1024.png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="YCC App" />
-    <link rel="apple-touch-icon" href="/logo192.png" />
-    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1976d2" />
+    <meta name="description" content="Your digital YCC companion." />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="YCC App" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/logo192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/logo512.png" />
+    <link rel="apple-touch-icon" sizes="1024x1024" href="/logo1024.png" />
+
     <title>YCC App</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="splash-screen">
+      <div id="splash-logo"></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      #splash-screen {
+        position: fixed;
+        inset: 0;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+      }
+
+      #splash-logo {
+        background-image: url("/logo.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        width: 80vw;
+        height: 80vh;
+        animation:
+          fadeIn 1.8s ease-in forwards,
+          pulse 2.5s ease-in-out infinite;
+        animation-delay: 0s, 2s;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        100% {
+          opacity: 0.8;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      /* !important: override ongoing animation */
+      .splash-screen-fade-out {
+        animation: fadeOut 0.5s ease-in forwards !important;
+        animation-delay: 0.5s !important;
+      }
+
+      .splash-logo-fade-out {
+        animation: fadeOut 0.5s ease-in-out forwards !important;
+      }
+
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
   </body>
 </html>
