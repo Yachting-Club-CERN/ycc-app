@@ -22,15 +22,13 @@ import {
   HelperTasks,
 } from "@/model/helpers-dtos";
 
-import {
-  createTimingInfoFragment,
-  fakeRandomSignUpText,
-} from "./helpers-format";
+import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
+import { fakeRandomSignUpText } from "../helpers-format";
 import {
   canSignUpAsCaptain,
   canSignUpAsHelper,
   getTaskLocation,
-} from "./helpers-utils";
+} from "../helpers-utils";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.ycc-urgent`]: {
@@ -103,7 +101,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     return (
       <DataGridCell>
         <Typography variant="body2" align="center" width="100%">
-          {createTimingInfoFragment(task)}
+          <HelperTaskTimingInfo task={task} />
         </Typography>
       </DataGridCell>
     );
@@ -204,7 +202,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     {
       field: "shortDescription",
       headerName: "Short Description",
-      minWidth: 300,
+      minWidth: 50,
       flex: 1,
       sortable: false,
     },
@@ -247,7 +245,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
         sx={{
           // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
           minHeight: "265px",
-          height: "calc(100vh - 370px)",
+          height: "calc(100vh - 255px)",
         }}
       />
 

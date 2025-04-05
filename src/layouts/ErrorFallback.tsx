@@ -4,7 +4,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Link from "@mui/material/Link";
 import { FallbackProps } from "react-error-boundary";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import ReadingBox from "@/components/layout/ReadingBox";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import getErrorText from "@/utils/error-helper";
 
@@ -13,7 +13,7 @@ const ErrorFallback = (props: FallbackProps) => {
   const boatCount = Math.floor(Math.random() * 10) + 1;
 
   return (
-    <ReadingFriendlyBox>
+    <ReadingBox>
       <Alert severity="error">
         <AlertTitle>Oops, something went terribly wrong :-(</AlertTitle>
         <SpacedTypography sx={{ whiteSpace: "pre-wrap" }}>
@@ -32,7 +32,7 @@ const ErrorFallback = (props: FallbackProps) => {
           ))}
         </SpacedTypography>
       </Alert>
-    </ReadingFriendlyBox>
+    </ReadingBox>
   );
 };
 

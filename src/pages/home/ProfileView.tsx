@@ -5,20 +5,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
 import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 
-const ProfilePage = () => {
+const ProfileView = () => {
   const currentUser = useCurrentUser();
   const yccOnly = (array: readonly string[]) => {
     return array
       .filter((el) => el.startsWith("ycc"))
       .sort((a, b) => a.localeCompare(b));
   };
+  const groups = yccOnly(currentUser.groups);
+  const roles = yccOnly(currentUser.roles);
 
   return (
-    <ReadingFriendlyBox>
+    <>
       <PageTitle value="Profile" />
       <TableContainer component={Paper}>
         <Table className="ycc-profile-table">
@@ -41,17 +42,17 @@ const ProfilePage = () => {
             </TableRow>
             <TableRow>
               <TableCell>Groups:</TableCell>
-              <TableCell>{yccOnly(currentUser.groups).join(", ")}</TableCell>
+              <TableCell>{groups.join(", ")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Roles:</TableCell>
-              <TableCell>{yccOnly(currentUser.roles).join(", ")}</TableCell>
+              <TableCell>{roles.join(", ")}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-    </ReadingFriendlyBox>
+    </>
   );
 };
 
-export default ProfilePage;
+export default ProfileView;

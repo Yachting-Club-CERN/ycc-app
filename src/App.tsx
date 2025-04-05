@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +10,6 @@ import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import AppRoutes from "@/layouts/AppRoutes";
-import Footer from "@/layouts/Footer";
 import TopBarAndSidebar from "@/layouts/TopBarAndSidebar";
 
 import useCurrentUser from "./context/auth/useCurrentUser";
@@ -55,14 +53,11 @@ const App = () => {
                 <Box component="main">
                   <AppRoutes />
                 </Box>
-                <Divider sx={{ mt: 2 }} />
-                <Box component="div" className="ycc-footer">
-                  <Footer />
-                </Box>
               </Stack>
             </Box>
           </ThemeProvider>
         </Box>
+        <Box id="ycc-page-end" />
       </BrowserRouter>
     </LocalizationProvider>
   );

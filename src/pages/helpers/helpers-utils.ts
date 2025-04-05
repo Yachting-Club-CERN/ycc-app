@@ -7,15 +7,6 @@ import {
   getHelperTaskType,
 } from "@/model/helpers-dtos";
 import { getNow, isSameDay } from "@/utils/date-utils";
-export type HelperTaskFilterOptions = {
-  year: number | null;
-  search: string;
-  showOnlyUpcoming: boolean;
-  showOnlyContactOrSignedUp: boolean;
-  showOnlyAvailable: boolean;
-  showOnlyUnpublished: boolean;
-  states: HelperTaskState[];
-};
 
 /**
  * Returns the location of a task's page.

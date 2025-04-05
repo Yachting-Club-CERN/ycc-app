@@ -8,8 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 import config, { Environment } from "@/config";
-
-import { externalUrls } from "./ExternalUrls";
+import { YCC_URLS } from "@/utils/constants";
 
 type Props = {
   toggleDrawer: (event: React.SyntheticEvent) => void;
@@ -75,7 +74,7 @@ LOCAL:
         <Typography component="h1" variant="h6" flexGrow={2}>
           YCC App{" "}
           <Link
-            href={externalUrls.yccBoatBooking}
+            href={YCC_URLS.BOAT_BOOKING}
             target="_blank"
             rel="noopener"
             sx={{ fontSize: "1.25rem" }}

@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
+import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import useDelay from "@/hooks/useDelay";
@@ -10,7 +10,7 @@ import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
 import MembersDataGrid from "./MembersDataGrid";
 
-const MembersPage = () => {
+const MemberListPage = () => {
   const currentYear = dayjs().year();
   const [search, setSearch] = useState<string>("");
 
@@ -22,11 +22,12 @@ const MembersPage = () => {
   );
 
   return (
-    <>
-      <PageTitle value={`Active Members (${currentYear})`} />
-
-      <RowStack wrap={false} compact={true} mt={2} mb={2}>
-        <Typography>Search:</Typography>
+    <ReadingBoxLarge>
+      <RowStack wrap={false} mb={2}>
+        <PageTitle
+          value={`Active Members (${currentYear})`}
+          mobileValue="Members"
+        />
         <TextField
           onChange={onSearch}
           variant="outlined"
@@ -40,8 +41,8 @@ const MembersPage = () => {
       </RowStack>
 
       <MembersDataGrid year={currentYear} search={search} />
-    </>
+    </ReadingBoxLarge>
   );
 };
 
-export default MembersPage;
+export default MemberListPage;

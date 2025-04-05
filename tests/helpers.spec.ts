@@ -1,38 +1,76 @@
 import { Page, expect, test } from "@playwright/test";
 import dayjs from "dayjs";
 
-import { app, ui } from "./test-utils";
+import { app, expectSameElements, ui } from "./test-utils";
 
-const createTask = async (page: Page) => {
-  expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
+const createTask = async (page: Page) =>
+  await test.step("Create task", async () => {
+    expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
+    await expect(page.locator("h2")).toHaveText("New Helper Task");
 
-  const now = dayjs();
+    const now = dayjs();
+    const taskTime = now.format("HH:mm");
+    const title = `Test Task @ ${taskTime}`;
+    const deadline = now.add(3, "day").format("DD/MM/YYYY HH:mm");
 
-  await ui.selectOption(page.getByLabel("Category"), "Maintenance / General");
+    await ui.selectOption(page.getByLabel("Category"), "Maintenance / General");
 
-  await page.getByLabel("Title").fill(`Test Task @ ${now.format("HH:mm:ss")}`);
-  await page
-    .getByLabel("Short Description")
-    .fill(`Test task @ ${now.format("HH:mm:ss")}`);
+    await page.getByLabel("Title").fill(title);
+    await page
+      .getByLabel("Short Description")
+      .fill(`Test task @ ${taskTime} description`);
 
-  await ui.selectOption(page.getByLabel("Contact"), "PWHITE"); // Next one in the list
+    await ui.selectOption(page.getByLabel("Contact"), "PWHITE"); // Next one in the list
 
-  await page.getByRole("button", { name: "Deadline" }).click();
-  await ui.selectDateTime(
-    page,
-    page.locator(".ycc-helper-task-deadline-input * input"),
-    now.add(3, "day").format("DD/MM/YYYY HH:mm"),
-  );
+    await page.getByRole("button", { name: "Deadline" }).click();
+    await ui.selectDateTime(
+      page,
+      page.locator(".ycc-helper-task-deadline-input * input"),
+      deadline,
+    );
 
-  await page.getByLabel("Max. Helpers").fill("2");
+    await page.getByLabel("Max. Helpers").fill("2");
 
-  await page.getByRole("button", { name: "Submit" }).click();
+    await page.getByRole("button", { name: "Submit" }).click();
 
-  await page.waitForURL(/\/helpers\/tasks\/\d+$/);
+    await page.waitForURL(/\/helpers\/tasks\/\d+$/);
+    await expect(page.locator("h2")).toHaveText(title);
 
-  const id = parseInt(page.url().split("/").pop()!);
-  return id;
-};
+    const id = parseInt(page.url().split("/").pop()!);
+    return id;
+  });
+
+const signUp = async (page: Page, id: number, role: "Captain" | "Helper") =>
+  await test.step(`Sign up as ${role}`, async () => {
+    await page.getByRole("button", { name: `Sign up as ${role}` }).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: `Sign up as ${role}` })
+      .click();
+
+    await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
+    await expect(page.getByRole("dialog")).toBeHidden();
+  });
+
+const checkCaptain = async (page: Page, expectedCaptain: string | null) =>
+  await test.step(`Check captain: ${expectedCaptain}`, async () => {
+    const captain = await page
+      .locator("p:has-text('Captain:')")
+      .locator("a")
+      .allInnerTexts();
+
+    expectSameElements(captain, expectedCaptain ? [expectedCaptain] : []);
+  });
+
+const checkHelpers = async (page: Page, expectedHelpers: string[]) =>
+  await test.step(`Check helpers: ${expectedHelpers || "none"}`, async () => {
+    const helpers = await page
+      .locator("p:has-text('Helpers:')")
+      .locator("a")
+      .allInnerTexts();
+
+    expectSameElements(helpers, expectedHelpers);
+  });
 
 test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await app.loadPage(page, "/helpers", { expectSignIn: true });
@@ -41,19 +79,10 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await page.waitForURL("/helpers/tasks/new");
 
   const id = await createTask(page);
-  await expect(page.locator("main")).not.toContainText(
-    "Captain:Michele HUFF (MHUFF)",
-  );
+  await checkCaptain(page, null);
 
-  await page.getByRole("button", { name: "Sign up as Captain" }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Sign up as Captain" })
-    .click();
-  await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText(
-    "Captain:Michele HUFF (MHUFF)",
-  );
+  await signUp(page, id, "Captain");
+  await checkCaptain(page, "Michele HUFF (MHUFF)");
 });
 
 test("Helpers: Create task and sign up as helper", async ({ browser }) => {
@@ -66,19 +95,10 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await page.waitForURL("/helpers/tasks/new");
 
   const id = await createTask(page);
-  await expect(page.locator("main")).not.toContainText(
-    "Helpers:Michele HUFF (MHUFF)",
-  );
+  await checkHelpers(page, []);
 
-  await page.getByRole("button", { name: "Sign up as Helper" }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Sign up as Helper" })
-    .click();
-  await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText(
-    "Helpers:Michele HUFF (MHUFF)",
-  );
+  await signUp(page, id, "Helper");
+  await checkHelpers(page, ["Michele HUFF (MHUFF)"]);
 
   await app.signOut(page);
 
@@ -90,13 +110,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
     user: "IMCDOWEL",
   });
   await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await page.getByRole("button", { name: "Sign up as Helper" }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Sign up as Helper" })
-    .click();
-  await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
-  await expect(page.locator("main")).toContainText(
-    "Helpers:Michele HUFF (MHUFF)Ian MCDOWELL (IMCDOWEL)",
-  );
+
+  await signUp(page, id, "Helper");
+  await checkHelpers(page, ["Michele HUFF (MHUFF)", "Ian MCDOWELL (IMCDOWEL)"]);
 });

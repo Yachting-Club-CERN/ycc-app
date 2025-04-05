@@ -1,13 +1,12 @@
-import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import ErrorIcon from "@mui/icons-material/Error";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
-import HomeIcon from "@mui/icons-material/Home";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LanguageIcon from "@mui/icons-material/Language";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import SailingIcon from "@mui/icons-material/Sailing";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -23,8 +22,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import config, { Environment } from "@/config";
 import useAuth from "@/context/auth/useAuth";
-
-import { externalUrls } from "./ExternalUrls";
+import { YCC_URLS } from "@/utils/constants";
 
 type SidebarItem = {
   title: string;
@@ -38,17 +36,11 @@ const SidebarMenu = () => {
   const currentUser = auth.currentUser;
 
   const items: SidebarItem[][] = [
-    [{ title: "Home", path: "/", icon: <HomeIcon /> }],
     [
       {
-        title: "Reserve a Boat",
-        path: externalUrls.yccBoatBooking,
-        icon: <SailingIcon />,
-      },
-      {
-        title: "Help the Club!",
+        title: "Helper Tasks",
         path: "/helpers",
-        icon: <AccessibilityNewIcon />,
+        icon: <PlaylistAddCheckIcon />,
       },
       {
         title: "Member List",
@@ -56,49 +48,56 @@ const SidebarMenu = () => {
         icon: <PeopleIcon />,
       },
     ],
+    ...(currentUser.helpersAppAdmin
+      ? [
+          [
+            {
+              title: "Permissions",
+              path: "/admin/permissions",
+              icon: <HowToRegIcon />,
+            },
+          ],
+        ]
+      : []),
     [
       {
-        title: "Go to the Website",
-        path: externalUrls.yccWebsite,
+        title: "Reserve a Boat",
+        path: YCC_URLS.BOAT_BOOKING,
+        icon: <SailingIcon />,
+      },
+      {
+        title: "YCC Website",
+        path: YCC_URLS.WEBSITE,
         icon: <LanguageIcon />,
       },
     ],
+    ...(config.environment === Environment.LOCAL
+      ? [
+          [
+            {
+              title: "Playground: 404",
+              path: "/playground/this-page-is-definitely-not-declared-in-the-routes",
+              icon: <ErrorIcon />,
+            },
+            {
+              title: "Playground: Editor",
+              path: "/playground/editor",
+              icon: <AutoFixHighIcon />,
+            },
+            {
+              title: "Playground: Error",
+              path: "/playground/error",
+              icon: <ErrorIcon />,
+            },
+            {
+              title: "Playground: Styles",
+              path: "/playground/styles",
+              icon: <FormatColorFillIcon />,
+            },
+          ],
+        ]
+      : []),
   ];
-
-  if (currentUser.helpersAppAdmin) {
-    items.push([
-      {
-        title: "Permissions",
-        path: "/admin/permissions",
-        icon: <HowToRegIcon />,
-      },
-    ]);
-  }
-
-  if (config.environment === Environment.LOCAL) {
-    items.push([
-      {
-        title: "Playground: 404",
-        path: "/playground/this-page-is-definitely-not-declared-in-the-routes",
-        icon: <ErrorIcon />,
-      },
-      {
-        title: "Playground: Editor",
-        path: "/playground/editor",
-        icon: <AutoFixHighIcon />,
-      },
-      {
-        title: "Playground: Error",
-        path: "/playground/error",
-        icon: <ErrorIcon />,
-      },
-      {
-        title: "Playground: Styles",
-        path: "/playground/styles",
-        icon: <FormatColorFillIcon />,
-      },
-    ]);
-  }
 
   return (
     <>
@@ -113,9 +112,9 @@ const SidebarMenu = () => {
           }
         >
           <ListItemButton
-            selected={"/profile" === location.pathname}
+            selected={"/" === location.pathname}
             component={RouterLink}
-            to="/profile"
+            to="/"
           >
             <ListItemIcon>
               <AccountCircleIcon />

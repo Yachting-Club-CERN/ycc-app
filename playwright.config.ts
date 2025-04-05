@@ -17,6 +17,10 @@ export default defineConfig({
   timeout: 120000,
   // High timeout is useful when running tests locally in parallel
   // timeout: 300000,
+  expect: {
+    // Allow slower loading times for parallel tests
+    timeout: 30000,
+  },
   projects: [
     {
       name: "Desktop: Chrome",

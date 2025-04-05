@@ -41,8 +41,8 @@ import client from "@/utils/client";
 import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
-import { canEdit, getTaskLocation, isMultiDayShift } from "./helpers-utils";
-import { getFullNameAndUsername } from "../members/members-utils";
+import { getFullNameAndUsername } from "../../members/members-utils";
+import { canEdit, getTaskLocation, isMultiDayShift } from "../helpers-utils";
 
 type Props = {
   task?: HelperTask;
@@ -113,7 +113,13 @@ const HelperTaskForm = ({
         : (task?.contact.id ?? currentUser.memberId),
       startsAt: task?.startsAt ?? null,
       endsAt: task?.endsAt ?? null,
-      deadline: task?.deadline ?? null,
+      deadline:
+        task?.deadline ??
+        dayjs()
+          .add(2, "weeks")
+          .set("hour", 20)
+          .set("minute", 0)
+          .set("second", 0),
       urgent: task?.urgent ?? false,
       captainRequiredLicenceInfoId: task?.captainRequiredLicenceInfo?.id ?? -1,
       helperMinCount: task?.helperMinCount ?? 1,

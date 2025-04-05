@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import ReadingBox from "@/components/layout/ReadingBox";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
@@ -13,7 +13,7 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
-const HelpersNewTaskPage = () => {
+const NewHelperTaskPage = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdminOrEditor) {
@@ -37,7 +37,7 @@ const HelpersNewTaskPage = () => {
   const licenceInfos = useLicenceInfos();
 
   return (
-    <ReadingFriendlyBox>
+    <ReadingBox>
       <PageTitle value="New Helper Task" />
       {taskToClone.result !== undefined &&
         helperTaskCategories.result &&
@@ -54,8 +54,8 @@ const HelpersNewTaskPage = () => {
       <PromiseStatus
         outcomes={[taskToClone, helperTaskCategories, members, licenceInfos]}
       />
-    </ReadingFriendlyBox>
+    </ReadingBox>
   );
 };
 
-export default HelpersNewTaskPage;
+export default NewHelperTaskPage;
