@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- "My tasks" on the profile page
+- "My Tasks" on the profile page
 - Card view for task list to complement the grid and report views
 - Helper task page:
   - Set/remove captain, add/remove helper functionality
