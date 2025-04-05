@@ -116,7 +116,7 @@ const MembersDataGrid = ({ year, search }: Props) => {
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: "215px",
-            height: "calc(100vh - 270px)",
+            height: "calc(100vh - 155px)",
           }}
           className="ycc-members-data-grid"
         />

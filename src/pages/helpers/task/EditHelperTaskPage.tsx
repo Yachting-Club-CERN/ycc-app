@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import ReadingBox from "@/components/layout/ReadingBox";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
@@ -13,7 +13,7 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
-const HelpersEditTaskPage = () => {
+const EditHelperTaskPage = () => {
   const { id } = useParams();
   const task = usePromise(
     (signal?: AbortSignal) => {
@@ -37,7 +37,7 @@ const HelpersEditTaskPage = () => {
   const licenceInfos = useLicenceInfos();
 
   return (
-    <ReadingFriendlyBox>
+    <ReadingBox>
       <PageTitle value="Edit Helper Task" />
       {task.result &&
         helperTaskCategories.result &&
@@ -54,8 +54,8 @@ const HelpersEditTaskPage = () => {
       <PromiseStatus
         outcomes={[task, helperTaskCategories, members, licenceInfos]}
       />
-    </ReadingFriendlyBox>
+    </ReadingBox>
   );
 };
 
-export default HelpersEditTaskPage;
+export default EditHelperTaskPage;

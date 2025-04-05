@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import ReadingBox from "@/components/layout/ReadingBox";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import usePromise from "@/hooks/usePromise";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
-import HelperTaskInfo from "./HelperTaskInfo";
+import HelperTaskView from "./HelperTaskView";
 
 const HelperTaskPage = () => {
   const { id } = useParams();
@@ -24,12 +24,12 @@ const HelperTaskPage = () => {
   const taskToDisplay = updatedTask ?? task.result;
 
   return (
-    <ReadingFriendlyBox>
+    <ReadingBox>
       {taskToDisplay && (
-        <HelperTaskInfo task={taskToDisplay} refreshTask={setUpdatedTask} />
+        <HelperTaskView task={taskToDisplay} refreshTask={setUpdatedTask} />
       )}
       {!taskToDisplay && <PromiseStatus outcomes={[task]} />}
-    </ReadingFriendlyBox>
+    </ReadingBox>
   );
 };
 

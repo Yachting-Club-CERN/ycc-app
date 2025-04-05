@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
+import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import SpacedTypography from "@/components/ui/SpacedTypography";
@@ -46,13 +47,15 @@ const PermissionsPage = () => {
 
       {permissions.result && (
         <>
-          <SpacedTypography>
-            Currently {permissions.result.length} members have permissions to
-            manage helper tasks.{" "}
-            <Button onClick={handleClick} variant="text">
-              Email Them
+          <RowStack wrap={true}>
+            <SpacedTypography>
+              Currently {permissions.result.length} members have permissions to
+              manage helper tasks.{" "}
+            </SpacedTypography>
+            <Button variant="contained" onClick={handleClick}>
+              Send them an email
             </Button>
-          </SpacedTypography>
+          </RowStack>
           <PermissionsDataGrid permissions={permissions.result} />
         </>
       )}

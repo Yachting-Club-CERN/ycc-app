@@ -16,7 +16,7 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
 
   // Wait for the grid to load
   const grid = page.locator(".ycc-members-data-grid");
-  await grid.waitFor({ state: "visible" });
+  await expect(grid).toBeVisible();
 
   // Get the total number of rows
   const displayedRows = grid.locator(".MuiTablePagination-displayedRows");
@@ -33,7 +33,7 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
   await grid.locator('[data-rowindex="103"] [data-field="firstName"]').click();
 
   const dialog = page.locator(".ycc-member-info-dialog");
-  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
   const dialogClose = dialog.locator('button:has-text("Close")');
   await expect(dialogClose).toBeVisible();
 

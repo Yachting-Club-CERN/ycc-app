@@ -3,7 +3,6 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
@@ -19,27 +18,27 @@ import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
 import { formatDateTime } from "@/utils/date-utils";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
-import { getFullNameAndUsername } from "../members/members-utils";
-import AddHelperActionButton from "./components/action-buttons/AddHelperActionButton";
-import MarkAsDoneActionButton from "./components/action-buttons/MarkAsDoneActionButton";
-import RemoveCaptainActionButton from "./components/action-buttons/RemoveCaptainActionButton";
-import RemoveHelperActionButton from "./components/action-buttons/RemoveHelperActionButton";
-import SetCaptainActionButton from "./components/action-buttons/SetCaptainActionButton";
-import SignUpAsCaptainActionButton from "./components/action-buttons/SignUpAsCaptainActionButton";
-import SignUpAsHelperActionButton from "./components/action-buttons/SignUpAsHelperActionButton";
-import { TaskActionProps } from "./components/action-buttons/TaskActionButton";
-import ValidateActionButton from "./components/action-buttons/ValidateActionButton";
-import HelpersSpeedDial from "./components/HelpersSpeedDial";
-import ShareTaskViaEmailIconButton from "./components/ShareTaskViaEmailIconButton";
-import ShareTaskViaWhatsAppIconButton from "./components/ShareTaskViaWhatsAppIconButton";
-import { createTimingInfoFragment } from "./helpers-format";
+import { getFullNameAndUsername } from "../../members/members-utils";
+import AddHelperActionButton from "../components/action-buttons/AddHelperActionButton";
+import MarkAsDoneActionButton from "../components/action-buttons/MarkAsDoneActionButton";
+import RemoveCaptainActionButton from "../components/action-buttons/RemoveCaptainActionButton";
+import RemoveHelperActionButton from "../components/action-buttons/RemoveHelperActionButton";
+import SetCaptainActionButton from "../components/action-buttons/SetCaptainActionButton";
+import SignUpAsCaptainActionButton from "../components/action-buttons/SignUpAsCaptainActionButton";
+import SignUpAsHelperActionButton from "../components/action-buttons/SignUpAsHelperActionButton";
+import { TaskActionProps } from "../components/action-buttons/TaskActionButton";
+import ValidateActionButton from "../components/action-buttons/ValidateActionButton";
+import HelpersSpeedDial from "../components/HelpersSpeedDial";
+import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
+import ShareTaskViaEmailIconButton from "../components/ShareTaskViaEmailIconButton";
+import ShareTaskViaWhatsAppIconButton from "../components/ShareTaskViaWhatsAppIconButton";
 
 type Props = {
   task: HelperTask;
   refreshTask: (task: HelperTask) => void;
 };
 
-const HelperTaskInfo = ({ task, refreshTask }: Props) => {
+const HelperTaskView = ({ task, refreshTask }: Props) => {
   const [error, setError] = useState<unknown>();
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
@@ -65,17 +64,12 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
       <SpacedTypography variant="h3">
         Category: {task.category.title}
       </SpacedTypography>
-      <SpacedTypography variant="body2">
-        <Link component={RouterLink} to="/helpers">
-          ← Back to the task list
-        </Link>
+      <SpacedTypography>
+        <HelperTaskTimingInfo task={task} />
       </SpacedTypography>
-      <SpacedTypography>{createTimingInfoFragment(task)}</SpacedTypography>
-
       <Divider sx={{ mt: 2 }} />
 
       <SpacedTypography>{task.shortDescription}</SpacedTypography>
-
       <Divider sx={{ mt: 2 }} />
 
       {task.longDescription && (
@@ -217,4 +211,4 @@ const HelperTaskInfo = ({ task, refreshTask }: Props) => {
   );
 };
 
-export default HelperTaskInfo;
+export default HelperTaskView;

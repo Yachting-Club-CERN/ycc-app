@@ -1,7 +1,7 @@
-import { Locator, Page, expect } from "@playwright/test";
+import { Locator, Page, expect, test } from "@playwright/test";
 import dayjs from "dayjs";
 
-const ADMIN_USER = "MHUFF";
+import { ADMIN_USER } from "./test-constants";
 
 const waitForAuthPage = async (page: Page) => {
   console.info("[test] waitForAuthPage()");
@@ -12,6 +12,12 @@ const waitForNonAuthPage = async (page: Page) => {
   console.info("[test] waitForNonAuthPage()");
   await page.waitForFunction(
     () => !window.location.href.includes("/openid-connect/"),
+  );
+};
+
+export const expectSameElements = (actual: string[], expected: string[]) => {
+  expect([...actual].sort((a, b) => a.localeCompare(b))).toEqual(
+    [...expected].sort((a, b) => a.localeCompare(b)),
   );
 };
 
@@ -91,7 +97,7 @@ export const ui = {
       await locator.fill(date);
     }
   },
-};
+} as const;
 
 export const app = {
   /**
@@ -122,45 +128,47 @@ export const app = {
       expectSignIn: boolean;
       user?: string;
     },
-  ) => {
-    console.info("[test] loadPage()", path, options);
+  ) =>
+    await test.step(`Load page: ${path} (expectSignIn: ${options.expectSignIn})`, async () => {
+      console.info("[test] loadPage()", path, options);
 
-    await page.goto(path);
+      await page.goto(path);
 
-    if (options.expectSignIn) {
-      console.info("[test] Expecting sign in");
-      await waitForAuthPage(page);
-      const user = options.user ?? ADMIN_USER;
-      console.info("[test] Sign in", user);
+      if (options.expectSignIn) {
+        console.info("[test] Expecting sign in");
+        await waitForAuthPage(page);
+        const user = options.user ?? ADMIN_USER;
+        console.info("[test] Sign in", user);
 
-      await page.fill("#username", user);
-      await page.fill("#password", user);
-      await page.click("#kc-login");
-    } else {
-      console.info("[test] Not expecting sign in");
-    }
+        await page.fill("#username", user);
+        await page.fill("#password", user);
+        await page.click("#kc-login");
+      } else {
+        console.info("[test] Not expecting sign in");
+      }
 
-    await waitForNonAuthPage(page);
+      await waitForNonAuthPage(page);
 
-    // Wait for load to complete
-    await page.waitForSelector(".ycc-footer");
+      // Wait for load to complete
+      await page.waitForSelector("#ycc-page-end", { state: "attached" });
 
-    console.info("[test] Page loaded", path);
-  },
+      console.info("[test] Page loaded", path);
+    }),
 
   /**
    * Signs out of the app.
    * @param page - Playwright Page object.
    */
-  signOut: async (page: Page) => {
-    console.info("[test] signOut()");
+  signOut: async (page: Page) =>
+    await test.step("Sign out", async () => {
+      console.info("[test] signOut()");
 
-    const sidebar = (await app.openMenuIfMobile(page))
-      ? page.locator(".ycc-sidebar-mobile")
-      : page.locator(".ycc-sidebar");
+      const sidebar = (await app.openMenuIfMobile(page))
+        ? page.locator(".ycc-sidebar-mobile")
+        : page.locator(".ycc-sidebar");
 
-    await sidebar.getByTestId("LogoutIcon").click();
-    await waitForAuthPage(page);
-    expect(page.url()).toContain("/protocol/openid-connect/auth");
-  },
-};
+      await sidebar.getByTestId("LogoutIcon").click();
+      await waitForAuthPage(page);
+      expect(page.url()).toContain("/protocol/openid-connect/auth");
+    }),
+} as const;

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { useState } from "react";
 
-import ReadingFriendlyBox from "@/components/layout/ReadingFriendlyBox";
+import ReadingBox from "@/components/layout/ReadingBox";
 import PageTitle from "@/components/ui/PageTitle";
 import RichTextEditor from "@/components/ui/RichTextEditor/RichTextEditor";
 import SpacedTypography from "@/components/ui/SpacedTypography";
@@ -18,7 +18,7 @@ const PlaygroundEditorPage = () => {
   console.debug("Sanitised content", content);
 
   return (
-    <ReadingFriendlyBox>
+    <ReadingBox>
       <PageTitle value="Playground: Editor" />
       <Box mt={2}>
         <RichTextEditor
@@ -32,7 +32,7 @@ const PlaygroundEditorPage = () => {
         ... See the result below ...
       </SpacedTypography>
       {content}
-    </ReadingFriendlyBox>
+    </ReadingBox>
   );
 };
 

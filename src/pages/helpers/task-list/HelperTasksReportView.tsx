@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import { HelperTasks } from "@/model/helpers-dtos";
 
-import { createTimingInfoLine } from "./helpers-format";
-import { getTaskLocation } from "./helpers-utils";
+import { createTimingInfoLine } from "../helpers-format";
+import { getTaskLocation } from "../helpers-utils";
 
 type Props = {
   tasks: HelperTasks;
 };
 
-const HelperTasksReport = ({ tasks }: Props) => {
+const HelperTasksReportView = ({ tasks }: Props) => {
   const navigate = useNavigate();
 
   const handleClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -36,7 +36,7 @@ const HelperTasksReport = ({ tasks }: Props) => {
                 /* This is needed to avoid complete page reload on navigation. */
                 onClick={handleClick}
               >
-                {createTimingInfoLine(task)} ({task.title})
+                {task.title} &mdash; {createTimingInfoLine(task)}
               </Link>
             </li>
           );
@@ -46,4 +46,4 @@ const HelperTasksReport = ({ tasks }: Props) => {
   );
 };
 
-export default HelperTasksReport;
+export default HelperTasksReportView;

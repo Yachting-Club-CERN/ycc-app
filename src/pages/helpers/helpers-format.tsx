@@ -1,6 +1,3 @@
-import { JSX } from "react";
-
-import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import { HelperTask, HelperTaskType } from "@/model/helpers-dtos";
 import {
   formatDateTime,
@@ -53,120 +50,36 @@ export const getStatusEmoji = (task: HelperTask): string => {
  * @returns the timing info line
  */
 export const createTimingInfoLine = (task: HelperTask): string => {
-  let extraTimingTitle = [
-    task.urgent ? "URGENT" : "",
-    task.published ? "" : "HIDDEN",
-  ]
+  const labels = [task.urgent && "URGENT", !task.published && "HIDDEN"]
     .filter(Boolean)
     .join(", ");
-  if (extraTimingTitle !== "") {
-    extraTimingTitle = `${extraTimingTitle} `;
-  }
-
-  let statusEmoji = getStatusEmoji(task);
-  if (statusEmoji) {
-    statusEmoji = `${statusEmoji} `;
-  }
+  const statusEmoji = getStatusEmoji(task);
+  const prefix = [
+    labels && `(${labels}) `,
+    statusEmoji && `${statusEmoji} `,
+  ].join("");
 
   if (task.type === HelperTaskType.Shift) {
     if (isMultiDayShift(task)) {
       // That's an En Dash (U+2013)
-      return `${extraTimingTitle}${statusEmoji}Multi-Day Shift: ${formatDateTime(
+      return `${prefix}Multi-Day Shift: ${formatDateTime(
         task.startsAt,
       )} – ${formatDateTime(task.endsAt)}`;
     } else {
       // That's an En Dash (U+2013)
-      return `${extraTimingTitle}${statusEmoji}Shift: ${formatDateWithDay(
+      return `${prefix}Shift: ${formatDateWithDay(
         task.startsAt,
       )} ${formatTime(task.startsAt)} – ${formatTime(task.endsAt)}`;
     }
   } else if (task.type === HelperTaskType.Deadline) {
-    return `${extraTimingTitle}${statusEmoji}Deadline: ${formatDateWithDay(
+    return `${prefix}Deadline: ${formatDateWithDay(
       task.deadline,
     )} ${formatTime(task.deadline)}`;
   } else {
-    return `${extraTimingTitle}${statusEmoji}Start: ${
+    return `${prefix}Start: ${
       formatDateTime(task.startsAt) ?? "-"
     } End: ${formatDateTime(task.endsAt) ?? "-"} Deadline: ${
       formatDateTime(task.deadline) ?? "-"
     }`;
-  }
-};
-
-/**
- * Creates the timing info fragment for a task.
- *
- * @param task a task
- * @returns the timing info fragment
- */
-export const createTimingInfoFragment = (task: HelperTask): JSX.Element => {
-  let extraTimingTitle = [
-    task.urgent ? "Urgent" : "",
-    task.published ? "" : "Hidden",
-  ]
-    .filter(Boolean)
-    .join(", ");
-  if (extraTimingTitle !== "") {
-    extraTimingTitle = ` (${extraTimingTitle})`;
-  }
-
-  let statusEmoji = getStatusEmoji(task);
-  if (statusEmoji) {
-    statusEmoji = ` ${statusEmoji}`;
-  }
-
-  // Visual note: Max 3 <SpanBlockBox> should be used on each branch
-  if (task.type === HelperTaskType.Shift) {
-    if (isMultiDayShift(task)) {
-      return (
-        <>
-          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
-            Multi-Day Shift{extraTimingTitle}
-            {statusEmoji}
-          </SpanBlockBox>
-          <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
-          <SpanBlockBox>End: {formatDateTime(task.endsAt)}</SpanBlockBox>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
-            Shift{extraTimingTitle}
-            {statusEmoji}
-          </SpanBlockBox>
-          <SpanBlockBox>{formatDateWithDay(task.startsAt)}</SpanBlockBox>
-          <SpanBlockBox>
-            {/* That's an En Dash (U+2013) */}
-            {formatTime(task.startsAt)} – {formatTime(task.endsAt)}
-          </SpanBlockBox>
-        </>
-      );
-    }
-  } else if (task.type === HelperTaskType.Deadline) {
-    return (
-      <>
-        <SpanBlockBox sx={{ color: "warning.main", fontWeight: "bold" }}>
-          Deadline{extraTimingTitle}
-          {statusEmoji}
-        </SpanBlockBox>
-        <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>
-        <SpanBlockBox>{formatTime(task.deadline)}</SpanBlockBox>
-      </>
-    );
-  } else {
-    // Fallback for inconsistent data
-    return (
-      <>
-        <SpanBlockBox>
-          Start: {formatDateTime(task.startsAt) ?? "-"}
-          {statusEmoji}
-        </SpanBlockBox>
-        <SpanBlockBox>End: {formatDateTime(task.endsAt) ?? "-"}</SpanBlockBox>
-        <SpanBlockBox>
-          Deadline: {formatDateTime(task.deadline) ?? "-"}
-        </SpanBlockBox>
-      </>
-    );
   }
 };

@@ -1,3 +1,6 @@
+import GridOnIcon from "@mui/icons-material/GridOn";
+import GridViewIcon from "@mui/icons-material/GridView";
+import ListIcon from "@mui/icons-material/List";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -7,23 +10,26 @@ import IconButton from "@mui/material/IconButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState } from "react";
 
+import ReadingBox from "@/components/layout/ReadingBox";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
-import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
 import { getCurrentYear } from "@/utils/date-utils";
 import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
-import HelpersSpeedDial from "./components/HelpersSpeedDial";
-import { doneEmoji, validatedEmoji } from "./helpers-format";
-import { HelperTaskFilterOptions } from "./helpers-utils";
+import HelpersSpeedDial from "../components/HelpersSpeedDial";
+import { doneEmoji, validatedEmoji } from "../helpers-format";
+import { HelperTaskFilterOptions } from "../useFilteredHelperTasks";
 import HelperTasksView from "./HelperTasksView";
+import { HelperTaskListDisplay, HelperTaskListDisplayOptions } from "./types";
 
 const checkArrayContainsAllElements = <T,>(states: T[], arr: T[]): boolean => {
   return arr.every((state) => states.includes(state));
@@ -53,9 +59,12 @@ const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   states: [HelperTaskState.Pending],
 });
 
-const filterOptionsSessionStorageKey = "helpers.grid.filterOptions";
+const SESSION_STORAGE = {
+  DISPLAY: "helpers.tasks.display",
+  FILTER_OPTIONS: "helpers.tasks.filterOptions",
+} as const;
 
-const HelpersPage = () => {
+const HelperTaskListPage = () => {
   const currentUser = useCurrentUser();
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
@@ -68,7 +77,7 @@ const HelpersPage = () => {
   ] = useDelayedState<HelperTaskFilterOptions>(() => {
     try {
       const savedFilterOptions = sessionStorage.getItem(
-        filterOptionsSessionStorageKey,
+        SESSION_STORAGE.FILTER_OPTIONS,
       );
       return savedFilterOptions
         ? (JSON.parse(savedFilterOptions) as HelperTaskFilterOptions)
@@ -78,15 +87,25 @@ const HelpersPage = () => {
       return getDefaultFilterOptions();
     }
   }, SEARCH_DELAY_MS);
-  const [display, setDisplay] = useState<"grid" | "report">("grid");
+  const [display, setDisplay] = useState<HelperTaskListDisplay>(() => {
+    const savedDisplay = sessionStorage.getItem(SESSION_STORAGE.DISPLAY);
+    return savedDisplay && HelperTaskListDisplayOptions.includes(savedDisplay)
+      ? (savedDisplay as HelperTaskListDisplay)
+      : "cards";
+  });
 
   useEffect(() => {
     console.info("Save filter options to session storage", filterOptions);
     sessionStorage.setItem(
-      filterOptionsSessionStorageKey,
+      SESSION_STORAGE.FILTER_OPTIONS,
       JSON.stringify(filterOptions),
     );
   }, [delayedFilterOptions]);
+
+  useEffect(() => {
+    console.info("Save display to session storage", display);
+    sessionStorage.setItem(SESSION_STORAGE.DISPLAY, display);
+  }, [display]);
 
   const years = Array.from(
     // Add the next year too
@@ -107,7 +126,10 @@ const HelpersPage = () => {
 
     newFilterOptions.year = year;
     if (year === currentYear) {
-      if (checkArrayContainsAllElements(newFilterOptions.states, allStates)) {
+      if (
+        newFilterOptions.states === undefined ||
+        checkArrayContainsAllElements(newFilterOptions.states, allStates)
+      ) {
         newFilterOptions.states = [HelperTaskState.Pending];
       }
     } else {
@@ -141,62 +163,82 @@ const HelpersPage = () => {
 
   return (
     <>
-      <PageTitle value="Helper Tasks" />
-      <HelpersSpeedDial />
+      <RowStack wrap={false} mb={2}>
+        <PageTitle value="Helper Tasks" mobileValue="Tasks" />
 
-      <SpacedTypography>
-        On this page you can sign up for surveillance and maintenance tasks.
-        Captain means Q-boat driver or the person who is organising the
-        execution of the task.
-      </SpacedTypography>
-
-      <RowStack wrap={true} compact={true} mt={2} mb={0}>
         {currentUser.helpersAppAdminOrEditor && (
-          <RowStack wrap={false} compact={true}>
-            <Typography>Year:</Typography>
-            <Select
-              value={filterOptions.year?.toString() ?? allYearsLabel}
-              onChange={handleYearChange}
-              variant="outlined"
-              size="small"
-            >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-              <MenuItem key={9999} value={allYearsLabel}>
-                {allYearsLabel}
+          <Select
+            value={filterOptions.year?.toString() ?? allYearsLabel}
+            onChange={handleYearChange}
+            variant="outlined"
+            size="small"
+          >
+            {years.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
               </MenuItem>
-            </Select>
-          </RowStack>
+            ))}
+            <MenuItem key={9999} value={allYearsLabel}>
+              {allYearsLabel}
+            </MenuItem>
+          </Select>
         )}
 
-        <RowStack wrap={false} compact={true}>
-          <Typography>Search:</Typography>
+        <ToggleButtonGroup
+          value={display}
+          exclusive
+          onChange={(_, newDisplay: HelperTaskListDisplay | null) => {
+            if (newDisplay !== null) {
+              setDisplay(newDisplay);
+            }
+          }}
+          size="small"
+        >
+          <ToggleButton value="data-grid">
+            <GridOnIcon />
+          </ToggleButton>
+          <ToggleButton value="cards">
+            <GridViewIcon />
+          </ToggleButton>
+          <ToggleButton value="report">
+            <ListIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </RowStack>
+      <HelpersSpeedDial />
+
+      <ReadingBox>
+        <RowStack wrap={false} compact={true} mb={1}>
           <TextField
             value={filterOptions.search}
             onChange={handleSearch}
             variant="outlined"
-            label="Category, person, text..."
+            label="Search boat, member..."
             size="small"
             sx={{
               width: 200,
             }}
             className="ycc-helpers-search-input"
           />
-        </RowStack>
 
-        <RowStack wrap={false} compact={true}>
-          <Typography>State:</Typography>
           <Select
             multiple
             value={filterOptions.states}
             onChange={handleStateChange}
             renderValue={(values) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 0.5,
+                }}
+              >
                 {values.map((value) => (
-                  <Chip key={value} label={allStatesWithLabel[value]} />
+                  <Chip
+                    key={value}
+                    label={allStatesWithLabel[value]}
+                    size="small"
+                  />
                 ))}
               </Box>
             )}
@@ -206,6 +248,7 @@ const HelpersPage = () => {
               <MenuItem key={key} value={key}>
                 <Checkbox
                   checked={
+                    filterOptions.states &&
                     filterOptions.states.indexOf(key as HelperTaskState) > -1
                   }
                 />
@@ -213,76 +256,71 @@ const HelpersPage = () => {
               </MenuItem>
             ))}
           </Select>
+
+          <IconButton onClick={handleReset} size="small">
+            <RestartAltIcon />
+          </IconButton>
         </RowStack>
 
-        <IconButton onClick={handleReset} size="small">
-          <RestartAltIcon />
-        </IconButton>
-      </RowStack>
+        <RowStack wrap={true} compact={true} mb={2}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={filterOptions.showOnlyUpcoming}
+                onChange={(_, checked) => {
+                  setFilterOptionsImmediately({
+                    ...filterOptions,
+                    showOnlyUpcoming: checked,
+                  });
+                }}
+              />
+            }
+            label="Upcoming"
+          />
 
-      <RowStack wrap={true} compact={true} mt={0} mb={2}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={filterOptions.showOnlyUpcoming}
-              onChange={(_, checked) => {
-                setFilterOptionsImmediately({
-                  ...filterOptions,
-                  showOnlyUpcoming: checked,
-                });
-              }}
-              size="small"
-            />
-          }
-          label="Only upcoming"
-        />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={filterOptions.showOnlyContactOrSignedUp}
+                onChange={(_, checked) => {
+                  const newFilterOptions: HelperTaskFilterOptions = {
+                    ...filterOptions,
+                  };
+                  newFilterOptions.showOnlyContactOrSignedUp = checked;
+                  if (checked) {
+                    newFilterOptions.showOnlyAvailable = false;
+                  }
+                  setFilterOptionsImmediately(newFilterOptions);
+                }}
+              />
+            }
+            label="My Tasks"
+          />
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={filterOptions.showOnlyContactOrSignedUp}
-              onChange={(_, checked) => {
-                const newFilterOptions: HelperTaskFilterOptions = {
-                  ...filterOptions,
-                };
-                newFilterOptions.showOnlyContactOrSignedUp = checked;
-                if (checked) {
-                  newFilterOptions.showOnlyAvailable = false;
-                }
-                setFilterOptionsImmediately(newFilterOptions);
-              }}
-              size="small"
-            />
-          }
-          label="Only mine"
-        />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={filterOptions.showOnlyAvailable}
+                onChange={(_, checked) => {
+                  const newFilterOptions: HelperTaskFilterOptions = {
+                    ...filterOptions,
+                  };
+                  newFilterOptions.showOnlyAvailable = checked;
+                  if (checked) {
+                    newFilterOptions.showOnlyContactOrSignedUp = false;
+                    newFilterOptions.states = [HelperTaskState.Pending];
+                  }
+                  setFilterOptionsImmediately(newFilterOptions);
+                }}
+              />
+            }
+            label="Available"
+          />
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={filterOptions.showOnlyAvailable}
-              onChange={(_, checked) => {
-                const newFilterOptions: HelperTaskFilterOptions = {
-                  ...filterOptions,
-                };
-                newFilterOptions.showOnlyAvailable = checked;
-                if (checked) {
-                  newFilterOptions.showOnlyContactOrSignedUp = false;
-                  newFilterOptions.states = [HelperTaskState.Pending];
-                }
-                setFilterOptionsImmediately(newFilterOptions);
-              }}
-              size="small"
-            />
-          }
-          label="Only available"
-        />
-
-        {currentUser.helpersAppAdminOrEditor && (
-          <>
+          {currentUser.helpersAppAdminOrEditor && (
             <FormControlLabel
               control={
-                <Checkbox
+                <Switch
                   checked={filterOptions.showOnlyUnpublished}
                   onChange={(_, checked) => {
                     setFilterOptionsImmediately({
@@ -290,31 +328,17 @@ const HelpersPage = () => {
                       showOnlyUnpublished: checked,
                     });
                   }}
-                  size="small"
                 />
               }
-              label="Only unpublished"
+              label="Unpublished"
             />
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={display === "report"}
-                  onChange={(_, checked) => {
-                    setDisplay(checked ? "report" : "grid");
-                  }}
-                  size="small"
-                />
-              }
-              label="Report view"
-            />
-          </>
-        )}
-      </RowStack>
+          )}
+        </RowStack>
+      </ReadingBox>
 
       <HelperTasksView display={display} filterOptions={delayedFilterOptions} />
     </>
   );
 };
 
-export default HelpersPage;
+export default HelperTaskListPage;
