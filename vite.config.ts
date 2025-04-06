@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
 
       VitePWA({
         registerType: "autoUpdate",
-        includeAssets: ["favicon.ico", "robots.txt"],
+        includeAssets: ["favicon.ico", "robots.txt", "silent-check-sso.html"],
         devOptions: { enabled: true },
         manifest: {
           // TODO check which is used and where
