@@ -226,7 +226,7 @@ class AuthenticationProvider {
     try {
       const authenticated = await this._keycloak.init({
         onLoad: "check-sso",
-        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso`,
         // checkLoginIframe: false, // Prevents flickering during loading on Firefox
       });
 
