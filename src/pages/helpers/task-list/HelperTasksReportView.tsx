@@ -22,8 +22,8 @@ const HelperTasksReportView = ({ tasks }: Props) => {
   return (
     <>
       <SpacedTypography>
-        This is a simple list of the filtered tasks, ready to be copied into
-        e.g., emails.
+        This is a simple list of the filtered tasks, ready to be copied e.g.,
+        into emails.
       </SpacedTypography>
       <ul>
         {tasks.map((task) => {

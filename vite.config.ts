@@ -5,8 +5,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { VitePWA } from "vite-plugin-pwa";
 import { Environment, parseEnvironment } from "./src/environment";
 
-// TODO check speed with and without splash schreen
-
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   const environment = parseEnvironment(env.VITE_APP_ENVIRONMENT);
@@ -14,10 +12,15 @@ export default defineConfig(({ mode }) => {
     !environment || environment === Environment.PRODUCTION
       ? "YCC App"
       : `YCC App ${environment}`;
-  const app_short_name =
-    !environment || environment === Environment.PRODUCTION
-      ? "YCC"
-      : `YCC ${environment}`;
+
+  let app_short_name;
+  if (!environment || environment === Environment.PRODUCTION) {
+    app_short_name = "YCC";
+  } else if (environment === Environment.DEVELOPMENT) {
+    app_short_name = "YCC DEV";
+  } else {
+    app_short_name = `YCC ${environment}`;
+  }
 
   return {
     plugins: [
@@ -31,10 +34,9 @@ export default defineConfig(({ mode }) => {
 
       VitePWA({
         registerType: "autoUpdate",
-        includeAssets: ["favicon.ico", "robots.txt", "silent-check-sso.html"],
+        includeAssets: ["favicon.ico", "robots.txt"],
         devOptions: { enabled: true },
         manifest: {
-          // TODO check which is used and where
           name: app_name,
           short_name: app_short_name,
           description: "Your digital YCC companion.",
@@ -49,11 +51,6 @@ export default defineConfig(({ mode }) => {
               name: "Member List",
               short_name: "Members",
               url: "/members",
-            },
-            {
-              name: "New Helper Task",
-              short_name: "New Task",
-              url: "/helpers/tasks/new",
             },
           ],
           display: "standalone",
