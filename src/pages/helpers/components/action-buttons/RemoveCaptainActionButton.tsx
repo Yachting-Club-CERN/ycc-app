@@ -13,7 +13,11 @@ type Props = {
   captain: MemberPublicInfo;
 } & TaskActionProps;
 
-const RemoveCaptainActionButton = ({ captain, task, ...props }: Props) => {
+const RemoveCaptainActionButton: React.FC<Props> = ({
+  captain,
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canAddOrRemoveMembers(task, currentUser)) {

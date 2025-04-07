@@ -4,7 +4,7 @@ import ReadingBox from "@/components/layout/ReadingBox";
 import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 
-const PlaygroundErrorPage = () => {
+const PlaygroundErrorPage: React.FC = () => {
   useEffect(() => {
     throw new Error("This is an error...", {
       cause: "... and this is the cause",

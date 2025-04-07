@@ -14,7 +14,8 @@ import { getNow, isSameDay } from "@/utils/date-utils";
  * @param taskId task id
  * @returns task location
  */
-export const getTaskLocation = (taskId: number) => `/helpers/tasks/${taskId}`;
+export const getTaskLocation = (taskId: number): string =>
+  `/helpers/tasks/${taskId}`;
 
 /**
  * Returns the location of a task's edit page.
@@ -22,7 +23,7 @@ export const getTaskLocation = (taskId: number) => `/helpers/tasks/${taskId}`;
  * @param taskId task id
  * @returns task edit location
  */
-export const getTaskEditLocation = (taskId: number) =>
+export const getTaskEditLocation = (taskId: number): string =>
   `${getTaskLocation(taskId)}/edit`;
 
 /**
@@ -31,7 +32,7 @@ export const getTaskEditLocation = (taskId: number) =>
  * @param taskId task id
  * @returns task clone location
  */
-export const getTaskCloneLocation = (taskId: number) =>
+export const getTaskCloneLocation = (taskId: number): string =>
   `/helpers/tasks/new?from=${taskId}`;
 
 /**

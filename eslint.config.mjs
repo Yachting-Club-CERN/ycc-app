@@ -61,12 +61,11 @@ const eslintConfig = [
         },
       ],
       "no-warning-comments": "warn",
-      // This was not enabled in the past, maybe one day in the future
-      "@typescript-eslint/explicit-function-return-type": "off",
-      // This was not enabled in the past, maybe one day in the future
-      "@typescript-eslint/explicit-member-accessibility": "off",
-      // This was not enabled in the past, maybe one day in the future
-      "@typescript-eslint/explicit-module-boundary-types": "off",
+      // Checked by typescript
+      "react/prop-types": "off",
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/explicit-member-accessibility": "error",
+      "@typescript-eslint/explicit-module-boundary-types": "error",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-misused-promises": [
         "error",

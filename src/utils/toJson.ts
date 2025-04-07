@@ -1,16 +1,25 @@
 import { decycle } from "./decycle";
 import { getErrorCauseChain } from "./error-helper";
 
-const specialValue = (valueAsString: string) => ({
+const specialValue = (
+  valueAsString: string,
+): {
+  $specialValue: string;
+} => ({
   $specialValue: valueAsString,
 });
 
-const error = (error: Error) => ({
+const error = (
+  error: Error,
+): {
+  $error: string;
+  $causeChain: unknown[];
+} => ({
   $error: error.toString(),
   $causeChain: getErrorCauseChain(error),
 });
 
-const replacer = (_key: string, value: unknown) => {
+const replacer = (_key: string, value: unknown): object | null => {
   if (value === undefined) {
     return specialValue("undefined");
   } else if (typeof value === "number" && !isFinite(value)) {

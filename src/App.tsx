@@ -17,7 +17,7 @@ import useSharedData from "./context/shared-data/useSharedData";
 import { theme } from "./Theme";
 import { getCurrentYear } from "./utils/date-utils";
 
-const App = () => {
+const App: React.FC = () => {
   const currentUser = useCurrentUser();
   const sharedData = useSharedData();
 
@@ -35,7 +35,7 @@ const App = () => {
       void sharedData.getMembers(getCurrentYear());
     }, 2000);
 
-    return () => {
+    return (): void => {
       clearTimeout(timer);
     };
   }, [currentUser.helpersAppAdminOrEditor, sharedData]);

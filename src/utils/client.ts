@@ -29,9 +29,9 @@ enum ClientErrorCode {
 }
 
 class ClientError<TCause = unknown> extends Error {
-  readonly code: ClientErrorCode;
+  public readonly code: ClientErrorCode;
 
-  constructor(message: string, cause: TCause, code: ClientErrorCode) {
+  public constructor(message: string, cause: TCause, code: ClientErrorCode) {
     super(message);
     this.cause = cause;
     this.code = code;
@@ -51,7 +51,7 @@ type HttpRequest = {
 class HttpClient {
   private readonly _http: Axios;
 
-  constructor(baseUrl: string) {
+  public constructor(baseUrl: string) {
     this._http = HttpClient.initHttp(baseUrl);
   }
 
@@ -76,14 +76,14 @@ class HttpClient {
     return http;
   }
 
-  readonly request = async <TResponse>({
+  public readonly request = async <TResponse>({
     method,
     path,
     params,
     data,
     responseSchema,
     signal,
-  }: HttpRequest) => {
+  }: HttpRequest): Promise<TResponse> => {
     console.debug(
       "[client]",
       method.toUpperCase(),
@@ -172,13 +172,16 @@ class HttpClient {
 abstract class BaseClient {
   protected readonly _http: HttpClient;
 
-  constructor(http: HttpClient) {
+  public constructor(http: HttpClient) {
     this._http = http;
   }
 }
 
 class MembersClient extends BaseClient {
-  readonly getAll = async (year: number, signal?: AbortSignal) =>
+  public readonly getAll = async (
+    year: number,
+    signal?: AbortSignal,
+  ): Promise<MemberPublicInfos> =>
     await this._http.request<MemberPublicInfos>({
       method: "GET",
       path: "/api/v1/members",
@@ -189,7 +192,9 @@ class MembersClient extends BaseClient {
 }
 
 class LicenceInfosClient extends BaseClient {
-  readonly getAll = async (signal?: AbortSignal) =>
+  public readonly getAll = async (
+    signal?: AbortSignal,
+  ): Promise<LicenceDetailedInfos> =>
     await this._http.request<LicenceDetailedInfos>({
       method: "GET",
       path: "/api/v1/licence-infos",
@@ -199,7 +204,9 @@ class LicenceInfosClient extends BaseClient {
 }
 
 class HelpersClient extends BaseClient {
-  readonly getPermissions = async (signal?: AbortSignal) =>
+  public readonly getPermissions = async (
+    signal?: AbortSignal,
+  ): Promise<HelpersAppPermissions> =>
     await this._http.request<HelpersAppPermissions>({
       method: "GET",
       path: "/api/v1/helpers/permissions",
@@ -207,7 +214,9 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly getTaskCategories = async (signal?: AbortSignal) =>
+  public readonly getTaskCategories = async (
+    signal?: AbortSignal,
+  ): Promise<HelperTaskCategories> =>
     await this._http.request<HelperTaskCategories>({
       method: "GET",
       path: "/api/v1/helpers/task-categories",
@@ -215,10 +224,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly getTasks = async (
+  public readonly getTasks = async (
     year: number | null = null,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTasks> =>
     await this._http.request<HelperTasks>({
       method: "GET",
       path: "/api/v1/helpers/tasks",
@@ -227,7 +236,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly getTaskById = async (id: number, signal?: AbortSignal) =>
+  public readonly getTaskById = async (
+    id: number,
+    signal?: AbortSignal,
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "GET",
       path: `/api/v1/helpers/tasks/${id}`,
@@ -235,10 +247,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly createTask = async (
+  public readonly createTask = async (
     data: HelperTaskCreationRequest,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "POST",
       path: "/api/v1/helpers/tasks",
@@ -247,11 +259,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly updateTask = async (
+  public readonly updateTask = async (
     id: number,
     data: HelperTaskUpdateRequest,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "PUT",
       path: `/api/v1/helpers/tasks/${id}`,
@@ -260,11 +272,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly setCaptain = async (
+  public readonly setCaptain = async (
     id: number,
     memberId: number,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "PUT",
       path: `/api/v1/helpers/tasks/${id}/captain/${memberId}`,
@@ -272,7 +284,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly removeCaptain = async (id: number, signal?: AbortSignal) =>
+  public readonly removeCaptain = async (
+    id: number,
+    signal?: AbortSignal,
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "DELETE",
       path: `/api/v1/helpers/tasks/${id}/captain`,
@@ -280,11 +295,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly addHelper = async (
+  public readonly addHelper = async (
     id: number,
     memberId: number,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "PUT",
       path: `/api/v1/helpers/tasks/${id}/helpers/${memberId}`,
@@ -292,11 +307,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly removeHelper = async (
+  public readonly removeHelper = async (
     id: number,
     memberId: number,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "DELETE",
       path: `/api/v1/helpers/tasks/${id}/helpers/${memberId}`,
@@ -304,7 +319,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly signUpAsCaptain = async (id: number, signal?: AbortSignal) =>
+  public readonly signUpAsCaptain = async (
+    id: number,
+    signal?: AbortSignal,
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "POST",
       path: `/api/v1/helpers/tasks/${id}/sign-up-as-captain`,
@@ -312,7 +330,10 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly signUpAsHelper = async (id: number, signal?: AbortSignal) =>
+  public readonly signUpAsHelper = async (
+    id: number,
+    signal?: AbortSignal,
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "POST",
       path: `/api/v1/helpers/tasks/${id}/sign-up-as-helper`,
@@ -320,11 +341,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly markAsDone = async (
+  public readonly markAsDone = async (
     id: number,
     data: HelperTaskMarkAsDoneRequest,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "POST",
       path: `/api/v1/helpers/tasks/${id}/mark-as-done`,
@@ -333,11 +354,11 @@ class HelpersClient extends BaseClient {
       signal,
     });
 
-  readonly validate = async (
+  public readonly validate = async (
     id: number,
     data: HelperTaskValidationRequest,
     signal?: AbortSignal,
-  ) =>
+  ): Promise<HelperTask> =>
     await this._http.request<HelperTask>({
       method: "POST",
       path: `/api/v1/helpers/tasks/${id}/validate`,

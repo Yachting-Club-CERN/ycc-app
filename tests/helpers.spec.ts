@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 import { app, expectSameElements, ui } from "./test-utils";
 
-const createTask = async (page: Page) =>
+const createTask = async (page: Page): Promise<number> =>
   await test.step("Create task", async () => {
     expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
     await expect(page.locator("h2")).toHaveText("New Helper Task");
@@ -40,7 +40,11 @@ const createTask = async (page: Page) =>
     return id;
   });
 
-const signUp = async (page: Page, id: number, role: "Captain" | "Helper") =>
+const signUp = async (
+  page: Page,
+  id: number,
+  role: "Captain" | "Helper",
+): Promise<void> =>
   await test.step(`Sign up as ${role}`, async () => {
     await page.getByRole("button", { name: `Sign up as ${role}` }).click();
     await page
@@ -52,7 +56,10 @@ const signUp = async (page: Page, id: number, role: "Captain" | "Helper") =>
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 
-const checkCaptain = async (page: Page, expectedCaptain: string | null) =>
+const checkCaptain = async (
+  page: Page,
+  expectedCaptain: string | null,
+): Promise<void> =>
   await test.step(`Check captain: ${expectedCaptain}`, async () => {
     const captain = await page
       .locator("p:has-text('Captain:')")
@@ -62,7 +69,10 @@ const checkCaptain = async (page: Page, expectedCaptain: string | null) =>
     expectSameElements(captain, expectedCaptain ? [expectedCaptain] : []);
   });
 
-const checkHelpers = async (page: Page, expectedHelpers: string[]) =>
+const checkHelpers = async (
+  page: Page,
+  expectedHelpers: string[],
+): Promise<void> =>
   await test.step(`Check helpers: ${expectedHelpers || "none"}`, async () => {
     const helpers = await page
       .locator("p:has-text('Helpers:')")

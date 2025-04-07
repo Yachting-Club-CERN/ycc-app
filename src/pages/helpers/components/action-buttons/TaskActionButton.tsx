@@ -37,7 +37,7 @@ export type TaskActionProps = {
   task: HelperTask;
 } & Pick<Props, "openConfirmationDialog" | "onTaskUpdate" | "onError">;
 
-const TaskActionButton = ({
+const TaskActionButton: React.FC<Props> = ({
   buttonText,
   buttonIcon,
   buttonColor,
@@ -50,8 +50,8 @@ const TaskActionButton = ({
   openConfirmationDialog,
   onTaskUpdate: updateTask,
   onError,
-}: Props) => {
-  const handleClick = () => {
+}) => {
+  const handleClick = (): void => {
     onError(undefined);
     if (onDialogOpening) {
       onDialogOpening();

@@ -4,7 +4,7 @@ import SpacedTypography from "@/components/ui/SpacedTypography";
 
 import LoremIpsum from "./LoremIpsum";
 
-const PlaygroundStylesPage = () => {
+const PlaygroundStylesPage: React.FC = () => {
   return (
     <ReadingBox>
       <PageTitle value="Playground: Styles" />

@@ -59,7 +59,7 @@ export const getHelperTaskType = (task: {
   startsAt: dayjs.Dayjs | null;
   endsAt: dayjs.Dayjs | null;
   deadline: dayjs.Dayjs | null;
-}) => {
+}): HelperTaskType => {
   if (task.startsAt && task.endsAt && !task.deadline) {
     return HelperTaskType.Shift;
   } else if (!task.startsAt && !task.endsAt && task.deadline) {
@@ -72,7 +72,7 @@ export const getHelperTaskType = (task: {
 export const getHelperTaskState = (task: {
   validatedAt: dayjs.Dayjs | null;
   markedAsDoneAt: dayjs.Dayjs | null;
-}) => {
+}): HelperTaskState => {
   if (task.validatedAt) {
     return HelperTaskState.Validated;
   } else if (task.markedAsDoneAt) {
@@ -114,13 +114,13 @@ export const HelperTaskSchema = z
 
     return {
       ...values,
-      get type() {
+      get type(): HelperTaskType {
         return getHelperTaskType(values);
       },
-      get state() {
+      get state(): HelperTaskState {
         return getHelperTaskState(values);
       },
-      get searchString() {
+      get searchString(): string {
         if (searchString !== undefined) {
           return searchString;
         }

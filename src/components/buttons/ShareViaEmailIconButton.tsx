@@ -10,12 +10,12 @@ type Props = {
   htmlBody: string;
 };
 
-const ShareViaEmailIconButton = ({
+const ShareViaEmailIconButton: React.FC<Props> = ({
   subject,
   plainTextBody,
   htmlBody,
-}: Props) => {
-  const handleClick = () => {
+}) => {
+  const handleClick = (): void => {
     window.location.href = mailtoHref({
       subject,
       plainTextBody,

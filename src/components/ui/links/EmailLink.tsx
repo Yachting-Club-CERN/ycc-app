@@ -6,7 +6,7 @@ type Props = {
   email?: string | null;
 };
 
-const EmailLink = ({ email }: Props) => {
+const EmailLink: React.FC<Props> = ({ email }) => {
   if (!email) {
     return null;
   }

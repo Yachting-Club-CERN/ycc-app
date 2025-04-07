@@ -18,7 +18,7 @@ type Props = {
  *
  * Uses `<span>` elements to allow usage in `<p>` elements as well.
  */
-const HelperTaskTimingInfo = ({ task }: Props) => {
+const HelperTaskTimingInfo: React.FC<Props> = ({ task }) => {
   const labels = [task.urgent && "Urgent", !task.published && "Hidden"]
     .filter(Boolean)
     .join(", ");

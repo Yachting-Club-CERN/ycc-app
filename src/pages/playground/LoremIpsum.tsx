@@ -8,7 +8,7 @@ type Props = {
   variant?: Variant;
 };
 
-const LoremIpsum = ({ title, titleVariant, variant }: Props) => {
+const LoremIpsum: React.FC<Props> = ({ title, titleVariant, variant }) => {
   return (
     <>
       <SpacedTypography variant={titleVariant}>{title}</SpacedTypography>

@@ -15,7 +15,10 @@ export const validatedEmoji = "✔️";
  *
  * @returns a sign up text
  */
-export const fakeRandomSignUpText = (taskId: number, captain: boolean) => {
+export const fakeRandomSignUpText = (
+  taskId: number,
+  captain: boolean,
+): string => {
   const texts = [
     // You want to keep the length of this array a prime number for best results
     "Sign me up!",

@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 import useDelayedRef from "@/hooks/useDelayedRef";
 
 import RichTextEditor from "./RichTextEditor";
@@ -7,7 +9,13 @@ type Props = Pick<
   "minHeight" | "containerProps"
 >;
 
-const useRichTextEditor = (props: Props) => {
+const useRichTextEditor = (
+  props: Props,
+): {
+  component: JSX.Element;
+  content: string;
+  clearContent: () => void;
+} => {
   const contentRef = useDelayedRef("");
 
   return {
@@ -19,12 +27,10 @@ const useRichTextEditor = (props: Props) => {
         onUpdate={contentRef.setWithDelay}
       />
     ),
-    get content() {
+    get content(): string {
       return contentRef.get();
     },
-    clearContent: () => {
-      contentRef.setImmediately("");
-    },
+    clearContent: (): void => contentRef.setImmediately(""),
   };
 };
 

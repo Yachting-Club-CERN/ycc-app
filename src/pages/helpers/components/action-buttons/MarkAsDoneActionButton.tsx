@@ -7,7 +7,10 @@ import client from "@/utils/client";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canMarkAsDone } from "../../helpers-utils";
 
-const MarkAsDoneActionButton = ({ task, ...props }: TaskActionProps) => {
+const MarkAsDoneActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canMarkAsDone(task, currentUser)) {

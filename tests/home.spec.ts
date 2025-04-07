@@ -2,12 +2,12 @@ import { Page, expect, test } from "@playwright/test";
 
 import { app } from "./test-utils";
 
-const verifyMyTasksView = async (page: Page) =>
+const verifyMyTasksView = async (page: Page): Promise<void> =>
   await test.step("Verify My Tasks View", async () => {
     await expect(page.locator("h2").nth(0)).toHaveText("My Tasks");
   });
 
-const verifyProfileView = async (page: Page) =>
+const verifyProfileView = async (page: Page): Promise<void> =>
   await test.step("Verify Profile View", async () => {
     await expect(page.locator("h2").nth(1)).toHaveText("Profile");
 

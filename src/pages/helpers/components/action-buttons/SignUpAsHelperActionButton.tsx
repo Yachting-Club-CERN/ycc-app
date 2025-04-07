@@ -5,7 +5,10 @@ import CannotCancelDialogNotice from "./CannotCancelDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canSignUpAsHelper } from "../../helpers-utils";
 
-const SignUpAsHelperActionButton = ({ task, ...props }: TaskActionProps) => {
+const SignUpAsHelperActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canSignUpAsHelper(task, currentUser)) {

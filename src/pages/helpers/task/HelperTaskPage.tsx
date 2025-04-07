@@ -9,17 +9,19 @@ import client from "@/utils/client";
 
 import HelperTaskView from "./HelperTaskView";
 
-const HelperTaskPage = () => {
+const HelperTaskPage: React.FC = () => {
   const { id } = useParams();
-  const getHelperTask = (signal?: AbortSignal) => {
-    const task_id = parseInt(id ?? "NaN");
-    if (isNaN(task_id)) {
-      throw new Error("Invalid task ID");
-    } else {
-      return client.helpers.getTaskById(task_id, signal);
-    }
-  };
-  const task = usePromise(getHelperTask, [id]);
+  const task = usePromise(
+    (signal?: AbortSignal): Promise<HelperTask> => {
+      const task_id = parseInt(id ?? "NaN");
+      if (isNaN(task_id)) {
+        throw new Error("Invalid task ID");
+      } else {
+        return client.helpers.getTaskById(task_id, signal);
+      }
+    },
+    [id],
+  );
   const [updatedTask, setUpdatedTask] = useState<HelperTask>();
   const taskToDisplay = updatedTask ?? task.result;
 

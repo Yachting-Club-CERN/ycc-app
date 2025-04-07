@@ -4,7 +4,7 @@ type Props = {
   phone?: string | null;
 };
 
-const PhoneLink = ({ phone }: Props) => {
+const PhoneLink: React.FC<Props> = ({ phone }) => {
   if (!phone) {
     return null;
   }

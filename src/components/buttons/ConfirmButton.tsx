@@ -10,7 +10,7 @@ type Props = {
   delayed?: boolean;
 };
 
-const ConfirmButton = (props: Props) => {
+const ConfirmButton: React.FC<Props> = (props) => {
   const { onConfirm, loading } = props;
   const text = props.text ?? "Confirm";
   const delayed = props.delayed ?? false;
@@ -32,7 +32,7 @@ const ConfirmButton = (props: Props) => {
       clearInterval(interval);
     }, CONFIRM_BUTTON_DELAY_MS);
 
-    return () => {
+    return (): void => {
       clearTimeout(timeout);
       clearInterval(interval);
     };

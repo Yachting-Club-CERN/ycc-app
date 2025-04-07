@@ -8,13 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 
-const ProfileView = () => {
+const ProfileView: React.FC = () => {
   const currentUser = useCurrentUser();
-  const yccOnly = (array: readonly string[]) => {
-    return array
+  const yccOnly = (array: readonly string[]): string[] =>
+    array
       .filter((el) => el.startsWith("ycc"))
       .sort((a, b) => a.localeCompare(b));
-  };
   const groups = yccOnly(currentUser.groups);
   const roles = yccOnly(currentUser.roles);
 

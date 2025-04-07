@@ -30,7 +30,7 @@ type SidebarItem = {
   icon: JSX.Element;
 };
 
-const SidebarMenu = () => {
+const SidebarMenu: React.FC = () => {
   const location = useLocation();
   const auth = useAuth();
   const currentUser = auth.currentUser;

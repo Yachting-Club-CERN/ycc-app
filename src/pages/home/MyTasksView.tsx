@@ -15,7 +15,7 @@ import {
   useFilteredHelperTasks,
 } from "../helpers/useFilteredHelperTasks";
 
-const MyTasksView = () => {
+const MyTasksView: React.FC = () => {
   const [filterOptions, delayedFilterOptions, , setFilterOptionsWithDelay] =
     useDelayedState<HelperTaskFilterOptions>(
       () => ({
@@ -30,12 +30,11 @@ const MyTasksView = () => {
 
   const showSearch = user.helpersAppAdminOrEditor;
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>): void =>
     setFilterOptionsWithDelay({
       ...filterOptions,
       search: event.target.value,
     });
-  };
 
   return (
     <>

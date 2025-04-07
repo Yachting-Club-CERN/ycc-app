@@ -10,7 +10,7 @@ type Props = {
   fatal?: boolean;
 };
 
-const ErrorAlert = ({ error, fatal }: Props) => {
+const ErrorAlert: React.FC<Props> = ({ error, fatal }) => {
   return (
     <Alert severity="error">
       <AlertTitle>

@@ -15,7 +15,7 @@ import PlaygroundStylesPage from "@/pages/playground/PlaygroundStylesPage";
 
 import ErrorFallback from "./ErrorFallback";
 
-const AppRoutes = () => {
+const AppRoutes: React.FC = () => {
   const location = useLocation();
 
   return (

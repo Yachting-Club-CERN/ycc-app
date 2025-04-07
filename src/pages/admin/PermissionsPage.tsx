@@ -13,7 +13,7 @@ import { mailtoHref } from "@/utils/utils";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 
-const PermissionsPage = () => {
+const PermissionsPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const permissions = usePromise(client.helpers.getPermissions);
 
@@ -22,7 +22,7 @@ const PermissionsPage = () => {
     void navigate("/");
   }
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (!permissions.result) {
       return;
     }

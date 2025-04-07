@@ -2,7 +2,9 @@ import { Locator, expect, test } from "@playwright/test";
 
 import { app } from "./test-utils";
 
-const getDisplayedRows = async (displayedRows: Locator) => {
+const getDisplayedRowsCount = async (
+  displayedRows: Locator,
+): Promise<number> => {
   const displayedRowsText = await displayedRows.textContent();
   return parseInt(displayedRowsText!.split("of")[1].trim());
 };
@@ -20,7 +22,7 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
 
   // Get the total number of rows
   const displayedRows = grid.locator(".MuiTablePagination-displayedRows");
-  const totalRows = await getDisplayedRows(displayedRows);
+  const totalRows = await getDisplayedRowsCount(displayedRows);
 
   // Get the next page of the grid
   await grid.getByTestId("KeyboardArrowRightIcon").click();
@@ -38,7 +40,7 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
   await expect(dialogClose).toBeVisible();
 
   await dialogClose.click();
-  await expect(dialog).not.toBeVisible();
+  await expect(dialog).toBeHidden();
 
   // Filter
   await page.fill(".ycc-members-search-input * input", "+33");
@@ -46,6 +48,6 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
   // Wait for the grid to filter
   await page.waitForTimeout(500);
 
-  const filteredRows = await getDisplayedRows(displayedRows);
+  const filteredRows = await getDisplayedRowsCount(displayedRows);
   expect(filteredRows).toBeLessThan(totalRows);
 });

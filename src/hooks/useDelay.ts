@@ -9,7 +9,10 @@ import { useCallback, useEffect, useRef } from "react";
  * @param callback the callback function to be executed
  * @returns a function that can be used to trigger the callback with the specified delay
  */
-const useDelay = <T>(delayMs: number, callback: (event: T) => void) => {
+const useDelay = <T>(
+  delayMs: number,
+  callback: (event: T) => void,
+): ((event: T) => void) => {
   const timeout = useRef<number>(undefined);
 
   const delayed = useCallback(
@@ -27,7 +30,7 @@ const useDelay = <T>(delayMs: number, callback: (event: T) => void) => {
 
   // Cleanup
   useEffect(() => {
-    return () => {
+    return (): void => {
       if (timeout.current) {
         clearTimeout(timeout.current);
       }

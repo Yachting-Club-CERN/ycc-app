@@ -1,13 +1,13 @@
 import RowStack from "@/components/layout/RowStack";
-import { HelperTasks } from "@/model/helpers-dtos";
+import { HelperTask } from "@/model/helpers-dtos";
 
 import HelperTaskCard from "./HelperTaskCard";
 
 type Props = {
-  tasks: HelperTasks;
+  tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTaskCardGrid = ({ tasks }: Props) => {
+const HelperTaskCardGrid: React.FC<Props> = ({ tasks }) => {
   return (
     <RowStack wrap={true} mb={2}>
       {tasks.map((task) => (

@@ -45,45 +45,45 @@ type KeycloakUserInfo = {
 };
 
 class User {
-  constructor(
-    readonly keycloakId: string,
-    readonly memberId: number,
-    readonly username: string,
-    readonly email: string,
-    readonly firstName: string,
-    readonly lastName: string,
-    readonly groups: readonly string[],
-    readonly roles: readonly string[],
+  public constructor(
+    public readonly keycloakId: string,
+    public readonly memberId: number,
+    public readonly username: string,
+    public readonly email: string,
+    public readonly firstName: string,
+    public readonly lastName: string,
+    public readonly groups: readonly string[],
+    public readonly roles: readonly string[],
   ) {}
 
-  get activeMember(): boolean {
+  public get activeMember(): boolean {
     return this.roles.includes("ycc-member-active");
   }
 
-  get committeeMember(): boolean {
+  public get committeeMember(): boolean {
     return this.roles.includes("ycc-member-committee");
   }
 
-  get helpersAppAdmin(): boolean {
+  public get helpersAppAdmin(): boolean {
     return this.roles.includes("ycc-helpers-app-admin");
   }
 
-  get helpersAppEditor(): boolean {
+  public get helpersAppEditor(): boolean {
     return this.roles.includes("ycc-helpers-app-editor");
   }
 
-  get helpersAppAdminOrEditor(): boolean {
+  public get helpersAppAdminOrEditor(): boolean {
     return this.helpersAppAdmin || this.helpersAppEditor;
   }
 
-  hasLicence = (licence: string): boolean => {
+  public hasLicence = (licence: string): boolean => {
     return this.roles.includes(`ycc-licence-${licence.toLowerCase()}`);
   };
 }
 
 class UserFactory {
   // Super resilient
-  static create(
+  public static create(
     info?: KeycloakUserInfo,
     profile?: KeycloakProfile,
     accessToken?: KeycloakTokenParsed,
@@ -194,17 +194,17 @@ class AuthenticationProvider {
     this._user = null;
   }
 
-  get authenticated(): boolean {
+  public get authenticated(): boolean {
     return this._keycloak.authenticated ? !!this._user : false;
   }
 
-  get currentUser(): User {
+  public get currentUser(): User {
     // Simplify component code by not making it nullable
     return this._user || UNKNOWN_USER;
   }
 
-  readonly init = async () => {
-    this._keycloak.onTokenExpired = () => {
+  public readonly init = async (): Promise<void> => {
+    this._keycloak.onTokenExpired = (): void => {
       this._keycloak
         .updateToken(KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY)
         .then((refreshed) => {
@@ -276,19 +276,18 @@ class AuthenticationProvider {
     }
   };
 
-  public readonly logout = async () => {
+  public readonly logout = async (): Promise<void> => {
     console.debug("[auth] Logging out");
     await this._keycloak.logout();
   };
 
-  private readonly updateGlobalToken = () => {
+  private readonly updateGlobalToken = (): void => {
     window.oauth2Token = this._keycloak.token;
   };
 }
 
 const auth = new AuthenticationProvider();
+const AuthenticationContext = createContext<AuthenticationProvider>(auth);
 
 export { auth, User };
-
-const AuthenticationContext = createContext<AuthenticationProvider>(auth);
 export default AuthenticationContext;

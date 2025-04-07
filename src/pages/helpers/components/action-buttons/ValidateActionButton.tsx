@@ -7,7 +7,10 @@ import client from "@/utils/client";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canValidate } from "../../helpers-utils";
 
-const ValidateActionButton = ({ task, ...props }: TaskActionProps) => {
+const ValidateActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canValidate(task, currentUser)) {

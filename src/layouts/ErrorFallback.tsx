@@ -8,7 +8,7 @@ import ReadingBox from "@/components/layout/ReadingBox";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import getErrorText from "@/utils/error-helper";
 
-const ErrorFallback = (props: FallbackProps) => {
+const ErrorFallback: React.FC<FallbackProps> = (props) => {
   const error: unknown = props.error;
   const boatCount = Math.floor(Math.random() * 10) + 1;
 

@@ -7,7 +7,7 @@ type Props = {
   mobileValue?: string;
 };
 
-const PageTitle = ({ value, mobileValue }: Props) => {
+const PageTitle: React.FC<Props> = ({ value, mobileValue }) => {
   return (
     <Typography variant="h2" className="ycc-page-title" mb={2}>
       <Span sx={{ display: { xs: "inline", sm: "none" } }}>

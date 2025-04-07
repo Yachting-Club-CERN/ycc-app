@@ -3,7 +3,10 @@ import dayjs from "@/utils/dayjs";
 
 import { formatDate, formatDateWithDay } from "./date-utils";
 
-export const searchAnyStringProperty = (search: string, object: object) => {
+export const searchAnyStringProperty = (
+  search: string,
+  object: object,
+): boolean => {
   const s = search.toLowerCase().trim();
   return Object.values(object).some(
     (value) => typeof value === "string" && value.toLowerCase().includes(s),
@@ -13,7 +16,7 @@ export const searchAnyStringProperty = (search: string, object: object) => {
 export const searchMemberUsernameOrName = (
   search: string,
   member: MemberPublicInfo,
-) => {
+): boolean => {
   const s = search.toLowerCase().trim();
   return (
     member.username.toLowerCase().includes(s) ||
@@ -22,5 +25,5 @@ export const searchMemberUsernameOrName = (
   );
 };
 
-export const toDateSearchString = (date: dayjs.Dayjs | null) =>
+export const toDateSearchString = (date: dayjs.Dayjs | null): string =>
   date === null ? "" : `${formatDate(date)} ${formatDateWithDay(date)}`;

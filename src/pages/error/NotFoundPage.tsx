@@ -5,7 +5,7 @@ import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import toJson from "@/utils/toJson";
 
-const NotFoundPage = () => {
+const NotFoundPage: React.FC = () => {
   const location = useLocation();
 
   const debug = {
