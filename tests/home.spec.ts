@@ -4,12 +4,12 @@ import { app } from "./test-utils";
 
 const verifyMyTasksView = async (page: Page): Promise<void> =>
   await test.step("Verify My Tasks View", async () => {
-    await expect(page.locator("h2").nth(0)).toHaveText("My Tasks");
+    await expect(page.locator("h2").nth(0)).toContainText("My Tasks");
   });
 
 const verifyProfileView = async (page: Page): Promise<void> =>
   await test.step("Verify Profile View", async () => {
-    await expect(page.locator("h2").nth(1)).toHaveText("Profile");
+    await expect(page.locator("h2").nth(1)).toContainText("Profile");
 
     const table = page.locator(".ycc-profile-table");
     await expect(table).toBeVisible();

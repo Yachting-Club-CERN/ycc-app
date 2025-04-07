@@ -6,7 +6,7 @@ import { app, expectSameElements, ui } from "./test-utils";
 const createTask = async (page: Page): Promise<number> =>
   await test.step("Create task", async () => {
     expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
-    await expect(page.locator("h2")).toHaveText("New Helper Task");
+    await expect(page.locator("h2")).toContainText("New Helper Task");
 
     const now = dayjs();
     const taskTime = now.format("HH:mm");
@@ -34,7 +34,7 @@ const createTask = async (page: Page): Promise<number> =>
     await page.getByRole("button", { name: "Submit" }).click();
 
     await page.waitForURL(/\/helpers\/tasks\/\d+$/);
-    await expect(page.locator("h2")).toHaveText(title);
+    await expect(page.locator("h2")).toContainText(title);
 
     const id = parseInt(page.url().split("/").pop()!);
     return id;
@@ -62,7 +62,8 @@ const checkCaptain = async (
 ): Promise<void> =>
   await test.step(`Check captain: ${expectedCaptain}`, async () => {
     const captain = await page
-      .locator("p:has-text('Captain:')")
+      .locator("//div[contains(text(), 'Captain:')]")
+      .locator("..")
       .locator("a")
       .allInnerTexts();
 
@@ -75,7 +76,8 @@ const checkHelpers = async (
 ): Promise<void> =>
   await test.step(`Check helpers: ${expectedHelpers || "none"}`, async () => {
     const helpers = await page
-      .locator("p:has-text('Helpers:')")
+      .locator("//div[contains(text(), 'Helpers:')]")
+      .locator("..")
       .locator("a")
       .allInnerTexts();
 

@@ -171,6 +171,15 @@ export const canSignUp = (task: HelperTask, user: User): boolean =>
   canSignUpAsCaptain(task, user) || canSignUpAsHelper(task, user);
 
 /**
+ * Tells whether anyone has signed up for a task.
+ *
+ * @param task a task
+ * @returns  true if anyone has signed up, false otherwise
+ */
+export const hasAnyoneSignedUp = (task: HelperTask): boolean =>
+  task.captain !== null || task.helpers.length > 0;
+
+/**
  * Tells whether a user can add or remove members from a task.
  *
  * @param task a task

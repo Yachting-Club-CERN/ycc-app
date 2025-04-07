@@ -42,7 +42,12 @@ import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
 import { getFullNameAndUsername } from "../../members/members-utils";
-import { canEdit, getTaskLocation, isMultiDayShift } from "../helpers-utils";
+import {
+  canEdit,
+  getTaskLocation,
+  hasAnyoneSignedUp,
+  isMultiDayShift,
+} from "../helpers-utils";
 
 type Props = {
   task?: HelperTask;
@@ -338,6 +343,9 @@ const HelperTaskForm: React.FC<Props> = ({
     })),
   ];
 
+  const showUrgent = newTask || task?.validatedBy === null;
+  const showPublished = newTask || (task && !hasAnyoneSignedUp(task));
+
   return (
     <FormContainer defaultValues={initialData} onSuccess={handleSubmit}>
       <SpacedTypography>
@@ -582,8 +590,10 @@ const HelperTaskForm: React.FC<Props> = ({
       )}
       <SpacedBox>
         <RowStack wrap={true} justifyContent="center">
-          <SwitchElement name="base.urgent" label="Urgent" />
-          <SwitchElement name="base.published" label="Published" />
+          {showUrgent && <SwitchElement name="base.urgent" label="Urgent" />}
+          {showPublished && (
+            <SwitchElement name="base.published" label="Published" />
+          )}
 
           {!newTask && (
             <SwitchElement
