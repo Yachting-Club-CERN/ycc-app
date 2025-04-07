@@ -143,7 +143,7 @@ class ToJSONSubclassWithoutOverride extends ToJSONSuperclass {
   }
 }
 
-test("inheritance", () => {
+test("Inheritance", () => {
   const obj1: Superclass = { field1: "Object 1" };
   const obj2: Subclass = { field1: "Object 2", field2: 42 };
 
@@ -162,7 +162,7 @@ test("inheritance", () => {
   );
 });
 
-test("inheritance of classes implementing toJSONObject()", () => {
+test("Inheritance of classes implementing toJSONObject()", () => {
   const obj1: ToJSONSuperclass = new ToJSONSuperclass("Object 1");
   const obj2: ToJSONSubclass = new ToJSONSubclass("Object 2", 42);
   const obj3: ToJSONSubclassWithoutOverride = new ToJSONSubclassWithoutOverride(

@@ -7,7 +7,7 @@ const check = (error: unknown, expected: string): void => {
   expect(getErrorText(error)).toEqual(expected);
 };
 
-test("non-error types", () => {
+test("Non-error types", () => {
   check("Some string error", "Some string error");
 
   check(undefined, "<undefined>");

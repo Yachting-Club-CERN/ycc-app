@@ -10,7 +10,7 @@ export const check = (
   expect(toJson(value, format)).toEqual(expected);
 };
 
-test("general data types", () => {
+test("General data types", () => {
   // Booleans
   check(false, "false");
   check(true, "true");
@@ -98,7 +98,7 @@ test("general data types", () => {
   );
 });
 
-test("complex object with special values", () => {
+test("Complex object with special values", () => {
   check(
     {
       booleans: [false, true],
