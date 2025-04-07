@@ -22,7 +22,7 @@ type Props = {
   onClose: () => void;
 };
 
-const ConfirmationDialog = ({
+const ConfirmationDialog: React.FC<Props> = ({
   title,
   content,
   confirmButtonText,
@@ -31,7 +31,7 @@ const ConfirmationDialog = ({
   delayConfirm,
   onConfirm,
   onClose,
-}: Props) => {
+}) => {
   return (
     <Dialog
       open={open}

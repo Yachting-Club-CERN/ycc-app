@@ -2,16 +2,16 @@ import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 
 import SpacedTypography from "@/components/ui/SpacedTypography";
-import { HelperTasks } from "@/model/helpers-dtos";
+import { HelperTask } from "@/model/helpers-dtos";
 
 import { createTimingInfoLine } from "../helpers-format";
 import { getTaskLocation } from "../helpers-utils";
 
 type Props = {
-  tasks: HelperTasks;
+  tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTasksReportView = ({ tasks }: Props) => {
+const HelperTasksReportView: React.FC<Props> = ({ tasks }) => {
   return (
     <>
       <SpacedTypography>

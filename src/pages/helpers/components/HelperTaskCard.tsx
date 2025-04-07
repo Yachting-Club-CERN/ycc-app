@@ -2,7 +2,6 @@ import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 import { useNavigate } from "@/hooks/useNavigate";
 import { HelperTask } from "@/model/helpers-dtos";
@@ -14,10 +13,11 @@ type Props = {
   task: HelperTask;
 };
 
-const HelperTaskCard = ({ task }: Props) => {
+const HelperTaskCard: React.FC<Props> = ({ task }) => {
   const navigate = useNavigate();
-  const handleClick = async (event: React.MouseEvent<HTMLElement>) =>
-    await navigate(getTaskLocation(task.id), event);
+  const handleClick = async (
+    event: React.MouseEvent<HTMLElement>,
+  ): Promise<void> => await navigate(getTaskLocation(task.id), event);
 
   return (
     <Card

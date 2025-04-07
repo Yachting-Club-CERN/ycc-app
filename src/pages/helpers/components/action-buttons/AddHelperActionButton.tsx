@@ -6,7 +6,10 @@ import NotificationDialogNotice from "./NotificationDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canAddHelper } from "../../helpers-utils";
 
-const AddHelperActionButton = ({ task, ...props }: TaskActionProps) => {
+const AddHelperActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
   const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 

@@ -9,6 +9,7 @@ import {
   MuiEvent,
   gridClasses,
 } from "@mui/x-data-grid";
+import { JSX } from "react";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
@@ -16,11 +17,7 @@ import DataGridCell from "@/components/ui/DataGrid/DataGridCell";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import { MemberPublicInfo } from "@/model/dtos";
-import {
-  HelperTask,
-  HelperTaskHelper,
-  HelperTasks,
-} from "@/model/helpers-dtos";
+import { HelperTask, HelperTaskHelper } from "@/model/helpers-dtos";
 
 import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
 import { fakeRandomSignUpText } from "../helpers-format";
@@ -43,42 +40,42 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 })) as typeof DataGrid;
 
 type Props = {
-  tasks: HelperTasks;
+  tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTasksDataGrid = ({ tasks }: Props) => {
+const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
 
   const memberInfoDialog = useMemberInfoDialog();
 
-  const getRowId = (task: HelperTask) => task.id;
+  const getRowId = (task: HelperTask): number => task.id;
 
   const handleGridCellClick = async (
     params: GridCellParams<MemberPublicInfo>,
     event: MuiEvent<React.MouseEvent<HTMLElement>>,
-  ) => await navigate(getTaskLocation(params.row.id), event);
+  ): Promise<void> => await navigate(getTaskLocation(params.row.id), event);
 
   const openMemberInfoDialogFromGrid = (
     event: React.SyntheticEvent,
     member: MemberPublicInfo,
-  ) => {
+  ): void => {
     event.stopPropagation();
     memberInfoDialog.open({ member });
   };
 
-  const createMemberDialogLink = (member: MemberPublicInfo) => {
-    return (
-      <Link
-        sx={{ color: "grey", textDecorationColor: "grey" }}
-        onClick={(event) => openMemberInfoDialogFromGrid(event, member)}
-      >
-        {member.username}
-      </Link>
-    );
-  };
+  const createMemberDialogLink = (member: MemberPublicInfo): JSX.Element => (
+    <Link
+      sx={{ color: "grey", textDecorationColor: "grey" }}
+      onClick={(event) => openMemberInfoDialogFromGrid(event, member)}
+    >
+      {member.username}
+    </Link>
+  );
 
-  const renderTimingCell = (params: GridCellParams<HelperTask>) => {
+  const renderTimingCell = (
+    params: GridCellParams<HelperTask>,
+  ): JSX.Element => {
     const task = params.row;
     return (
       <DataGridCell>
@@ -89,7 +86,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderTaskCell = (params: GridCellParams<HelperTask>) => {
+  const renderTaskCell = (params: GridCellParams<HelperTask>): JSX.Element => {
     const task = params.row;
     return (
       <DataGridCell>
@@ -103,7 +100,9 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderContactCell = (params: GridCellParams<HelperTask>) => {
+  const renderContactCell = (
+    params: GridCellParams<HelperTask>,
+  ): JSX.Element => {
     const task = params.row;
 
     return (
@@ -115,7 +114,9 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     );
   };
 
-  const renderCaptainCell = (params: GridCellParams<HelperTask>) => {
+  const renderCaptainCell = (
+    params: GridCellParams<HelperTask>,
+  ): JSX.Element => {
     const task = params.row;
 
     if (task.captain) {
@@ -139,7 +140,9 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
     }
   };
 
-  const renderHelpersCell = (params: GridCellParams<HelperTask>) => {
+  const renderHelpersCell = (
+    params: GridCellParams<HelperTask>,
+  ): JSX.Element => {
     const task = params.row;
 
     return (

@@ -8,7 +8,7 @@ type Props = {
   task: HelperTask;
 };
 
-const ShareTaskViaWhatsAppIconButton = ({ task }: Props) => {
+const ShareTaskViaWhatsAppIconButton: React.FC<Props> = ({ task }) => {
   const currentUser = useCurrentUser();
   const message = `Dear Sailors ⛵️🥳,
 

@@ -14,8 +14,8 @@ type Props = {
   toggleDrawer: (event: React.SyntheticEvent) => void;
 };
 
-const TopBar = (props: Props) => {
-  const alertEnvironmentInfo = () => {
+const TopBar: React.FC<Props> = (props) => {
+  const alertEnvironmentInfo = (): void => {
     alert(`Current environment: ${config.environment}
 
 PRODUCTION:

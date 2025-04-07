@@ -21,7 +21,7 @@ type Props = {
  * - A simple FAB when only one action is provided
  * - A SpeedDial with multiple actions when more are given
  */
-const SmartSpeedDial = ({ actions }: Props) => {
+const SmartSpeedDial: React.FC<Props> = ({ actions }) => {
   if (actions.length === 0) {
     return null;
   }

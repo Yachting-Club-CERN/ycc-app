@@ -7,7 +7,10 @@ import CannotCancelDialogNotice from "./CannotCancelDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canSignUpAsCaptain } from "../../helpers-utils";
 
-const SignUpAsCaptainActionButton = ({ task, ...props }: TaskActionProps) => {
+const SignUpAsCaptainActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canSignUpAsCaptain(task, currentUser)) {

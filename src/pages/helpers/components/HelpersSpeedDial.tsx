@@ -12,7 +12,7 @@ type Props = {
   task?: HelperTask;
 };
 
-const HelpersSpeedDial = ({ task }: Props) => {
+const HelpersSpeedDial: React.FC<Props> = ({ task }) => {
   const currentUser = useCurrentUser();
 
   if (!currentUser.helpersAppAdminOrEditor) {

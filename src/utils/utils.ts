@@ -1,4 +1,4 @@
-export const isDesktop = () => {
+export const isDesktop = (): boolean => {
   const platform = navigator.userAgentData?.platform ?? navigator.userAgent;
 
   return /Win|Mac|Linux/i.test(platform);
@@ -31,7 +31,7 @@ export const mailtoHref = ({
   subject,
   plainTextBody,
   htmlBody,
-}: MailtoHrefPropsWithBody | MailtoHrefPropsWithoutBody) => {
+}: MailtoHrefPropsWithBody | MailtoHrefPropsWithoutBody): string => {
   const params = [];
   if (subject) {
     params.push(`subject=${encodeURIComponent(subject)}`);

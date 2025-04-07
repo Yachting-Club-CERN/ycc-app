@@ -8,7 +8,7 @@ type Props = {
   task: HelperTask;
 };
 
-const ShareTaskViaEmailIconButton = ({ task }: Props) => {
+const ShareTaskViaEmailIconButton: React.FC<Props> = ({ task }) => {
   const currentUser = useCurrentUser();
   const subject = `Helper task: ${task.title}`;
 

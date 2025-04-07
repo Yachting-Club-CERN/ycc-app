@@ -64,7 +64,7 @@ const SESSION_STORAGE = {
   FILTER_OPTIONS: "helpers.tasks.filterOptions",
 } as const;
 
-const HelperTasksPage = () => {
+const HelperTasksPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
@@ -113,11 +113,10 @@ const HelperTasksPage = () => {
     (_, i) => firstHelperAppYear + i,
   );
 
-  const handleReset = () => {
+  const handleReset = (): void =>
     setFilterOptionsImmediately(getDefaultFilterOptions());
-  };
 
-  const handleYearChange = (event: SelectChangeEvent) => {
+  const handleYearChange = (event: SelectChangeEvent): void => {
     const year =
       event.target.value === allYearsLabel
         ? null
@@ -142,14 +141,16 @@ const HelperTasksPage = () => {
     setFilterOptionsImmediately(newFilterOptions);
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setFilterOptionsWithDelay({
       ...filterOptions,
       search: event.target.value,
     });
   };
 
-  const handleStateChange = (event: SelectChangeEvent<HelperTaskState[]>) => {
+  const handleStateChange = (
+    event: SelectChangeEvent<HelperTaskState[]>,
+  ): void => {
     const value = event.target.value;
     const values = typeof value === "string" ? value.split(",") : value;
 

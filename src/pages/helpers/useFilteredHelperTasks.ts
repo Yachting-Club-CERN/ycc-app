@@ -4,7 +4,7 @@ import { User } from "@/context/auth/AuthenticationContext";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import usePromise, { PromiseOutcome } from "@/hooks/usePromise";
 import { MemberPublicInfo } from "@/model/dtos";
-import { HelperTask, HelperTasks, HelperTaskState } from "@/model/helpers-dtos";
+import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import {
   searchAnyStringProperty,
@@ -29,10 +29,13 @@ export type HelperTaskFilterOptions = {
   states?: HelperTaskState[];
 };
 
-const filterSearchMember = (searchToken: string, member?: MemberPublicInfo) =>
+const filterSearchMember = (
+  searchToken: string,
+  member?: MemberPublicInfo,
+): boolean =>
   (member && searchMemberUsernameOrName(searchToken, member)) ?? false;
 
-const filterSearchTask = (searchToken: string, task: HelperTask) =>
+const filterSearchTask = (searchToken: string, task: HelperTask): boolean =>
   task.category.title.toLowerCase().includes(searchToken) ||
   filterSearchMember(searchToken, task.contact) ||
   filterSearchMember(searchToken, task.captain?.member) ||
@@ -42,7 +45,10 @@ const filterSearchTask = (searchToken: string, task: HelperTask) =>
   // Also searches HelperTask.searchString
   searchAnyStringProperty(searchToken, task);
 
-const filterSearch = (search: string, tasks: HelperTasks) => {
+const filterSearch = (
+  search: string,
+  tasks: Readonly<HelperTask[]>,
+): Readonly<HelperTask[]> => {
   // The user might want to search for a combination of things such as "J80 maintenance jib" or "MicMac Tim"
   const searchTokens = search.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
@@ -58,8 +64,8 @@ const filterSearch = (search: string, tasks: HelperTasks) => {
 const filterFlags = (
   filterOptions: HelperTaskFilterOptions,
   currentUser: User,
-  tasks: HelperTasks,
-) => {
+  tasks: Readonly<HelperTask[]>,
+): Readonly<HelperTask[]> => {
   let filtered = tasks;
 
   if (filterOptions.showOnlyUpcoming) {
@@ -94,8 +100,8 @@ const filterFlags = (
 const filter = (
   filterOptions: HelperTaskFilterOptions,
   user: User,
-  tasks: HelperTasks,
-) => {
+  tasks: Readonly<HelperTask[]>,
+): Readonly<HelperTask[]> => {
   let filtered = filterFlags(filterOptions, user, tasks);
 
   if (filterOptions.search) {
@@ -107,7 +113,7 @@ const filter = (
 
 export const useFilteredHelperTasks = (
   filterOptions: HelperTaskFilterOptions,
-): PromiseOutcome<HelperTasks> => {
+): PromiseOutcome<Readonly<HelperTask[]>> => {
   const currentUser = useCurrentUser();
   const tasks = usePromise(
     (signal?: AbortSignal) =>

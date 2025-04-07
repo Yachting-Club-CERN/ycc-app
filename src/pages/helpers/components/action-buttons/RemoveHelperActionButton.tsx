@@ -13,7 +13,11 @@ type Props = {
   helper: MemberPublicInfo;
 } & TaskActionProps;
 
-const RemoveHelperActionButton = ({ helper, task, ...props }: Props) => {
+const RemoveHelperActionButton: React.FC<Props> = ({
+  helper,
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
 
   if (!canAddOrRemoveMembers(task, currentUser)) {

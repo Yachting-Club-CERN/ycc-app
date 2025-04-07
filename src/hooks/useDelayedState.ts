@@ -19,11 +19,11 @@ const useDelayedState = <S>(
   const [delayedState, setDelayedState] = useState(state);
   const setDelayedStateWithDelay = useDelay(delay, setDelayedState);
 
-  const setImmediately = (newState: S) => {
+  const setImmediately = (newState: S): void => {
     setState(newState);
     setDelayedState(newState);
   };
-  const setWithDelay = (newState: S) => {
+  const setWithDelay = (newState: S): void => {
     setState(newState);
     setDelayedStateWithDelay(newState);
   };

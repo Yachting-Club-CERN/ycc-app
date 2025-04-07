@@ -1,15 +1,17 @@
 import { createContext } from "react";
 
-import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
-import { HelperTaskCategories } from "@/model/helpers-dtos";
+import { LicenceDetailedInfo, MemberPublicInfo } from "@/model/dtos";
+import { HelperTaskCategory } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
 class SharedData {
-  private _helperTaskCategories?: HelperTaskCategories;
-  private _licenceInfos?: LicenceDetailedInfos;
-  private _members: { [year: number]: MemberPublicInfos } = {};
+  private _helperTaskCategories?: HelperTaskCategory[];
+  private _licenceInfos?: LicenceDetailedInfo[];
+  private _members: { [year: number]: MemberPublicInfo[] } = {};
 
-  readonly getHelperTaskCategories = async (signal?: AbortSignal) => {
+  public readonly getHelperTaskCategories = async (
+    signal?: AbortSignal,
+  ): Promise<Readonly<HelperTaskCategory[]>> => {
     if (this._helperTaskCategories === undefined) {
       console.debug("[shared-data] Loading helper task categories");
       this._helperTaskCategories =
@@ -26,7 +28,9 @@ class SharedData {
     return this._helperTaskCategories;
   };
 
-  readonly getLicenceInfos = async (signal?: AbortSignal) => {
+  public readonly getLicenceInfos = async (
+    signal?: AbortSignal,
+  ): Promise<Readonly<LicenceDetailedInfo[]>> => {
     if (this._licenceInfos === undefined) {
       console.debug("[shared-data] Loading licence infos");
       this._licenceInfos = await client.licenceInfos.getAll(signal);
@@ -42,7 +46,10 @@ class SharedData {
     return this._licenceInfos;
   };
 
-  readonly getMembers = async (year: number, signal?: AbortSignal) => {
+  public readonly getMembers = async (
+    year: number,
+    signal?: AbortSignal,
+  ): Promise<Readonly<MemberPublicInfo[]>> => {
     if (this._members[year] === undefined) {
       console.debug(`[shared-data] Loading members for ${year}`);
       this._members[year] = await client.members.getAll(year, signal);
@@ -61,6 +68,7 @@ class SharedData {
 }
 
 const sharedData = new SharedData();
-
 const SharedDataContext = createContext<SharedData>(sharedData);
+
+export { sharedData };
 export default SharedDataContext;

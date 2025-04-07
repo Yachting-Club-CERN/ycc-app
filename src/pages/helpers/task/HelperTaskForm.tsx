@@ -28,10 +28,10 @@ import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedRef from "@/hooks/useDelayedRef";
 import { useNavigate } from "@/hooks/useNavigate";
-import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
+import { LicenceDetailedInfo, MemberPublicInfo } from "@/model/dtos";
 import {
   HelperTask,
-  HelperTaskCategories,
+  HelperTaskCategory,
   HelperTaskCreationRequest,
   HelperTaskMutationRequestBase,
   HelperTaskType,
@@ -47,9 +47,9 @@ import { canEdit, getTaskLocation, isMultiDayShift } from "../helpers-utils";
 type Props = {
   task?: HelperTask;
   newTask: boolean;
-  categories: HelperTaskCategories;
-  members: MemberPublicInfos;
-  licenceInfos: LicenceDetailedInfos;
+  categories: Readonly<HelperTaskCategory[]>;
+  members: Readonly<MemberPublicInfo[]>;
+  licenceInfos: Readonly<LicenceDetailedInfo[]>;
 };
 
 type HelperTaskCreationRequestExtra = Omit<
@@ -73,13 +73,13 @@ type HelperTaskFormData = {
   };
 };
 
-const HelperTaskForm = ({
+const HelperTaskForm: React.FC<Props> = ({
   task,
   newTask,
   categories,
   members,
   licenceInfos,
-}: Props) => {
+}) => {
   const currentUser = useCurrentUser();
   const [error, setError] = useState<unknown>();
   const longDescription = useDelayedRef<string | null | undefined>(
@@ -138,7 +138,7 @@ const HelperTaskForm = ({
   const handleTypeChange = (
     _: React.MouseEvent<HTMLElement>,
     newType: HelperTaskType | null,
-  ) => {
+  ): void => {
     if (newType !== null) {
       setType(newType);
     }
@@ -148,7 +148,7 @@ const HelperTaskForm = ({
     base: HelperTaskMutationRequestBase,
     creation: HelperTaskCreationRequestExtra,
     update: HelperTaskUpdateRequestExtra,
-  ) => {
+  ): Promise<void> => {
     try {
       const mutatedTask =
         !newTask && task
@@ -170,7 +170,7 @@ const HelperTaskForm = ({
   const getConfirmations = (
     base: HelperTaskMutationRequestBase,
     update: HelperTaskUpdateRequestExtra,
-  ) => {
+  ): JSX.Element[] => {
     const confirmations: JSX.Element[] = [];
 
     if (!newTask) {
@@ -259,7 +259,7 @@ const HelperTaskForm = ({
     return confirmations;
   };
 
-  const handleSubmit = async (data: HelperTaskFormData) => {
+  const handleSubmit = async (data: HelperTaskFormData): Promise<void> => {
     setError(undefined);
     const {
       base,

@@ -7,7 +7,7 @@ type Obj = {
   parent?: Obj;
 };
 
-test("Test simple circular reference", () => {
+test("Simple circular reference", () => {
   const obj: Obj = { value: "obj" };
   obj.parent = obj;
   check(
@@ -21,7 +21,7 @@ test("Test simple circular reference", () => {
   );
 });
 
-test("Test longer circular reference", () => {
+test("Longer circular reference", () => {
   const a: Obj = { value: "a" };
   const b: Obj = { value: "b", parent: a };
   const c: Obj = { value: "c", parent: b };
@@ -108,7 +108,7 @@ type Subclass = Superclass & {
 class ToJSONSuperclass {
   private readonly field1: string;
 
-  constructor(field1: string) {
+  public constructor(field1: string) {
     this.field1 = field1;
   }
 
@@ -122,9 +122,9 @@ class ToJSONSuperclass {
 }
 
 class ToJSONSubclass extends ToJSONSuperclass {
-  field2: number;
+  public readonly field2: number;
 
-  constructor(field1: string, field2: number) {
+  public constructor(field1: string, field2: number) {
     super(field1);
     this.field2 = field2;
   }
@@ -135,15 +135,15 @@ class ToJSONSubclass extends ToJSONSuperclass {
 }
 
 class ToJSONSubclassWithoutOverride extends ToJSONSuperclass {
-  field2: number;
+  public readonly field2: number;
 
-  constructor(field1: string, field2: number) {
+  public constructor(field1: string, field2: number) {
     super(field1);
     this.field2 = field2;
   }
 }
 
-test("Test inheritance", () => {
+test("Inheritance", () => {
   const obj1: Superclass = { field1: "Object 1" };
   const obj2: Subclass = { field1: "Object 2", field2: 42 };
 
@@ -162,7 +162,7 @@ test("Test inheritance", () => {
   );
 });
 
-test("Test inheritance of classes implementing toJSONObject()", () => {
+test("Inheritance of classes implementing toJSONObject()", () => {
   const obj1: ToJSONSuperclass = new ToJSONSuperclass("Object 1");
   const obj2: ToJSONSubclass = new ToJSONSubclass("Object 2", 42);
   const obj3: ToJSONSubclassWithoutOverride = new ToJSONSubclassWithoutOverride(

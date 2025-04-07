@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { JSX, useState } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";
 
@@ -8,6 +8,9 @@ type Props = Pick<
   React.ComponentProps<typeof MemberInfoDialog>,
   "member" | "extra"
 >;
+
+type OpenProps = { member: MemberPublicInfo } & Omit<Props, "member">;
+
 const DEFAULT_DIALOG_PROPS = { member: null } as const;
 
 /**
@@ -17,16 +20,18 @@ const DEFAULT_DIALOG_PROPS = { member: null } as const;
  *
  * @returns object with the component to render and dialog functions
  */
-const useMemberInfoDialog = () => {
+const useMemberInfoDialog = (): {
+  component: JSX.Element;
+  open: (props: OpenProps) => void;
+  close: () => void;
+} => {
   const [dialogProps, setDialogProps] = useState<Props>(DEFAULT_DIALOG_PROPS);
 
-  const close = () => setDialogProps(DEFAULT_DIALOG_PROPS);
+  const close = (): void => setDialogProps(DEFAULT_DIALOG_PROPS);
 
   return {
     component: <MemberInfoDialog {...dialogProps} onClose={close} />,
-    open: (props: { member: MemberPublicInfo } & Omit<Props, "member">) => {
-      setDialogProps(props);
-    },
+    open: (props: OpenProps): void => setDialogProps(props),
     close,
   };
 };

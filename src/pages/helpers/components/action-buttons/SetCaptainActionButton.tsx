@@ -6,7 +6,10 @@ import NotificationDialogNotice from "./NotificationDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 import { canSetCaptain } from "../../helpers-utils";
 
-const SetCaptainActionButton = ({ task, ...props }: TaskActionProps) => {
+const SetCaptainActionButton: React.FC<TaskActionProps> = ({
+  task,
+  ...props
+}) => {
   const currentUser = useCurrentUser();
   const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 

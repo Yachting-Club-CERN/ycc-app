@@ -21,7 +21,7 @@ const usePromise = <T>(
   const [error, setError] = useState<unknown>();
   const [pending, setPending] = useState(true);
 
-  const doReset = () => {
+  const doReset = (): void => {
     setResult(undefined);
     setError(undefined);
     setPending(true);
@@ -47,7 +47,7 @@ const usePromise = <T>(
         }
       });
 
-    return () => {
+    return (): void => {
       abortController.abort();
       doReset();
     };

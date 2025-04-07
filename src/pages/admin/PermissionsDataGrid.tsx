@@ -50,14 +50,14 @@ type Props = {
   permissions: HelpersAppPermission[];
 };
 
-const PermissionsDataGrid = ({ permissions }: Props) => {
+const PermissionsDataGrid: React.FC<Props> = ({ permissions }) => {
   const memberInfoDialog = useMemberInfoDialog();
 
-  const getRowId = (permission: HelpersAppPermission) =>
-    permission.member.username;
+  const getRowId = (permission: HelpersAppPermission): number =>
+    permission.member.id;
   const handleGridCellClick = (
     params: GridCellParams<HelpersAppPermission>,
-  ) => {
+  ): void =>
     memberInfoDialog.open({
       member: params.row.member,
       extra: {
@@ -65,7 +65,6 @@ const PermissionsDataGrid = ({ permissions }: Props) => {
         Note: params.row.note ?? "-",
       },
     });
-  };
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { JSX, useState } from "react";
 
 import ConfirmationDialog from "./ConfirmationDialog";
 
@@ -20,7 +20,11 @@ const DEFAULT_DIALOG_PROPS = {
  *
  * @returns object with the component to render and dialog functions
  */
-const useConfirmationDialog = () => {
+const useConfirmationDialog = (): {
+  component: JSX.Element;
+  open: (props: OpenConfirmationDialogProps) => void;
+  close: () => void;
+} => {
   const [dialogProps, setDialogProps] =
     useState<OpenConfirmationDialogProps>(DEFAULT_DIALOG_PROPS);
   const [open, setOpen] = useState(false);
@@ -28,7 +32,7 @@ const useConfirmationDialog = () => {
 
   const { onConfirm, ...dialogPropsWithoutOnConfirm } = dialogProps;
 
-  const close = () => {
+  const close = (): void => {
     setDialogProps(DEFAULT_DIALOG_PROPS);
     setOpen(false);
   };
@@ -51,7 +55,7 @@ const useConfirmationDialog = () => {
         onClose={close}
       />
     ),
-    open: (props: OpenConfirmationDialogProps) => {
+    open: (props: OpenConfirmationDialogProps): void => {
       setDialogProps(props);
       setOpen(true);
     },

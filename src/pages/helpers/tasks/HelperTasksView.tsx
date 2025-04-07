@@ -16,7 +16,7 @@ type Props = {
   filterOptions: HelperTaskFilterOptions;
 };
 
-const HelperTasksView = ({ display, filterOptions }: Props) => {
+const HelperTasksView: React.FC<Props> = ({ display, filterOptions }) => {
   const filteredTasks = useFilteredHelperTasks(filterOptions);
 
   return (

@@ -13,7 +13,10 @@ import { useNavigate as useReactNavigate } from "react-router-dom";
 export const useNavigate = () => {
   const navigate = useReactNavigate();
 
-  return async (location: string, event?: React.MouseEvent<HTMLElement>) => {
+  return async (
+    location: string,
+    event?: React.MouseEvent<HTMLElement>,
+  ): Promise<void> => {
     // Not an <a> but good enough
     // event.button === 1 is a middle click
     // For onClick events it is only accessible here if onMouseDown called event.preventDefault()

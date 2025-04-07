@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 
 const BlockBox = styled(Box)({
@@ -12,7 +12,7 @@ const BlockBox = styled(Box)({
  *
  * Useful when `<div>` is not allowed.
  */
-const SpanBlockBox = (props: React.ComponentProps<typeof Box>) => (
+const SpanBlockBox: React.FC<Omit<BoxProps, "component">> = (props) => (
   <BlockBox component="span" {...props} />
 );
 

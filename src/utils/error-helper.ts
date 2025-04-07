@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 
 import toJson from "./toJson";
 
-const getErrorDetail = (error: AxiosError) => {
+const getErrorDetail = (error: AxiosError): unknown => {
   const data: unknown = error.response?.data;
 
   if (data !== null && typeof data === "object") {
@@ -12,7 +12,7 @@ const getErrorDetail = (error: AxiosError) => {
   }
 };
 
-const getErrorDetailMsg = (detail: unknown) => {
+const getErrorDetailMsg = (detail: unknown): unknown => {
   if (detail !== null && typeof detail === "object") {
     return (detail as Record<string, unknown>)?.msg;
   } else {
@@ -20,7 +20,7 @@ const getErrorDetailMsg = (detail: unknown) => {
   }
 };
 
-const getText = (value: unknown) => {
+const getText = (value: unknown): string => {
   if (value === undefined) {
     return "<undefined>";
   } else if (value === null) {
@@ -74,7 +74,7 @@ const getErrorAsString = (error: Error): string => {
  * @param error an error
  * @returns array of error chain
  */
-export const getErrorChainAsStrings = (error: Error) => {
+export const getErrorChainAsStrings = (error: Error): string[] => {
   const chain: string[] = [];
   chain.push(getErrorAsString(error));
 
@@ -98,7 +98,7 @@ export const getErrorChainAsStrings = (error: Error) => {
  * @param error an error
  * @returns array of error cause chain
  */
-export const getErrorCauseChain = (error: Error) => {
+export const getErrorCauseChain = (error: Error): unknown[] => {
   const chain: unknown[] = [];
 
   let curr: unknown = error.cause;

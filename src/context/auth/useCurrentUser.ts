@@ -1,5 +1,6 @@
+import { User } from "./AuthenticationContext";
 import useAuth from "./useAuth";
 
-const useCurrentUser = () => useAuth().currentUser;
+const useCurrentUser = (): User => useAuth().currentUser;
 
 export default useCurrentUser;

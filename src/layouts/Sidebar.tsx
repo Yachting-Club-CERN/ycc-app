@@ -12,7 +12,7 @@ type Props = {
   toggleDrawer: (open: boolean) => (event: React.SyntheticEvent) => void;
 };
 
-const Sidebar = (props: Props) => {
+const Sidebar: React.FC<Props> = (props) => {
   const sidebarMenu = <SidebarMenu />;
   const commonDrawerSx = {
     width: drawerWidth,

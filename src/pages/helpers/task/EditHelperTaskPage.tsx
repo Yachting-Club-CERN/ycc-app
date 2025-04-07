@@ -14,7 +14,7 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
-const EditHelperTaskPage = () => {
+const EditHelperTaskPage: React.FC = () => {
   const { id } = useParams();
   const task = usePromise(
     (signal?: AbortSignal) => {

@@ -9,12 +9,13 @@ import useLicenceInfos from "@/context/shared-data/useLicenceInfos";
 import useMembers from "@/context/shared-data/useMembers";
 import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
+import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
-const NewHelperTaskPage = () => {
+const NewHelperTaskPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdminOrEditor) {
@@ -24,14 +25,16 @@ const NewHelperTaskPage = () => {
   const [searchParams] = useSearchParams();
   const taskToCloneId = parseInt(searchParams.get("from") ?? "NaN");
 
-  const getHelperTask = (signal?: AbortSignal) => {
-    if (isNaN(taskToCloneId)) {
-      return Promise.resolve(null);
-    } else {
-      return client.helpers.getTaskById(taskToCloneId, signal);
-    }
-  };
-  const taskToClone = usePromise(getHelperTask, [taskToCloneId]);
+  const taskToClone = usePromise(
+    (signal?: AbortSignal): Promise<HelperTask | null> => {
+      if (isNaN(taskToCloneId)) {
+        return Promise.resolve(null);
+      } else {
+        return client.helpers.getTaskById(taskToCloneId, signal);
+      }
+    },
+    [taskToCloneId],
+  );
 
   const helperTaskCategories = useHelperTaskCategories();
   const members = useMembers(getCurrentYear());

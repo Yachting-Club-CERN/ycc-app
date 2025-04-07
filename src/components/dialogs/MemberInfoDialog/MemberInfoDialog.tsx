@@ -17,7 +17,7 @@ type Props = {
   onClose: () => void;
 };
 
-const MemberInfoDialog = ({ member, extra, onClose }: Props) => {
+const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
   return (
     <Dialog
       open={!!member}

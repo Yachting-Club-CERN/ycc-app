@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { JSX, useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
@@ -38,12 +38,12 @@ type Props = {
   refreshTask: (task: HelperTask) => void;
 };
 
-const HelperTaskView = ({ task, refreshTask }: Props) => {
+const HelperTaskView: React.FC<Props> = ({ task, refreshTask }) => {
   const [error, setError] = useState<unknown>();
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
 
-  const createMemberDialogLink = (member: MemberPublicInfo) => (
+  const createMemberDialogLink = (member: MemberPublicInfo): JSX.Element => (
     <Link onClick={() => memberInfoDialog.open({ member })}>
       {getFullNameAndUsername(member)}
     </Link>

@@ -3,19 +3,22 @@ import dayjs from "dayjs";
 
 import { ADMIN_USER } from "./test-constants";
 
-const waitForAuthPage = async (page: Page) => {
+const waitForAuthPage = async (page: Page): Promise<void> => {
   console.info("[test] waitForAuthPage()");
   await page.waitForURL("**/protocol/openid-connect/auth**");
 };
 
-const waitForNonAuthPage = async (page: Page) => {
+const waitForNonAuthPage = async (page: Page): Promise<void> => {
   console.info("[test] waitForNonAuthPage()");
   await page.waitForFunction(
     () => !window.location.href.includes("/openid-connect/"),
   );
 };
 
-export const expectSameElements = (actual: string[], expected: string[]) => {
+export const expectSameElements = (
+  actual: string[],
+  expected: string[],
+): void => {
   expect([...actual].sort((a, b) => a.localeCompare(b))).toEqual(
     [...expected].sort((a, b) => a.localeCompare(b)),
   );

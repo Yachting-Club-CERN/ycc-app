@@ -41,7 +41,7 @@ type Props = {
   onUpdate: (html: string) => void;
 };
 
-const RichTextEditor = ({
+const RichTextEditor: React.FC<Props> = ({
   initialContent,
   placeholder,
   minHeight,
@@ -49,7 +49,7 @@ const RichTextEditor = ({
   onBlur,
   onCreate,
   onUpdate,
-}: Props) => {
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -75,7 +75,7 @@ const RichTextEditor = ({
     onUpdate: ({ editor }) => onUpdate(editor.getHTML()),
   });
 
-  const handleAddImageClick = () => {
+  const handleAddImageClick = (): void => {
     const url = window.prompt("Image URL:");
     if (!editor || !url) {
       return;

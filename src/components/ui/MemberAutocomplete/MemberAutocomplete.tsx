@@ -14,11 +14,11 @@ type Props = {
   sx?: SxProps<Theme>;
 };
 
-const MemberAutocomplete = ({ onChange, sx }: Props) => {
+const MemberAutocomplete: React.FC<Props> = ({ onChange, sx }) => {
   const members = useMembers(getCurrentYear());
   const [selected, setSelected] = useState<MemberPublicInfo | null>(null);
 
-  const handleChange = (newValue: MemberPublicInfo | null) => {
+  const handleChange = (newValue: MemberPublicInfo | null): void => {
     setSelected(newValue);
     onChange(newValue);
   };

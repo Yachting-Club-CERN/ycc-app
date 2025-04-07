@@ -3,11 +3,11 @@ import { test, expect } from "vitest";
 
 import getErrorText from "../error-helper";
 
-const check = (error: unknown, expected: string) => {
+const check = (error: unknown, expected: string): void => {
   expect(getErrorText(error)).toEqual(expected);
 };
 
-test("Test non-error types", () => {
+test("Non-error types", () => {
   check("Some string error", "Some string error");
 
   check(undefined, "<undefined>");
@@ -44,7 +44,7 @@ test("Test non-error types", () => {
   );
 });
 
-test("Test Error", () => {
+test("Error", () => {
   check(new Error("Error 1"), "Error: Error 1");
 
   check(
@@ -53,7 +53,7 @@ test("Test Error", () => {
   );
 });
 
-test("Test AxiosError", () => {
+test("AxiosError", () => {
   check(
     new AxiosError("Axios error 1"),
     "AxiosError: Axios error 1 [undefined]",

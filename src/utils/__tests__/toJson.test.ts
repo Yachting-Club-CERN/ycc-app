@@ -2,11 +2,15 @@ import { test, expect } from "vitest";
 
 import toJson from "../toJson";
 
-export const check = (value: unknown, expected: string, format?: boolean) => {
+export const check = (
+  value: unknown,
+  expected: string,
+  format?: boolean,
+): void => {
   expect(toJson(value, format)).toEqual(expected);
 };
 
-test("Test general data types", () => {
+test("General data types", () => {
   // Booleans
   check(false, "false");
   check(true, "true");
@@ -94,7 +98,7 @@ test("Test general data types", () => {
   );
 });
 
-test("Test complex object with special values", () => {
+test("Complex object with special values", () => {
   check(
     {
       booleans: [false, true],
@@ -105,11 +109,11 @@ test("Test complex object with special values", () => {
         null,
         undefined,
         Symbol("sym"),
-        function () {},
-        function (a: number, b: number) {
+        function (): void {},
+        function (a: number, b: number): number {
           return a + b;
         },
-        (c: number, d: number) => c + d,
+        (c: number, d: number): number => c + d,
       ],
       errors: [
         Error("Error", { cause: Error("Cause") }),

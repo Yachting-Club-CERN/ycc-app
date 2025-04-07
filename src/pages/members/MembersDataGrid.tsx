@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/DataGrid/render-utils";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useMembers from "@/context/shared-data/useMembers";
-import { MemberPublicInfo, MemberPublicInfos } from "@/model/dtos";
+import { MemberPublicInfo } from "@/model/dtos";
 import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
@@ -73,16 +73,20 @@ type Props = {
   search: string;
 };
 
-const MembersDataGrid = ({ year, search }: Props) => {
+const MembersDataGrid: React.FC<Props> = ({ year, search }) => {
   const members = useMembers(year);
 
   const memberInfoDialog = useMemberInfoDialog();
 
-  const getRowId = (member: MemberPublicInfo) => member.username;
-  const handleGridCellClick = (params: GridCellParams<MemberPublicInfo>) =>
-    memberInfoDialog.open({ member: params.row });
+  const getRowId = (member: MemberPublicInfo): number => member.id;
+  const handleGridCellClick = (
+    params: GridCellParams<MemberPublicInfo>,
+  ): void => memberInfoDialog.open({ member: params.row });
 
-  const filter = (search: string, members: MemberPublicInfos) => {
+  const filter = (
+    search: string,
+    members: Readonly<MemberPublicInfo[]>,
+  ): Readonly<MemberPublicInfo[]> => {
     // User typically wants to search for one thing, e.g., name or phone number
     const s = search.toLowerCase().trim();
     if (s && members) {

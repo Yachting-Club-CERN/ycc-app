@@ -10,13 +10,13 @@ type Props = {
   "direction" | "spacing" | "useFlexGap" | "flexWrap" | "display"
 >;
 
-const RowStack = ({
+const RowStack: React.FC<Props> = ({
   wrap,
   compact = false,
   alignItems = "center",
   children,
   ...rest
-}: Props) => {
+}) => {
   // Dynamic way to detect if the children are empty (e.g., components which return null)
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasVisibleContent, setHasVisibleContent] = useState(true);

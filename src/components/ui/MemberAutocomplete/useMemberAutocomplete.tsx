@@ -1,11 +1,17 @@
 import { SxProps } from "@mui/material";
-import { useRef } from "react";
+import { JSX, useRef } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";
 
 import MemberAutocomplete from "./MemberAutocomplete";
 
-const useMemberAutocomplete = (componentSx?: SxProps) => {
+const useMemberAutocomplete = (
+  componentSx?: SxProps,
+): {
+  component: JSX.Element;
+  requireSelectedMember: MemberPublicInfo;
+  clearSelection: () => void;
+} => {
   const selectedMemberRef = useRef<MemberPublicInfo | null>(null);
 
   return {
@@ -15,13 +21,13 @@ const useMemberAutocomplete = (componentSx?: SxProps) => {
         sx={componentSx}
       />
     ),
-    get requireSelectedMember() {
+    get requireSelectedMember(): MemberPublicInfo {
       if (!selectedMemberRef.current) {
         throw new Error("No member selected");
       }
       return selectedMemberRef.current;
     },
-    clearSelection: () => {
+    clearSelection: (): void => {
       selectedMemberRef.current = null;
     },
   };

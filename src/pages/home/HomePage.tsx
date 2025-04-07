@@ -3,7 +3,7 @@ import ReadingBox from "@/components/layout/ReadingBox";
 import MyTasksView from "./MyTasksView";
 import ProfileView from "./ProfileView";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <ReadingBox>
       <MyTasksView />
