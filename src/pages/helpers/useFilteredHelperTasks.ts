@@ -39,6 +39,7 @@ const filterSearchTask = (searchToken: string, task: HelperTask) =>
   task.helpers.some((helper) =>
     filterSearchMember(searchToken, helper.member),
   ) ||
+  // Also searches HelperTask.searchString
   searchAnyStringProperty(searchToken, task);
 
 const filterSearch = (search: string, tasks: HelperTasks) => {

@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 
-import { CONFIRM_BUTTON_DELAY_SECONDS } from "@/utils/constants";
+import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
 
 type Props = {
   onConfirm: () => void;
@@ -16,7 +16,7 @@ const ConfirmButton = (props: Props) => {
   const delayed = props.delayed ?? false;
 
   const [enabled, setEnabled] = useState(!delayed);
-  const [countdown, setCountdown] = useState(CONFIRM_BUTTON_DELAY_SECONDS);
+  const [countdownMs, setCountdownMs] = useState(CONFIRM_BUTTON_DELAY_MS);
 
   useEffect(() => {
     if (!delayed) {
@@ -24,13 +24,13 @@ const ConfirmButton = (props: Props) => {
     }
 
     const interval = setInterval(() => {
-      setCountdown((c) => c - 1);
-    }, 1000);
+      setCountdownMs((c) => c - 100);
+    }, 100);
 
     const timeout = setTimeout(() => {
       setEnabled(true);
       clearInterval(interval);
-    }, CONFIRM_BUTTON_DELAY_SECONDS * 1000);
+    }, CONFIRM_BUTTON_DELAY_MS);
 
     return () => {
       clearTimeout(timeout);
@@ -47,7 +47,7 @@ const ConfirmButton = (props: Props) => {
       disabled={!enabled}
       loading={loading}
     >
-      {enabled ? text : `${text} (${countdown}s)`}
+      {enabled ? text : `${text} (${Math.ceil(countdownMs / 1000)}s)`}
     </Button>
   );
 };

@@ -1,6 +1,7 @@
 import { MemberPublicInfo } from "@/model/dtos";
+import dayjs from "@/utils/dayjs";
 
-export const SEARCH_DELAY_MS = 100;
+import { formatDate, formatDateWithDay } from "./date-utils";
 
 export const searchAnyStringProperty = (search: string, object: object) => {
   const s = search.toLowerCase().trim();
@@ -20,3 +21,6 @@ export const searchMemberUsernameOrName = (
     `${member.lastName} ${member.firstName}`.toLowerCase().includes(s)
   );
 };
+
+export const toDateSearchString = (date: dayjs.Dayjs | null) =>
+  date === null ? "" : `${formatDate(date)} ${formatDateWithDay(date)}`;

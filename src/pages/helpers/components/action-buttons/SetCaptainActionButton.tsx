@@ -8,12 +8,11 @@ import { canSetCaptain } from "../../helpers-utils";
 
 const SetCaptainActionButton = ({ task, ...props }: TaskActionProps) => {
   const currentUser = useCurrentUser();
+  const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 
   if (!canSetCaptain(task, currentUser)) {
     return null;
   }
-
-  const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 
   return (
     <TaskActionButton

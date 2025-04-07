@@ -5,8 +5,8 @@ import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import useDelay from "@/hooks/useDelay";
+import { SEARCH_DELAY_MS } from "@/utils/constants";
 import dayjs from "@/utils/dayjs";
-import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
 import MembersDataGrid from "./MembersDataGrid";
 

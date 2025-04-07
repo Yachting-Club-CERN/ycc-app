@@ -6,7 +6,7 @@ import NotFoundPage from "@/pages/error/NotFoundPage";
 import EditHelperTaskPage from "@/pages/helpers/task/EditHelperTaskPage";
 import HelperTaskPage from "@/pages/helpers/task/HelperTaskPage";
 import NewHelperTaskPage from "@/pages/helpers/task/NewHelperTaskPage";
-import HelperTaskListPage from "@/pages/helpers/task-list/HelperTaskListPage";
+import HelperTasksPage from "@/pages/helpers/tasks/HelperTasksPage";
 import HomePage from "@/pages/home/HomePage";
 import MemberListPage from "@/pages/members/MembersListPage";
 import PlaygroundEditorPage from "@/pages/playground/PlaygroundEditorPage";
@@ -25,7 +25,7 @@ const AppRoutes = () => {
 
         <Route path="/" element={<HomePage />} />
         <Route path="/members" element={<MemberListPage />} />
-        <Route path="/helpers" element={<HelperTaskListPage />} />
+        <Route path="/helpers" element={<HelperTasksPage />} />
         <Route path="/helpers/tasks/new" element={<NewHelperTaskPage />} />
         <Route path="/helpers/tasks/:id" element={<HelperTaskPage />} />
         <Route

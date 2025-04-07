@@ -1,5 +1,14 @@
 /// <reference types="vite/client" />
 
+interface Navigator {
+  userAgentData?: NavigatorUserAgentData;
+  mobile?: boolean;
+}
+
+interface NavigatorUserAgentData {
+  platform?: string;
+}
+
 interface Window {
   oauth2Token?: string;
 }

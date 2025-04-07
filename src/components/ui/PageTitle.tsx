@@ -1,35 +1,20 @@
 import Typography from "@mui/material/Typography";
 
+import Span from "../layout/Span";
+
 type Props = {
   value: string;
   mobileValue?: string;
 };
 
 const PageTitle = ({ value, mobileValue }: Props) => {
-  // Do not duplicate the title in the DOM if the mobile value is the same as the value
-  const commonProps = {
-    variant: "h2",
-    className: "ycc-page-title",
-    mb: 2,
-  } as const;
-
-  return !mobileValue || value === mobileValue ? (
-    <Typography {...commonProps}>{value}</Typography>
-  ) : (
-    <>
-      <Typography
-        {...commonProps}
-        sx={{ display: { xs: "block", sm: "none" } }}
-      >
+  return (
+    <Typography variant="h2" className="ycc-page-title" mb={2}>
+      <Span sx={{ display: { xs: "inline", sm: "none" } }}>
         {mobileValue ?? value}
-      </Typography>
-      <Typography
-        {...commonProps}
-        sx={{ display: { xs: "none", sm: "block" } }}
-      >
-        {value}
-      </Typography>
-    </>
+      </Span>
+      <Span sx={{ display: { xs: "none", sm: "inline" } }}>{value}</Span>
+    </Typography>
   );
 };
 

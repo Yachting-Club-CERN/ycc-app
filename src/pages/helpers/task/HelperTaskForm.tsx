@@ -18,7 +18,6 @@ import {
   DateTimePickerElement,
   TimePickerElement,
 } from "react-hook-form-mui/date-pickers";
-import { useNavigate } from "react-router-dom";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import RowStack from "@/components/layout/RowStack";
@@ -28,6 +27,7 @@ import RichTextEditor from "@/components/ui/RichTextEditor/RichTextEditor";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedRef from "@/hooks/useDelayedRef";
+import { useNavigate } from "@/hooks/useNavigate";
 import { LicenceDetailedInfos, MemberPublicInfos } from "@/model/dtos";
 import {
   HelperTask,

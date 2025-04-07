@@ -9,12 +9,12 @@ import {
   MuiEvent,
   gridClasses,
 } from "@mui/x-data-grid";
-import { useNavigate } from "react-router-dom";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import DataGridCell from "@/components/ui/DataGrid/DataGridCell";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { useNavigate } from "@/hooks/useNavigate";
 import { MemberPublicInfo } from "@/model/dtos";
 import {
   HelperTask,
@@ -57,25 +57,7 @@ const HelperTasksDataGrid = ({ tasks }: Props) => {
   const handleGridCellClick = async (
     params: GridCellParams<MemberPublicInfo>,
     event: MuiEvent<React.MouseEvent<HTMLElement>>,
-  ) => {
-    const location = getTaskLocation(params.row.id);
-
-    // Not an <a> but good enough
-    if (event.ctrlKey) {
-      // Note: blur/focus might not work depending on the browser
-      window.open(location, "_blank")?.blur(); //NOSONAR
-      window.focus();
-    } else if (event.shiftKey) {
-      // https://stackoverflow.com/a/726803
-      window.open(
-        location,
-        "_blank",
-        `height=${window.innerHeight},width=${window.innerWidth})`,
-      );
-    } else {
-      await navigate(location);
-    }
-  };
+  ) => await navigate(getTaskLocation(params.row.id), event);
 
   const openMemberInfoDialogFromGrid = (
     event: React.SyntheticEvent,

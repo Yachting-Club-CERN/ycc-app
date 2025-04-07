@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
- * This hook is used to delay the execution of a callback function.
+ * This hook is used to delay (debounce) the execution of a callback function.
  *
  * The delay is reset every time the returned function is called. It is useful to avoid lag when the user is typing.
  *
@@ -12,15 +12,29 @@ import { useRef } from "react";
 const useDelay = <T>(delayMs: number, callback: (event: T) => void) => {
   const timeout = useRef<number>(undefined);
 
-  return (event: T) => {
-    if (timeout.current) {
-      clearTimeout(timeout.current);
-    }
+  const delayed = useCallback(
+    (event: T) => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
 
-    timeout.current = window.setTimeout(() => {
-      callback(event);
-    }, delayMs);
-  };
+      timeout.current = window.setTimeout(() => {
+        callback(event);
+      }, delayMs);
+    },
+    [callback, delayMs],
+  );
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
+    };
+  }, []);
+
+  return delayed;
 };
 
 export default useDelay;

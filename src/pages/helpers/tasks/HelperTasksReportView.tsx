@@ -1,5 +1,5 @@
 import Link from "@mui/material/Link";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import { HelperTasks } from "@/model/helpers-dtos";
@@ -12,13 +12,6 @@ type Props = {
 };
 
 const HelperTasksReportView = ({ tasks }: Props) => {
-  const navigate = useNavigate();
-
-  const handleClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    await navigate(event.currentTarget.href);
-  };
-
   return (
     <>
       <SpacedTypography>
@@ -30,12 +23,7 @@ const HelperTasksReportView = ({ tasks }: Props) => {
           const taskLocation = getTaskLocation(task.id);
           return (
             <li key={task.id}>
-              <Link
-                /* This is needed so we get a clickable link during copy-paste. */
-                href={taskLocation}
-                /* This is needed to avoid complete page reload on navigation. */
-                onClick={handleClick}
-              >
+              <Link component={RouterLink} to={taskLocation}>
                 {task.title} &mdash; {createTimingInfoLine(task)}
               </Link>
             </li>

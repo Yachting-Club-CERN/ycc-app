@@ -22,14 +22,14 @@ import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
+import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
-import { SEARCH_DELAY_MS } from "@/utils/search-utils";
 
 import HelpersSpeedDial from "../components/HelpersSpeedDial";
 import { doneEmoji, validatedEmoji } from "../helpers-format";
 import { HelperTaskFilterOptions } from "../useFilteredHelperTasks";
 import HelperTasksView from "./HelperTasksView";
-import { HelperTaskListDisplay, HelperTaskListDisplayOptions } from "./types";
+import { HelperTasksDisplay, HelperTasksDisplayOptions } from "./types";
 
 const checkArrayContainsAllElements = <T,>(states: T[], arr: T[]): boolean => {
   return arr.every((state) => states.includes(state));
@@ -64,7 +64,7 @@ const SESSION_STORAGE = {
   FILTER_OPTIONS: "helpers.tasks.filterOptions",
 } as const;
 
-const HelperTaskListPage = () => {
+const HelperTasksPage = () => {
   const currentUser = useCurrentUser();
   const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
@@ -87,10 +87,10 @@ const HelperTaskListPage = () => {
       return getDefaultFilterOptions();
     }
   }, SEARCH_DELAY_MS);
-  const [display, setDisplay] = useState<HelperTaskListDisplay>(() => {
+  const [display, setDisplay] = useState<HelperTasksDisplay>(() => {
     const savedDisplay = sessionStorage.getItem(SESSION_STORAGE.DISPLAY);
-    return savedDisplay && HelperTaskListDisplayOptions.includes(savedDisplay)
-      ? (savedDisplay as HelperTaskListDisplay)
+    return savedDisplay && HelperTasksDisplayOptions.includes(savedDisplay)
+      ? (savedDisplay as HelperTasksDisplay)
       : "cards";
   });
 
@@ -187,7 +187,7 @@ const HelperTaskListPage = () => {
         <ToggleButtonGroup
           value={display}
           exclusive
-          onChange={(_, newDisplay: HelperTaskListDisplay | null) => {
+          onChange={(_, newDisplay: HelperTasksDisplay | null) => {
             if (newDisplay !== null) {
               setDisplay(newDisplay);
             }
@@ -341,4 +341,4 @@ const HelperTaskListPage = () => {
   );
 };
 
-export default HelperTaskListPage;
+export default HelperTasksPage;

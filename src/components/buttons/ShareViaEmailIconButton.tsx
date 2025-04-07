@@ -2,14 +2,25 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
+import { mailtoHref } from "@/utils/utils";
+
 type Props = {
   subject: string;
-  body: string;
+  plainTextBody: string;
+  htmlBody: string;
 };
 
-const ShareViaEmailIconButton = ({ subject, body }: Props) => {
+const ShareViaEmailIconButton = ({
+  subject,
+  plainTextBody,
+  htmlBody,
+}: Props) => {
   const handleClick = () => {
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoHref({
+      subject,
+      plainTextBody,
+      htmlBody,
+    });
   };
 
   return (

@@ -31,7 +31,6 @@ export default defineConfig(({ mode }) => {
       tsconfigPaths(),
       // See stats.html for chunk details (after running pnpm build)
       visualizer(),
-
       VitePWA({
         registerType: "autoUpdate",
         includeAssets: ["favicon.ico", "robots.txt"],
@@ -66,24 +65,69 @@ export default defineConfig(({ mode }) => {
               src: "logo192.png",
               type: "image/png",
               sizes: "192x192",
-              purpose: "any maskable",
             },
             {
               src: "logo512.png",
               type: "image/png",
               sizes: "512x512",
-              purpose: "any maskable",
             },
             {
               src: "logo1024.png",
               type: "image/png",
               sizes: "1024x1024",
-              purpose: "any maskable",
             },
             {
               src: "logo.svg",
               type: "image/svg+xml",
-              purpose: "any maskable",
+            },
+            // https://maskable.app/editor
+            {
+              purpose: "maskable",
+              sizes: "1024x1024",
+              src: "maskable_icon.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "48x48",
+              src: "maskable_icon_x48.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "72x72",
+              src: "maskable_icon_x72.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "96x96",
+              src: "maskable_icon_x96.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "128x128",
+              src: "maskable_icon_x128.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "192x192",
+              src: "maskable_icon_x192.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "384x384",
+              src: "maskable_icon_x384.png",
+              type: "image/png",
+            },
+            {
+              purpose: "maskable",
+              sizes: "512x512",
+              src: "maskable_icon_x512.png",
+              type: "image/png",
             },
           ],
         },
