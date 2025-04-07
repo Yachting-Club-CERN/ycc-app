@@ -22,7 +22,7 @@ type MailtoHrefPropsWithoutBody = MailtoHrefPropsCommon & {
 };
 
 /**
- * Generates a `mailto:` hyperlink with optional subject and body content.
+ * Generates a `mailto:` link with optional subject and body content.
  *
  * Uses `htmlBody` on desktop if available and `plainTextBody` on mobile.
  */
