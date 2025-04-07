@@ -1,5 +1,7 @@
 import Link from "@mui/material/Link";
 
+import { mailtoHref } from "@/utils/utils";
+
 type Props = {
   email?: string | null;
 };
@@ -10,7 +12,7 @@ const EmailLink = ({ email }: Props) => {
   }
 
   return (
-    <Link href={`mailto:${email}`} target="_blank" rel="noopener">
+    <Link href={mailtoHref({ to: email })} target="_blank" rel="noopener">
       {email}
     </Link>
   );

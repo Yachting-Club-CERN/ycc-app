@@ -8,12 +8,11 @@ import { canAddHelper } from "../../helpers-utils";
 
 const AddHelperActionButton = ({ task, ...props }: TaskActionProps) => {
   const currentUser = useCurrentUser();
+  const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 
   if (!canAddHelper(task, currentUser)) {
     return null;
   }
-
-  const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 
   return (
     <TaskActionButton

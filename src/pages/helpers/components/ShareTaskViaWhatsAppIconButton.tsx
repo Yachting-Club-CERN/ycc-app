@@ -20,7 +20,7 @@ _${task.shortDescription}_
 
 Open in the App: ${window.location.href}
 
-Cheers,
+Fair Winds,
 ${currentUser.firstName} ${currentUser.lastName}`;
 
   return <ShareViaWhatsAppIconButton message={message} />;

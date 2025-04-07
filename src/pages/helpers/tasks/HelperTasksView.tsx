@@ -9,10 +9,10 @@ import {
 } from "../useFilteredHelperTasks";
 import HelperTasksDataGrid from "./HelperTasksDataGrid";
 import HelperTasksReportView from "./HelperTasksReportView";
-import { HelperTaskListDisplay } from "./types";
+import { HelperTasksDisplay } from "./types";
 
 type Props = {
-  display: HelperTaskListDisplay;
+  display: HelperTasksDisplay;
   filterOptions: HelperTaskFilterOptions;
 };
 

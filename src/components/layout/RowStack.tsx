@@ -4,12 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 type Props = {
   wrap: boolean;
   compact?: boolean;
+  alignItems?: StackProps["alignItems"];
 } & Omit<
   StackProps,
-  "direction" | "spacing" | "useFlexGap" | "flexWrap" | "alignItems" | "display"
+  "direction" | "spacing" | "useFlexGap" | "flexWrap" | "display"
 >;
 
-const RowStack = ({ wrap, compact = false, children, ...rest }: Props) => {
+const RowStack = ({
+  wrap,
+  compact = false,
+  alignItems = "center",
+  children,
+  ...rest
+}: Props) => {
   // Dynamic way to detect if the children are empty (e.g., components which return null)
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasVisibleContent, setHasVisibleContent] = useState(true);
@@ -38,7 +45,7 @@ const RowStack = ({ wrap, compact = false, children, ...rest }: Props) => {
       spacing={compact ? 1 : 2}
       useFlexGap={wrap}
       flexWrap={wrap ? "wrap" : undefined}
-      alignItems="center"
+      alignItems={alignItems}
       display={hasVisibleContent ? "flex" : "none"}
       {...rest}
     >

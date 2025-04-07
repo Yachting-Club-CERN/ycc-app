@@ -1,14 +1,15 @@
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
 import { YCC_COMMITTEE_EMAIL_ADDRESS } from "@/utils/constants";
+import { mailtoHref } from "@/utils/utils";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 
@@ -29,16 +30,26 @@ const PermissionsPage = () => {
     const to =
       `${YCC_COMMITTEE_EMAIL_ADDRESS},` +
       permissions.result.map((permission) => permission.member.email).join(",");
-    const subject = "Helper Task Management Permissions";
 
-    const body = `Dear Sailors ⛵️🥳,
-      <br /><br />
-      
-      <br /><br />
-      Cheers,<br />
-      ${currentUser.firstName}`;
+    const plainTextBody = `Dear Sailors ⛵️🥳,
 
-    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+
+Fair Winds,
+${currentUser.firstName}`;
+
+    const htmlBody = `Dear Sailors ⛵️🥳,
+<br /><br />
+
+<br /><br />
+Fair Winds,<br />
+${currentUser.firstName}`;
+
+    window.location.href = mailtoHref({
+      to,
+      plainTextBody,
+      htmlBody,
+    });
   };
 
   return (
@@ -47,11 +58,11 @@ const PermissionsPage = () => {
 
       {permissions.result && (
         <>
-          <RowStack wrap={true}>
-            <SpacedTypography>
+          <RowStack wrap={true} mb={2}>
+            <Typography>
               Currently {permissions.result.length} members have permissions to
               manage helper tasks.{" "}
-            </SpacedTypography>
+            </Typography>
             <Button variant="contained" onClick={handleClick}>
               Send them an email
             </Button>

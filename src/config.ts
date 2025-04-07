@@ -1,9 +1,4 @@
-enum Environment {
-  PRODUCTION = "PRODUCTION",
-  TEST = "TEST",
-  DEVELOPMENT = "DEVELOPMENT",
-  LOCAL = "LOCAL",
-}
+import { Environment } from "./environment";
 
 type Config = {
   environment: Environment;

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import dayjs from "@/utils/dayjs";
+import { toDateSearchString } from "@/utils/search-utils";
 
 import {
   LicenceInfoSchema,
@@ -106,15 +107,34 @@ export const HelperTaskSchema = z
     validatedBy: MemberPublicInfoSchema.nullable(),
     validationComment: z.string().nullable(),
   })
-  .transform((values) => ({
-    ...values,
-    get type() {
-      return getHelperTaskType(values);
-    },
-    get state() {
-      return getHelperTaskState(values);
-    },
-  }))
+  .transform((values) => {
+    // Search string for object fields
+    // Enums are represented as strings and can be searched using searchAnyStringProperty()
+    let searchString: string | undefined;
+
+    return {
+      ...values,
+      get type() {
+        return getHelperTaskType(values);
+      },
+      get state() {
+        return getHelperTaskState(values);
+      },
+      get searchString() {
+        if (searchString !== undefined) {
+          return searchString;
+        }
+
+        // Convert dates to search strings (only the date is searchable, not the time)
+        searchString = [values.startsAt, values.endsAt, values.deadline]
+          .map((date) => toDateSearchString(date))
+          .filter((dateStr) => dateStr.length > 0)
+          .join(" ");
+
+        return searchString;
+      },
+    };
+  })
   // Make it readonly() since mutations would not update calculated properties
   .readonly();
 export type HelperTask = z.infer<typeof HelperTaskSchema>;

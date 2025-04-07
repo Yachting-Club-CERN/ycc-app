@@ -2,7 +2,6 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import Typography from "@mui/material/Typography";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -10,38 +9,43 @@ import { auth } from "@/context/auth/AuthenticationContext";
 
 import App from "./App";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
-);
+if (window.location.pathname === "/silent-check-sso") {
+  // Normally one would use a public silent-check-sso.html file, but:
+  // - This application is served by serve for simplicity
+  // - Serve in SPA mode automatically redirects *.html requests to * before checking whether the static files exists
+  // - Serve without SPA mode caused other troubles in the past
+  //
+  // If further issues arise with serve, switch to Nginx
+  console.debug("[main] Silent check SSO");
+  window.parent.postMessage(window.location.href, window.location.origin);
+} else {
+  console.info("[main] Starting YCC App...");
 
-// Hack to display something in case loading takes a while
-let authFinally = false;
-setTimeout(() => {
-  if (!authFinally) {
-    root.render(<Typography>Authenticating...</Typography>);
-  }
-}, 2000);
+  const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement,
+  );
 
-void auth.init().finally(() => {
-  authFinally = true;
-  if (auth.authenticated) {
-    if (auth.currentUser.activeMember) {
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>,
-      );
+  void auth.init().finally(() => {
+    console.debug("[main] Authentication initialized");
+
+    if (auth.authenticated) {
+      if (auth.currentUser.activeMember) {
+        root.render(
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>,
+        );
+      } else {
+        alert(
+          "Sorry, but it seems that you are not an active member of YCC.\n" +
+            "Maybe your membership fee for the current year was not recorded yet.\n" +
+            `If this is the case, please contact us with your username which is ${auth.currentUser.username}.`,
+        );
+        void auth.logout();
+      }
     } else {
-      const message =
-        "Sorry, but it seems that you are not an active member of YCC.\n" +
-        "Maybe your membership fee for the current year was not recorded yet.\n" +
-        `If this is the case, please contact us with your username which is ${auth.currentUser.username}.`;
-      alert(message);
-      root.render(<Typography>{message}</Typography>);
-      void auth.logout();
+      alert("Authentication failed");
+      window.location.reload();
     }
-  } else {
-    alert("Authentication failed");
-    window.location.reload();
-  }
-});
+  });
+}

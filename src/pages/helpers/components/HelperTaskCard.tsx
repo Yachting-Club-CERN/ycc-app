@@ -2,8 +2,9 @@ import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
+import { useNavigate } from "@/hooks/useNavigate";
 import { HelperTask } from "@/model/helpers-dtos";
 
 import { getTaskLocation } from "../helpers-utils";
@@ -15,6 +16,9 @@ type Props = {
 
 const HelperTaskCard = ({ task }: Props) => {
   const navigate = useNavigate();
+  const handleClick = async (event: React.MouseEvent<HTMLElement>) =>
+    await navigate(getTaskLocation(task.id), event);
+
   return (
     <Card
       key={task.id}
@@ -23,9 +27,9 @@ const HelperTaskCard = ({ task }: Props) => {
         display: "flex",
         width: 280,
       }}
-      onClick={async () => {
-        await navigate(getTaskLocation(task.id));
-      }}
+      onClick={handleClick}
+      onAuxClick={handleClick}
+      onMouseDown={(event) => event.preventDefault()}
     >
       <CardActionArea>
         <CardContent>
