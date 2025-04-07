@@ -7,7 +7,7 @@ type Obj = {
   parent?: Obj;
 };
 
-test("simple circular reference", () => {
+test("Simple circular reference", () => {
   const obj: Obj = { value: "obj" };
   obj.parent = obj;
   check(
@@ -21,7 +21,7 @@ test("simple circular reference", () => {
   );
 });
 
-test("longer circular reference", () => {
+test("Longer circular reference", () => {
   const a: Obj = { value: "a" };
   const b: Obj = { value: "b", parent: a };
   const c: Obj = { value: "c", parent: b };
