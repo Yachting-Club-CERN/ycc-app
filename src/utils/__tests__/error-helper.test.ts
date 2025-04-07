@@ -7,7 +7,7 @@ const check = (error: unknown, expected: string): void => {
   expect(getErrorText(error)).toEqual(expected);
 };
 
-test("non-error types", () => {
+test("Test non-error types", () => {
   check("Some string error", "Some string error");
 
   check(undefined, "<undefined>");
@@ -44,7 +44,7 @@ test("non-error types", () => {
   );
 });
 
-test("Error", () => {
+test("Test Error", () => {
   check(new Error("Error 1"), "Error: Error 1");
 
   check(
@@ -53,7 +53,7 @@ test("Error", () => {
   );
 });
 
-test("AxiosError", () => {
+test("Test AxiosError", () => {
   check(
     new AxiosError("Axios error 1"),
     "AxiosError: Axios error 1 [undefined]",
