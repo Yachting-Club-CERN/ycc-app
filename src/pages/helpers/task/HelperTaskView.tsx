@@ -1,15 +1,15 @@
 import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
-import InlineFlexSpanBox from "@/components/layout/InlineFlexSpanBox";
 import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
-import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
@@ -81,61 +81,52 @@ const HelperTaskView = ({ task, refreshTask }: Props) => {
         </>
       )}
 
-      <SpacedTypography>
-        <InlineFlexSpanBox>
-          <SpanBlockBox mr={1}>Contact:</SpanBlockBox>
-          {createMemberDialogLink(task.contact)}
-        </InlineFlexSpanBox>
-      </SpacedTypography>
+      <RowStack wrap={true} compact={true} mt={2} mb={2}>
+        <Box width={60}>Contact:</Box>
+        <Box>{createMemberDialogLink(task.contact)}</Box>
+      </RowStack>
 
       {task.captainRequiredLicenceInfo && (
         <SpacedTypography>
-          <InlineFlexSpanBox>
-            <SpanBlockBox mr={1}>Captain Required Licence:</SpanBlockBox>
-            {task.captainRequiredLicenceInfo.licence}
-          </InlineFlexSpanBox>
+          Captain Required Licence: {task.captainRequiredLicenceInfo.licence}
         </SpacedTypography>
       )}
 
       <SpacedTypography>
-        <InlineFlexSpanBox>
-          <SpanBlockBox mr={1}>
-            Helpers needed (apart from captain):
-          </SpanBlockBox>
-          {task.helperMinCount === task.helperMaxCount
-            ? task.helperMinCount
-            : `${task.helperMinCount} - ${task.helperMaxCount}`}
-        </InlineFlexSpanBox>
+        Helpers needed (apart from captain):{" "}
+        {task.helperMinCount === task.helperMaxCount
+          ? task.helperMinCount
+          : `${task.helperMinCount} - ${task.helperMaxCount}`}
       </SpacedTypography>
 
       {task.captain && (
-        <SpacedTypography>
-          <InlineFlexSpanBox>
-            <SpanBlockBox mr={1}>Captain:</SpanBlockBox>
+        <RowStack wrap={true} compact={true} mb={2}>
+          <Box width={60}>Captain:</Box>
+          <RowStack wrap={false} compact={true}>
             {createMemberDialogLink(task.captain.member)}
             <RemoveCaptainActionButton
               captain={task.captain.member}
               {...taskActionProps}
             />
-          </InlineFlexSpanBox>
-        </SpacedTypography>
+          </RowStack>
+        </RowStack>
       )}
 
       {task.helpers.length > 0 && (
-        <SpacedTypography>
-          <InlineFlexSpanBox>
-            <SpanBlockBox mr={1}>Helpers:</SpanBlockBox>
+        <RowStack wrap={true} compact={true} alignItems="flex-start" mb={2}>
+          <Box width={60}>Helpers:</Box>
+          <Stack direction="column">
             {task.helpers.map((helper) => (
-              <InlineFlexSpanBox key={helper.member.id} mr={1}>
+              <RowStack key={helper.member.id} wrap={false} compact={true}>
                 {createMemberDialogLink(helper.member)}
                 <RemoveHelperActionButton
                   helper={helper.member}
                   {...taskActionProps}
                 />
-              </InlineFlexSpanBox>
+              </RowStack>
             ))}
-          </InlineFlexSpanBox>
-        </SpacedTypography>
+          </Stack>
+        </RowStack>
       )}
 
       {task.state !== HelperTaskState.Pending && (

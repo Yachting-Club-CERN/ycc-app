@@ -24,7 +24,7 @@ const RemoveCaptainActionButton = ({ captain, task, ...props }: Props) => {
     <TaskActionButton
       buttonIcon={<PersonRemoveIcon fontSize="small" />}
       buttonColor="error"
-      buttonSx={{ pl: 1, pt: 0, pr: 1, pb: 0 }}
+      buttonSx={{ p: 0 }}
       dialogTitle={`Remove ${getFullNameAndUsername(captain)}?`}
       dialogContent={<NotificationDialogNotice />}
       dialogDelayConfirm={true}

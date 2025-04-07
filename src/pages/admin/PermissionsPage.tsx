@@ -1,9 +1,9 @@
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
@@ -58,11 +58,11 @@ ${currentUser.firstName}`;
 
       {permissions.result && (
         <>
-          <RowStack wrap={true}>
-            <SpacedTypography>
+          <RowStack wrap={true} mb={2}>
+            <Typography>
               Currently {permissions.result.length} members have permissions to
               manage helper tasks.{" "}
-            </SpacedTypography>
+            </Typography>
             <Button variant="contained" onClick={handleClick}>
               Send them an email
             </Button>
