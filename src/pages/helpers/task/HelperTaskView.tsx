@@ -189,10 +189,9 @@ const HelperTaskView: React.FC<Props> = ({ task, refreshTask }) => {
       <Alert severity="info" sx={{ mt: 2 }}>
         <Typography>
           After signing up for a task you will be unable to cancel. If you need
-          to withdraw from a shift, please first find a replacement (e.g., in
-          the port or in one of the WhatsApp groups), then notify the contact by
-          email (and CC your replacement). The contact will administer the
-          change.
+          to withdraw from a task, please find a replacement first (e.g., in one
+          of the WhatsApp groups), then notify the contact by email (and CC your
+          replacement). The contact will administer the change.
         </Typography>
       </Alert>
 
