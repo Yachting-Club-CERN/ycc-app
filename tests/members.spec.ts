@@ -22,7 +22,7 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
 
   // Get the total number of rows
   const displayedRows = grid.locator(".MuiTablePagination-displayedRows");
-  const totalRows = await getDisplayedRowsCount(displayedRows);
+  const displayedRowsCount = await getDisplayedRowsCount(displayedRows);
 
   // Get the next page of the grid
   await grid.getByTestId("KeyboardArrowRightIcon").click();
@@ -49,5 +49,5 @@ test("Member List: Find member & info dialog & filter", async ({ page }) => {
   await page.waitForTimeout(500);
 
   const filteredRows = await getDisplayedRowsCount(displayedRows);
-  expect(filteredRows).toBeLessThan(totalRows);
+  expect(filteredRows).toBeLessThan(displayedRowsCount);
 });
