@@ -7,7 +7,7 @@ const columns: GridColDef[] = [
   {
     field: "member.id",
     headerName: "ID",
-    width: 80,
+    width: 70,
     valueGetter: (_, permission: HelpersAppPermission) => permission.member.id,
   },
   {

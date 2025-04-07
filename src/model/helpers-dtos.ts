@@ -108,7 +108,8 @@ export const HelperTaskSchema = z
     validationComment: z.string().nullable(),
   })
   .transform((values) => {
-    // Search string for object fields (enums are represented as strings)
+    // Search string for object fields
+    // Enums are represented as strings and can be searched using searchAnyStringProperty()
     let searchString: string | undefined;
 
     return {

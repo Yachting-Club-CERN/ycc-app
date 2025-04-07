@@ -13,7 +13,7 @@ if (window.location.pathname === "/silent-check-sso") {
   // Normally one would use a public silent-check-sso.html file, but:
   // - This application is served by serve for simplicity
   // - Serve in SPA mode automatically redirects *.html requests to * before checking whether the static files exists
-  // - Serve without SPA mode cause other troubles in the past
+  // - Serve without SPA mode caused other troubles in the past
   //
   // If further issues arise with serve, switch to Nginx
   console.debug("[main] Silent check SSO");
