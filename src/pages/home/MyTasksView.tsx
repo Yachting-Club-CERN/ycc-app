@@ -49,8 +49,7 @@ const MyTasksView = () => {
             label="Search..."
             size="small"
             sx={{
-              width: 230,
-              display: { xs: "none", sm: "block" },
+              width: 200,
             }}
             className="ycc-members-search-input"
           />
