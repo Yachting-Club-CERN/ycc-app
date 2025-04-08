@@ -24,7 +24,6 @@ export const AuditLogEntryDataView: React.FC<Props> = ({ data }) => {
 
   try {
     const dataJson = JSON.parse(data) as unknown;
-    console.log(typeof dataJson);
     if (typeof dataJson === "object" && !Array.isArray(dataJson)) {
       dataEntries = Object.entries(dataJson as Record<string, unknown>);
     } else {
