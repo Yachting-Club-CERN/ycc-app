@@ -16,7 +16,10 @@ const ErrorFallback: React.FC<FallbackProps> = (props) => {
     <ReadingBox>
       <Alert severity="error">
         <AlertTitle>Oops, something went terribly wrong :-(</AlertTitle>
-        <SpacedTypography sx={{ whiteSpace: "pre-wrap" }}>
+        <SpacedTypography
+          fontFamily="Roboto Mono, monospace"
+          whiteSpace="pre-wrap"
+        >
           {getErrorText(error)}
         </SpacedTypography>
         <SpacedTypography>

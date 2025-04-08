@@ -7,8 +7,9 @@ const useMembers = (
   year: number,
 ): PromiseOutcome<Readonly<MemberPublicInfo[]>> => {
   const sharedData = useSharedData();
-  return usePromise((signal?: AbortSignal) =>
-    sharedData.getMembers(year, signal),
+  return usePromise(
+    async (signal?: AbortSignal) => await sharedData.getMembers(year, signal),
+    [year],
   );
 };
 

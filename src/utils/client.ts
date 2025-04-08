@@ -3,6 +3,13 @@ import { z } from "zod";
 
 import config from "@/config";
 import {
+  AuditLogEntries,
+  AuditLogEntriesDeleteRequest,
+  AuditLogEntriesSchema,
+  AuditLogEntry,
+  AuditLogEntrySchema,
+} from "@/model/audit-log-dtos";
+import {
   LicenceDetailedInfos,
   LicenceDetailedInfosSchema,
   MemberPublicInfos,
@@ -44,7 +51,7 @@ type HttpRequest = {
   path: string;
   params?: unknown;
   data?: unknown;
-  responseSchema: z.ZodTypeAny;
+  responseSchema: z.ZodTypeAny | null;
   signal?: AbortSignal;
 };
 
@@ -116,7 +123,9 @@ class HttpClient {
     }
 
     try {
-      return responseSchema.parse(response.data) as TResponse;
+      return responseSchema === null
+        ? (undefined as unknown as TResponse)
+        : (responseSchema.parse(response.data) as TResponse);
     } catch (error) {
       console.error(
         "[client] Response parsing failed",
@@ -177,28 +186,37 @@ abstract class BaseClient {
   }
 }
 
-class MembersClient extends BaseClient {
-  public readonly getAll = async (
-    year: number,
+class AuditLogClient extends BaseClient {
+  public readonly getEntries = async (
     signal?: AbortSignal,
-  ): Promise<MemberPublicInfos> =>
-    await this._http.request<MemberPublicInfos>({
+  ): Promise<AuditLogEntries> =>
+    await this._http.request<AuditLogEntries>({
       method: "GET",
-      path: "/api/v1/members",
-      params: { year: year },
-      responseSchema: MemberPublicInfosSchema,
+      path: "/api/v1/audit-log/entries",
+      responseSchema: AuditLogEntriesSchema,
       signal,
     });
-}
 
-class LicenceInfosClient extends BaseClient {
-  public readonly getAll = async (
+  public readonly getEntryById = async (
+    id: number,
     signal?: AbortSignal,
-  ): Promise<LicenceDetailedInfos> =>
-    await this._http.request<LicenceDetailedInfos>({
+  ): Promise<AuditLogEntry> =>
+    await this._http.request<AuditLogEntry>({
       method: "GET",
-      path: "/api/v1/licence-infos",
-      responseSchema: LicenceDetailedInfosSchema,
+      path: `/api/v1/audit-log/entries/${id}`,
+      responseSchema: AuditLogEntrySchema,
+      signal,
+    });
+
+  public readonly deleteEntries = async (
+    request: AuditLogEntriesDeleteRequest,
+    signal?: AbortSignal,
+  ): Promise<void> =>
+    await this._http.request<void>({
+      method: "DELETE",
+      path: "/api/v1/audit-log/entries",
+      responseSchema: null,
+      data: request,
       signal,
     });
 }
@@ -368,12 +386,39 @@ class HelpersClient extends BaseClient {
     });
 }
 
+class LicenceInfosClient extends BaseClient {
+  public readonly getAll = async (
+    signal?: AbortSignal,
+  ): Promise<LicenceDetailedInfos> =>
+    await this._http.request<LicenceDetailedInfos>({
+      method: "GET",
+      path: "/api/v1/licence-infos",
+      responseSchema: LicenceDetailedInfosSchema,
+      signal,
+    });
+}
+
+class MembersClient extends BaseClient {
+  public readonly getAll = async (
+    year: number,
+    signal?: AbortSignal,
+  ): Promise<MemberPublicInfos> =>
+    await this._http.request<MemberPublicInfos>({
+      method: "GET",
+      path: "/api/v1/members",
+      params: { year: year },
+      responseSchema: MemberPublicInfosSchema,
+      signal,
+    });
+}
+
 const httpClient = new HttpClient(config.yccHullUrl);
 
 const client = {
-  members: new MembersClient(httpClient),
-  licenceInfos: new LicenceInfosClient(httpClient),
+  auditLog: new AuditLogClient(httpClient),
   helpers: new HelpersClient(httpClient),
+  licenceInfos: new LicenceInfosClient(httpClient),
+  members: new MembersClient(httpClient),
 };
 
 export default client;

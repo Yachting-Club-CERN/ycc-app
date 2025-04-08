@@ -47,7 +47,7 @@ const columns: GridColDef[] = [
 ];
 
 type Props = {
-  permissions: HelpersAppPermission[];
+  permissions: Readonly<HelpersAppPermission[]>;
 };
 
 const PermissionsDataGrid: React.FC<Props> = ({ permissions }) => {

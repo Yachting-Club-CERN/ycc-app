@@ -307,9 +307,7 @@ const HelperTaskForm: React.FC<Props> = ({
         title: "Please confirm the following:",
         content,
         delayConfirm: true,
-        onConfirm: async () => {
-          await doSubmit(base, creation, update);
-        },
+        onConfirm: async () => await doSubmit(base, creation, update),
       });
     } else {
       await doSubmit(base, creation, update);

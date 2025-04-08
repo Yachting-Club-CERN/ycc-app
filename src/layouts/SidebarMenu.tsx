@@ -1,5 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import DescriptionIcon from "@mui/icons-material/Description";
 import ErrorIcon from "@mui/icons-material/Error";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
@@ -55,6 +56,11 @@ const SidebarMenu: React.FC = () => {
               title: "Permissions",
               path: "/admin/permissions",
               icon: <HowToRegIcon />,
+            },
+            {
+              title: "Audit Log",
+              path: "/admin/audit-log",
+              icon: <DescriptionIcon />,
             },
           ],
         ]
@@ -160,10 +166,10 @@ const SidebarMenu: React.FC = () => {
         </React.Fragment>
       ))}
 
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+      <Box display="flex" justifyContent="center" mt={2}>
         <Box
           component="img"
-          sx={{ height: 192 }}
+          height={192}
           src={`${import.meta.env.BASE_URL}logo192.png`}
           alt="YCC Logo"
         />

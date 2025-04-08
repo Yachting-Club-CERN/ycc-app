@@ -32,6 +32,14 @@ export const formatDateTime = (
     : dayjs(date).tz(TIME_ZONE_ID).format("DD/MM/YYYY HH:mm");
 };
 
+export const formatDateTimeWithSeconds = (
+  date: OptionalDate,
+): string | null | undefined => {
+  return date === null || date === undefined
+    ? date
+    : dayjs(date).tz(TIME_ZONE_ID).format("DD/MM/YYYY HH:mm:ss");
+};
+
 export const isSameDay = (date1: dayjs.Dayjs, date2: dayjs.Dayjs): boolean =>
   date1.isSame(date2, "day");
 

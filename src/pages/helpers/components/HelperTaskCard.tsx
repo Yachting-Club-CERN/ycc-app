@@ -23,10 +23,7 @@ const HelperTaskCard: React.FC<Props> = ({ task }) => {
     <Card
       key={task.id}
       className="ycc-helper-task-card"
-      sx={{
-        display: "flex",
-        width: 280,
-      }}
+      sx={{ display: "flex", width: 280 }}
       onClick={handleClick}
       onAuxClick={handleClick}
       onMouseDown={(event) => event.preventDefault()}
@@ -36,11 +33,9 @@ const HelperTaskCard: React.FC<Props> = ({ task }) => {
           <Typography
             variant="h5"
             gutterBottom
-            sx={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
           >
             {task.title}
           </Typography>

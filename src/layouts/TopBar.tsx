@@ -77,7 +77,7 @@ LOCAL:
             href={YCC_URLS.BOAT_BOOKING}
             target="_blank"
             rel="noopener"
-            sx={{ fontSize: "1.25rem" }}
+            fontSize="1.25rem"
           >
             ⛵
           </Link>

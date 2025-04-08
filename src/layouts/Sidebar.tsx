@@ -38,7 +38,7 @@ const Sidebar: React.FC<Props> = (props) => {
         className="ycc-sidebar-mobile"
       >
         <Toolbar />
-        <Box sx={{ overflow: "auto" }}>{sidebarMenu}</Box>
+        <Box overflow="auto">{sidebarMenu}</Box>
       </SwipeableDrawer>
 
       <Drawer
@@ -50,7 +50,7 @@ const Sidebar: React.FC<Props> = (props) => {
         className="ycc-sidebar"
       >
         <Toolbar />
-        <Box sx={{ overflow: "auto" }}>{sidebarMenu}</Box>
+        <Box overflow="auto">{sidebarMenu}</Box>
       </Drawer>
     </Box>
   );

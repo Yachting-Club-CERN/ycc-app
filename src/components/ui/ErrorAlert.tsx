@@ -1,9 +1,8 @@
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Typography from "@mui/material/Typography";
 
 import getErrorText from "@/utils/error-helper";
-
-import SpacedTypography from "./SpacedTypography";
 
 type Props = {
   error: unknown;
@@ -18,9 +17,9 @@ const ErrorAlert: React.FC<Props> = ({ error, fatal }) => {
           ? "Oops, something went terribly wrong :-("
           : "Oops, something went wrong..."}
       </AlertTitle>
-      <SpacedTypography sx={{ whiteSpace: "pre-wrap" }}>
+      <Typography fontFamily="Roboto Mono, monospace" whiteSpace="pre-wrap">
         {getErrorText(error)}
-      </SpacedTypography>
+      </Typography>
     </Alert>
   );
 };

@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import AuditLogPage from "@/pages/admin/AuditLogPage";
 import PermissionsPage from "@/pages/admin/PermissionsPage";
 import NotFoundPage from "@/pages/error/NotFoundPage";
 import EditHelperTaskPage from "@/pages/helpers/task/EditHelperTaskPage";
@@ -33,6 +34,7 @@ const AppRoutes: React.FC = () => {
           element={<EditHelperTaskPage />}
         />
 
+        <Route path="/admin/audit-log" element={<AuditLogPage />} />
         <Route path="/admin/permissions" element={<PermissionsPage />} />
 
         <Route path="/playground/editor" element={<PlaygroundEditorPage />} />

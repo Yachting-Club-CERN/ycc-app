@@ -33,9 +33,7 @@ const MemberListPage: React.FC = () => {
           variant="outlined"
           label="Name, username, phone..."
           size="small"
-          sx={{
-            width: 230,
-          }}
+          sx={{ width: 230 }}
           className="ycc-members-search-input"
         />
       </RowStack>

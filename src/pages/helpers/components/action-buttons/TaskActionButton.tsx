@@ -22,6 +22,9 @@ type CommonProps = {
 
   dialogTitle: string;
   dialogContent: JSX.Element;
+  dialogConfirmButtonColor?: ButtonProps["color"];
+  dialogConfirmButtonText?: string;
+  dialogCancelButtonColor?: ButtonProps["color"];
   dialogDelayConfirm?: boolean;
 
   onDialogOpening?: () => void;
@@ -44,6 +47,9 @@ const TaskActionButton: React.FC<Props> = ({
   buttonSx,
   dialogTitle,
   dialogContent,
+  dialogConfirmButtonColor,
+  dialogConfirmButtonText,
+  dialogCancelButtonColor,
   dialogDelayConfirm,
   onDialogOpening,
   onDialogConfirm,
@@ -60,7 +66,9 @@ const TaskActionButton: React.FC<Props> = ({
     openConfirmationDialog({
       title: dialogTitle,
       content: dialogContent,
-      confirmButtonText: buttonText,
+      confirmButtonColor: dialogConfirmButtonColor,
+      confirmButtonText: dialogConfirmButtonText ?? buttonText,
+      cancelButtonColor: dialogCancelButtonColor,
       delayConfirm: dialogDelayConfirm,
       onConfirm: async () => {
         try {

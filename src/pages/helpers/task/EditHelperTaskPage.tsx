@@ -17,12 +17,12 @@ import HelperTaskForm from "./HelperTaskForm";
 const EditHelperTaskPage: React.FC = () => {
   const { id } = useParams();
   const task = usePromise(
-    (signal?: AbortSignal) => {
+    async (signal?: AbortSignal) => {
       const task_id = parseInt(id ?? "NaN");
       if (isNaN(task_id)) {
         throw new Error("Invalid task ID");
       } else {
-        return client.helpers.getTaskById(task_id, signal);
+        return await client.helpers.getTaskById(task_id, signal);
       }
     },
     [id],
