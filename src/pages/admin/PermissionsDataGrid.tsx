@@ -183,7 +183,6 @@ const PermissionsDataGrid: React.FC<Props> = ({
         } catch (error) {
           setError(error);
         }
-        console.log(grantDataRef.current);
       },
     });
   };
