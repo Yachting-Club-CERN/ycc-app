@@ -79,10 +79,16 @@ const PermissionsDataGrid: React.FC<Props> = ({
   onPermissionsChange,
 }) => {
   const currentUser = useCurrentUser();
-  const memberInfoDialog = useMemberInfoDialog();
-  const memberAutocomplete = useMemberAutocomplete({ mt: 1, mb: 2 });
-  const confirmationDialog = useConfirmationDialog();
 
+  const memberInfoDialog = useMemberInfoDialog();
+  const confirmationDialog = useConfirmationDialog();
+  const [contextMenu, setContextMenu] = useState<{
+    row?: HelpersAppPermission;
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
+  const memberAutocomplete = useMemberAutocomplete({ mt: 1, mb: 2 });
   const grantDataRef = useResettableRef<{
     permission: HelpersAppPermissionType;
     note: string;
@@ -90,11 +96,6 @@ const PermissionsDataGrid: React.FC<Props> = ({
     permission: "EDITOR",
     note: "",
   }));
-  const [contextMenu, setContextMenu] = useState<{
-    row?: HelpersAppPermission;
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
   const [error, setError] = useState<unknown>();
 
   const getRowId = (permission: HelpersAppPermission): number =>
@@ -220,7 +221,6 @@ const PermissionsDataGrid: React.FC<Props> = ({
       setError(new Error("Member ID mismatch"));
       return original;
     }
-
     if (update.note === original.note) {
       return original;
     }
