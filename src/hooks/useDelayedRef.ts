@@ -12,11 +12,11 @@ import useDelay from "./useDelay";
 const useDelayedRef = <T>(
   initialValue: T,
   delay = 500,
-): {
+): Readonly<{
   get: () => T;
   setImmediately: (value: T) => void;
   setWithDelay: (value: T) => void;
-} => {
+}> => {
   const ref = useRef(initialValue);
   const get = (): T => ref.current;
   const setImmediately = (value: T): void => {

@@ -21,15 +21,36 @@ export enum HelperTaskState {
   Validated = "Validated",
 }
 
+export const HelpersAppPermissionTypeSchema = z.enum(["ADMIN", "EDITOR"]);
+export type HelpersAppPermissionType = z.infer<
+  typeof HelpersAppPermissionTypeSchema
+>;
+
 export const HelpersAppPermissionSchema = z.object({
   member: MemberPublicInfoSchema,
-  permission: z.string(),
+  permission: HelpersAppPermissionTypeSchema,
   note: z.string().nullable(),
 });
 export type HelpersAppPermission = z.infer<typeof HelpersAppPermissionSchema>;
 
 export const HelpersAppPermissionsSchema = z.array(HelpersAppPermissionSchema);
 export type HelpersAppPermissions = z.infer<typeof HelpersAppPermissionsSchema>;
+
+export const HelpersAppPermissionGrantRequestSchema = z.object({
+  memberId: z.number(),
+  permission: HelpersAppPermissionTypeSchema,
+  note: z.string().nullable(),
+});
+export type HelpersAppPermissionGrantRequest = z.infer<
+  typeof HelpersAppPermissionGrantRequestSchema
+>;
+
+export const HelpersAppPermissionUpdateRequestSchema = z.object({
+  note: z.string().nullable(),
+});
+export type HelpersAppPermissionUpdateRequest = z.infer<
+  typeof HelpersAppPermissionUpdateRequestSchema
+>;
 
 export const HelperTaskCategorySchema = z
   .object({

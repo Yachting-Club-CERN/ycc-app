@@ -1,4 +1,5 @@
 export const CONFIRM_BUTTON_DELAY_MS = 3000;
+export const DATA_GRID_PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
 export const SEARCH_DELAY_MS = 100;
 export const TIME_ZONE_ID = "Europe/Zurich";
 

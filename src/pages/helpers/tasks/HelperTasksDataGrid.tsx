@@ -18,6 +18,7 @@ import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTask, HelperTaskHelper } from "@/model/helpers-dtos";
+import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 
 import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
 import { fakeRandomSignUpText } from "../helpers-format";
@@ -219,8 +220,8 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
         rows={tasks}
         getRowId={getRowId}
         onCellClick={handleGridCellClick}
-        disableColumnFilter={true}
-        pageSizeOptions={[10, 25, 50, 100]}
+        disableColumnFilter
+        pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
         getRowClassName={(params: GridRowParams<HelperTask>) =>
           params.row.urgent ? "ycc-urgent" : ""
         }

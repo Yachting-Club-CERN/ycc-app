@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 type PromiseOutcome<T> = {
-  result: T | undefined;
-  error: unknown;
-  pending: boolean;
+  readonly result: T | undefined;
+  readonly error: unknown;
+  readonly pending: boolean;
 };
 
 /**
