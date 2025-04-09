@@ -8,6 +8,7 @@ import {
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo } from "@/model/dtos";
+import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 import {
   searchAnyStringProperty,
   searchMemberUsernameOrName,
@@ -108,8 +109,8 @@ const MembersDataGrid: React.FC<Props> = ({ year, search }) => {
           rows={filter(search, members.result)}
           getRowId={getRowId}
           onCellClick={handleGridCellClick}
-          disableColumnFilter={true}
-          pageSizeOptions={[10, 25, 50, 100]}
+          disableColumnFilter
+          pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
           initialState={{
             columns: {
               columnVisibilityModel: {

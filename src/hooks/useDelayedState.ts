@@ -14,7 +14,7 @@ import useDelay from "./useDelay";
 const useDelayedState = <S>(
   initialState: S | (() => S),
   delay = 500,
-): [S, S, (newState: S) => void, (newState: S) => void] => {
+): readonly [S, S, (newState: S) => void, (newState: S) => void] => {
   const [state, setState] = useState(initialState);
   const [delayedState, setDelayedState] = useState(state);
   const setDelayedStateWithDelay = useDelay(delay, setDelayedState);
@@ -28,7 +28,7 @@ const useDelayedState = <S>(
     setDelayedStateWithDelay(newState);
   };
 
-  return [state, delayedState, setImmediately, setWithDelay];
+  return [state, delayedState, setImmediately, setWithDelay] as const;
 };
 
 export default useDelayedState;

@@ -1,7 +1,13 @@
-import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 
 import useAuditLogEntryDialog from "@/components/dialogs/AuditLogEntryDialog/useAuditLogEntryDialog";
 import { AuditLogEntry } from "@/model/audit-log-dtos";
+import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 import { formatDateTimeWithSeconds } from "@/utils/date-utils";
 
 const columns: GridColDef[] = [
@@ -52,8 +58,17 @@ const AuditLogEntriesDataGrid: React.FC<Props> = ({ entries }) => {
         rows={entries}
         getRowId={getRowId}
         onCellClick={handleGridCellClick}
-        disableColumnFilter={false}
-        pageSizeOptions={[10, 25, 50, 100]}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        density="compact"
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
+        pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
         sx={{
           // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
           minHeight: "215px",

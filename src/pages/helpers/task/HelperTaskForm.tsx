@@ -303,6 +303,8 @@ const HelperTaskForm: React.FC<Props> = ({
         </>
       );
 
+      setError(undefined);
+
       confirmationDialog.open({
         title: "Please confirm the following:",
         content,

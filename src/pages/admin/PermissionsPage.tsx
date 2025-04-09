@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
 
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
@@ -7,6 +8,7 @@ import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
+import { HelpersAppPermission } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import { YCC_COMMITTEE_EMAIL_ADDRESS } from "@/utils/constants";
 import { mailtoHref } from "@/utils/utils";
@@ -16,6 +18,15 @@ import PermissionsDataGrid from "./PermissionsDataGrid";
 const PermissionsPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const permissions = usePromise(client.helpers.getPermissions);
+  const [editablePermissions, setEditablePermissions] = useState<
+    HelpersAppPermission[]
+  >([]);
+
+  useEffect(() => {
+    if (permissions.result) {
+      setEditablePermissions(permissions.result);
+    }
+  }, [permissions.result]);
 
   const navigate = useNavigate();
   if (!currentUser.helpersAppAdmin) {
@@ -67,7 +78,10 @@ ${currentUser.firstName}`;
               Send them an email
             </Button>
           </RowStack>
-          <PermissionsDataGrid permissions={permissions.result} />
+          <PermissionsDataGrid
+            permissions={editablePermissions}
+            onPermissionsChange={setEditablePermissions}
+          />
         </>
       )}
 

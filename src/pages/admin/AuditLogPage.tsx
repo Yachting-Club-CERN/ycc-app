@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import RowStack from "@/components/layout/RowStack";
@@ -12,6 +12,7 @@ import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
+import useResettableRef from "@/hooks/useResettableRef";
 import client from "@/utils/client";
 import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
@@ -24,7 +25,7 @@ const AuditLogPage: React.FC = () => {
   const [error, setError] = useState<unknown>();
   const [reloadFlag, setReloadFlag] = useState(0);
   const entries = usePromise(client.auditLog.getEntries, [reloadFlag]);
-  const cutoffDate = useRef<dayjs.Dayjs>(
+  const cutoffDate = useResettableRef<dayjs.Dayjs>(() =>
     getNow().subtract(90, "days").startOf("day"),
   );
 
@@ -34,6 +35,9 @@ const AuditLogPage: React.FC = () => {
   }
 
   const handleClick = (): void => {
+    setError(undefined);
+    cutoffDate.reset();
+
     deleteEntriesDialog.open({
       title: "Delete audit log entries",
       content: (
@@ -53,8 +57,6 @@ const AuditLogPage: React.FC = () => {
       cancelButtonColor: "primary",
       delayConfirm: true,
       onConfirm: async () => {
-        setError(undefined);
-
         if (!cutoffDate.current.isValid()) {
           setError(
             new Error("Invalid date selected. Please select a valid date."),

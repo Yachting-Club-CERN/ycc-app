@@ -26,6 +26,10 @@ import {
   HelperTaskValidationRequest,
   HelperTasks,
   HelperTasksSchema,
+  HelpersAppPermission,
+  HelpersAppPermissionGrantRequest,
+  HelpersAppPermissionSchema,
+  HelpersAppPermissionUpdateRequest,
   HelpersAppPermissions,
   HelpersAppPermissionsSchema,
 } from "@/model/helpers-dtos";
@@ -229,6 +233,42 @@ class HelpersClient extends BaseClient {
       method: "GET",
       path: "/api/v1/helpers/permissions",
       responseSchema: HelpersAppPermissionsSchema,
+      signal,
+    });
+
+  public readonly grantPermission = async (
+    request: HelpersAppPermissionGrantRequest,
+    signal?: AbortSignal,
+  ): Promise<HelpersAppPermission> =>
+    await this._http.request<HelpersAppPermission>({
+      method: "POST",
+      path: "/api/v1/helpers/permissions",
+      data: request,
+      responseSchema: HelpersAppPermissionSchema,
+      signal,
+    });
+
+  public readonly updatePermission = async (
+    memberId: number,
+    request: HelpersAppPermissionUpdateRequest,
+    signal?: AbortSignal,
+  ): Promise<HelpersAppPermission> =>
+    await this._http.request<HelpersAppPermission>({
+      method: "PUT",
+      path: `/api/v1/helpers/permissions/${memberId}`,
+      data: request,
+      responseSchema: HelpersAppPermissionSchema,
+      signal,
+    });
+
+  public readonly revokePermission = async (
+    memberId: number,
+    signal?: AbortSignal,
+  ): Promise<void> =>
+    await this._http.request<void>({
+      method: "DELETE",
+      path: `/api/v1/helpers/permissions/${memberId}`,
+      responseSchema: null,
       signal,
     });
 
