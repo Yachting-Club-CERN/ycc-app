@@ -9,7 +9,7 @@ import HelperTaskPage from "@/pages/helpers/task/HelperTaskPage";
 import NewHelperTaskPage from "@/pages/helpers/task/NewHelperTaskPage";
 import HelperTasksPage from "@/pages/helpers/tasks/HelperTasksPage";
 import HomePage from "@/pages/home/HomePage";
-import MemberListPage from "@/pages/members/MembersListPage";
+import MemberListPage from "@/pages/members/MemberListPage";
 import PlaygroundEditorPage from "@/pages/playground/PlaygroundEditorPage";
 import PlaygroundErrorPage from "@/pages/playground/PlaygroundErrorPage";
 import PlaygroundStylesPage from "@/pages/playground/PlaygroundStylesPage";

@@ -4,6 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
+import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
@@ -81,7 +82,7 @@ const AuditLogPage: React.FC = () => {
     : "Audit Log";
 
   return (
-    <>
+    <ReadingBoxLarge>
       <RowStack wrap={false} compact={true} mb={2}>
         <PageTitle value={pageTitle} />
         <IconButton color="error" onClick={handleClick}>
@@ -89,17 +90,19 @@ const AuditLogPage: React.FC = () => {
         </IconButton>
       </RowStack>
 
-      {error && (
-        <SpacedBox>
-          <ErrorAlert error={error} />
-        </SpacedBox>
-      )}
+      <>
+        {error && (
+          <SpacedBox>
+            <ErrorAlert error={error} />
+          </SpacedBox>
+        )}
+      </>
 
       {entries.result && <AuditLogEntriesDataGrid entries={entries.result} />}
 
       <PromiseStatus outcomes={[entries]} />
       {deleteEntriesDialog.component}
-    </>
+    </ReadingBoxLarge>
   );
 };
 

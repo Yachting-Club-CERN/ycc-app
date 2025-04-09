@@ -2,6 +2,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 
+import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
@@ -64,7 +65,7 @@ ${currentUser.firstName}`;
   };
 
   return (
-    <>
+    <ReadingBoxLarge>
       <PageTitle value="Permissions" />
 
       {permissions.result && (
@@ -86,7 +87,7 @@ ${currentUser.firstName}`;
       )}
 
       <PromiseStatus outcomes={[permissions]} />
-    </>
+    </ReadingBoxLarge>
   );
 };
 
