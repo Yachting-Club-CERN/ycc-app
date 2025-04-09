@@ -15,7 +15,7 @@ const PromiseStatus: React.FC<Props> = ({ outcomes }) => {
   return (
     <>
       {error && <ErrorAlert error={error} />}
-      {pending && !error && <CircularProgress />}
+      {pending && !error && <CircularProgress sx={{ mb: 2 }} />}
     </>
   );
 };

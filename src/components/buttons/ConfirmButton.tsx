@@ -1,4 +1,4 @@
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 import { useEffect, useState } from "react";
 
 import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
@@ -6,15 +6,18 @@ import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
 type Props = {
   onConfirm: () => void;
   loading: boolean;
+  color?: ButtonProps["color"];
   text?: string;
   delayed?: boolean;
 };
 
-const ConfirmButton: React.FC<Props> = (props) => {
-  const { onConfirm, loading } = props;
-  const text = props.text ?? "Confirm";
-  const delayed = props.delayed ?? false;
-
+const ConfirmButton: React.FC<Props> = ({
+  onConfirm,
+  loading,
+  color = "success",
+  text = "Confirm",
+  delayed = false,
+}) => {
   const [enabled, setEnabled] = useState(!delayed);
   const [countdownMs, setCountdownMs] = useState(CONFIRM_BUTTON_DELAY_MS);
 
@@ -42,7 +45,7 @@ const ConfirmButton: React.FC<Props> = (props) => {
     <Button
       onClick={onConfirm}
       variant="contained"
-      color="success"
+      color={color}
       autoFocus
       disabled={!enabled}
       loading={loading}

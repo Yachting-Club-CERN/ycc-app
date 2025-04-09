@@ -4,7 +4,13 @@ import ConfirmationDialog from "./ConfirmationDialog";
 
 export type OpenConfirmationDialogProps = Pick<
   React.ComponentProps<typeof ConfirmationDialog>,
-  "title" | "content" | "confirmButtonText" | "delayConfirm" | "onConfirm"
+  | "title"
+  | "content"
+  | "confirmButtonColor"
+  | "confirmButtonText"
+  | "cancelButtonColor"
+  | "delayConfirm"
+  | "onConfirm"
 >;
 
 const DEFAULT_DIALOG_PROPS = {

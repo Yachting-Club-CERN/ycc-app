@@ -43,11 +43,11 @@ const App: React.FC = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
       <BrowserRouter>
-        <Box sx={{ display: "flex" }}>
+        <Box display="flex">
           <CssBaseline />
           <ThemeProvider theme={theme}>
             <TopBarAndSidebar />
-            <Box sx={{ width: "100%", p: 2 }}>
+            <Box width="100%" p={2}>
               <Toolbar />
               <Stack direction="column">
                 <Box component="main">

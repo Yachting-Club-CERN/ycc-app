@@ -32,7 +32,7 @@ const HelperTaskTimingInfo: React.FC<Props> = ({ task }) => {
     if (isMultiDayShift(task)) {
       return (
         <>
-          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
+          <SpanBlockBox color="info.main" fontWeight="bold">
             Multi-Day Shift{suffix}
           </SpanBlockBox>
           <SpanBlockBox>Start: {formatDateTime(task.startsAt)}</SpanBlockBox>
@@ -42,7 +42,7 @@ const HelperTaskTimingInfo: React.FC<Props> = ({ task }) => {
     } else {
       return (
         <>
-          <SpanBlockBox sx={{ color: "info.main", fontWeight: "bold" }}>
+          <SpanBlockBox color="info.main" fontWeight="bold">
             Shift{suffix}
           </SpanBlockBox>
           <SpanBlockBox>{formatDateWithDay(task.startsAt)}</SpanBlockBox>
@@ -56,7 +56,7 @@ const HelperTaskTimingInfo: React.FC<Props> = ({ task }) => {
   } else if (task.type === HelperTaskType.Deadline) {
     return (
       <>
-        <SpanBlockBox sx={{ color: "warning.main", fontWeight: "bold" }}>
+        <SpanBlockBox color="warning.main" fontWeight="bold">
           Deadline{suffix}
         </SpanBlockBox>
         <SpanBlockBox>{formatDateWithDay(task.deadline)}</SpanBlockBox>

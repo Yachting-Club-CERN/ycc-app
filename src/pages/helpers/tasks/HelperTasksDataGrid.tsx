@@ -92,9 +92,7 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
       <DataGridCell>
         <Typography variant="body2">
           <SpanBlockBox>{task.title}</SpanBlockBox>
-          <SpanBlockBox sx={{ fontStyle: "italic" }}>
-            {task.category.title}
-          </SpanBlockBox>
+          <SpanBlockBox fontStyle="italic">{task.category.title}</SpanBlockBox>
         </Typography>
       </DataGridCell>
     );

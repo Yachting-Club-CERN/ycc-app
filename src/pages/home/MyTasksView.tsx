@@ -47,9 +47,7 @@ const MyTasksView: React.FC = () => {
             variant="outlined"
             label="Search..."
             size="small"
-            sx={{
-              width: 200,
-            }}
+            sx={{ width: 200 }}
             className="ycc-members-search-input"
           />
         )}

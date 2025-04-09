@@ -27,7 +27,7 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
     >
       {member && (
         <>
-          <DialogTitle>{`${getFullName(member)}`}</DialogTitle>
+          <DialogTitle>{getFullName(member)}</DialogTitle>
           <DialogContent
             sx={{
               display: "flex",
@@ -36,7 +36,7 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
               pb: 0,
             }}
           >
-            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+            <Typography variant="subtitle1" fontWeight="bold">
               Email:
             </Typography>
             <Typography>
@@ -44,10 +44,7 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
             </Typography>
             {member.mobilePhone && (
               <>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", mt: 2 }}
-                >
+                <Typography variant="subtitle1" fontWeight="bold" mt={2}>
                   Mobile Phone:
                 </Typography>
                 <Typography>
@@ -57,10 +54,7 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
             )}
             {member.homePhone && (
               <>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", mt: 2 }}
-                >
+                <Typography variant="subtitle1" fontWeight="bold" mt={2}>
                   Home Phone:
                 </Typography>
                 <Typography>
@@ -70,10 +64,7 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
             )}
             {member.workPhone && (
               <>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", mt: 2 }}
-                >
+                <Typography variant="subtitle1" fontWeight="bold" mt={2}>
                   Work Phone:
                 </Typography>
                 <Typography>
@@ -81,17 +72,14 @@ const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
                 </Typography>
               </>
             )}
-            <Typography variant="subtitle1" sx={{ fontWeight: "bold", mt: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold" mt={2}>
               Username:
             </Typography>
             <Typography>{member.username}</Typography>
             {extra &&
               Object.entries(extra).map(([key, value]) => (
                 <React.Fragment key={key}>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", mt: 2 }}
-                  >
+                  <Typography variant="subtitle1" fontWeight="bold" mt={2}>
                     {key}:
                   </Typography>
                   <Typography>{value}</Typography>

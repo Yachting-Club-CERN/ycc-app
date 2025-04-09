@@ -116,8 +116,8 @@ export const useFilteredHelperTasks = (
 ): PromiseOutcome<Readonly<HelperTask[]>> => {
   const currentUser = useCurrentUser();
   const tasks = usePromise(
-    (signal?: AbortSignal) =>
-      client.helpers.getTasks(filterOptions.year, signal),
+    async (signal?: AbortSignal) =>
+      await client.helpers.getTasks(filterOptions.year, signal),
     [filterOptions.year],
   );
 

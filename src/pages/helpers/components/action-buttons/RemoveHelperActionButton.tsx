@@ -31,6 +31,9 @@ const RemoveHelperActionButton: React.FC<Props> = ({
       buttonSx={{ p: 0 }}
       dialogTitle={`Remove ${getFullNameAndUsername(helper)}?`}
       dialogContent={<NotificationDialogNotice />}
+      dialogConfirmButtonColor="error"
+      dialogConfirmButtonText="Remove Helper"
+      dialogCancelButtonColor="primary"
       dialogDelayConfirm={true}
       onDialogConfirm={async () =>
         await client.helpers.removeHelper(task.id, helper.id)

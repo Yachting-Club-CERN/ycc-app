@@ -31,6 +31,9 @@ const RemoveCaptainActionButton: React.FC<Props> = ({
       buttonSx={{ p: 0 }}
       dialogTitle={`Remove ${getFullNameAndUsername(captain)}?`}
       dialogContent={<NotificationDialogNotice />}
+      dialogConfirmButtonColor="error"
+      dialogConfirmButtonText="Remove Captain"
+      dialogCancelButtonColor="primary"
       dialogDelayConfirm={true}
       onDialogConfirm={async () => await client.helpers.removeCaptain(task.id)}
       {...props}

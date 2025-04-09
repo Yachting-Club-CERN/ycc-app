@@ -58,8 +58,9 @@ const HelperTaskView: React.FC<Props> = ({ task, refreshTask }) => {
 
   return (
     <>
-      <PageTitle value={task.title} />
       <HelpersSpeedDial task={task} />
+
+      <PageTitle value={task.title} />
 
       <SpacedTypography variant="h3">
         Category: {task.category.title}

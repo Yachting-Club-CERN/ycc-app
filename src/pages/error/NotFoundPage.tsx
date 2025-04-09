@@ -26,7 +26,10 @@ const NotFoundPage: React.FC = () => {
       <SpacedTypography>
         If you feel the boogie you can send this to the IT Helpers:
       </SpacedTypography>
-      <SpacedTypography sx={{ whiteSpace: "pre-wrap" }}>
+      <SpacedTypography
+        fontFamily="Roboto Mono, monospace"
+        whiteSpace="pre-wrap"
+      >
         {toJson(debug)}
       </SpacedTypography>
     </ReadingBox>

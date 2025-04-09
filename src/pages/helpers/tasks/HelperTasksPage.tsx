@@ -164,6 +164,8 @@ const HelperTasksPage: React.FC = () => {
 
   return (
     <>
+      <HelpersSpeedDial />
+
       <RowStack wrap={false} mb={2}>
         <PageTitle value="Helper Tasks" mobileValue="Tasks" />
 
@@ -206,7 +208,6 @@ const HelperTasksPage: React.FC = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </RowStack>
-      <HelpersSpeedDial />
 
       <ReadingBox>
         <RowStack wrap={false} compact={true} mb={1}>
@@ -216,9 +217,7 @@ const HelperTasksPage: React.FC = () => {
             variant="outlined"
             label="Search boat, member..."
             size="small"
-            sx={{
-              width: 200,
-            }}
+            sx={{ width: 200 }}
             className="ycc-helpers-search-input"
           />
 
