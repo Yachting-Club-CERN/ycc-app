@@ -234,22 +234,24 @@ const HelperTaskForm: React.FC<Props> = ({
       );
     }
 
-    if (task?.validatedBy) {
-      confirmations.push(
-        <DialogContentText mb={2}>
-          Are you sure that you want to{" "}
-          <strong>modify this validated task</strong>
-          {"?"}
-        </DialogContentText>,
-      );
-    } else if (task?.markedAsDoneBy) {
-      confirmations.push(
-        <DialogContentText mb={2}>
-          Are you sure you want to modify{" "}
-          <strong>this task that has been marked as done</strong>
-          {"?"}
-        </DialogContentText>,
-      );
+    if (!newTask) {
+      if (task?.validatedBy) {
+        confirmations.push(
+          <DialogContentText mb={2}>
+            Are you sure that you want to{" "}
+            <strong>modify this validated task</strong>
+            {"?"}
+          </DialogContentText>,
+        );
+      } else if (task?.markedAsDoneBy) {
+        confirmations.push(
+          <DialogContentText mb={2}>
+            Are you sure you want to modify{" "}
+            <strong>this task that has been marked as done</strong>
+            {"?"}
+          </DialogContentText>,
+        );
+      }
     }
 
     if (!base.published) {
