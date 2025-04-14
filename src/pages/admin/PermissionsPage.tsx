@@ -43,24 +43,16 @@ const PermissionsPage: React.FC = () => {
       `${YCC_COMMITTEE_EMAIL_ADDRESS},` +
       permissions.result.map((permission) => permission.member.email).join(",");
 
-    const plainTextBody = `Dear Sailors ⛵️🥳,
+    const body = `Dear Sailors ⛵️🥳,
 
 
 
 Fair Winds,
 ${currentUser.firstName}`;
 
-    const htmlBody = `Dear Sailors ⛵️🥳,
-<br /><br />
-
-<br /><br />
-Fair Winds,<br />
-${currentUser.firstName}`;
-
     window.location.href = mailtoHref({
       to,
-      plainTextBody,
-      htmlBody,
+      body,
     });
   };
 
