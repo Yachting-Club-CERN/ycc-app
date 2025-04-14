@@ -19,8 +19,6 @@ export const mailtoHref = ({ to, subject, body }: MailtoHrefProps): string => {
     params.push(`body=${encodeURIComponent(body)}`);
   }
 
-  console.log(`mailto:${to ?? ""}?${params.join("&")}`);
-
   return params.length > 0
     ? `mailto:${to ?? ""}?${params.join("&")}`
     : `mailto:${to ?? ""}`;
