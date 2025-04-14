@@ -6,20 +6,14 @@ import { mailtoHref } from "@/utils/utils";
 
 type Props = {
   subject: string;
-  plainTextBody: string;
-  htmlBody: string;
+  body: string;
 };
 
-const ShareViaEmailIconButton: React.FC<Props> = ({
-  subject,
-  plainTextBody,
-  htmlBody,
-}) => {
+const ShareViaEmailIconButton: React.FC<Props> = ({ subject, body }) => {
   const handleClick = (): void => {
     window.location.href = mailtoHref({
       subject,
-      plainTextBody,
-      htmlBody,
+      body,
     });
   };
 

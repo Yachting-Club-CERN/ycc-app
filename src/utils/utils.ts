@@ -1,46 +1,20 @@
-export const isDesktop = (): boolean => {
-  const platform = navigator.userAgentData?.platform ?? navigator.userAgent;
-
-  return /Win|Mac|Linux/i.test(platform);
-};
-
-type MailtoHrefPropsCommon = {
+type MailtoHrefProps = {
   to?: string;
   subject?: string;
-};
-
-type MailtoHrefPropsWithBody = MailtoHrefPropsCommon & {
-  // For mobile
-  plainTextBody: string;
-  // For desktop, as \n is not correctly supported by all email clients
-  htmlBody: string;
-};
-
-type MailtoHrefPropsWithoutBody = MailtoHrefPropsCommon & {
-  plainTextBody?: never;
-  htmlBody?: never;
+  /**
+   * Use plain text, as HTML is only supported by a limited number of desktop clients.
+   */
+  body?: string;
 };
 
 /**
  * Generates a `mailto:` link with optional subject and body content.
- *
- * Uses `htmlBody` on desktop if available and `plainTextBody` on mobile.
  */
-export const mailtoHref = ({
-  to,
-  subject,
-  plainTextBody,
-  htmlBody,
-}: MailtoHrefPropsWithBody | MailtoHrefPropsWithoutBody): string => {
+export const mailtoHref = ({ to, subject, body }: MailtoHrefProps): string => {
   const params = [];
   if (subject) {
     params.push(`subject=${encodeURIComponent(subject)}`);
   }
-
-  const body = isDesktop()
-    ? (htmlBody ?? plainTextBody)
-    : (plainTextBody ?? htmlBody);
-
   if (body) {
     params.push(`body=${encodeURIComponent(body)}`);
   }
