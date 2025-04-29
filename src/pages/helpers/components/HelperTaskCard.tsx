@@ -23,7 +23,6 @@ const HelperTaskCard: React.FC<Props> = ({ task }) => {
     <Card
       key={task.id}
       className="ycc-helper-task-card"
-      sx={{ display: "flex", width: 280 }}
       onClick={handleClick}
       onAuxClick={handleClick}
       onMouseDown={(event) => event.preventDefault()}

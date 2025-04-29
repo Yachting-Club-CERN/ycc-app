@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Permissions page (admin): search, grant, edit and revoke
 - External links to ResQ and Mother Duck II logs
+- Editors can show/hide validated tasks on the my tasks page
 
 ### Changed
 
