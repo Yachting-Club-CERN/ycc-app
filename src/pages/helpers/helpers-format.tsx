@@ -7,8 +7,8 @@ import {
 
 import { isMultiDayShift } from "./helpers-utils";
 
-export const doneEmoji = "🚦";
-export const validatedEmoji = "✔️";
+export const DONE_EMOJI = "🚦";
+export const VALIDATED_EMOJI = "✔️";
 
 /**
  * Gives a "fake random" sign up text. Deterministic.
@@ -38,9 +38,9 @@ export const fakeRandomSignUpText = (
  */
 export const getStatusEmoji = (task: HelperTask): string => {
   if (task.validatedAt) {
-    return validatedEmoji;
+    return VALIDATED_EMOJI;
   } else if (task.markedAsDoneAt) {
-    return doneEmoji;
+    return DONE_EMOJI;
   } else {
     return "";
   }

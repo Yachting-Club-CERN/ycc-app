@@ -26,7 +26,7 @@ import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
 import HelpersSpeedDial from "../components/HelpersSpeedDial";
-import { doneEmoji, validatedEmoji } from "../helpers-format";
+import { DONE_EMOJI, VALIDATED_EMOJI } from "../helpers-format";
 import { HelperTaskFilterOptions } from "../useFilteredHelperTasks";
 import HelperTasksView from "./HelperTasksView";
 import { HelperTasksDisplay, HelperTasksDisplayOptions } from "./types";
@@ -43,8 +43,8 @@ const allStates = [
 
 const allStatesWithLabel = {
   [HelperTaskState.Pending]: "Pending",
-  [HelperTaskState.Done]: `Done, but not validated ${doneEmoji}`,
-  [HelperTaskState.Validated]: `Validated ${validatedEmoji}`,
+  [HelperTaskState.Done]: `Done, but not validated ${DONE_EMOJI}`,
+  [HelperTaskState.Validated]: `Validated ${VALIDATED_EMOJI}`,
 };
 
 const allYearsLabel = "ALL";

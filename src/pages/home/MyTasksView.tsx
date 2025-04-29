@@ -1,3 +1,5 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 
 import RowStack from "@/components/layout/RowStack";
@@ -6,6 +8,7 @@ import PromiseStatus from "@/components/ui/PromiseStatus";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
+import { HelperTaskState } from "@/model/helpers-dtos";
 import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
@@ -16,14 +19,19 @@ import {
 } from "../helpers/useFilteredHelperTasks";
 
 const MyTasksView: React.FC = () => {
-  const [filterOptions, delayedFilterOptions, , setFilterOptionsWithDelay] =
-    useDelayedState<HelperTaskFilterOptions>(
-      () => ({
-        year: getCurrentYear(),
-        showOnlyContactOrSignedUp: true,
-      }),
-      SEARCH_DELAY_MS,
-    );
+  const [
+    filterOptions,
+    delayedFilterOptions,
+    setFilterOptionsImmediately,
+    setFilterOptionsWithDelay,
+  ] = useDelayedState<HelperTaskFilterOptions>(
+    () => ({
+      year: getCurrentYear(),
+      showOnlyContactOrSignedUp: true,
+      states: [HelperTaskState.Pending, HelperTaskState.Done],
+    }),
+    SEARCH_DELAY_MS,
+  );
 
   const user = useCurrentUser();
   const tasks = useFilteredHelperTasks(delayedFilterOptions);
@@ -38,9 +46,10 @@ const MyTasksView: React.FC = () => {
 
   return (
     <>
-      <RowStack wrap={false} mb={2}>
-        <PageTitle value="My Tasks" />
-        {showSearch && (
+      <PageTitle value="My Tasks" />
+
+      {showSearch && (
+        <RowStack wrap={true} compact={true} mb={2}>
           <TextField
             value={filterOptions.search}
             onChange={onSearch}
@@ -48,10 +57,30 @@ const MyTasksView: React.FC = () => {
             label="Search..."
             size="small"
             sx={{ width: 200 }}
-            className="ycc-members-search-input"
+            className="ycc-my-tasks-search-input"
           />
-        )}
-      </RowStack>
+
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={(_, checked) => {
+                  setFilterOptionsImmediately({
+                    ...filterOptions,
+                    states: checked
+                      ? [
+                          HelperTaskState.Pending,
+                          HelperTaskState.Done,
+                          HelperTaskState.Validated,
+                        ]
+                      : [HelperTaskState.Pending, HelperTaskState.Done],
+                  });
+                }}
+              />
+            }
+            label="Show Validated Tasks"
+          />
+        </RowStack>
+      )}
 
       {tasks.result && tasks.result.length > 0 && (
         <HelperTaskCardGrid tasks={tasks.result} />
