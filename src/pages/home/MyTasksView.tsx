@@ -86,7 +86,9 @@ const MyTasksView: React.FC = () => {
         <HelperTaskCardGrid tasks={tasks.result} />
       )}
       {tasks.result && tasks.result.length === 0 && (
-        <SpacedTypography>You have no tasks yet. 😢</SpacedTypography>
+        <SpacedTypography>
+          {showSearch ? "No tasks to display." : "You have no tasks yet. 😢"}
+        </SpacedTypography>
       )}
 
       <PromiseStatus outcomes={[tasks]} />
