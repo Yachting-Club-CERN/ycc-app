@@ -1,6 +1,7 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import DescriptionIcon from "@mui/icons-material/Description";
+import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import ErrorIcon from "@mui/icons-material/Error";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
@@ -61,6 +62,16 @@ const SidebarMenu: React.FC = () => {
               title: "Audit Log",
               path: "/admin/audit-log",
               icon: <DescriptionIcon />,
+            },
+            {
+              title: "ResQ Logs",
+              path: YCC_URLS.LOGS_RESQ,
+              icon: <DirectionsBoatIcon />,
+            },
+            {
+              title: "Mother Duck II Logs",
+              path: YCC_URLS.LOGS_MOTHER_DUCK_II,
+              icon: <DirectionsBoatIcon />,
             },
           ],
         ]

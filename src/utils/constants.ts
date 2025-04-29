@@ -7,5 +7,7 @@ export const YCC_COMMITTEE_EMAIL_ADDRESS = "club-yachting-committee@cern.ch";
 
 export const YCC_URLS = {
   BOAT_BOOKING: "https://yachting.web.cern.ch/yachting/reserve.html",
+  LOGS_RESQ: "https://yccres.app.cern.ch/app/res/logs/15",
+  LOGS_MOTHER_DUCK_II: "https://yccres.app.cern.ch/app/res/logs/36",
   WEBSITE: "https://yachting.web.cern.ch",
 } as const;

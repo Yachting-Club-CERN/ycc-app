@@ -64,7 +64,7 @@ ${currentUser.firstName}`;
         <>
           <RowStack wrap={true} mb={2}>
             <Typography>
-              Currently {permissions.result.length} members have permissions to
+              Currently {editablePermissions.length} members have permissions to
               manage helper tasks.{" "}
             </Typography>
             <Button variant="contained" onClick={handleClick}>
