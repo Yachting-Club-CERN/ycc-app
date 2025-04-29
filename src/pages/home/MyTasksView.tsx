@@ -49,39 +49,37 @@ const MyTasksView: React.FC = () => {
       <PageTitle value="My Tasks" />
 
       {showSearch && (
-        <>
-          <RowStack wrap={true} compact={true} mb={2}>
-            <TextField
-              value={filterOptions.search}
-              onChange={onSearch}
-              variant="outlined"
-              label="Search..."
-              size="small"
-              sx={{ width: 200 }}
-              className="ycc-my-tasks-search-input"
-            />
+        <RowStack wrap={true} compact={true} mb={2}>
+          <TextField
+            value={filterOptions.search}
+            onChange={onSearch}
+            variant="outlined"
+            label="Search..."
+            size="small"
+            sx={{ width: 200 }}
+            className="ycc-my-tasks-search-input"
+          />
 
-            <FormControlLabel
-              control={
-                <Switch
-                  onChange={(_, checked) => {
-                    setFilterOptionsImmediately({
-                      ...filterOptions,
-                      states: checked
-                        ? [
-                            HelperTaskState.Pending,
-                            HelperTaskState.Done,
-                            HelperTaskState.Validated,
-                          ]
-                        : [HelperTaskState.Pending, HelperTaskState.Done],
-                    });
-                  }}
-                />
-              }
-              label="Show Validated Tasks"
-            />
-          </RowStack>
-        </>
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={(_, checked) => {
+                  setFilterOptionsImmediately({
+                    ...filterOptions,
+                    states: checked
+                      ? [
+                          HelperTaskState.Pending,
+                          HelperTaskState.Done,
+                          HelperTaskState.Validated,
+                        ]
+                      : [HelperTaskState.Pending, HelperTaskState.Done],
+                  });
+                }}
+              />
+            }
+            label="Show Validated Tasks"
+          />
+        </RowStack>
       )}
 
       {tasks.result && tasks.result.length > 0 && (
