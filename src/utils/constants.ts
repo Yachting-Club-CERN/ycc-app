@@ -3,6 +3,7 @@ export const DATA_GRID_PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
 export const SEARCH_DELAY_MS = 100;
 export const TIME_ZONE_ID = "Europe/Zurich";
 
+export const YCC_FIRST_HELPER_APP_YEAR = 2023;
 export const YCC_COMMITTEE_EMAIL_ADDRESS = "club-yachting-committee@cern.ch";
 
 export const YCC_URLS = {

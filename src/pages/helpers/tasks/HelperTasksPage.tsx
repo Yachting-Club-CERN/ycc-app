@@ -22,7 +22,7 @@ import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
-import { SEARCH_DELAY_MS } from "@/utils/constants";
+import { YCC_FIRST_HELPER_APP_YEAR, SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
 import HelpersSpeedDial from "../components/HelpersSpeedDial";
@@ -66,7 +66,6 @@ const SESSION_STORAGE = {
 
 const HelperTasksPage: React.FC = () => {
   const currentUser = useCurrentUser();
-  const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
   const [
@@ -109,8 +108,8 @@ const HelperTasksPage: React.FC = () => {
 
   const years = Array.from(
     // Add the next year too
-    { length: currentYear - firstHelperAppYear + 2 },
-    (_, i) => firstHelperAppYear + i,
+    { length: currentYear - YCC_FIRST_HELPER_APP_YEAR + 2 },
+    (_, i) => YCC_FIRST_HELPER_APP_YEAR + i,
   );
 
   const handleReset = (): void =>
