@@ -12,6 +12,7 @@ import client from "@/utils/client";
 
 import ContactStatisticsReport from "./components/ContactStatisticsReport";
 import MemberParticipationReport from "./components/MemberParticipationReport";
+import MotorboatDriverParticipationReport from "./components/MotorboatDriverParticipationReport";
 import OverallStatisticsReport from "./components/OverallStatisticsReport";
 import TroubleshootingReport from "./components/TroubleshootingReport";
 
@@ -43,6 +44,10 @@ const StatisticsPage: React.FC = () => {
       {publishedTasks && <OverallStatisticsReport tasks={publishedTasks} />}
 
       {publishedTasks && <MemberParticipationReport tasks={publishedTasks} />}
+
+      {publishedTasks && (
+        <MotorboatDriverParticipationReport tasks={publishedTasks} />
+      )}
 
       {publishedTasks && <ContactStatisticsReport tasks={publishedTasks} />}
 
