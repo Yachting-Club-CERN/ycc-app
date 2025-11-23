@@ -16,13 +16,17 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState } from "react";
 
+import {
+  useYearSelector,
+  type SelectedYear,
+} from "@/components/input/YearSelector";
 import ReadingBox from "@/components/layout/ReadingBox";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
-import { YCC_FIRST_HELPER_APP_YEAR, SEARCH_DELAY_MS } from "@/utils/constants";
+import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
 import HelpersSpeedDial from "../components/HelpersSpeedDial";
@@ -46,8 +50,6 @@ const allStatesWithLabel = {
   [HelperTaskState.Done]: `Done, but not validated ${DONE_EMOJI}`,
   [HelperTaskState.Validated]: `Validated ${VALIDATED_EMOJI}`,
 };
-
-const allYearsLabel = "ALL";
 
 const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   year: getCurrentYear(),
@@ -106,20 +108,10 @@ const HelperTasksPage: React.FC = () => {
     sessionStorage.setItem(SESSION_STORAGE.DISPLAY, display);
   }, [display]);
 
-  const years = Array.from(
-    // Add the next year too
-    { length: currentYear - YCC_FIRST_HELPER_APP_YEAR + 2 },
-    (_, i) => YCC_FIRST_HELPER_APP_YEAR + i,
-  );
-
   const handleReset = (): void =>
     setFilterOptionsImmediately(getDefaultFilterOptions());
 
-  const handleYearChange = (event: SelectChangeEvent): void => {
-    const year =
-      event.target.value === allYearsLabel
-        ? null
-        : parseInt(event.target.value);
+  const handleYearChange = (year: SelectedYear): void => {
     const newFilterOptions: HelperTaskFilterOptions = { ...filterOptions };
 
     newFilterOptions.year = year;
@@ -161,6 +153,12 @@ const HelperTasksPage: React.FC = () => {
     });
   };
 
+  const yearSelector = useYearSelector({
+    value: filterOptions.year,
+    includeAllOption: true,
+    onChange: handleYearChange,
+  });
+
   return (
     <>
       <HelpersSpeedDial />
@@ -168,23 +166,7 @@ const HelperTasksPage: React.FC = () => {
       <RowStack wrap={false} mb={2}>
         <PageTitle value="Helper Tasks" mobileValue="Tasks" />
 
-        {currentUser.helpersAppAdminOrEditor && (
-          <Select
-            value={filterOptions.year?.toString() ?? allYearsLabel}
-            onChange={handleYearChange}
-            variant="outlined"
-            size="small"
-          >
-            {years.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-            <MenuItem key={9999} value={allYearsLabel}>
-              {allYearsLabel}
-            </MenuItem>
-          </Select>
-        )}
+        {currentUser.helpersAppAdminOrEditor && yearSelector.component}
 
         <ToggleButtonGroup
           value={display}

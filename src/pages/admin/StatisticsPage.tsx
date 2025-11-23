@@ -1,5 +1,4 @@
 import Link from "@mui/material/Link";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,11 +6,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
+import { useYearSelector } from "@/components/input/YearSelector";
 import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import SpacedBox from "@/components/layout/SpacedBox";
 import PageTitle from "@/components/ui/PageTitle";
@@ -21,7 +20,6 @@ import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
-import { YCC_FIRST_HELPER_APP_YEAR } from "@/utils/constants";
 import { formatDate, getCurrentYear } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
@@ -263,9 +261,7 @@ type ContactStats = {
   taskCount: number;
 };
 
-const calculateContactStatistics = (
-  tasks: HelperTask[],
-): ContactStats[] => {
+const calculateContactStatistics = (tasks: HelperTask[]): ContactStats[] => {
   const contactMap = new Map<number, { name: string; count: number }>();
 
   tasks.forEach((task) => {
@@ -319,16 +315,15 @@ const findTasksWithLicenseNotInSurveillance = (
 const StatisticsPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
-  const currentYear = getCurrentYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const yearSelector = useYearSelector({ initialYear: getCurrentYear() });
 
   if (!currentUser.helpersAppAdmin) {
     void navigate("/");
   }
 
   const allTasks = usePromise(
-    () => client.helpers.getTasks(selectedYear),
-    [selectedYear],
+    () => client.helpers.getTasks(yearSelector.selectedYearForApi),
+    [yearSelector.selectedYearForApi],
   );
 
   const tasks = useMemo(() => {
@@ -380,11 +375,6 @@ const StatisticsPage: React.FC = () => {
     return findTasksWithLicenseNotInSurveillance(allTasks.result);
   }, [allTasks.result]);
 
-  const years = Array.from(
-    { length: currentYear - YCC_FIRST_HELPER_APP_YEAR + 2 },
-    (_, i) => YCC_FIRST_HELPER_APP_YEAR + i,
-  );
-
   // Calculate grand totals
   const grandTotals = useMemo(() => {
     if (!statistics) return null;
@@ -403,21 +393,7 @@ const StatisticsPage: React.FC = () => {
     <ReadingBoxLarge>
       <PageTitle value="Statistics" />
 
-      <SpacedBox>
-        <TextField
-          select
-          label="Select Year"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          sx={{ minWidth: 200 }}
-        >
-          {years.map((year) => (
-            <MenuItem key={year} value={year}>
-              {year}
-            </MenuItem>
-          ))}
-        </TextField>
-      </SpacedBox>
+      <SpacedBox>{yearSelector.component}</SpacedBox>
 
       {statistics && grandTotals && (
         <SpacedBox>

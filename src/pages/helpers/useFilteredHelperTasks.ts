@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { ALL_YEARS, type SelectedYear } from "@/components/input/YearSelector";
 import { User } from "@/context/auth/AuthenticationContext";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import usePromise, { PromiseOutcome } from "@/hooks/usePromise";
@@ -20,7 +21,7 @@ import {
 } from "./helpers-utils";
 
 export type HelperTaskFilterOptions = {
-  year: number | null;
+  year: SelectedYear;
   search?: string;
   showOnlyUpcoming?: boolean;
   showOnlyContactOrSignedUp?: boolean;
@@ -117,7 +118,10 @@ export const useFilteredHelperTasks = (
   const currentUser = useCurrentUser();
   const tasks = usePromise(
     async (signal?: AbortSignal) =>
-      await client.helpers.getTasks(filterOptions.year, signal),
+      await client.helpers.getTasks(
+        filterOptions.year === ALL_YEARS ? null : filterOptions.year,
+        signal,
+      ),
     [filterOptions.year],
   );
 

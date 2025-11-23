@@ -1,9 +1,8 @@
 import DownloadIcon from "@mui/icons-material/Download";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
+import { ALL_YEARS, useYearSelector } from "@/components/input/YearSelector";
 import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
@@ -14,14 +13,12 @@ import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
-import { YCC_FIRST_HELPER_APP_YEAR } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
 const ExportPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
-  const currentYear = getCurrentYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const yearSelector = useYearSelector({ initialYear: getCurrentYear() });
   const [error, setError] = useState<unknown>();
   const [isExporting, setIsExporting] = useState(false);
 
@@ -30,8 +27,8 @@ const ExportPage: React.FC = () => {
   }
 
   const tasks = usePromise(
-    () => client.helpers.getTasks(selectedYear),
-    [selectedYear],
+    () => client.helpers.getTasks(yearSelector.selectedYearForApi),
+    [yearSelector.selectedYearForApi],
   );
 
   const handleExport = (): void => {
@@ -50,7 +47,7 @@ const ExportPage: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `helper-tasks-${selectedYear}.json`;
+      link.download = `helper-tasks-${yearSelector.selectedYear === ALL_YEARS ? "all" : yearSelector.selectedYear}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -62,30 +59,11 @@ const ExportPage: React.FC = () => {
     }
   };
 
-  const years = Array.from(
-    { length: currentYear - YCC_FIRST_HELPER_APP_YEAR + 2 },
-    (_, i) => YCC_FIRST_HELPER_APP_YEAR + i,
-  );
-
   return (
     <ReadingBoxLarge>
       <PageTitle value="Export" />
 
-      <SpacedBox>
-        <TextField
-          select
-          label="Select Year"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          sx={{ minWidth: 200 }}
-        >
-          {years.map((year) => (
-            <MenuItem key={year} value={year}>
-              {year}
-            </MenuItem>
-          ))}
-        </TextField>
-      </SpacedBox>
+      <SpacedBox>{yearSelector.component}</SpacedBox>
 
       <>
         {error && (
@@ -100,7 +78,8 @@ const ExportPage: React.FC = () => {
           <RowStack wrap={false}>
             <div>
               Found {tasks.result.length} task
-              {tasks.result.length !== 1 ? "s" : ""} for {selectedYear}
+              {tasks.result.length !== 1 ? "s" : ""} for{" "}
+              {yearSelector.selectedYear}
             </div>
             <Button
               variant="contained"
