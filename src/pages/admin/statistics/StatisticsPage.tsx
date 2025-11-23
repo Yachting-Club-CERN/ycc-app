@@ -20,7 +20,7 @@ import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
-import { formatDate, getCurrentYear } from "@/utils/date-utils";
+import { formatDate } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
 type CategoryStats = {
@@ -315,7 +315,7 @@ const findTasksWithLicenseNotInSurveillance = (
 const StatisticsPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
-  const yearSelector = useYearSelector({ initialYear: getCurrentYear() });
+  const yearSelector = useYearSelector();
 
   if (!currentUser.helpersAppAdmin) {
     void navigate("/");

@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import AuditLogPage from "@/pages/admin/AuditLogPage";
 import ExportPage from "@/pages/admin/ExportPage";
 import PermissionsPage from "@/pages/admin/PermissionsPage";
-import StatisticsPage from "@/pages/admin/StatisticsPage";
+import StatisticsPage from "@/pages/admin/statistics/StatisticsPage";
 import NotFoundPage from "@/pages/error/NotFoundPage";
 import EditHelperTaskPage from "@/pages/helpers/task/EditHelperTaskPage";
 import HelperTaskPage from "@/pages/helpers/task/HelperTaskPage";

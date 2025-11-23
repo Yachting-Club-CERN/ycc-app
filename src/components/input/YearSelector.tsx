@@ -81,7 +81,7 @@ type UseYearSelectorReturn = {
  * ```tsx
  * const yearSelector = useYearSelector({ initialYear: 2025 });
  * // Or with default (current year):
- * const yearSelector = useYearSelector({});
+ * const yearSelector = useYearSelector();
  * ```
  *
  * **Controlled mode** (external state controls the hook):

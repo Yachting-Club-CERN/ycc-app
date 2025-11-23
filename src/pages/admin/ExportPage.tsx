@@ -2,58 +2,53 @@ import DownloadIcon from "@mui/icons-material/Download";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-import { ALL_YEARS, useYearSelector } from "@/components/input/YearSelector";
+import { useYearSelector } from "@/components/input/YearSelector";
 import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
-import RowStack from "@/components/layout/RowStack";
 import SpacedBox from "@/components/layout/SpacedBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import PageTitle from "@/components/ui/PageTitle";
-import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
-import usePromise from "@/hooks/usePromise";
+import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
-import { getCurrentYear } from "@/utils/date-utils";
+import dayjs from "@/utils/dayjs";
 
 const ExportPage: React.FC = () => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
-  const yearSelector = useYearSelector({ initialYear: getCurrentYear() });
-  const [error, setError] = useState<unknown>();
+  const yearSelector = useYearSelector();
+  const [error, setError] = useState<Error | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
   if (!currentUser.helpersAppAdmin) {
     void navigate("/");
   }
 
-  const tasks = usePromise(
-    () => client.helpers.getTasks(yearSelector.selectedYearForApi),
-    [yearSelector.selectedYearForApi],
-  );
-
-  const handleExport = (): void => {
-    setError(undefined);
+  const handleExport = async (): Promise<void> => {
+    setError(null);
     setIsExporting(true);
 
     try {
-      if (!tasks.result) {
-        setError(new Error("No tasks loaded to export"));
-        setIsExporting(false);
-        return;
-      }
+      const tasks: HelperTask[] = await client.helpers.getTasks(
+        yearSelector.selectedYearForApi,
+      );
 
-      const jsonString = JSON.stringify(tasks.result, null, 2);
+      const jsonString = JSON.stringify(tasks, null, 2);
       const blob = new Blob([jsonString], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `helper-tasks-${yearSelector.selectedYear === ALL_YEARS ? "all" : yearSelector.selectedYear}.json`;
+
+      const year = yearSelector.selectedYear;
+      const currentDateTime = dayjs().format("YYYY-MM-DD-HHmmss");
+      link.download = `ycc-app-export-${year}-at-${currentDateTime}.json`;
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      setError(error);
+      setError(error instanceof Error ? error : new Error(String(error)));
     } finally {
       setIsExporting(false);
     }
@@ -65,35 +60,22 @@ const ExportPage: React.FC = () => {
 
       <SpacedBox>{yearSelector.component}</SpacedBox>
 
-      <>
-        {error && (
-          <SpacedBox>
-            <ErrorAlert error={error} />
-          </SpacedBox>
-        )}
-      </>
-
-      {tasks.result && (
+      {error && (
         <SpacedBox>
-          <RowStack wrap={false}>
-            <div>
-              Found {tasks.result.length} task
-              {tasks.result.length !== 1 ? "s" : ""} for{" "}
-              {yearSelector.selectedYear}
-            </div>
-            <Button
-              variant="contained"
-              startIcon={<DownloadIcon />}
-              onClick={handleExport}
-              disabled={isExporting || tasks.result.length === 0}
-            >
-              Export JSON
-            </Button>
-          </RowStack>
+          <ErrorAlert error={error} />
         </SpacedBox>
       )}
 
-      <PromiseStatus outcomes={[tasks]} />
+      <SpacedBox>
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handleExport}
+          disabled={isExporting}
+        >
+          {isExporting ? "Exporting..." : "Export JSON"}
+        </Button>
+      </SpacedBox>
     </ReadingBoxLarge>
   );
 };
