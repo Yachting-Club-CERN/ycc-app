@@ -95,6 +95,16 @@ const HelperTasksPage: React.FC = () => {
       : "cards";
   });
 
+  // Non-admin/editor users can only view the current year
+  useEffect(() => {
+    if (
+      !currentUser.helpersAppAdminOrEditor &&
+      filterOptions.year !== currentYear
+    ) {
+      setFilterOptionsImmediately(getDefaultFilterOptions());
+    }
+  }, [currentUser.helpersAppAdminOrEditor]);
+
   useEffect(() => {
     console.info("Save filter options to session storage", filterOptions);
     sessionStorage.setItem(
@@ -228,10 +238,9 @@ const HelperTasksPage: React.FC = () => {
             {Object.entries(allStatesWithLabel).map(([key, value]) => (
               <MenuItem key={key} value={key}>
                 <Checkbox
-                  checked={
-                    filterOptions.states &&
-                    filterOptions.states.includes(key as HelperTaskState)
-                  }
+                  checked={filterOptions.states?.includes(
+                    key as HelperTaskState,
+                  )}
                 />
                 <ListItemText primary={value} />
               </MenuItem>

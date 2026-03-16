@@ -43,7 +43,7 @@ const findCancelledTasks = (tasks: HelperTask[]): HelperTask[] =>
     })
     .sort(statsSortByDate);
 
-const findTasksWithLicenseNotInSurveillance = (
+const findTasksWithLicenceNotInSurveillance = (
   tasks: HelperTask[],
 ): HelperTask[] =>
   tasks
@@ -122,8 +122,8 @@ const contactColumn: TaskTableColumn = {
   getValue: (task) => getFullName(task.contact),
 };
 
-const licenseColumn: TaskTableColumn = {
-  label: "Required License",
+const licenceColumn: TaskTableColumn = {
+  label: "Required Licence",
   getValue: (task) => task.captainRequiredLicenceInfo?.licence || "N/A",
 };
 
@@ -151,8 +151,8 @@ const TroubleshootingReport: React.FC<Props> = ({
     [allTasks],
   );
 
-  const tasksWithLicenseNotInSurveillance = useMemo(
-    () => findTasksWithLicenseNotInSurveillance(allTasks),
+  const tasksWithLicenceNotInSurveillance = useMemo(
+    () => findTasksWithLicenceNotInSurveillance(allTasks),
     [allTasks],
   );
 
@@ -217,21 +217,21 @@ const TroubleshootingReport: React.FC<Props> = ({
         </Accordion>
       )}
 
-      {tasksWithLicenseNotInSurveillance.length > 0 && (
+      {tasksWithLicenceNotInSurveillance.length > 0 && (
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h6">
-              Tasks with required license but not in Surveillance (
-              {tasksWithLicenseNotInSurveillance.length})
+              Tasks with required licence but not in Surveillance (
+              {tasksWithLicenceNotInSurveillance.length})
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <TaskTable
-              tasks={tasksWithLicenseNotInSurveillance}
+              tasks={tasksWithLicenceNotInSurveillance}
               columns={[
                 ...baseColumns,
                 categoryColumn,
-                licenseColumn,
+                licenceColumn,
                 dateColumn,
                 contactColumn,
               ]}

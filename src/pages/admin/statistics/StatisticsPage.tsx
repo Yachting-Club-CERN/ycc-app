@@ -5,8 +5,6 @@ import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import SpacedBox from "@/components/layout/SpacedBox";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useCurrentUser from "@/context/auth/useCurrentUser";
-import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
 
@@ -17,13 +15,7 @@ import OverallStatisticsReport from "./components/OverallStatisticsReport";
 import TroubleshootingReport from "./components/TroubleshootingReport";
 
 const StatisticsPage: React.FC = () => {
-  const currentUser = useCurrentUser();
-  const navigate = useNavigate();
   const yearSelector = useYearSelector();
-
-  if (!currentUser.helpersAppAdmin) {
-    void navigate("/");
-  }
 
   const allTasks = usePromise(
     (signal) =>

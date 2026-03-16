@@ -17,6 +17,7 @@ import PlaygroundErrorPage from "@/pages/playground/PlaygroundErrorPage";
 import PlaygroundStylesPage from "@/pages/playground/PlaygroundStylesPage";
 
 import ErrorFallback from "./ErrorFallback";
+import { RequireAdmin, RequireAdminOrEditor } from "./RequireAuth";
 
 const AppRoutes: React.FC = () => {
   const location = useLocation();
@@ -29,17 +30,22 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/members" element={<MemberListPage />} />
         <Route path="/helpers" element={<HelperTasksPage />} />
-        <Route path="/helpers/tasks/new" element={<NewHelperTaskPage />} />
         <Route path="/helpers/tasks/:id" element={<HelperTaskPage />} />
-        <Route
-          path="/helpers/tasks/:id/edit"
-          element={<EditHelperTaskPage />}
-        />
 
-        <Route path="/admin/audit-log" element={<AuditLogPage />} />
-        <Route path="/admin/permissions" element={<PermissionsPage />} />
-        <Route path="/admin/statistics" element={<StatisticsPage />} />
-        <Route path="/admin/export" element={<ExportPage />} />
+        <Route element={<RequireAdminOrEditor redirectTo="/helpers" />}>
+          <Route path="/helpers/tasks/new" element={<NewHelperTaskPage />} />
+          <Route
+            path="/helpers/tasks/:id/edit"
+            element={<EditHelperTaskPage />}
+          />
+        </Route>
+
+        <Route element={<RequireAdmin redirectTo="/" />}>
+          <Route path="/admin/audit-log" element={<AuditLogPage />} />
+          <Route path="/admin/permissions" element={<PermissionsPage />} />
+          <Route path="/admin/statistics" element={<StatisticsPage />} />
+          <Route path="/admin/export" element={<ExportPage />} />
+        </Route>
 
         <Route path="/playground/editor" element={<PlaygroundEditorPage />} />
         <Route path="/playground/error" element={<PlaygroundErrorPage />} />

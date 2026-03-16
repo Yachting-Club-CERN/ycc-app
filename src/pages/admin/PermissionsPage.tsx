@@ -7,7 +7,6 @@ import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
-import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import { HelpersAppPermission } from "@/model/helpers-dtos";
 import client from "@/utils/client";
@@ -28,11 +27,6 @@ const PermissionsPage: React.FC = () => {
       setEditablePermissions(permissions.result);
     }
   }, [permissions.result]);
-
-  const navigate = useNavigate();
-  if (!currentUser.helpersAppAdmin) {
-    void navigate("/");
-  }
 
   const handleClick = (): void => {
     if (!permissions.result) {

@@ -7,22 +7,14 @@ import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import SpacedBox from "@/components/layout/SpacedBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import PageTitle from "@/components/ui/PageTitle";
-import useCurrentUser from "@/context/auth/useCurrentUser";
-import { useNavigate } from "@/hooks/useNavigate";
 import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import dayjs from "@/utils/dayjs";
 
 const ExportPage: React.FC = () => {
-  const currentUser = useCurrentUser();
-  const navigate = useNavigate();
   const yearSelector = useYearSelector();
   const [error, setError] = useState<Error | null>(null);
   const [isExporting, setIsExporting] = useState(false);
-
-  if (!currentUser.helpersAppAdmin) {
-    void navigate("/");
-  }
 
   const handleExport = async (): Promise<void> => {
     setError(null);
