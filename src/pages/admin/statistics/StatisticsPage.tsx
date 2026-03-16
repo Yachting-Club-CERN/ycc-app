@@ -26,7 +26,8 @@ const StatisticsPage: React.FC = () => {
   }
 
   const allTasks = usePromise(
-    () => client.helpers.getTasks(yearSelector.selectedYearForApi),
+    (signal) =>
+      client.helpers.getTasks(yearSelector.selectedYearForApi, signal),
     [yearSelector.selectedYearForApi],
   );
 

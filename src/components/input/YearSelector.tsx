@@ -99,7 +99,12 @@ type UseYearSelectorReturn = {
 const useYearSelector = (
   props: UseYearSelectorProps = {},
 ): UseYearSelectorReturn => {
-  const { initialYear, value: externalValue, onChange, ...rest } = props;
+  const {
+    initialYear,
+    value: externalValue,
+    onChange,
+    includeAllOption,
+  } = props;
 
   // Validate that both value and initialYear are not provided
   if (externalValue !== undefined && initialYear !== undefined) {
@@ -130,9 +135,13 @@ const useYearSelector = (
 
   const component = useMemo(
     () => (
-      <YearSelector value={selectedYear} onChange={handleChange} {...rest} />
+      <YearSelector
+        value={selectedYear}
+        onChange={handleChange}
+        includeAllOption={includeAllOption}
+      />
     ),
-    [selectedYear, handleChange, rest],
+    [selectedYear, handleChange, includeAllOption],
   );
 
   return {

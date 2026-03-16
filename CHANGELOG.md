@@ -5,23 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-NEW end of 2025 near AGM TIME
-
-export, statistics
-
 ## [Unreleased]
 
-TODO these were done sometime in 2025 Q1/Q2 maybe even released
+## [1.4.0] - 2026-03-??
 
 ### Added
 
-- Permissions page (admin): search, grant, edit and revoke
-- External links to ResQ and Mother Duck II logs
-- Editors can show/hide validated tasks on the my tasks page
+- Permissions page (admin): search, grant, edit and revoke (deployed in 2025)
+- External links to ResQ and Mother Duck II logs (deployed in 2025)
+- Editors can show/hide validated tasks on the my tasks page (deployed in 2025)
+- Statistics page (admin): overall stats, participation reports, troubleshooting report
+- JSON export page (admin)
 
 ### Changed
 
-- Email links should always use body in plain text format
+- Email links should always use body in plain text format (deployed in 2025)
 
 ## [1.3.0] - 2025-04-09
 

@@ -52,12 +52,13 @@ const findTasksWithLicenseNotInSurveillance = (
         task.captainRequiredLicenceInfo &&
         task.category.title.toLowerCase() !== "surveillance",
     )
-    .sort(statsSortByDate)
-    .sort((a, b) =>
-      a.captainRequiredLicenceInfo!.licence.localeCompare(
+    .sort((a, b) => {
+      const licenceCmp = a.captainRequiredLicenceInfo!.licence.localeCompare(
         b.captainRequiredLicenceInfo!.licence,
-      ),
-    );
+      );
+      if (licenceCmp !== 0) return licenceCmp;
+      return statsSortByDate(a, b);
+    });
 
 type TaskTableColumn = {
   label: string;
@@ -134,7 +135,10 @@ const TroubleshootingReport: React.FC<Props> = ({
 
   const dateColumn: TaskTableColumn = {
     label: "Date",
-    getValue: (task) => formatDate(task.startsAt || task.deadline!),
+    getValue: (task) =>
+      task.startsAt || task.deadline
+        ? formatDate(task.startsAt || task.deadline)
+        : "N/A",
   };
 
   const categoryColumn: TaskTableColumn = {

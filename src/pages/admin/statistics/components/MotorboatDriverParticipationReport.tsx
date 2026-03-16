@@ -131,7 +131,9 @@ const MotorboatDriverParticipationReport: React.FC<Props> = ({ tasks }) => {
         <Typography variant="h6">Motorboat Driver Participation</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography sx={{ mb: 2 }}>Double-check: {doubleCheck}</Typography>
+        <Typography sx={{ mb: 2 }}>
+          Total driver participations: {doubleCheck}
+        </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
