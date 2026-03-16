@@ -230,7 +230,7 @@ const HelperTasksPage: React.FC = () => {
                 <Checkbox
                   checked={
                     filterOptions.states &&
-                    filterOptions.states.indexOf(key as HelperTaskState) > -1
+                    filterOptions.states.includes(key as HelperTaskState)
                   }
                 />
                 <ListItemText primary={value} />

@@ -45,7 +45,7 @@ const ExportPage: React.FC = () => {
 
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      link.remove();
       URL.revokeObjectURL(url);
     } catch (error) {
       setError(error instanceof Error ? error : new Error(String(error)));

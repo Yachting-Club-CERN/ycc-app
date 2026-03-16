@@ -69,11 +69,7 @@ const calculateMotorboatDriverParticipation = (
   };
 
   for (const task of tasks) {
-    if (
-      task.captain &&
-      task.captainRequiredLicenceInfo &&
-      task.captainRequiredLicenceInfo.licence === "M"
-    ) {
+    if (task.captain && task.captainRequiredLicenceInfo?.licence === "M") {
       handleDriver(task, task.captain.member);
     }
   }

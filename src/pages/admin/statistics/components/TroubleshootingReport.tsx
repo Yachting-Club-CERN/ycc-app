@@ -93,6 +93,40 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks, columns }) => (
   </TableContainer>
 );
 
+const baseColumns: TaskTableColumn[] = [
+  {
+    label: "Task",
+    getValue: (task) => (
+      <Link component={RouterLink} to={`/helpers/tasks/${task.id}`}>
+        {task.title}
+      </Link>
+    ),
+  },
+];
+
+const dateColumn: TaskTableColumn = {
+  label: "Date",
+  getValue: (task) =>
+    task.startsAt || task.deadline
+      ? formatDate(task.startsAt || task.deadline)
+      : "N/A",
+};
+
+const categoryColumn: TaskTableColumn = {
+  label: "Category",
+  getValue: (task) => task.category.title,
+};
+
+const contactColumn: TaskTableColumn = {
+  label: "Contact",
+  getValue: (task) => getFullName(task.contact),
+};
+
+const licenseColumn: TaskTableColumn = {
+  label: "Required License",
+  getValue: (task) => task.captainRequiredLicenceInfo?.licence || "N/A",
+};
+
 type Props = {
   publishedTasks: HelperTask[];
   allTasks: HelperTask[];
@@ -121,40 +155,6 @@ const TroubleshootingReport: React.FC<Props> = ({
     () => findTasksWithLicenseNotInSurveillance(allTasks),
     [allTasks],
   );
-
-  const baseColumns: TaskTableColumn[] = [
-    {
-      label: "Task",
-      getValue: (task) => (
-        <Link component={RouterLink} to={`/helpers/tasks/${task.id}`}>
-          {task.title}
-        </Link>
-      ),
-    },
-  ];
-
-  const dateColumn: TaskTableColumn = {
-    label: "Date",
-    getValue: (task) =>
-      task.startsAt || task.deadline
-        ? formatDate(task.startsAt || task.deadline)
-        : "N/A",
-  };
-
-  const categoryColumn: TaskTableColumn = {
-    label: "Category",
-    getValue: (task) => task.category.title,
-  };
-
-  const contactColumn: TaskTableColumn = {
-    label: "Contact",
-    getValue: (task) => getFullName(task.contact),
-  };
-
-  const licenseColumn: TaskTableColumn = {
-    label: "Required License",
-    getValue: (task) => task.captainRequiredLicenceInfo?.licence || "N/A",
-  };
 
   return (
     <>
