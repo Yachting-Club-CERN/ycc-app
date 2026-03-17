@@ -1,7 +1,7 @@
 import { Locator, Page, expect, test } from "@playwright/test";
 import dayjs from "dayjs";
 
-import { ADMIN_USER } from "./test-constants";
+import { TEST_USERS } from "./test-constants";
 
 const waitForAuthPage = async (page: Page): Promise<void> => {
   console.info("[test] waitForAuthPage()");
@@ -140,7 +140,7 @@ export const app = {
       if (options.expectSignIn) {
         console.info("[test] Expecting sign in");
         await waitForAuthPage(page);
-        const user = options.user ?? ADMIN_USER;
+        const user = options.user ?? TEST_USERS.ADMIN.username;
         console.info("[test] Sign in", user);
 
         await page.fill("#username", user);
