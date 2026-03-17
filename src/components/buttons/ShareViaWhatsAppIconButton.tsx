@@ -8,7 +8,7 @@ type Props = {
 
 const ShareViaWhatsAppIconButton: React.FC<Props> = ({ message }) => {
   const handleClick = (): void => {
-    window.location.href = `whatsapp://send?text=${encodeURIComponent(message)}`;
+    globalThis.location.href = `whatsapp://send?text=${encodeURIComponent(message)}`;
   };
 
   return (

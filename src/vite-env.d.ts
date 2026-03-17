@@ -9,9 +9,8 @@ interface NavigatorUserAgentData {
   platform?: string;
 }
 
-interface Window {
-  oauth2Token?: string;
-}
+// eslint-disable-next-line no-var
+declare var oauth2Token: string | undefined;
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;

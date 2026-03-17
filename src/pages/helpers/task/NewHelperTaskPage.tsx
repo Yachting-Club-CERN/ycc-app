@@ -14,11 +14,11 @@ import HelperTaskForm from "./HelperTaskForm";
 
 const NewHelperTaskPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const taskToCloneId = parseInt(searchParams.get("from") ?? "NaN");
+  const taskToCloneId = Number.parseInt(searchParams.get("from") ?? "NaN");
 
   const taskToClone = usePromise(
     async (signal?: AbortSignal) =>
-      isNaN(taskToCloneId)
+      Number.isNaN(taskToCloneId)
         ? null
         : await client.helpers.getTaskById(taskToCloneId, signal),
     [taskToCloneId],

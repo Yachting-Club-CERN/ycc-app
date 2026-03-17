@@ -22,14 +22,14 @@ export const useNavigate = () => {
     // For onClick events it is only accessible here if onMouseDown called event.preventDefault()
     if (event?.ctrlKey || event?.button === 1) {
       // Note: blur/focus might not work depending on the browser
-      window.open(location, "_blank")?.blur(); //NOSONAR
-      window.focus();
+      globalThis.open(location, "_blank")?.blur();
+      globalThis.focus();
     } else if (event?.shiftKey) {
       // https://stackoverflow.com/a/726803
-      window.open(
+      globalThis.open(
         location,
         "_blank",
-        `height=${window.innerHeight},width=${window.innerWidth})`,
+        `height=${globalThis.innerHeight},width=${globalThis.innerWidth})`,
       );
     } else {
       await navigate(location);

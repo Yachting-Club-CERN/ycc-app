@@ -76,7 +76,7 @@ const RichTextEditor: React.FC<Props> = ({
   });
 
   const handleAddImageClick = (): void => {
-    const url = window.prompt("Image URL:");
+    const url = globalThis.prompt("Image URL:");
     if (!editor || !url) {
       return;
     }

@@ -73,7 +73,7 @@ class HttpClient {
 
     http.interceptors.request.use(
       (config) => {
-        const token = window.oauth2Token;
+        const token = globalThis.oauth2Token;
         if (token) {
           config.headers["Authorization"] = `Bearer ${token}`;
         }

@@ -6,7 +6,7 @@ const getDisplayedRowsCount = async (
   displayedRows: Locator,
 ): Promise<number> => {
   const displayedRowsText = await displayedRows.textContent();
-  return parseInt(displayedRowsText!.split("of")[1].trim());
+  return Number.parseInt(displayedRowsText!.split("of")[1].trim());
 };
 
 test("Member List: Find member & info dialog & filter", async ({ page }) => {

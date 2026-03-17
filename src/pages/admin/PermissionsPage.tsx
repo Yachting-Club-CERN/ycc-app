@@ -44,7 +44,7 @@ const PermissionsPage: React.FC = () => {
 Fair Winds,
 ${currentUser.firstName}`;
 
-    window.location.href = mailtoHref({
+    globalThis.location.href = mailtoHref({
       to,
       body,
     });

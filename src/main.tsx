@@ -13,7 +13,7 @@ import { auth } from "@/context/auth/AuthenticationContext";
 
 import App from "./App";
 
-if (window.location.pathname === "/silent-check-sso") {
+if (globalThis.location.pathname === "/silent-check-sso") {
   // Normally one would use a public silent-check-sso.html file, but:
   // - This application is served by serve for simplicity
   // - Serve in SPA mode automatically redirects *.html requests to * before checking whether the static files exists
@@ -21,7 +21,10 @@ if (window.location.pathname === "/silent-check-sso") {
   //
   // If further issues arise with serve, switch to Nginx
   console.debug("[main] Silent check SSO");
-  window.parent.postMessage(window.location.href, window.location.origin);
+  globalThis.parent.postMessage(
+    globalThis.location.href,
+    globalThis.location.origin,
+  );
 } else {
   console.info("[main] Starting YCC App...");
 
@@ -49,7 +52,7 @@ if (window.location.pathname === "/silent-check-sso") {
       }
     } else {
       alert("Authentication failed");
-      window.location.reload();
+      globalThis.location.reload();
     }
   });
 }

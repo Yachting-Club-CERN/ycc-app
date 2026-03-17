@@ -13,7 +13,7 @@ const useDelay = <T>(
   delayMs: number,
   callback: (event: T) => void,
 ): ((event: T) => void) => {
-  const timeout = useRef<number>(undefined);
+  const timeout = useRef<ReturnType<typeof globalThis.setTimeout>>(undefined);
 
   const delayed = useCallback(
     (event: T) => {
@@ -21,7 +21,7 @@ const useDelay = <T>(
         clearTimeout(timeout.current);
       }
 
-      timeout.current = window.setTimeout(() => {
+      timeout.current = globalThis.setTimeout(() => {
         callback(event);
       }, delayMs);
     },
