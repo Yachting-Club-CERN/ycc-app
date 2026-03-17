@@ -269,7 +269,7 @@ class AuthenticationProvider {
       } else {
         console.error("[auth] Not authenticated");
         await this._keycloak.login();
-        return Promise.reject(new Error("Not authenticated"));
+        throw new Error("Not authenticated");
       }
     } catch (error) {
       return console.error("[auth] Authentication failed", error);

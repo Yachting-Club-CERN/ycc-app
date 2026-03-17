@@ -52,7 +52,7 @@ const signUp = async (
       .getByRole("button", { name: `Sign up as ${role}` })
       .click();
 
-    await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
+    await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 
@@ -121,7 +121,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
     expectSignIn: true,
     user: "IMCDOWEL",
   });
-  await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
+  await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
 
   await signUp(page, id, "Helper");
   await checkHelpers(page, ["Michele HUFF (MHUFF)", "Ian MCDOWELL (IMCDOWEL)"]);

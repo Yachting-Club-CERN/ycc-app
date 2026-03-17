@@ -17,6 +17,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState } from "react";
 
 import {
+  isValidSelectedYear,
   useYearSelector,
   type SelectedYear,
 } from "@/components/input/YearSelector";
@@ -80,9 +81,15 @@ const HelperTasksPage: React.FC = () => {
       const savedFilterOptions = sessionStorage.getItem(
         SESSION_STORAGE.FILTER_OPTIONS,
       );
-      return savedFilterOptions
-        ? (JSON.parse(savedFilterOptions) as HelperTaskFilterOptions)
-        : getDefaultFilterOptions();
+      if (!savedFilterOptions) {
+        return getDefaultFilterOptions();
+      }
+
+      const parsed = JSON.parse(savedFilterOptions) as HelperTaskFilterOptions;
+      if (!isValidSelectedYear(parsed.year)) {
+        parsed.year = currentYear;
+      }
+      return parsed;
     } catch (error) {
       console.error("Error parsing filter options from sessionStorage:", error);
       return getDefaultFilterOptions();

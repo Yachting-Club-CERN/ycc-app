@@ -80,7 +80,7 @@ class HttpClient {
         return config;
       },
       (error: Error) => {
-        return Promise.reject(error);
+        throw error;
       },
     );
 

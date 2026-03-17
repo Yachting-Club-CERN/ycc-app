@@ -7,6 +7,15 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 const ALL_YEARS = "ALL";
 
+const isValidYear = (year: unknown): year is number =>
+  typeof year === "number" &&
+  Number.isInteger(year) &&
+  year >= YCC_FIRST_HELPER_APP_YEAR &&
+  year <= getCurrentYear() + 1;
+
+const isValidSelectedYear = (year: unknown): year is SelectedYear =>
+  year === ALL_YEARS || isValidYear(year);
+
 type SelectedYear = number | typeof ALL_YEARS;
 
 type YearSelectorProps = {
@@ -150,6 +159,11 @@ const useYearSelector = (
     component,
   };
 };
-
-export { ALL_YEARS, useYearSelector, type SelectedYear };
+export {
+  ALL_YEARS,
+  isValidSelectedYear,
+  isValidYear,
+  useYearSelector,
+  type SelectedYear,
+};
 export default YearSelector;
