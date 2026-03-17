@@ -29,7 +29,7 @@ export const useNavigate = () => {
       globalThis.open(
         location,
         "_blank",
-        `height=${globalThis.innerHeight},width=${globalThis.innerWidth})`,
+        `height=${globalThis.innerHeight},width=${globalThis.innerWidth}`,
       );
     } else {
       await navigate(location);

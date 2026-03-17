@@ -97,7 +97,7 @@ class UserFactory {
     );
 
     // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
-    const memberId = Number.parseInt(keycloakId.split(":").slice(-1)[0]);
+    const memberId = Number.parseInt(keycloakId.split(":").at(-1)!);
 
     const username = UserFactory.parseAsString(
       profile?.username,
