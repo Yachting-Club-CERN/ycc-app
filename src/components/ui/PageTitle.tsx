@@ -1,5 +1,7 @@
 import Typography from "@mui/material/Typography";
 
+import useDocumentTitle from "@/hooks/useDocumentTitle";
+
 import Span from "../layout/Span";
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 };
 
 const PageTitle: React.FC<Props> = ({ value, mobileValue }) => {
+  useDocumentTitle(value);
+
   return (
     <Typography variant="h2" className="ycc-page-title" mb={2}>
       <Span sx={{ display: { xs: "inline", sm: "none" } }}>

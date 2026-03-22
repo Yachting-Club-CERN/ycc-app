@@ -22,4 +22,6 @@ interface ImportMetaEnv {
   readonly VITE_APP_KEYCLOAK_REALM?: string;
   readonly VITE_APP_KEYCLOAK_CLIENT?: string;
   readonly VITE_APP_YCC_HULL_URL?: string;
+  /** For testing only: bypasses Keycloak authentication with a mock user. */
+  readonly VITE_TEST_USER?: string;
 }
