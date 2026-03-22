@@ -1,7 +1,9 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
+import DownloadIcon from "@mui/icons-material/Download";
 import ErrorIcon from "@mui/icons-material/Error";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
@@ -54,6 +56,18 @@ const SidebarMenu: React.FC = () => {
       ? [
           [
             {
+              title: "ResQ Logs",
+              path: YCC_URLS.LOGS_RESQ,
+              icon: <DirectionsBoatIcon />,
+            },
+            {
+              title: "Mother Duck II Logs",
+              path: YCC_URLS.LOGS_MOTHER_DUCK_II,
+              icon: <DirectionsBoatIcon />,
+            },
+          ],
+          [
+            {
               title: "Permissions",
               path: "/admin/permissions",
               icon: <HowToRegIcon />,
@@ -64,14 +78,14 @@ const SidebarMenu: React.FC = () => {
               icon: <DescriptionIcon />,
             },
             {
-              title: "ResQ Logs",
-              path: YCC_URLS.LOGS_RESQ,
-              icon: <DirectionsBoatIcon />,
+              title: "Statistics",
+              path: "/admin/statistics",
+              icon: <BarChartIcon />,
             },
             {
-              title: "Mother Duck II Logs",
-              path: YCC_URLS.LOGS_MOTHER_DUCK_II,
-              icon: <DirectionsBoatIcon />,
+              title: "Export",
+              path: "/admin/export",
+              icon: <DownloadIcon />,
             },
           ],
         ]

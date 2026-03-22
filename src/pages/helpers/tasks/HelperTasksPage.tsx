@@ -16,6 +16,11 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState } from "react";
 
+import {
+  isValidSelectedYear,
+  useYearSelector,
+  type SelectedYear,
+} from "@/components/input/YearSelector";
 import ReadingBox from "@/components/layout/ReadingBox";
 import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
@@ -47,8 +52,6 @@ const allStatesWithLabel = {
   [HelperTaskState.Validated]: `Validated ${VALIDATED_EMOJI}`,
 };
 
-const allYearsLabel = "ALL";
-
 const getDefaultFilterOptions = (): HelperTaskFilterOptions => ({
   year: getCurrentYear(),
   search: "",
@@ -66,7 +69,6 @@ const SESSION_STORAGE = {
 
 const HelperTasksPage: React.FC = () => {
   const currentUser = useCurrentUser();
-  const firstHelperAppYear = 2023;
   const currentYear = getCurrentYear();
 
   const [
@@ -79,9 +81,15 @@ const HelperTasksPage: React.FC = () => {
       const savedFilterOptions = sessionStorage.getItem(
         SESSION_STORAGE.FILTER_OPTIONS,
       );
-      return savedFilterOptions
-        ? (JSON.parse(savedFilterOptions) as HelperTaskFilterOptions)
-        : getDefaultFilterOptions();
+      if (!savedFilterOptions) {
+        return getDefaultFilterOptions();
+      }
+
+      const parsed = JSON.parse(savedFilterOptions) as HelperTaskFilterOptions;
+      if (!isValidSelectedYear(parsed.year)) {
+        parsed.year = currentYear;
+      }
+      return parsed;
     } catch (error) {
       console.error("Error parsing filter options from sessionStorage:", error);
       return getDefaultFilterOptions();
@@ -93,6 +101,16 @@ const HelperTasksPage: React.FC = () => {
       ? (savedDisplay as HelperTasksDisplay)
       : "cards";
   });
+
+  // Non-admin/editor users can only view the current year
+  useEffect(() => {
+    if (
+      !currentUser.helpersAppAdminOrEditor &&
+      filterOptions.year !== currentYear
+    ) {
+      setFilterOptionsImmediately(getDefaultFilterOptions());
+    }
+  }, [currentUser.helpersAppAdminOrEditor]);
 
   useEffect(() => {
     console.info("Save filter options to session storage", filterOptions);
@@ -107,20 +125,10 @@ const HelperTasksPage: React.FC = () => {
     sessionStorage.setItem(SESSION_STORAGE.DISPLAY, display);
   }, [display]);
 
-  const years = Array.from(
-    // Add the next year too
-    { length: currentYear - firstHelperAppYear + 2 },
-    (_, i) => firstHelperAppYear + i,
-  );
-
   const handleReset = (): void =>
     setFilterOptionsImmediately(getDefaultFilterOptions());
 
-  const handleYearChange = (event: SelectChangeEvent): void => {
-    const year =
-      event.target.value === allYearsLabel
-        ? null
-        : parseInt(event.target.value);
+  const handleYearChange = (year: SelectedYear): void => {
     const newFilterOptions: HelperTaskFilterOptions = { ...filterOptions };
 
     newFilterOptions.year = year;
@@ -162,6 +170,12 @@ const HelperTasksPage: React.FC = () => {
     });
   };
 
+  const yearSelector = useYearSelector({
+    value: filterOptions.year,
+    includeAllOption: true,
+    onChange: handleYearChange,
+  });
+
   return (
     <>
       <HelpersSpeedDial />
@@ -169,23 +183,7 @@ const HelperTasksPage: React.FC = () => {
       <RowStack wrap={false} mb={2}>
         <PageTitle value="Helper Tasks" mobileValue="Tasks" />
 
-        {currentUser.helpersAppAdminOrEditor && (
-          <Select
-            value={filterOptions.year?.toString() ?? allYearsLabel}
-            onChange={handleYearChange}
-            variant="outlined"
-            size="small"
-          >
-            {years.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-            <MenuItem key={9999} value={allYearsLabel}>
-              {allYearsLabel}
-            </MenuItem>
-          </Select>
-        )}
+        {currentUser.helpersAppAdminOrEditor && yearSelector.component}
 
         <ToggleButtonGroup
           value={display}
@@ -247,10 +245,9 @@ const HelperTasksPage: React.FC = () => {
             {Object.entries(allStatesWithLabel).map(([key, value]) => (
               <MenuItem key={key} value={key}>
                 <Checkbox
-                  checked={
-                    filterOptions.states &&
-                    filterOptions.states.indexOf(key as HelperTaskState) > -1
-                  }
+                  checked={filterOptions.states?.includes(
+                    key as HelperTaskState,
+                  )}
                 />
                 <ListItemText primary={value} />
               </MenuItem>

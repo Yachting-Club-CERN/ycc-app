@@ -11,7 +11,7 @@ type Props = {
 
 const ShareViaEmailIconButton: React.FC<Props> = ({ subject, body }) => {
   const handleClick = (): void => {
-    window.location.href = mailtoHref({
+    globalThis.location.href = mailtoHref({
       subject,
       body,
     });

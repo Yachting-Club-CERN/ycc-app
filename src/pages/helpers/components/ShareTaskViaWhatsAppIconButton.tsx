@@ -18,7 +18,7 @@ I wanted to share this task with you: ${task.title}
 
 _${task.shortDescription}_
 
-Open in the App: ${window.location.href}
+Open in the App: ${globalThis.location.href}
 
 Fair Winds,
 ${currentUser.firstName} ${currentUser.lastName}`;

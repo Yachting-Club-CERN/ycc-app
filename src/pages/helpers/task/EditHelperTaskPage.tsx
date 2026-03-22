@@ -3,11 +3,9 @@ import { useParams } from "react-router-dom";
 import ReadingBox from "@/components/layout/ReadingBox";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-import useCurrentUser from "@/context/auth/useCurrentUser";
 import useHelperTaskCategories from "@/context/shared-data/useHelperTaskCategories";
 import useLicenceInfos from "@/context/shared-data/useLicenceInfos";
 import useMembers from "@/context/shared-data/useMembers";
-import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import client from "@/utils/client";
 import { getCurrentYear } from "@/utils/date-utils";
@@ -18,20 +16,15 @@ const EditHelperTaskPage: React.FC = () => {
   const { id } = useParams();
   const task = usePromise(
     async (signal?: AbortSignal) => {
-      const task_id = parseInt(id ?? "NaN");
-      if (isNaN(task_id)) {
-        throw new Error("Invalid task ID");
+      const task_id = Number.parseInt(id ?? "NaN");
+      if (Number.isNaN(task_id)) {
+        throw new TypeError("Invalid task ID");
       } else {
         return await client.helpers.getTaskById(task_id, signal);
       }
     },
     [id],
   );
-  const currentUser = useCurrentUser();
-  const navigate = useNavigate();
-  if (!currentUser.helpersAppAdminOrEditor) {
-    void navigate("/helpers");
-  }
 
   const helperTaskCategories = useHelperTaskCategories();
   const members = useMembers(getCurrentYear());

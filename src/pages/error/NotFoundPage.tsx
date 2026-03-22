@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => {
 
   const debug = {
     problem: "Page not found",
-    windowLocation: window.location.href,
+    windowLocation: globalThis.location.href,
     routerLocation: location,
   };
   console.debug("Debug info: ", debug);

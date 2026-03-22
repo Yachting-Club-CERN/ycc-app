@@ -21,7 +21,7 @@ ${createTimingInfoLine(task)}
 
 ${task.shortDescription}
 
-Open in the App: ${window.location.href}
+Open in the App: ${globalThis.location.href}
 
 Fair Winds,
 ${currentUser.firstName} ${currentUser.lastName}`;

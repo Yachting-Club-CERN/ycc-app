@@ -7,7 +7,6 @@ import RowStack from "@/components/layout/RowStack";
 import PageTitle from "@/components/ui/PageTitle";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import useCurrentUser from "@/context/auth/useCurrentUser";
-import { useNavigate } from "@/hooks/useNavigate";
 import usePromise from "@/hooks/usePromise";
 import { HelpersAppPermission } from "@/model/helpers-dtos";
 import client from "@/utils/client";
@@ -29,11 +28,6 @@ const PermissionsPage: React.FC = () => {
     }
   }, [permissions.result]);
 
-  const navigate = useNavigate();
-  if (!currentUser.helpersAppAdmin) {
-    void navigate("/");
-  }
-
   const handleClick = (): void => {
     if (!permissions.result) {
       return;
@@ -50,7 +44,7 @@ const PermissionsPage: React.FC = () => {
 Fair Winds,
 ${currentUser.firstName}`;
 
-    window.location.href = mailtoHref({
+    globalThis.location.href = mailtoHref({
       to,
       body,
     });

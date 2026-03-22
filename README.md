@@ -42,11 +42,13 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 ```sh
 pnpm lint
 pnpm fix
+pnpm test
 ```
 
 You can run the end-to-end tests using Playwright:
 
 ```sh
+pnpm exec playwright install
 pnpm exec playwright test --ui
 ```
 

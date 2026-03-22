@@ -97,7 +97,7 @@ class UserFactory {
     );
 
     // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
-    const memberId = parseInt(keycloakId.split(":").slice(-1)[0]);
+    const memberId = Number.parseInt(keycloakId.split(":").at(-1)!);
 
     const username = UserFactory.parseAsString(
       profile?.username,
@@ -227,7 +227,7 @@ class AuthenticationProvider {
       const authenticated = await this._keycloak.init({
         onLoad: "check-sso",
         // See main.tsx
-        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso`,
+        silentCheckSsoRedirectUri: `${globalThis.location.origin}/silent-check-sso`,
       });
 
       if (authenticated) {
@@ -269,7 +269,7 @@ class AuthenticationProvider {
       } else {
         console.error("[auth] Not authenticated");
         await this._keycloak.login();
-        return Promise.reject(new Error("Not authenticated"));
+        throw new Error("Not authenticated");
       }
     } catch (error) {
       return console.error("[auth] Authentication failed", error);
@@ -282,7 +282,7 @@ class AuthenticationProvider {
   };
 
   private readonly updateGlobalToken = (): void => {
-    window.oauth2Token = this._keycloak.token;
+    globalThis.oauth2Token = this._keycloak.token;
   };
 }
 

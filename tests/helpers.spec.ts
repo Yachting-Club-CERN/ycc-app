@@ -1,6 +1,7 @@
 import { Page, expect, test } from "@playwright/test";
 import dayjs from "dayjs";
 
+import { TEST_USERS } from "./test-constants";
 import { app, expectSameElements, ui } from "./test-utils";
 
 const createTask = async (page: Page): Promise<number> =>
@@ -20,7 +21,10 @@ const createTask = async (page: Page): Promise<number> =>
       .getByLabel("Short Description")
       .fill(`Test task @ ${taskTime} description`);
 
-    await ui.selectOption(page.getByLabel("Contact"), "PWHITE"); // Next one in the list
+    await ui.selectOption(
+      page.getByLabel("Contact"),
+      TEST_USERS.CONTACT.username,
+    );
 
     await page.getByRole("button", { name: "Deadline" }).click();
     await ui.selectDateTime(
@@ -36,7 +40,7 @@ const createTask = async (page: Page): Promise<number> =>
     await page.waitForURL(/\/helpers\/tasks\/\d+$/);
     await expect(page.locator("h2")).toContainText(title);
 
-    const id = parseInt(page.url().split("/").pop()!);
+    const id = Number.parseInt(page.url().split("/").pop()!);
     return id;
   });
 
@@ -52,7 +56,7 @@ const signUp = async (
       .getByRole("button", { name: `Sign up as ${role}` })
       .click();
 
-    await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
+    await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 
@@ -94,7 +98,7 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await checkCaptain(page, null);
 
   await signUp(page, id, "Captain");
-  await checkCaptain(page, "Michele HUFF (MHUFF)");
+  await checkCaptain(page, TEST_USERS.ADMIN.display);
 });
 
 test("Helpers: Create task and sign up as helper", async ({ browser }) => {
@@ -110,7 +114,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await checkHelpers(page, []);
 
   await signUp(page, id, "Helper");
-  await checkHelpers(page, ["Michele HUFF (MHUFF)"]);
+  await checkHelpers(page, [TEST_USERS.ADMIN.display]);
 
   await app.signOut(page);
 
@@ -119,10 +123,13 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
 
   await app.loadPage(page, `/helpers/tasks/${id}`, {
     expectSignIn: true,
-    user: "IMCDOWEL",
+    user: TEST_USERS.MEMBER.username,
   });
-  await page.waitForURL(RegExp(`/helpers/tasks/${id}$`));
+  await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
 
   await signUp(page, id, "Helper");
-  await checkHelpers(page, ["Michele HUFF (MHUFF)", "Ian MCDOWELL (IMCDOWEL)"]);
+  await checkHelpers(page, [
+    TEST_USERS.ADMIN.display,
+    TEST_USERS.MEMBER.display,
+  ]);
 });

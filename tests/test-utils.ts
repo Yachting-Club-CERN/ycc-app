@@ -1,7 +1,7 @@
 import { Locator, Page, expect, test } from "@playwright/test";
 import dayjs from "dayjs";
 
-import { ADMIN_USER } from "./test-constants";
+import { TEST_USERS } from "./test-constants";
 
 const waitForAuthPage = async (page: Page): Promise<void> => {
   console.info("[test] waitForAuthPage()");
@@ -11,7 +11,7 @@ const waitForAuthPage = async (page: Page): Promise<void> => {
 const waitForNonAuthPage = async (page: Page): Promise<void> => {
   console.info("[test] waitForNonAuthPage()");
   await page.waitForFunction(
-    () => !window.location.href.includes("/openid-connect/"),
+    () => !globalThis.location.href.includes("/openid-connect/"),
   );
 };
 
@@ -56,8 +56,8 @@ export const ui = {
       // On mobile the field is not editable and a dialog pops up when the field is clicked.
 
       // Select month
-      const year = parseInt(date.substring(6, 10));
-      const month = parseInt(date.substring(3, 5));
+      const year = Number.parseInt(date.substring(6, 10));
+      const month = Number.parseInt(date.substring(3, 5));
 
       // Only future dates, good enough
       const click = 12 * (year - dayjs().year()) + (month - dayjs().month());
@@ -67,21 +67,21 @@ export const ui = {
       }
 
       // Select day
-      const dayStr = parseInt(date.substring(0, 2)).toString(); // Strip leading '0'
+      const dayStr = Number.parseInt(date.substring(0, 2)).toString(); // Strip leading '0'
       await dialog
         .getByRole("gridcell", { name: dayStr, exact: true })
         .last()
         .click();
 
       // Select hour
-      const hour = parseInt(date.substring(11, 13));
+      const hour = Number.parseInt(date.substring(11, 13));
       const hourStr = hour === 0 ? "00" : hour.toString();
       await dialog
         .getByRole("option", { name: `${hourStr} hours`, exact: true })
         .tap({ force: true });
 
       // Select minute
-      const minute = parseInt(date.substring(14, 16));
+      const minute = Number.parseInt(date.substring(14, 16));
       const closest5Minute = (Math.round(minute / 5) * 5) % 60; // Round to 5, good enough
       const closest5MinuteStr =
         closest5Minute < 10 ? `0${closest5Minute}` : closest5Minute.toString();
@@ -140,7 +140,7 @@ export const app = {
       if (options.expectSignIn) {
         console.info("[test] Expecting sign in");
         await waitForAuthPage(page);
-        const user = options.user ?? ADMIN_USER;
+        const user = options.user ?? TEST_USERS.ADMIN.username;
         console.info("[test] Sign in", user);
 
         await page.fill("#username", user);
