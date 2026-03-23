@@ -1,6 +1,6 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 
-import toJson from "../toJson";
+import toJson from "@/utils/toJson";
 
 export const check = (
   value: unknown,

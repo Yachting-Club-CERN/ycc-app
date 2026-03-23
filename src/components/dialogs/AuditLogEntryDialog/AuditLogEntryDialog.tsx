@@ -4,7 +4,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import usePromise from "@/hooks/usePromise";
@@ -19,7 +18,7 @@ type Props = {
   onClose: () => void;
 };
 
-const AuditLogEntryDialog: React.FC<Props> = ({ entry, onClose }) => {
+const AuditLogEntryDialog = ({ entry, onClose }: Props): React.ReactNode => {
   const entryWithData = usePromise(
     async (signal?: AbortSignal) =>
       entry ? await client.auditLog.getEntryById(entry.id, signal) : null,

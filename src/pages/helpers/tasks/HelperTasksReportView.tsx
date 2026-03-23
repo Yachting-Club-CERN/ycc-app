@@ -3,15 +3,14 @@ import { Link as RouterLink } from "react-router-dom";
 
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import { HelperTask } from "@/model/helpers-dtos";
-
-import { createTimingInfoLine } from "../helpers-format";
-import { getTaskLocation } from "../helpers-utils";
+import { createTimingInfoLine } from "@/pages/helpers/helpers-format";
+import { getTaskLocation } from "@/pages/helpers/helpers-utils";
 
 type Props = {
   tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTasksReportView: React.FC<Props> = ({ tasks }) => {
+const HelperTasksReportView = ({ tasks }: Props): React.ReactNode => {
   return (
     <>
       <SpacedTypography>

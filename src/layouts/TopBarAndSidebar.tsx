@@ -3,7 +3,7 @@ import { useState } from "react";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 
-const TopBarAndSidebar: React.FC = () => {
+const TopBarAndSidebar = (): React.ReactNode => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleDrawer =
     (open?: boolean) =>

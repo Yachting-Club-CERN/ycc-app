@@ -4,12 +4,11 @@ import Typography from "@mui/material/Typography";
 import {
   DataGrid,
   GridCellParams,
+  gridClasses,
   GridColDef,
   GridRowParams,
   MuiEvent,
-  gridClasses,
 } from "@mui/x-data-grid";
-import { JSX } from "react";
 
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
@@ -18,15 +17,14 @@ import useCurrentUser from "@/context/auth/useCurrentUser";
 import { useNavigate } from "@/hooks/useNavigate";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTask, HelperTaskHelper } from "@/model/helpers-dtos";
-import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
-
-import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
-import { fakeRandomSignUpText } from "../helpers-format";
+import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInfo";
+import { fakeRandomSignUpText } from "@/pages/helpers/helpers-format";
 import {
   canSignUpAsCaptain,
   canSignUpAsHelper,
   getTaskLocation,
-} from "../helpers-utils";
+} from "@/pages/helpers/helpers-utils";
+import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.ycc-urgent`]: {
@@ -44,7 +42,7 @@ type Props = {
   tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
+const HelperTasksDataGrid = ({ tasks }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const navigate = useNavigate();
 
@@ -65,7 +63,9 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
     memberInfoDialog.open({ member });
   };
 
-  const createMemberDialogLink = (member: MemberPublicInfo): JSX.Element => (
+  const createMemberDialogLink = (
+    member: MemberPublicInfo,
+  ): React.ReactNode => (
     <Link
       sx={{ color: "grey", textDecorationColor: "grey" }}
       onClick={(event) => openMemberInfoDialogFromGrid(event, member)}
@@ -76,7 +76,7 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
 
   const renderTimingCell = (
     params: GridCellParams<HelperTask>,
-  ): JSX.Element => {
+  ): React.ReactNode => {
     const task = params.row;
     return (
       <DataGridCell>
@@ -87,7 +87,9 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
     );
   };
 
-  const renderTaskCell = (params: GridCellParams<HelperTask>): JSX.Element => {
+  const renderTaskCell = (
+    params: GridCellParams<HelperTask>,
+  ): React.ReactNode => {
     const task = params.row;
     return (
       <DataGridCell>
@@ -101,7 +103,7 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
 
   const renderContactCell = (
     params: GridCellParams<HelperTask>,
-  ): JSX.Element => {
+  ): React.ReactNode => {
     const task = params.row;
 
     return (
@@ -115,7 +117,7 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
 
   const renderCaptainCell = (
     params: GridCellParams<HelperTask>,
-  ): JSX.Element => {
+  ): React.ReactNode => {
     const task = params.row;
 
     if (task.captain) {
@@ -141,7 +143,7 @@ const HelperTasksDataGrid: React.FC<Props> = ({ tasks }) => {
 
   const renderHelpersCell = (
     params: GridCellParams<HelperTask>,
-  ): JSX.Element => {
+  ): React.ReactNode => {
     const task = params.row;
 
     return (

@@ -1,7 +1,6 @@
 import { SxProps } from "@mui/material";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { JSX } from "react";
 
 import { OpenConfirmationDialogProps } from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import { HelperTask } from "@/model/helpers-dtos";
@@ -13,7 +12,7 @@ type WithButtonProps = {
 
 type WithIconButtonProps = {
   buttonText?: never;
-  buttonIcon: JSX.Element;
+  buttonIcon: React.ReactNode;
 };
 
 type CommonProps = {
@@ -21,7 +20,7 @@ type CommonProps = {
   buttonSx?: SxProps;
 
   dialogTitle: string;
-  dialogContent: JSX.Element;
+  dialogContent: React.ReactNode;
   dialogConfirmButtonColor?: ButtonProps["color"];
   dialogConfirmButtonText?: string;
   dialogCancelButtonColor?: ButtonProps["color"];
@@ -40,7 +39,7 @@ export type TaskActionProps = {
   task: HelperTask;
 } & Pick<Props, "openConfirmationDialog" | "onTaskUpdate" | "onError">;
 
-const TaskActionButton: React.FC<Props> = ({
+const TaskActionButton = ({
   buttonText,
   buttonIcon,
   buttonColor,
@@ -56,7 +55,7 @@ const TaskActionButton: React.FC<Props> = ({
   openConfirmationDialog,
   onTaskUpdate: updateTask,
   onError,
-}) => {
+}: Props): React.ReactNode => {
   const handleClick = (): void => {
     onError(undefined);
     if (onDialogOpening) {

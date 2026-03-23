@@ -11,13 +11,13 @@ type Props = {
   delayed?: boolean;
 };
 
-const ConfirmButton: React.FC<Props> = ({
+const ConfirmButton = ({
   onConfirm,
   loading,
   color = "success",
   text = "Confirm",
   delayed = false,
-}) => {
+}: Props): React.ReactNode => {
   const [enabled, setEnabled] = useState(!delayed);
   const [countdownMs, setCountdownMs] = useState(CONFIRM_BUTTON_DELAY_MS);
 

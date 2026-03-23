@@ -1,15 +1,15 @@
 import useMemberAutocomplete from "@/components/ui/MemberAutocomplete/useMemberAutocomplete";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canSetCaptain } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import NotificationDialogNotice from "./NotificationDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canSetCaptain } from "../../helpers-utils";
 
-const SetCaptainActionButton: React.FC<TaskActionProps> = ({
+const SetCaptainActionButton = ({
   task,
   ...props
-}) => {
+}: TaskActionProps): React.ReactNode => {
   const currentUser = useCurrentUser();
   const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 

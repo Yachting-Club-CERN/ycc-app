@@ -28,7 +28,6 @@ const getText = (value: unknown): string => {
   } else if (typeof value === "function" || typeof value === "object") {
     return toJson(value);
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
     return value.toString();
   }
 };

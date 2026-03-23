@@ -1,4 +1,4 @@
-import { Page, expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import dayjs from "dayjs";
 
 import { TEST_USERS } from "./test-constants";

@@ -1,7 +1,7 @@
 import { AxiosError, AxiosHeaders } from "axios";
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 
-import getErrorText from "../error-helper";
+import getErrorText from "@/utils/error-helper";
 
 const check = (error: unknown, expected: string): void => {
   expect(getErrorText(error)).toEqual(expected);

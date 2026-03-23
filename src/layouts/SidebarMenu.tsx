@@ -21,7 +21,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import React, { JSX } from "react";
+import React from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import config, { Environment } from "@/config";
@@ -31,10 +31,10 @@ import { YCC_URLS } from "@/utils/constants";
 type SidebarItem = {
   title: string;
   path: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 };
 
-const SidebarMenu: React.FC = () => {
+const SidebarMenu = (): React.ReactNode => {
   const location = useLocation();
   const auth = useAuth();
   const currentUser = auth.currentUser;

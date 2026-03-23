@@ -1,4 +1,4 @@
-import { Page, expect, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 
 import { app } from "./test-utils";
 

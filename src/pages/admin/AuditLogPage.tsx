@@ -18,7 +18,7 @@ import dayjs from "@/utils/dayjs";
 
 import AuditLogEntriesDataGrid from "./AuditLogEntriesDataGrid";
 
-const AuditLogPage: React.FC = () => {
+const AuditLogPage = (): React.ReactNode => {
   const deleteEntriesDialog = useConfirmationDialog();
   const [error, setError] = useState<unknown>();
   const [reloadFlag, setReloadFlag] = useState(0);

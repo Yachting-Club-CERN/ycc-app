@@ -19,7 +19,7 @@ import PlaygroundStylesPage from "@/pages/playground/PlaygroundStylesPage";
 import ErrorFallback from "./ErrorFallback";
 import { RequireAdmin, RequireAdminOrEditor } from "./RequireAuth";
 
-const AppRoutes: React.FC = () => {
+const AppRoutes = (): React.ReactNode => {
   const location = useLocation();
 
   return (

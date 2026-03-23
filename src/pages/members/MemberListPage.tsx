@@ -10,7 +10,7 @@ import dayjs from "@/utils/dayjs";
 
 import MembersDataGrid from "./MembersDataGrid";
 
-const MemberListPage: React.FC = () => {
+const MemberListPage = (): React.ReactNode => {
   const currentYear = dayjs().year();
   const [search, setSearch] = useState<string>("");
 

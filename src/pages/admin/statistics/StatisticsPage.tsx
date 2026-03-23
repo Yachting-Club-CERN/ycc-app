@@ -14,7 +14,7 @@ import MotorboatDriverParticipationReport from "./components/MotorboatDriverPart
 import OverallStatisticsReport from "./components/OverallStatisticsReport";
 import TroubleshootingReport from "./components/TroubleshootingReport";
 
-const StatisticsPage: React.FC = () => {
+const StatisticsPage = (): React.ReactNode => {
   const yearSelector = useYearSelector();
 
   const allTasks = usePromise(

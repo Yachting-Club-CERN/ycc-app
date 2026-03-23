@@ -60,7 +60,7 @@ type Props = {
   tasks: HelperTask[];
 };
 
-const ContactStatisticsReport: React.FC<Props> = ({ tasks }) => {
+const ContactStatisticsReport = ({ tasks }: Props): React.ReactNode => {
   const contactStatistics = useMemo(
     () => calculateContactStatistics(tasks),
     [tasks],

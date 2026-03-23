@@ -145,7 +145,7 @@ type Props = {
   tasks: HelperTask[];
 };
 
-const OverallStatisticsReport: React.FC<Props> = ({ tasks }) => {
+const OverallStatisticsReport = ({ tasks }: Props): React.ReactNode => {
   const statistics = useMemo(() => {
     return calculateOverallStatistics(tasks);
   }, [tasks]);

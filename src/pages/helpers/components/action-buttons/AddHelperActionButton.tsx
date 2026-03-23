@@ -1,15 +1,15 @@
 import useMemberAutocomplete from "@/components/ui/MemberAutocomplete/useMemberAutocomplete";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canAddHelper } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import NotificationDialogNotice from "./NotificationDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canAddHelper } from "../../helpers-utils";
 
-const AddHelperActionButton: React.FC<TaskActionProps> = ({
+const AddHelperActionButton = ({
   task,
   ...props
-}) => {
+}: TaskActionProps): React.ReactNode => {
   const currentUser = useCurrentUser();
   const memberAutoComplete = useMemberAutocomplete({ mt: 1, mb: 2 });
 

@@ -17,7 +17,7 @@ import useSharedData from "./context/shared-data/useSharedData";
 import { theme } from "./Theme";
 import { getCurrentYear } from "./utils/date-utils";
 
-const App: React.FC = () => {
+const App = (): React.ReactNode => {
   const currentUser = useCurrentUser();
   const sharedData = useSharedData();
 

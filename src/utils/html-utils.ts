@@ -2,7 +2,7 @@ import HTMLReactParser, {
   Element as DOMElement,
   Text as DOMText,
 } from "html-react-parser";
-import React, { JSX } from "react";
+import React from "react";
 
 const forbiddenTags = [
   "base",
@@ -31,9 +31,7 @@ const forbiddenTags = [
  * @param html HTML to sanitise
  * @returns React component(s)
  */
-export const sanitiseHtmlForReact = (
-  html: string,
-): JSX.Element | JSX.Element[] => {
+export const sanitiseHtmlForReact = (html: string): React.ReactNode => {
   const reactDom = HTMLReactParser(html, {
     // We trust our backend + React + RichTextEditor, but you never know...
     replace: (domNode) => {

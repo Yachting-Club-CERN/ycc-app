@@ -41,7 +41,7 @@ type Props = {
   onUpdate: (html: string) => void;
 };
 
-const RichTextEditor: React.FC<Props> = ({
+const RichTextEditor = ({
   initialContent,
   placeholder,
   minHeight,
@@ -49,7 +49,7 @@ const RichTextEditor: React.FC<Props> = ({
   onBlur,
   onCreate,
   onUpdate,
-}) => {
+}: Props): React.ReactNode => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({

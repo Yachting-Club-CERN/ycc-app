@@ -9,16 +9,15 @@ import SpacedTypography from "@/components/ui/SpacedTypography";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
-import { SEARCH_DELAY_MS } from "@/utils/constants";
-import { getCurrentYear } from "@/utils/date-utils";
-
-import HelperTaskCardGrid from "../helpers/components/HelperTaskCardGrid";
+import HelperTaskCardGrid from "@/pages/helpers/components/HelperTaskCardGrid";
 import {
   HelperTaskFilterOptions,
   useFilteredHelperTasks,
-} from "../helpers/useFilteredHelperTasks";
+} from "@/pages/helpers/useFilteredHelperTasks";
+import { SEARCH_DELAY_MS } from "@/utils/constants";
+import { getCurrentYear } from "@/utils/date-utils";
 
-const MyTasksView: React.FC = () => {
+const MyTasksView = (): React.ReactNode => {
   const [
     filterOptions,
     delayedFilterOptions,

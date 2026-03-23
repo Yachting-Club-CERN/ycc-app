@@ -9,7 +9,7 @@ type Props = {
   body: string;
 };
 
-const ShareViaEmailIconButton: React.FC<Props> = ({ subject, body }) => {
+const ShareViaEmailIconButton = ({ subject, body }: Props): React.ReactNode => {
   const handleClick = (): void => {
     globalThis.location.href = mailtoHref({
       subject,

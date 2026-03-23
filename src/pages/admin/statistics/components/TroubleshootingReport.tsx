@@ -70,7 +70,7 @@ type TaskTableProps = {
   columns: TaskTableColumn[];
 };
 
-const TaskTable: React.FC<TaskTableProps> = ({ tasks, columns }) => (
+const TaskTable = ({ tasks, columns }: TaskTableProps): React.ReactNode => (
   <TableContainer component={Paper} sx={{ mb: 3 }}>
     <Table>
       <TableHead>
@@ -132,10 +132,10 @@ type Props = {
   allTasks: HelperTask[];
 };
 
-const TroubleshootingReport: React.FC<Props> = ({
+const TroubleshootingReport = ({
   publishedTasks,
   allTasks,
-}) => {
+}: Props): React.ReactNode => {
   const surveillanceTasksWithoutCaptain = useMemo(
     () => findSurveillanceTasksWithoutCaptain(publishedTasks),
     [publishedTasks],

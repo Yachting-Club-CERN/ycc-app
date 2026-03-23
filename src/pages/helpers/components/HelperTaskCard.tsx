@@ -5,15 +5,15 @@ import Typography from "@mui/material/Typography";
 
 import { useNavigate } from "@/hooks/useNavigate";
 import { HelperTask } from "@/model/helpers-dtos";
+import { getTaskLocation } from "@/pages/helpers/helpers-utils";
 
-import { getTaskLocation } from "../helpers-utils";
 import HelperTaskTimingInfo from "./HelperTaskTimingInfo";
 
 type Props = {
   task: HelperTask;
 };
 
-const HelperTaskCard: React.FC<Props> = ({ task }) => {
+const HelperTaskCard = ({ task }: Props): React.ReactNode => {
   const navigate = useNavigate();
   const handleClick = async (
     event: React.MouseEvent<HTMLElement>,

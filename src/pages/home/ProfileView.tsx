@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 
-const ProfileView: React.FC = () => {
+const ProfileView = (): React.ReactNode => {
   const currentUser = useCurrentUser();
   const yccOnly = (array: readonly string[]): string[] =>
     array

@@ -14,7 +14,7 @@ type Props = {
   sx?: SxProps<Theme>;
 };
 
-const MemberAutocomplete: React.FC<Props> = ({ onChange, sx }) => {
+const MemberAutocomplete = ({ onChange, sx }: Props): React.ReactNode => {
   const members = useMembers(getCurrentYear());
   const [selected, setSelected] = useState<MemberPublicInfo | null>(null);
 

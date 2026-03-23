@@ -116,7 +116,7 @@ type Props = {
   tasks: HelperTask[];
 };
 
-const MemberParticipationReport: React.FC<Props> = ({ tasks }) => {
+const MemberParticipationReport = ({ tasks }: Props): React.ReactNode => {
   const memberParticipation = useMemo(() => {
     return calculateMemberParticipation(tasks);
   }, [tasks]);

@@ -74,7 +74,7 @@ type Props = {
   search: string;
 };
 
-const MembersDataGrid: React.FC<Props> = ({ year, search }) => {
+const MembersDataGrid = ({ year, search }: Props): React.ReactNode => {
   const members = useMembers(year);
 
   const memberInfoDialog = useMemberInfoDialog();

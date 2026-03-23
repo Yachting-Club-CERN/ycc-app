@@ -12,7 +12,7 @@ const BlockBox = styled(Box)({
  *
  * Useful when `<div>` is not allowed.
  */
-const SpanBlockBox: React.FC<Omit<BoxProps, "component">> = (props) => (
+const SpanBlockBox = (props: Omit<BoxProps, "component">): React.ReactNode => (
   <BlockBox component="span" {...props} />
 );
 

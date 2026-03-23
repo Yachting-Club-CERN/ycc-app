@@ -24,11 +24,11 @@ type YearSelectorProps = {
   includeAllOption?: boolean;
 };
 
-const YearSelector: React.FC<YearSelectorProps> = ({
+const YearSelector = ({
   value,
   onChange,
   includeAllOption = false,
-}) => {
+}: YearSelectorProps): React.ReactNode => {
   const currentYear = getCurrentYear();
 
   if (value === ALL_YEARS && !includeAllOption) {
@@ -80,7 +80,7 @@ type UseYearSelectorProps = {
 type UseYearSelectorReturn = {
   selectedYear: SelectedYear;
   selectedYearForApi: number | null;
-  component: React.ReactElement;
+  component: React.ReactNode;
 };
 
 /**

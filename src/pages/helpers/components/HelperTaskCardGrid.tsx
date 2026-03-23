@@ -8,7 +8,7 @@ type Props = {
   tasks: Readonly<HelperTask[]>;
 };
 
-const HelperTaskCardGrid: React.FC<Props> = ({ tasks }) => {
+const HelperTaskCardGrid = ({ tasks }: Props): React.ReactNode => {
   return (
     <Grid2 container spacing={2} mb={2}>
       {tasks.map((task) => (

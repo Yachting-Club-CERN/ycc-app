@@ -15,7 +15,7 @@ import { mailtoHref } from "@/utils/utils";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 
-const PermissionsPage: React.FC = () => {
+const PermissionsPage = (): React.ReactNode => {
   const currentUser = useCurrentUser();
   const permissions = usePromise(client.helpers.getPermissions);
   const [editablePermissions, setEditablePermissions] = useState<
