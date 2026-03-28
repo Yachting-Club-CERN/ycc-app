@@ -4,7 +4,7 @@ import dayjs from "@/utils/dayjs";
 
 export const zodTransformDate = (
   value: unknown,
-  ctx: z.core.$RefinementCtx,
+  ctx: z.RefinementCtx,
 ): dayjs.Dayjs => {
   if (typeof value === "string") {
     const date = dayjs(value);
