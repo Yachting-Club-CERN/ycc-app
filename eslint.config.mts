@@ -187,7 +187,6 @@ const eslintConfig = defineConfig([
     },
     rules: {
       ...jsRules,
-      // TODO check this probably config needs to be reorganized
       "import/no-extraneous-dependencies": "off",
       // Disable import resolution for config files (workspace packages and eslint/config not resolved)
       "import/no-unresolved": "off",
@@ -233,8 +232,6 @@ const eslintConfig = defineConfig([
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // "react/prop-types": "off",
-      // "react/react-in-jsx-scope": "off",
     },
   },
 

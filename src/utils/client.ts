@@ -111,7 +111,7 @@ class HttpClient {
         url: path,
         params,
         data,
-        signal: signal as AbortSignal,
+        ...(signal ? { signal } : {}),
       });
 
       console.debug(

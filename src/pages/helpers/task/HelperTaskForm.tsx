@@ -417,7 +417,7 @@ const HelperTaskForm = ({
 
       <SpacedTypography variant="h3">Timing</SpacedTypography>
 
-      {!newTask && type == HelperTaskType.Shift && (
+      {!newTask && type === HelperTaskType.Shift && (
         <Alert severity="warning" sx={{ mt: 2 }}>
           <Typography>
             If you change the time of a task and some of the helpers are not

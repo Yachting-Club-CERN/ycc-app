@@ -1,11 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const IS_CI = !!process.env["CI"];
+
 export default defineConfig({
   testDir: "e2e",
   fullyParallel: true,
-  forbidOnly: !!process.env["CI"],
-  retries: process.env["CI"] ? 2 : 0,
-  workers: process.env["CI"] ? 1 : "75%",
+  forbidOnly: IS_CI,
+  retries: IS_CI ? 2 : 0,
+  workers: IS_CI ? 1 : "75%",
   reporter: "html",
   use: {
     // Run tests on the LOCAL instance
