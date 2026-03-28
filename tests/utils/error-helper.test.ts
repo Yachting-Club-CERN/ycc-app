@@ -15,7 +15,7 @@ test("Non-error types", () => {
   check(true, "true");
   check(0, "0");
   check(1, "1");
-  check(NaN, "NaN");
+  check(Number.NaN, "NaN");
   check(-Infinity, "-Infinity");
   check(Infinity, "Infinity");
   check(BigInt(123), "123");
@@ -48,7 +48,9 @@ test("Error", () => {
   check(new Error("Error 1"), "Error: Error 1");
 
   check(
-    Error("Error 2", { cause: Error("Cause 2", { cause: "Root cause" }) }),
+    new Error("Error 2", {
+      cause: new Error("Cause 2", { cause: "Root cause" }),
+    }),
     "Error: Error 2\nCaused by: Error: Cause 2\nCaused by: Root cause",
   );
 });

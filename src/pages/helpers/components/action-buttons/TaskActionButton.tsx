@@ -7,11 +7,11 @@ import { HelperTask } from "@/model/helpers-dtos";
 
 type WithButtonProps = {
   buttonText?: string | undefined;
-  buttonIcon?: never | undefined;
+  buttonIcon?: never;
 };
 
 type WithIconButtonProps = {
-  buttonText?: never | undefined;
+  buttonText?: never;
   buttonIcon: React.ReactNode;
 };
 
