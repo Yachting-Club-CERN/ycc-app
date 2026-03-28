@@ -178,7 +178,7 @@ const eslintConfig = defineConfig([
   // Config files - no type-aware linting (they're outside tsconfig rootDir)
   {
     name: "base/eslint-config-files",
-    files: ["**/eslint.config.mts", "**/vitest.config.ts"],
+    files: ["**/eslint.config.mts", "**/vitest.config.mts"],
     plugins: {
       "unused-imports": unusedImports,
     },

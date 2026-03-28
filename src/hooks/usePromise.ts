@@ -10,7 +10,7 @@ type PromiseOutcome<T> = {
  * Cancellable promise hook. Creates `useState()` and `useEffect()` hooks under the hood.
  *
  * @param promise promise
- * @param deps `useEffect()` dependencies, `undefined` is translated to `[]`
+ * @param deps `useEffect()` dependencies
  * @returns object of promise result, promise error and pending (boolean)
  */
 const usePromise = <T>(
