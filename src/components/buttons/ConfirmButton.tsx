@@ -18,8 +18,9 @@ const ConfirmButton = ({
   text = "Confirm",
   delayed = false,
 }: Props): React.ReactNode => {
-  const [enabled, setEnabled] = useState(!delayed);
-  const [countdownMs, setCountdownMs] = useState(CONFIRM_BUTTON_DELAY_MS);
+  const [countdownMs, setCountdownMs] = useState(
+    delayed ? CONFIRM_BUTTON_DELAY_MS : 0,
+  );
 
   useEffect(() => {
     if (!delayed) {
@@ -27,19 +28,22 @@ const ConfirmButton = ({
     }
 
     const interval = setInterval(() => {
-      setCountdownMs((c) => c - 100);
+      setCountdownMs((c) => {
+        const next = c - 100;
+        if (next <= 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return next;
+      });
     }, 100);
 
-    const timeout = setTimeout(() => {
-      setEnabled(true);
-      clearInterval(interval);
-    }, CONFIRM_BUTTON_DELAY_MS);
-
     return (): void => {
-      clearTimeout(timeout);
       clearInterval(interval);
     };
   }, [delayed]);
+
+  const enabled = !delayed || countdownMs <= 0;
 
   return (
     <Button

@@ -7,7 +7,7 @@ import client from "@/utils/client";
 class SharedData {
   private _helperTaskCategories: HelperTaskCategory[] | undefined;
   private _licenceInfos: LicenceDetailedInfo[] | undefined;
-  private _members: { [year: number]: MemberPublicInfo[] } = {};
+  private _members: Partial<Record<number, MemberPublicInfo[]>> = {};
 
   public readonly getHelperTaskCategories = async (
     signal?: AbortSignal,

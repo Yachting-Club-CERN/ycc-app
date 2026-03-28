@@ -23,6 +23,7 @@ const PermissionsPage = (): React.ReactNode => {
     HelpersAppPermission[]
   >([]);
 
+  // This avoids useState() in useEffect()
   if (permissions.result && permissions.result !== dataSource) {
     setDataSource(permissions.result);
     setEditablePermissions(permissions.result);

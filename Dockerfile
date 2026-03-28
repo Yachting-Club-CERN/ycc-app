@@ -24,7 +24,7 @@ ENV VITE_APP_YCC_HULL_URL="$VITE_APP_YCC_HULL_URL"
 WORKDIR "/opt/app-root/src"
 # 1001 = uid from parent container
 COPY --chown=1001:0 . .
-RUN npm install -g pnpm
+RUN npm install -g corepack && corepack enable && corepack prepare --activate
 RUN pnpm install --frozen-lockfile
 RUN pnpm build
 

@@ -37,23 +37,23 @@ export const sanitiseHtmlForReact = (html: string): React.ReactNode => {
     replace: (domNode) => {
       if (domNode instanceof DOMText) {
         // Always keep text
-        return domNode;
+        return;
       } else if (domNode instanceof DOMElement) {
-        if (!forbiddenTags.includes(domNode.name)) {
-          return null;
+        if (forbiddenTags.includes(domNode.name)) {
+          return React.createElement(React.Fragment);
         } else if (
           domNode.name === "h1" ||
           domNode.name === "h2" ||
           domNode.name === "h3"
         ) {
-          // Does not look good
+          // h1-h3 are too large, demote them
           domNode.name = "h4";
         }
 
-        return domNode;
+        return;
       } else {
-        // Always skip comments, processing instructions (XHTML only), etc.
-        return null;
+        // Remove comments, processing instructions (XHTML only), etc.
+        return React.createElement(React.Fragment);
       }
     },
   });
