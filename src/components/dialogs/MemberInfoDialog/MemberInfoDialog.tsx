@@ -13,7 +13,7 @@ import { getFullName } from "@/pages/members/members-utils";
 
 type Props = {
   member: MemberPublicInfo | null;
-  extra?: Record<string, string>;
+  extra?: Record<string, string> | undefined;
   onClose: () => void;
 };
 

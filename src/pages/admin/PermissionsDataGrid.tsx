@@ -83,7 +83,7 @@ const PermissionsDataGrid = ({
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
   const [contextMenu, setContextMenu] = useState<{
-    row?: HelpersAppPermission;
+    row: HelpersAppPermission | undefined;
     mouseX: number;
     mouseY: number;
   } | null>(null);

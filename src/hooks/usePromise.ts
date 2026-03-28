@@ -15,7 +15,7 @@ type PromiseOutcome<T> = {
  */
 const usePromise = <T>(
   promise: (signal?: AbortSignal) => Promise<T>,
-  deps?: React.DependencyList,
+  deps: React.DependencyList,
 ): PromiseOutcome<T> => {
   const [result, setResult] = useState<T>();
   const [error, setError] = useState<unknown>();
@@ -51,7 +51,8 @@ const usePromise = <T>(
       abortController.abort();
       doReset();
     };
-  }, deps ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- deps are caller-controlled by design
+  }, deps);
 
   return { result, error, pending };
 };

@@ -1,5 +1,5 @@
-import { SxProps, Theme } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
+import { SxProps, Theme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
@@ -11,7 +11,7 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 type Props = {
   onChange: (value: MemberPublicInfo | null) => void;
-  sx?: SxProps<Theme>;
+  sx?: SxProps<Theme> | undefined;
 };
 
 const MemberAutocomplete = ({ onChange, sx }: Props): React.ReactNode => {

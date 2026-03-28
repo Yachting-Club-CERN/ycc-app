@@ -5,7 +5,7 @@ import useSharedData from "./useSharedData";
 
 const useLicenceInfos = (): PromiseOutcome<Readonly<LicenceDetailedInfo[]>> => {
   const sharedData = useSharedData();
-  return usePromise(sharedData.getLicenceInfos);
+  return usePromise(sharedData.getLicenceInfos, []);
 };
 
 export default useLicenceInfos;

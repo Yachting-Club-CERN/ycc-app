@@ -7,16 +7,10 @@ import client from "@/utils/client";
 
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 
-const ValidateActionButton = ({
+const ValidateActionButtonInner = ({
   task,
   ...props
 }: TaskActionProps): React.ReactNode => {
-  const currentUser = useCurrentUser();
-
-  if (!canValidate(task, currentUser)) {
-    return null;
-  }
-
   const commentEditor = useRichTextEditor({
     minHeight: 100,
     containerProps: { mb: 2 },
@@ -46,6 +40,19 @@ const ValidateActionButton = ({
       {...props}
     />
   );
+};
+
+const ValidateActionButton = ({
+  task,
+  ...props
+}: TaskActionProps): React.ReactNode => {
+  const currentUser = useCurrentUser();
+
+  if (!canValidate(task, currentUser)) {
+    return null;
+  }
+
+  return <ValidateActionButtonInner task={task} {...props} />;
 };
 
 export default ValidateActionButton;

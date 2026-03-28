@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
   wrap: boolean;
-  compact?: boolean;
-  alignItems?: StackProps["alignItems"];
+  compact?: boolean | undefined;
+  alignItems?: StackProps["alignItems"] | undefined;
 } & Omit<
   StackProps,
   "direction" | "spacing" | "useFlexGap" | "flexWrap" | "display"

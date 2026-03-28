@@ -7,16 +7,10 @@ import client from "@/utils/client";
 
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
 
-const MarkAsDoneActionButton = ({
+const MarkAsDoneActionButtonInner = ({
   task,
   ...props
 }: TaskActionProps): React.ReactNode => {
-  const currentUser = useCurrentUser();
-
-  if (!canMarkAsDone(task, currentUser)) {
-    return null;
-  }
-
   const commentEditor = useRichTextEditor({
     minHeight: 100,
     containerProps: { mb: 2 },
@@ -48,6 +42,19 @@ const MarkAsDoneActionButton = ({
       {...props}
     />
   );
+};
+
+const MarkAsDoneActionButton = ({
+  task,
+  ...props
+}: TaskActionProps): React.ReactNode => {
+  const currentUser = useCurrentUser();
+
+  if (!canMarkAsDone(task, currentUser)) {
+    return null;
+  }
+
+  return <MarkAsDoneActionButtonInner task={task} {...props} />;
 };
 
 export default MarkAsDoneActionButton;

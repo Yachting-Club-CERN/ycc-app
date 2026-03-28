@@ -1,32 +1,32 @@
-import { SxProps } from "@mui/material";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { SxProps } from "@mui/material/styles";
 
 import { OpenConfirmationDialogProps } from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import { HelperTask } from "@/model/helpers-dtos";
 
 type WithButtonProps = {
-  buttonText?: string;
-  buttonIcon?: never;
+  buttonText?: string | undefined;
+  buttonIcon?: never | undefined;
 };
 
 type WithIconButtonProps = {
-  buttonText?: never;
+  buttonText?: never | undefined;
   buttonIcon: React.ReactNode;
 };
 
 type CommonProps = {
   buttonColor: ButtonProps["color"];
-  buttonSx?: SxProps;
+  buttonSx?: SxProps | undefined;
 
   dialogTitle: string;
-  dialogContent: React.ReactNode;
-  dialogConfirmButtonColor?: ButtonProps["color"];
-  dialogConfirmButtonText?: string;
-  dialogCancelButtonColor?: ButtonProps["color"];
-  dialogDelayConfirm?: boolean;
+  dialogContent: React.ReactElement | null; // No content has to be explicit
+  dialogConfirmButtonColor?: ButtonProps["color"] | undefined;
+  dialogConfirmButtonText?: string | undefined;
+  dialogCancelButtonColor?: ButtonProps["color"] | undefined;
+  dialogDelayConfirm?: boolean | undefined;
 
-  onDialogOpening?: () => void;
+  onDialogOpening?: (() => void) | undefined;
   onDialogConfirm: () => Promise<HelperTask>;
   openConfirmationDialog: (props: OpenConfirmationDialogProps) => void;
   onTaskUpdate: (task: HelperTask) => void;

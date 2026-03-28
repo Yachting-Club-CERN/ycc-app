@@ -49,7 +49,7 @@ import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
 type Props = {
-  task?: HelperTask;
+  task: HelperTask | undefined;
   newTask: boolean;
   categories: Readonly<HelperTaskCategory[]>;
   members: Readonly<MemberPublicInfo[]>;
@@ -104,7 +104,7 @@ const HelperTaskForm = ({
       );
       void navigate(getTaskLocation(task.id));
     }
-  }, [task, newTask, currentUser]);
+  }, [task, newTask, currentUser, navigate]);
 
   const initialData: HelperTaskFormData = {
     base: {

@@ -4,7 +4,7 @@ import Span from "@/components/layout/Span";
 
 type Props = {
   value: string;
-  mobileValue?: string;
+  mobileValue?: string | undefined;
 };
 
 const PageTitle = ({ value, mobileValue }: Props): React.ReactNode => {

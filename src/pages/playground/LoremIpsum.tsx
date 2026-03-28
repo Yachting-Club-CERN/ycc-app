@@ -1,11 +1,11 @@
-import { Variant } from "@mui/material/styles/createTypography";
+import { TypographyVariant } from "@mui/material/styles";
 
 import SpacedTypography from "@/components/ui/SpacedTypography";
 
 type Props = {
   title: string;
-  titleVariant: Variant;
-  variant?: Variant;
+  titleVariant: TypographyVariant;
+  variant?: TypographyVariant | undefined;
 };
 
 const LoremIpsum = ({

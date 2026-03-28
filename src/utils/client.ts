@@ -1,5 +1,5 @@
 import axios, { Axios, AxiosResponse, Method } from "axios";
-import { z } from "zod";
+import * as z from "zod";
 
 import config from "@/config";
 import {
@@ -55,8 +55,8 @@ type HttpRequest = {
   path: string;
   params?: unknown;
   data?: unknown;
-  responseSchema: z.ZodTypeAny | null;
-  signal?: AbortSignal;
+  responseSchema: z.ZodType | null;
+  signal?: AbortSignal | undefined;
 };
 
 class HttpClient {
@@ -111,7 +111,7 @@ class HttpClient {
         url: path,
         params,
         data,
-        signal,
+        signal: signal as AbortSignal,
       });
 
       console.debug(

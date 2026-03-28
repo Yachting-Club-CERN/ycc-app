@@ -102,7 +102,8 @@ const SidebarMenu = (): React.ReactNode => {
         icon: <LanguageIcon />,
       },
     ],
-    ...(config.environment === Environment.LOCAL
+    ...(config.environment === Environment.LOCAL ||
+    config.environment === Environment.DEVELOPMENT
       ? [
           [
             {

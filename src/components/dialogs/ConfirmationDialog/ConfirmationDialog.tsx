@@ -9,10 +9,10 @@ import ConfirmButton from "@/components/buttons/ConfirmButton";
 type Props = {
   title: string;
   content: React.ReactElement | null; // No content has to be explicit
-  confirmButtonColor?: ButtonProps["color"];
-  confirmButtonText?: string;
-  cancelButtonColor?: ButtonProps["color"];
-  delayConfirm?: boolean;
+  confirmButtonColor?: ButtonProps["color"] | undefined;
+  confirmButtonText?: string | undefined;
+  cancelButtonColor?: ButtonProps["color"] | undefined;
+  delayConfirm?: boolean | undefined;
 
   // State
   open: boolean;

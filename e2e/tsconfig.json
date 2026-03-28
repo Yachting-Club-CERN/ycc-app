@@ -6,12 +6,8 @@
     // Avoid polluting test files with unnecessary ! assertions
     "noUncheckedIndexedAccess": false,
     "paths": {
-      "@e2e/*": [
-        "./e2e/*"
-      ]
+      "@e2e/*": ["./e2e/*"]
     }
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }

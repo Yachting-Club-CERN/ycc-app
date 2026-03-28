@@ -6,7 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Link as RouterLink } from "react-router-dom";
 
 type Action = {
-  icon: React.ReactNode<SvgIconProps>;
+  icon: React.ReactElement<SvgIconProps>;
   name: string;
   href: string;
 };
@@ -24,6 +24,7 @@ const SmartSpeedDial = ({ actions }: Props): React.ReactNode => {
   if (actions.length === 0) {
     return null;
   }
+  const firstAction = actions[0]!;
 
   const sxPosition = {
     position: "fixed",
@@ -31,27 +32,23 @@ const SmartSpeedDial = ({ actions }: Props): React.ReactNode => {
     right: { xs: 16, md: 48 },
   };
 
-  const singleAction = actions.length === 1;
-
-  if (singleAction) {
-    const [action] = actions;
-
+  if (actions.length === 1) {
     return (
-      <Tooltip title={action.name}>
+      <Tooltip title={firstAction.name}>
         <Fab
           color="primary"
           component={RouterLink}
-          to={action.href}
+          to={firstAction.href}
           sx={sxPosition}
         >
-          {action.icon}
+          {firstAction.icon}
         </Fab>
       </Tooltip>
     );
   }
 
   return (
-    <SpeedDial ariaLabel="Actions" icon={actions[0].icon} sx={sxPosition}>
+    <SpeedDial ariaLabel="Actions" icon={firstAction.icon} sx={sxPosition}>
       {actions.map((action) => (
         <SpeedDialAction
           key={action.name}

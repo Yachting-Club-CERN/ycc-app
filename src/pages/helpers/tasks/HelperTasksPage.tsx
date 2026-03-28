@@ -86,8 +86,13 @@ const HelperTasksPage = (): React.ReactNode => {
       }
 
       const parsed = JSON.parse(savedFilterOptions) as HelperTaskFilterOptions;
-      if (!isValidSelectedYear(parsed.year)) {
-        parsed.year = currentYear;
+      if (
+        !isValidSelectedYear(parsed.year) ||
+        // Non-admin/editor users can only view the current year
+        (!currentUser.helpersAppAdminOrEditor && parsed.year !== currentYear)
+      ) {
+        // Just reset the filter
+        return getDefaultFilterOptions();
       }
       return parsed;
     } catch (error) {
@@ -102,21 +107,14 @@ const HelperTasksPage = (): React.ReactNode => {
       : "cards";
   });
 
-  // Non-admin/editor users can only view the current year
   useEffect(() => {
-    if (
-      !currentUser.helpersAppAdminOrEditor &&
-      filterOptions.year !== currentYear
-    ) {
-      setFilterOptionsImmediately(getDefaultFilterOptions());
-    }
-  }, [currentUser.helpersAppAdminOrEditor]);
-
-  useEffect(() => {
-    console.info("Save filter options to session storage", filterOptions);
+    console.info(
+      "Save filter options to session storage",
+      delayedFilterOptions,
+    );
     sessionStorage.setItem(
       SESSION_STORAGE.FILTER_OPTIONS,
-      JSON.stringify(filterOptions),
+      JSON.stringify(delayedFilterOptions),
     );
   }, [delayedFilterOptions]);
 

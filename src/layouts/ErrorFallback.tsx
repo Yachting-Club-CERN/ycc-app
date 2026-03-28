@@ -2,6 +2,7 @@ import SailingIcon from "@mui/icons-material/Sailing";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Link from "@mui/material/Link";
+import { useState } from "react";
 import { FallbackProps } from "react-error-boundary";
 
 import ReadingBox from "@/components/layout/ReadingBox";
@@ -10,7 +11,7 @@ import getErrorText from "@/utils/error-helper";
 
 const ErrorFallback = (props: FallbackProps): React.ReactNode => {
   const error: unknown = props.error;
-  const boatCount = Math.floor(Math.random() * 10) + 1;
+  const [boatCount] = useState(() => Math.floor(Math.random() * 10) + 1);
 
   return (
     <ReadingBox>

@@ -6,9 +6,9 @@ import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
 type Props = {
   onConfirm: () => void;
   loading: boolean;
-  color?: ButtonProps["color"];
-  text?: string;
-  delayed?: boolean;
+  color?: ButtonProps["color"] | undefined;
+  text?: string | undefined;
+  delayed?: boolean | undefined;
 };
 
 const ConfirmButton = ({
@@ -39,7 +39,7 @@ const ConfirmButton = ({
       clearTimeout(timeout);
       clearInterval(interval);
     };
-  }, []);
+  }, [delayed]);
 
   return (
     <Button

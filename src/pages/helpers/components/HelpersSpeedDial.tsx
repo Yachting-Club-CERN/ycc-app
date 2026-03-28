@@ -11,7 +11,7 @@ import {
 } from "@/pages/helpers/helpers-utils";
 
 type Props = {
-  task?: HelperTask;
+  task?: HelperTask | undefined;
 };
 
 const HelpersSpeedDial = ({ task }: Props): React.ReactNode => {

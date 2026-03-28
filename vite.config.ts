@@ -1,13 +1,14 @@
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig, loadEnv } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig, loadEnv, Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import tsconfigPaths from "vite-tsconfig-paths";
+
 import { Environment, parseEnvironment } from "./src/environment";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  const environment = parseEnvironment(env.VITE_APP_ENVIRONMENT);
+  const environment = parseEnvironment(env["VITE_APP_ENVIRONMENT"]);
   const app_name =
     !environment || environment === Environment.PRODUCTION
       ? "YCC App"
@@ -30,7 +31,7 @@ export default defineConfig(({ mode }) => {
       }),
       tsconfigPaths(),
       // See stats.html for chunk details (after running pnpm build)
-      visualizer(),
+      visualizer() as unknown as Plugin,
       VitePWA({
         registerType: "autoUpdate",
         includeAssets: ["favicon.ico", "robots.txt"],

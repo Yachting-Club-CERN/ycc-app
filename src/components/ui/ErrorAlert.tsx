@@ -6,7 +6,7 @@ import getErrorText from "@/utils/error-helper";
 
 type Props = {
   error: unknown;
-  fatal?: boolean;
+  fatal?: boolean | undefined;
 };
 
 const ErrorAlert = ({ error, fatal }: Props): React.ReactNode => {

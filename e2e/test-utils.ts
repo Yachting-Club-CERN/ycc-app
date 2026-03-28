@@ -47,7 +47,7 @@ export const ui = {
 
   selectDateTime: async (page: Page, locator: Locator, date: string) => {
     // Date format: DD/MM/YYYY HH:MM
-    await locator.click();
+    await locator.click({ force: true });
 
     const dialog = page.getByRole("dialog");
     const nextMonthIcon = dialog.getByTestId("ArrowRightIcon");

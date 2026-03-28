@@ -21,7 +21,7 @@ type SelectedYear = number | typeof ALL_YEARS;
 type YearSelectorProps = {
   value: SelectedYear;
   onChange: (year: SelectedYear) => void;
-  includeAllOption?: boolean;
+  includeAllOption?: boolean | undefined;
 };
 
 const YearSelector = ({
@@ -70,11 +70,11 @@ const YearSelector = ({
 
 type UseYearSelectorProps = {
   /** Initial year for uncontrolled mode. Defaults to current year if not provided. */
-  initialYear?: SelectedYear;
+  initialYear?: SelectedYear | undefined;
   /** Current year value for controlled mode. If provided, component becomes controlled. */
-  value?: SelectedYear;
+  value?: SelectedYear | undefined;
   /** Callback when the year changes. */
-  onChange?: (year: SelectedYear) => void;
+  onChange?: ((year: SelectedYear) => void) | undefined;
 } & Omit<YearSelectorProps, "value" | "onChange">;
 
 type UseYearSelectorReturn = {

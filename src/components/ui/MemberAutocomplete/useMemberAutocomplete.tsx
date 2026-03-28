@@ -1,4 +1,4 @@
-import { SxProps } from "@mui/material";
+import { SxProps } from "@mui/material/styles";
 import { useRef } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";

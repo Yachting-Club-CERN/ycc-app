@@ -5,8 +5,8 @@ import { HelperTaskCategory } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
 class SharedData {
-  private _helperTaskCategories?: HelperTaskCategory[];
-  private _licenceInfos?: LicenceDetailedInfo[];
+  private _helperTaskCategories: HelperTaskCategory[] | undefined;
+  private _licenceInfos: LicenceDetailedInfo[] | undefined;
   private _members: { [year: number]: MemberPublicInfo[] } = {};
 
   public readonly getHelperTaskCategories = async (

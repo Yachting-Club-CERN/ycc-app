@@ -3,7 +3,7 @@ import Link from "@mui/material/Link";
 import { mailtoHref } from "@/utils/utils";
 
 type Props = {
-  email?: string | null;
+  email?: string | null | undefined;
 };
 
 const EmailLink = ({ email }: Props): React.ReactNode => {

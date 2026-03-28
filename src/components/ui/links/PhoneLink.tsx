@@ -1,7 +1,7 @@
 import Link from "@mui/material/Link";
 
 type Props = {
-  phone?: string | null;
+  phone?: string | null | undefined;
 };
 
 const PhoneLink = ({ phone }: Props): React.ReactNode => {
