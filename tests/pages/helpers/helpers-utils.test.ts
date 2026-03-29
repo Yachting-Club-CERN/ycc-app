@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
 
-import { User } from "@/context/auth/AuthenticationContext";
-import { LicenceInfo, MemberPublicInfo } from "@/model/dtos";
 import {
-  HelperTask,
-  HelperTaskHelper,
-  HelperTaskState,
-  HelperTaskType,
-} from "@/model/helpers-dtos";
+  makeHelper,
+  makeLicence,
+  makeMember,
+  makeTask,
+  makeUser,
+} from "@tests/factories";
+
 import {
   canAddHelper,
   canAddOrRemoveMembers,
@@ -33,59 +33,8 @@ import {
 import dayjs from "@/utils/dayjs";
 
 // =============================================================================
-// Test factories
+// Preset users
 // =============================================================================
-
-const makeMember = (
-  overrides: Partial<MemberPublicInfo> = {},
-): MemberPublicInfo => ({
-  id: 1,
-  username: "JDOE",
-  firstName: "John",
-  lastName: "Doe",
-  email: "john@example.com",
-  mobilePhone: null,
-  homePhone: null,
-  workPhone: null,
-  ...overrides,
-});
-
-const makeHelper = (
-  member: MemberPublicInfo = makeMember(),
-): HelperTaskHelper => ({
-  member,
-  signedUpAt: dayjs("2025-01-01"),
-});
-
-const makeLicence = (licence = "SU"): LicenceInfo => ({
-  id: 1,
-  licence,
-});
-
-const makeUser = (overrides: Partial<User> = {}): User => {
-  // User is a class with getters, so we construct it properly
-  const defaults = {
-    keycloakId: "f:abc:1",
-    memberId: 1,
-    username: "JDOE",
-    email: "john@example.com",
-    firstName: "John",
-    lastName: "Doe",
-    groups: [],
-    roles: ["ycc-member-active"],
-  };
-  const merged = { ...defaults, ...overrides };
-  return new User(
-    merged.keycloakId,
-    merged.memberId,
-    merged.username,
-    merged.email,
-    merged.firstName,
-    merged.lastName,
-    merged.groups,
-    merged.roles,
-  );
-};
 
 const adminUser = makeUser({
   username: "ADMIN",
@@ -107,57 +56,6 @@ const suUser = makeUser({
 
 const future = dayjs().add(7, "days");
 const past = dayjs().subtract(7, "days");
-
-const makeTask = (overrides: Partial<HelperTask> = {}): HelperTask => {
-  const defaults = {
-    id: 1,
-    category: {
-      id: 1,
-      title: "Surveillance",
-      shortDescription: "Watch",
-      longDescription: null,
-    },
-    title: "Test Task",
-    shortDescription: "A test",
-    longDescription: null,
-    contact: makeMember({ username: "CONTACT", id: 10 }),
-    startsAt: future,
-    endsAt: future.add(4, "hours"),
-    deadline: null,
-    urgent: false,
-    captainRequiredLicenceInfo: null,
-    helperMinCount: 1,
-    helperMaxCount: 3,
-    published: true,
-    captain: null,
-    helpers: [],
-    markedAsDoneAt: null,
-    markedAsDoneBy: null,
-    markedAsDoneComment: null,
-    validatedAt: null,
-    validatedBy: null,
-    validationComment: null,
-  };
-  const merged = { ...defaults, ...overrides };
-  return {
-    ...merged,
-    get type(): HelperTaskType {
-      if (merged.startsAt && merged.endsAt && !merged.deadline)
-        return HelperTaskType.Shift;
-      if (!merged.startsAt && !merged.endsAt && merged.deadline)
-        return HelperTaskType.Deadline;
-      return HelperTaskType.Unknown;
-    },
-    get state(): HelperTaskState {
-      if (merged.validatedAt) return HelperTaskState.Validated;
-      if (merged.markedAsDoneAt) return HelperTaskState.Done;
-      return HelperTaskState.Pending;
-    },
-    get searchString(): string {
-      return "";
-    },
-  };
-};
 
 // =============================================================================
 // Tests
@@ -241,7 +139,11 @@ describe("isHappeningNow", () => {
 
 describe("isUpcoming", () => {
   test("future shift is upcoming", () => {
-    expect(isUpcoming(makeTask())).toBe(true);
+    expect(
+      isUpcoming(
+        makeTask({ startsAt: future, endsAt: future.add(4, "hours") }),
+      ),
+    ).toBe(true);
   });
 
   test("past shift is not upcoming", () => {
@@ -286,7 +188,7 @@ describe("isContact", () => {
 describe("isSignedUpAsCaptain", () => {
   test("user is captain", () => {
     const task = makeTask({
-      captain: makeHelper(makeMember({ username: "JDOE" })),
+      captain: makeHelper({ member: makeMember({ username: "JDOE" }) }),
     });
     expect(isSignedUpAsCaptain(task, makeUser({ username: "JDOE" }))).toBe(
       true,
@@ -301,7 +203,7 @@ describe("isSignedUpAsCaptain", () => {
 
   test("different captain", () => {
     const task = makeTask({
-      captain: makeHelper(makeMember({ username: "OTHER" })),
+      captain: makeHelper({ member: makeMember({ username: "OTHER" }) }),
     });
     expect(isSignedUpAsCaptain(task, makeUser({ username: "JDOE" }))).toBe(
       false,
@@ -312,7 +214,7 @@ describe("isSignedUpAsCaptain", () => {
 describe("isSignedUpAsHelper", () => {
   test("user is helper", () => {
     const task = makeTask({
-      helpers: [makeHelper(makeMember({ username: "JDOE" }))],
+      helpers: [makeHelper({ member: makeMember({ username: "JDOE" }) })],
     });
     expect(isSignedUpAsHelper(task, makeUser({ username: "JDOE" }))).toBe(true);
   });
@@ -327,14 +229,14 @@ describe("isSignedUpAsHelper", () => {
 describe("isSignedUp", () => {
   test("signed up as captain", () => {
     const task = makeTask({
-      captain: makeHelper(makeMember({ username: "JDOE" })),
+      captain: makeHelper({ member: makeMember({ username: "JDOE" }) }),
     });
     expect(isSignedUp(task, makeUser({ username: "JDOE" }))).toBe(true);
   });
 
   test("signed up as helper", () => {
     const task = makeTask({
-      helpers: [makeHelper(makeMember({ username: "JDOE" }))],
+      helpers: [makeHelper({ member: makeMember({ username: "JDOE" }) })],
     });
     expect(isSignedUp(task, makeUser({ username: "JDOE" }))).toBe(true);
   });
@@ -382,8 +284,13 @@ describe("canEdit", () => {
 });
 
 describe("canSignUpAsCaptain", () => {
+  const futureTask = makeTask({
+    startsAt: future,
+    endsAt: future.add(4, "hours"),
+  });
+
   test("can sign up for upcoming published pending task without captain", () => {
-    expect(canSignUpAsCaptain(makeTask(), regularUser)).toBe(true);
+    expect(canSignUpAsCaptain(futureTask, regularUser)).toBe(true);
   });
 
   test("cannot sign up for past task", () => {
@@ -393,76 +300,122 @@ describe("canSignUpAsCaptain", () => {
 
   test("cannot sign up for unpublished task", () => {
     expect(
-      canSignUpAsCaptain(makeTask({ published: false }), regularUser),
+      canSignUpAsCaptain(
+        makeTask({
+          startsAt: future,
+          endsAt: future.add(4, "hours"),
+          published: false,
+        }),
+        regularUser,
+      ),
     ).toBe(false);
   });
 
   test("cannot sign up if captain already set", () => {
     expect(
-      canSignUpAsCaptain(makeTask({ captain: makeHelper() }), regularUser),
+      canSignUpAsCaptain(
+        makeTask({
+          startsAt: future,
+          endsAt: future.add(4, "hours"),
+          captain: makeHelper(),
+        }),
+        regularUser,
+      ),
     ).toBe(false);
   });
 
   test("cannot sign up if already signed up as helper", () => {
     const task = makeTask({
-      helpers: [makeHelper(makeMember({ username: "REGULAR" }))],
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      helpers: [makeHelper({ member: makeMember({ username: "REGULAR" }) })],
     });
     expect(canSignUpAsCaptain(task, regularUser)).toBe(false);
   });
 
   test("cannot sign up if task is done", () => {
-    const task = makeTask({ markedAsDoneAt: dayjs() });
+    const task = makeTask({
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      markedAsDoneAt: dayjs(),
+    });
     expect(canSignUpAsCaptain(task, regularUser)).toBe(false);
   });
 
   test("cannot sign up without required licence", () => {
-    const task = makeTask({ captainRequiredLicenceInfo: makeLicence("SU") });
+    const task = makeTask({
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      captainRequiredLicenceInfo: makeLicence({ licence: "SU" }),
+    });
     expect(canSignUpAsCaptain(task, regularUser)).toBe(false);
   });
 
   test("can sign up with required licence", () => {
-    const task = makeTask({ captainRequiredLicenceInfo: makeLicence("SU") });
+    const task = makeTask({
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      captainRequiredLicenceInfo: makeLicence({ licence: "SU" }),
+    });
     expect(canSignUpAsCaptain(task, suUser)).toBe(true);
   });
 });
 
 describe("canSignUpAsHelper", () => {
+  const futureTask = makeTask({
+    startsAt: future,
+    endsAt: future.add(4, "hours"),
+  });
+
   test("can sign up for upcoming published pending task", () => {
-    expect(canSignUpAsHelper(makeTask(), regularUser)).toBe(true);
+    expect(canSignUpAsHelper(futureTask, regularUser)).toBe(true);
   });
 
   test("cannot sign up if max helpers reached", () => {
     const task = makeTask({
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
       helperMaxCount: 1,
-      helpers: [makeHelper(makeMember({ username: "OTHER" }))],
+      helpers: [makeHelper({ member: makeMember({ username: "OTHER" }) })],
     });
     expect(canSignUpAsHelper(task, regularUser)).toBe(false);
   });
 
   test("cannot sign up if already captain", () => {
     const task = makeTask({
-      captain: makeHelper(makeMember({ username: "REGULAR" })),
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      captain: makeHelper({ member: makeMember({ username: "REGULAR" }) }),
     });
     expect(canSignUpAsHelper(task, regularUser)).toBe(false);
   });
 
   test("cannot sign up if already helper", () => {
     const task = makeTask({
-      helpers: [makeHelper(makeMember({ username: "REGULAR" }))],
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      helpers: [makeHelper({ member: makeMember({ username: "REGULAR" }) })],
     });
     expect(canSignUpAsHelper(task, regularUser)).toBe(false);
   });
 });
 
 describe("canSignUp", () => {
+  const futureTask = makeTask({
+    startsAt: future,
+    endsAt: future.add(4, "hours"),
+  });
+
   test("true if can sign up as captain", () => {
-    expect(canSignUp(makeTask(), regularUser)).toBe(true);
+    expect(canSignUp(futureTask, regularUser)).toBe(true);
   });
 
   test("true if can sign up as helper but not captain", () => {
     // Captain slot taken, but helper slot open
     const task = makeTask({
-      captain: makeHelper(makeMember({ username: "OTHER" })),
+      startsAt: future,
+      endsAt: future.add(4, "hours"),
+      captain: makeHelper({ member: makeMember({ username: "OTHER" }) }),
     });
     expect(canSignUp(task, regularUser)).toBe(true);
   });
@@ -534,7 +487,7 @@ describe("canMarkAsDone", () => {
   test("captain can mark past task as done", () => {
     const task = makeTask({
       ...pastTask,
-      captain: makeHelper(makeMember({ username: "CAPTAIN" })),
+      captain: makeHelper({ member: makeMember({ username: "CAPTAIN" }) }),
     });
     const captainUser = makeUser({ username: "CAPTAIN" });
     expect(canMarkAsDone(task, captainUser)).toBe(true);
@@ -545,7 +498,12 @@ describe("canMarkAsDone", () => {
   });
 
   test("cannot mark upcoming shift as done", () => {
-    expect(canMarkAsDone(makeTask(), adminUser)).toBe(false);
+    expect(
+      canMarkAsDone(
+        makeTask({ startsAt: future, endsAt: future.add(4, "hours") }),
+        adminUser,
+      ),
+    ).toBe(false);
   });
 
   test("cannot mark unpublished task as done", () => {
@@ -590,7 +548,12 @@ describe("canValidate", () => {
   });
 
   test("cannot validate upcoming shift", () => {
-    expect(canValidate(makeTask(), adminUser)).toBe(false);
+    expect(
+      canValidate(
+        makeTask({ startsAt: future, endsAt: future.add(4, "hours") }),
+        adminUser,
+      ),
+    ).toBe(false);
   });
 
   test("cannot validate already validated task", () => {

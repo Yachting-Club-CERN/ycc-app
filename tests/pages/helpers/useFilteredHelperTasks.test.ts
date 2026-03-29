@@ -1,13 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 
+import { makeMember, makeTask } from "@tests/factories";
+
 import { User } from "@/context/auth/AuthenticationContext";
-import { MemberPublicInfo } from "@/model/dtos";
-import {
-  HelperTask,
-  HelperTaskState,
-  HelperTaskType,
-} from "@/model/helpers-dtos";
+import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
 import { useFilteredHelperTasks } from "@/pages/helpers/useFilteredHelperTasks";
 import dayjs from "@/utils/dayjs";
 
@@ -36,75 +33,10 @@ vi.mock("@/utils/client", () => ({
   },
 }));
 
-const makeMember = (
-  overrides: Partial<MemberPublicInfo> = {},
-): MemberPublicInfo => ({
-  id: 1,
-  username: "ASMITH",
-  firstName: "Alice",
-  lastName: "Smith",
-  email: "alice@example.com",
-  mobilePhone: null,
-  homePhone: null,
-  workPhone: null,
-  ...overrides,
-});
-
 const futureStart = dayjs.tz("2099-06-15 08:00:00", "Europe/Zurich");
 const futureEnd = dayjs.tz("2099-06-15 16:00:00", "Europe/Zurich");
 const pastStart = dayjs.tz("2020-06-15 08:00:00", "Europe/Zurich");
 const pastEnd = dayjs.tz("2020-06-15 16:00:00", "Europe/Zurich");
-
-const makeTask = (overrides: Partial<HelperTask> = {}): HelperTask => {
-  const defaults = {
-    id: 1,
-    category: {
-      id: 1,
-      title: "Maintenance",
-      shortDescription: "",
-      longDescription: null,
-    },
-    title: "Fix jib",
-    shortDescription: "Fix the jib on J80",
-    longDescription: null,
-    contact: makeMember(),
-    startsAt: futureStart,
-    endsAt: futureEnd,
-    deadline: null,
-    urgent: false,
-    captainRequiredLicenceInfo: null,
-    helperMinCount: 1,
-    helperMaxCount: 3,
-    published: true,
-    captain: null,
-    helpers: [],
-    markedAsDoneAt: null,
-    markedAsDoneBy: null,
-    markedAsDoneComment: null,
-    validatedAt: null,
-    validatedBy: null,
-    validationComment: null,
-  };
-  const merged = { ...defaults, ...overrides };
-  return {
-    ...merged,
-    get type(): HelperTaskType {
-      if (merged.startsAt && merged.endsAt && !merged.deadline)
-        return HelperTaskType.Shift;
-      if (!merged.startsAt && !merged.endsAt && merged.deadline)
-        return HelperTaskType.Deadline;
-      return HelperTaskType.Unknown;
-    },
-    get state(): HelperTaskState {
-      if (merged.validatedAt) return HelperTaskState.Validated;
-      if (merged.markedAsDoneAt) return HelperTaskState.Done;
-      return HelperTaskState.Pending;
-    },
-    get searchString(): string {
-      return "";
-    },
-  };
-};
 
 const renderAndWait = async (
   options: Parameters<typeof useFilteredHelperTasks>[0],
@@ -124,7 +56,10 @@ const renderAndWait = async (
 
 describe("useFilteredHelperTasks", () => {
   test("returns all tasks with no filters", async () => {
-    mockTasks = [makeTask({ id: 1 }), makeTask({ id: 2 })];
+    mockTasks = [
+      makeTask({ id: 1, startsAt: futureStart, endsAt: futureEnd }),
+      makeTask({ id: 2, startsAt: futureStart, endsAt: futureEnd }),
+    ];
     const hook = await renderAndWait({ year: 2099 });
 
     expect(hook.result.current.result).toHaveLength(2);
@@ -142,6 +77,8 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 1,
             title: "Maintenance",
@@ -151,6 +88,8 @@ describe("useFilteredHelperTasks", () => {
         }),
         makeTask({
           id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 2,
             title: "Cleaning",
@@ -172,13 +111,15 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           contact: makeMember({
             firstName: "Tim",
             lastName: "Morgan",
             username: "TMORGAN",
           }),
         }),
-        makeTask({ id: 2 }),
+        makeTask({ id: 2, startsAt: futureStart, endsAt: futureEnd }),
       ];
       const hook = await renderAndWait({ year: 2099, search: "Tim" });
 
@@ -190,6 +131,8 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 1,
             title: "Racing",
@@ -204,6 +147,8 @@ describe("useFilteredHelperTasks", () => {
         }),
         makeTask({
           id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 2,
             title: "Maintenance",
@@ -222,7 +167,9 @@ describe("useFilteredHelperTasks", () => {
     });
 
     test("returns empty when not all tokens match", async () => {
-      mockTasks = [makeTask({ id: 1 })];
+      mockTasks = [
+        makeTask({ id: 1, startsAt: futureStart, endsAt: futureEnd }),
+      ];
       const hook = await renderAndWait({
         year: 2099,
         search: "Maintenance Nonexistent",
@@ -232,7 +179,10 @@ describe("useFilteredHelperTasks", () => {
     });
 
     test("empty search returns all", async () => {
-      mockTasks = [makeTask({ id: 1 }), makeTask({ id: 2 })];
+      mockTasks = [
+        makeTask({ id: 1, startsAt: futureStart, endsAt: futureEnd }),
+        makeTask({ id: 2, startsAt: futureStart, endsAt: futureEnd }),
+      ];
       const hook = await renderAndWait({ year: 2099, search: "   " });
 
       expect(hook.result.current.result).toHaveLength(2);
@@ -242,6 +192,8 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           captain: {
             member: makeMember({
               username: "BCAPTAIN",
@@ -264,6 +216,8 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           helpers: [
             {
               member: makeMember({
@@ -302,10 +256,22 @@ describe("useFilteredHelperTasks", () => {
 
     test("showOnlyContactOrSignedUp filters correctly", async () => {
       mockTasks = [
-        makeTask({ id: 1, contact: makeMember({ username: "JDOE" }) }),
-        makeTask({ id: 2, contact: makeMember({ username: "OTHER" }) }),
+        makeTask({
+          id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          contact: makeMember({ username: "JDOE" }),
+        }),
+        makeTask({
+          id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          contact: makeMember({ username: "OTHER" }),
+        }),
         makeTask({
           id: 3,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           contact: makeMember({ username: "OTHER" }),
           captain: {
             member: makeMember({ username: "JDOE" }),
@@ -325,10 +291,17 @@ describe("useFilteredHelperTasks", () => {
     test("showOnlyAvailable filters to tasks user can sign up for", async () => {
       mockTasks = [
         // Can sign up: upcoming, published, pending, has space, not signed up
-        makeTask({ id: 1, helperMaxCount: 3 }),
+        makeTask({
+          id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          helperMaxCount: 3,
+        }),
         // Cannot: user is already captain
         makeTask({
           id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           captain: {
             member: makeMember({ username: "JDOE" }),
             signedUpAt: dayjs(),
@@ -348,8 +321,18 @@ describe("useFilteredHelperTasks", () => {
 
     test("showOnlyUnpublished filters correctly", async () => {
       mockTasks = [
-        makeTask({ id: 1, published: true }),
-        makeTask({ id: 2, published: false }),
+        makeTask({
+          id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          published: true,
+        }),
+        makeTask({
+          id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          published: false,
+        }),
       ];
       const hook = await renderAndWait({
         year: 2099,
@@ -362,9 +345,19 @@ describe("useFilteredHelperTasks", () => {
 
     test("states filter matches specific states", async () => {
       mockTasks = [
-        makeTask({ id: 1 }),
-        makeTask({ id: 2, markedAsDoneAt: dayjs() }),
-        makeTask({ id: 3, validatedAt: dayjs() }),
+        makeTask({ id: 1, startsAt: futureStart, endsAt: futureEnd }),
+        makeTask({
+          id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          markedAsDoneAt: dayjs(),
+        }),
+        makeTask({
+          id: 3,
+          startsAt: futureStart,
+          endsAt: futureEnd,
+          validatedAt: dayjs(),
+        }),
       ];
       const hook = await renderAndWait({
         year: 2099,
@@ -381,6 +374,8 @@ describe("useFilteredHelperTasks", () => {
       mockTasks = [
         makeTask({
           id: 1,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 1,
             title: "Maintenance",
@@ -391,6 +386,8 @@ describe("useFilteredHelperTasks", () => {
         }),
         makeTask({
           id: 2,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 2,
             title: "Cleaning",
@@ -401,6 +398,8 @@ describe("useFilteredHelperTasks", () => {
         }),
         makeTask({
           id: 3,
+          startsAt: futureStart,
+          endsAt: futureEnd,
           category: {
             id: 1,
             title: "Maintenance",

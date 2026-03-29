@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
 
+import { makeTaskRaw } from "@tests/factories";
+
 import {
   getHelperTaskState,
   getHelperTaskType,
@@ -71,51 +73,6 @@ describe("getHelperTaskState", () => {
       getHelperTaskState({ validatedAt: null, markedAsDoneAt: null }),
     ).toBe(HelperTaskState.Pending);
   });
-});
-
-const makeMemberRaw = (overrides = {}): Record<string, unknown> => ({
-  id: 1,
-  username: "JDOE",
-  firstName: "John",
-  lastName: "Doe",
-  email: "john@example.com",
-  mobilePhone: null,
-  homePhone: null,
-  workPhone: null,
-  ...overrides,
-});
-
-const makeCategoryRaw = (): Record<string, unknown> => ({
-  id: 1,
-  title: "Surveillance",
-  shortDescription: "Watch",
-  longDescription: null,
-});
-
-const makeTaskRaw = (overrides = {}): Record<string, unknown> => ({
-  id: 1,
-  category: makeCategoryRaw(),
-  title: "Test Task",
-  shortDescription: "A test",
-  longDescription: null,
-  contact: makeMemberRaw(),
-  startsAt: "2025-06-15T08:00:00",
-  endsAt: "2025-06-15T18:00:00",
-  deadline: null,
-  urgent: false,
-  captainRequiredLicenceInfo: null,
-  helperMinCount: 1,
-  helperMaxCount: 3,
-  published: true,
-  captain: null,
-  helpers: [],
-  markedAsDoneAt: null,
-  markedAsDoneBy: null,
-  markedAsDoneComment: null,
-  validatedAt: null,
-  validatedBy: null,
-  validationComment: null,
-  ...overrides,
 });
 
 describe("HelperTaskSchema transform", () => {

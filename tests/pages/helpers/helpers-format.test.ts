@@ -1,11 +1,7 @@
 import { describe, expect, test } from "vitest";
 
-import { MemberPublicInfo } from "@/model/dtos";
-import {
-  HelperTask,
-  HelperTaskState,
-  HelperTaskType,
-} from "@/model/helpers-dtos";
+import { makeTask } from "@tests/factories";
+
 import {
   createTimingInfoLine,
   DONE_EMOJI,
@@ -14,68 +10,6 @@ import {
   VALIDATED_EMOJI,
 } from "@/pages/helpers/helpers-format";
 import dayjs from "@/utils/dayjs";
-
-const makeMember = (): MemberPublicInfo => ({
-  id: 1,
-  username: "JDOE",
-  firstName: "John",
-  lastName: "Doe",
-  email: "john@example.com",
-  mobilePhone: null,
-  homePhone: null,
-  workPhone: null,
-});
-
-const makeTask = (overrides: Partial<HelperTask> = {}): HelperTask => {
-  const defaults = {
-    id: 1,
-    category: {
-      id: 1,
-      title: "Cat",
-      shortDescription: "",
-      longDescription: null,
-    },
-    title: "Task",
-    shortDescription: "",
-    longDescription: null,
-    contact: makeMember(),
-    startsAt: dayjs.tz("2025-06-15 08:00:00", "Europe/Zurich"),
-    endsAt: dayjs.tz("2025-06-15 16:00:00", "Europe/Zurich"),
-    deadline: null,
-    urgent: false,
-    captainRequiredLicenceInfo: null,
-    helperMinCount: 1,
-    helperMaxCount: 3,
-    published: true,
-    captain: null,
-    helpers: [],
-    markedAsDoneAt: null,
-    markedAsDoneBy: null,
-    markedAsDoneComment: null,
-    validatedAt: null,
-    validatedBy: null,
-    validationComment: null,
-  };
-  const merged = { ...defaults, ...overrides };
-  return {
-    ...merged,
-    get type(): HelperTaskType {
-      if (merged.startsAt && merged.endsAt && !merged.deadline)
-        return HelperTaskType.Shift;
-      if (!merged.startsAt && !merged.endsAt && merged.deadline)
-        return HelperTaskType.Deadline;
-      return HelperTaskType.Unknown;
-    },
-    get state(): HelperTaskState {
-      if (merged.validatedAt) return HelperTaskState.Validated;
-      if (merged.markedAsDoneAt) return HelperTaskState.Done;
-      return HelperTaskState.Pending;
-    },
-    get searchString(): string {
-      return "";
-    },
-  };
-};
 
 describe("fakeRandomSignUpText", () => {
   test("returns a string from the texts array", () => {
@@ -132,7 +66,7 @@ describe("getStatusEmoji", () => {
 describe("createTimingInfoLine", () => {
   test("same-day shift", () => {
     const result = createTimingInfoLine(makeTask());
-    expect(result).toBe("Shift: Sunday, 15 June 2025 08:00 \u2013 16:00");
+    expect(result).toBe("Shift: Sunday, 15 June 2025 08:00 \u2013 18:00");
   });
 
   test("multi-day shift", () => {
@@ -198,14 +132,14 @@ describe("createTimingInfoLine", () => {
   test("done emoji in prefix", () => {
     const result = createTimingInfoLine(makeTask({ markedAsDoneAt: dayjs() }));
     expect(result).toBe(
-      `${DONE_EMOJI} Shift: Sunday, 15 June 2025 08:00 \u2013 16:00`,
+      `${DONE_EMOJI} Shift: Sunday, 15 June 2025 08:00 \u2013 18:00`,
     );
   });
 
   test("validated emoji in prefix", () => {
     const result = createTimingInfoLine(makeTask({ validatedAt: dayjs() }));
     expect(result).toBe(
-      `${VALIDATED_EMOJI} Shift: Sunday, 15 June 2025 08:00 \u2013 16:00`,
+      `${VALIDATED_EMOJI} Shift: Sunday, 15 June 2025 08:00 \u2013 18:00`,
     );
   });
 });

@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { auth, User } from "@/context/auth/AuthenticationContext";
+import { makeUser } from "@tests/factories";
+
+import { auth } from "@/context/auth/AuthenticationContext";
 
 const mockKeycloak = vi.hoisted(() => ({
   init: vi.fn(),
@@ -39,41 +41,6 @@ const keycloakProfile = {
   email: "heather.chang@mailinator.com",
   firstName: "Heather",
   lastName: "Chang",
-};
-
-const makeUser = (
-  overrides: Partial<{
-    keycloakId: string;
-    memberId: number;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    groups: string[];
-    roles: string[];
-  }> = {},
-): User => {
-  const defaults = {
-    keycloakId: "f:uuid:42",
-    memberId: 42,
-    username: "JDOE",
-    email: "john@example.com",
-    firstName: "John",
-    lastName: "Doe",
-    groups: [],
-    roles: [],
-  };
-  const merged = { ...defaults, ...overrides };
-  return new User(
-    merged.keycloakId,
-    merged.memberId,
-    merged.username,
-    merged.email,
-    merged.firstName,
-    merged.lastName,
-    merged.groups,
-    merged.roles,
-  );
 };
 
 const initAuthenticated = async (

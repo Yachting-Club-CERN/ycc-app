@@ -170,6 +170,11 @@ const eslintConfig = defineConfig([
       "import/resolver": {
         typescript: {
           alwaysTryTypes: true,
+          project: [
+            "./tests/tsconfig.json",
+            "./e2e/tsconfig.json",
+            "./tsconfig.json",
+          ],
         },
       },
     },

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
-import { MemberPublicInfo } from "@/model/dtos";
+import { makeMember } from "@tests/factories";
+
 import dayjs from "@/utils/dayjs";
 import {
   searchAnyStringProperty,
@@ -8,16 +9,7 @@ import {
   toDateSearchString,
 } from "@/utils/search-utils";
 
-const member: MemberPublicInfo = {
-  id: 1,
-  username: "JDOE",
-  firstName: "John",
-  lastName: "Doe",
-  email: "john@example.com",
-  mobilePhone: null,
-  homePhone: null,
-  workPhone: null,
-};
+const member = makeMember();
 
 describe("searchAnyStringProperty", () => {
   test("matches a string property", () => {
