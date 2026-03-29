@@ -35,17 +35,17 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
     {
       icon: <EditIcon />,
       name: "Edit Task",
-      href: getTaskEditLocation(task.id),
+      to: getTaskEditLocation(task.id),
     },
     {
       icon: <ContentCopyIcon />,
       name: "Clone Task",
-      href: getTaskCloneLocation(task.id),
+      to: getTaskCloneLocation(task.id),
     },
     {
       icon: <AddIcon />,
       name: "New Task",
-      href: "/helpers/tasks/new",
+      to: "/helpers/tasks/new",
     },
   ];
 
@@ -59,7 +59,7 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
               variant="contained"
               startIcon={action.icon}
               component={RouterLink}
-              to={action.href}
+              to={action.to}
             >
               {action.name}
             </Button>
@@ -86,7 +86,7 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
               slotProps={{
                 fab: {
                   component: RouterLink,
-                  to: action.href,
+                  to: action.to,
                 } as Partial<FabProps>,
                 tooltip: { title: action.name, open: true },
                 staticTooltipLabel: {
