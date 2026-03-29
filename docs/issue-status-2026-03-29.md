@@ -1,6 +1,6 @@
 # Issue tracker status (2026-03-29)
 
-Categorised snapshot of open issues with brief relevance notes.
+Categorized snapshot of open issues with brief relevance notes.
 
 ## Authentication / Access
 - **#132 Replace Keycloak with Enrico's SSO** — Major auth change removing Keycloak library; impacts login flow, token validation, and role propagation across frontend and backend.
