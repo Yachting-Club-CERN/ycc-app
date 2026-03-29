@@ -1,14 +1,18 @@
-import { Variant } from "@mui/material/styles/createTypography";
+import { TypographyVariant } from "@mui/material/styles";
 
 import SpacedTypography from "@/components/ui/SpacedTypography";
 
 type Props = {
   title: string;
-  titleVariant: Variant;
-  variant?: Variant;
+  titleVariant: TypographyVariant;
+  variant?: TypographyVariant | undefined;
 };
 
-const LoremIpsum: React.FC<Props> = ({ title, titleVariant, variant }) => {
+const LoremIpsum = ({
+  title,
+  titleVariant,
+  variant,
+}: Props): React.ReactNode => {
   return (
     <>
       <SpacedTypography variant={titleVariant}>{title}</SpacedTypography>

@@ -12,7 +12,7 @@ import { getCurrentYear } from "@/utils/date-utils";
 
 import HelperTaskForm from "./HelperTaskForm";
 
-const NewHelperTaskPage: React.FC = () => {
+const NewHelperTaskPage = (): React.ReactNode => {
   const [searchParams] = useSearchParams();
   const taskToCloneId = Number.parseInt(searchParams.get("from") ?? "NaN");
 

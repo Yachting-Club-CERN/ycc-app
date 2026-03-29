@@ -27,7 +27,7 @@ export const fakeRandomSignUpText = (
     "I will help!",
     "I will do it!",
   ];
-  return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length];
+  return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length]!;
 };
 
 /**

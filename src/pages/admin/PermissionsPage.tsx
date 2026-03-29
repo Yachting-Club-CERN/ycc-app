@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ReadingBoxLarge from "@/components/layout/ReadingBoxLarge";
 import RowStack from "@/components/layout/RowStack";
@@ -15,18 +15,19 @@ import { mailtoHref } from "@/utils/utils";
 
 import PermissionsDataGrid from "./PermissionsDataGrid";
 
-const PermissionsPage: React.FC = () => {
+const PermissionsPage = (): React.ReactNode => {
   const currentUser = useCurrentUser();
-  const permissions = usePromise(client.helpers.getPermissions);
+  const permissions = usePromise(client.helpers.getPermissions, []);
+  const [dataSource, setDataSource] = useState<HelpersAppPermission[]>();
   const [editablePermissions, setEditablePermissions] = useState<
     HelpersAppPermission[]
   >([]);
 
-  useEffect(() => {
-    if (permissions.result) {
-      setEditablePermissions(permissions.result);
-    }
-  }, [permissions.result]);
+  // This avoids useState() in useEffect()
+  if (permissions.result && permissions.result !== dataSource) {
+    setDataSource(permissions.result);
+    setEditablePermissions(permissions.result);
+  }
 
   const handleClick = (): void => {
     if (!permissions.result) {

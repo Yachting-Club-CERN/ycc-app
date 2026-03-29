@@ -3,10 +3,10 @@ import Link from "@mui/material/Link";
 import { mailtoHref } from "@/utils/utils";
 
 type Props = {
-  email?: string | null;
+  email?: string | null | undefined;
 };
 
-const EmailLink: React.FC<Props> = ({ email }) => {
+const EmailLink = ({ email }: Props): React.ReactNode => {
   if (!email) {
     return null;
   }

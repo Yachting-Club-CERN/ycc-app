@@ -5,7 +5,9 @@ export enum Environment {
   LOCAL = "LOCAL",
 }
 
-export const parseEnvironment = (env: string): Environment | undefined =>
+export const parseEnvironment = (
+  env: string | undefined,
+): Environment | undefined =>
   Object.values(Environment).includes(env as Environment)
     ? (env as Environment)
     : undefined;

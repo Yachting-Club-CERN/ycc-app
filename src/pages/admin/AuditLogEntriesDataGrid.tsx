@@ -44,7 +44,7 @@ type Props = {
   entries: Readonly<AuditLogEntry[]>;
 };
 
-const AuditLogEntriesDataGrid: React.FC<Props> = ({ entries }) => {
+const AuditLogEntriesDataGrid = ({ entries }: Props): React.ReactNode => {
   const auditLogEntryDialog = useAuditLogEntryDialog();
 
   const getRowId = (entry: AuditLogEntry): number => entry.id;

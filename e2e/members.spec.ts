@@ -1,4 +1,4 @@
-import { Locator, expect, test } from "@playwright/test";
+import { expect, Locator, test } from "@playwright/test";
 
 import { app } from "./test-utils";
 

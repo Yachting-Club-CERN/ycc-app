@@ -32,16 +32,16 @@ import {
 const DEFAULT_IMAGE_WIDTH = 400;
 
 type Props = {
-  placeholder?: string;
-  initialContent?: string;
-  minHeight?: number | string;
-  containerProps?: BoxProps;
-  onBlur?: (html: string) => void;
-  onCreate?: (html: string) => void;
+  placeholder?: string | undefined;
+  initialContent?: string | undefined;
+  minHeight?: number | string | undefined;
+  containerProps?: BoxProps | undefined;
+  onBlur?: ((html: string) => void) | undefined;
+  onCreate?: ((html: string) => void) | undefined;
   onUpdate: (html: string) => void;
 };
 
-const RichTextEditor: React.FC<Props> = ({
+const RichTextEditor = ({
   initialContent,
   placeholder,
   minHeight,
@@ -49,7 +49,7 @@ const RichTextEditor: React.FC<Props> = ({
   onBlur,
   onCreate,
   onUpdate,
-}) => {
+}: Props): React.ReactNode => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -69,7 +69,7 @@ const RichTextEditor: React.FC<Props> = ({
         placeholder: placeholder ?? "",
       }),
     ],
-    content: initialContent,
+    content: initialContent ?? null,
     onBlur: ({ editor }) => onBlur?.(editor.getHTML()),
     onCreate: ({ editor }) => onCreate?.(editor.getHTML()),
     onUpdate: ({ editor }) => onUpdate(editor.getHTML()),

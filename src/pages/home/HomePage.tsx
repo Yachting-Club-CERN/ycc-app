@@ -1,10 +1,10 @@
 import ReadingBox from "@/components/layout/ReadingBox";
+import HelpersSpeedDial from "@/pages/helpers/components/HelpersSpeedDial";
 
 import MyTasksView from "./MyTasksView";
 import ProfileView from "./ProfileView";
-import HelpersSpeedDial from "../helpers/components/HelpersSpeedDial";
 
-const HomePage: React.FC = () => {
+const HomePage = (): React.ReactNode => {
   return (
     <ReadingBox>
       <HelpersSpeedDial />

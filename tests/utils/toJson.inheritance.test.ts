@@ -80,7 +80,7 @@ test("Nested circular reference", () => {
   a.parent = c;
   check(
     { root: a },
-    `{
+    String.raw`{
   "root": {
     "value": "a",
     "parent": {
@@ -88,7 +88,7 @@ test("Nested circular reference", () => {
       "parent": {
         "value": "b",
         "parent": {
-          "$ref": "$[\\"root\\"]"
+          "$ref": "$[\"root\"]"
         }
       }
     }

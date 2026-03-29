@@ -1,16 +1,16 @@
 import DialogContentText from "@mui/material/DialogContentText";
 
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canSignUpAsCaptain } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import CannotCancelDialogNotice from "./CannotCancelDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canSignUpAsCaptain } from "../../helpers-utils";
 
-const SignUpAsCaptainActionButton: React.FC<TaskActionProps> = ({
+const SignUpAsCaptainActionButton = ({
   task,
   ...props
-}) => {
+}: TaskActionProps): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   if (!canSignUpAsCaptain(task, currentUser)) {

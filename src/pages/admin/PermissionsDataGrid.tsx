@@ -9,7 +9,7 @@ import {
   GridColDef,
   GridToolbar,
 } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
@@ -74,16 +74,16 @@ type Props = {
   onPermissionsChange: (permissions: HelpersAppPermission[]) => void;
 };
 
-const PermissionsDataGrid: React.FC<Props> = ({
+const PermissionsDataGrid = ({
   permissions,
   onPermissionsChange,
-}) => {
+}: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
   const [contextMenu, setContextMenu] = useState<{
-    row?: HelpersAppPermission;
+    row: HelpersAppPermission | undefined;
     mouseX: number;
     mouseY: number;
   } | null>(null);

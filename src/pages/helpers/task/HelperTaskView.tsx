@@ -4,7 +4,7 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { JSX, useState } from "react";
+import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import useMemberInfoDialog from "@/components/dialogs/MemberInfoDialog/useMemberInfoDialog";
@@ -15,35 +15,36 @@ import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
+import AddHelperActionButton from "@/pages/helpers/components/action-buttons/AddHelperActionButton";
+import MarkAsDoneActionButton from "@/pages/helpers/components/action-buttons/MarkAsDoneActionButton";
+import RemoveCaptainActionButton from "@/pages/helpers/components/action-buttons/RemoveCaptainActionButton";
+import RemoveHelperActionButton from "@/pages/helpers/components/action-buttons/RemoveHelperActionButton";
+import SetCaptainActionButton from "@/pages/helpers/components/action-buttons/SetCaptainActionButton";
+import SignUpAsCaptainActionButton from "@/pages/helpers/components/action-buttons/SignUpAsCaptainActionButton";
+import SignUpAsHelperActionButton from "@/pages/helpers/components/action-buttons/SignUpAsHelperActionButton";
+import { TaskActionProps } from "@/pages/helpers/components/action-buttons/TaskActionButton";
+import ValidateActionButton from "@/pages/helpers/components/action-buttons/ValidateActionButton";
+import HelpersSpeedDial from "@/pages/helpers/components/HelpersSpeedDial";
+import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInfo";
+import ShareTaskViaEmailIconButton from "@/pages/helpers/components/ShareTaskViaEmailIconButton";
+import ShareTaskViaWhatsAppIconButton from "@/pages/helpers/components/ShareTaskViaWhatsAppIconButton";
+import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import { formatDateTime } from "@/utils/date-utils";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
-
-import { getFullNameAndUsername } from "../../members/members-utils";
-import AddHelperActionButton from "../components/action-buttons/AddHelperActionButton";
-import MarkAsDoneActionButton from "../components/action-buttons/MarkAsDoneActionButton";
-import RemoveCaptainActionButton from "../components/action-buttons/RemoveCaptainActionButton";
-import RemoveHelperActionButton from "../components/action-buttons/RemoveHelperActionButton";
-import SetCaptainActionButton from "../components/action-buttons/SetCaptainActionButton";
-import SignUpAsCaptainActionButton from "../components/action-buttons/SignUpAsCaptainActionButton";
-import SignUpAsHelperActionButton from "../components/action-buttons/SignUpAsHelperActionButton";
-import { TaskActionProps } from "../components/action-buttons/TaskActionButton";
-import ValidateActionButton from "../components/action-buttons/ValidateActionButton";
-import HelpersSpeedDial from "../components/HelpersSpeedDial";
-import HelperTaskTimingInfo from "../components/HelperTaskTimingInfo";
-import ShareTaskViaEmailIconButton from "../components/ShareTaskViaEmailIconButton";
-import ShareTaskViaWhatsAppIconButton from "../components/ShareTaskViaWhatsAppIconButton";
 
 type Props = {
   task: HelperTask;
   refreshTask: (task: HelperTask) => void;
 };
 
-const HelperTaskView: React.FC<Props> = ({ task, refreshTask }) => {
+const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
   const [error, setError] = useState<unknown>();
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
 
-  const createMemberDialogLink = (member: MemberPublicInfo): JSX.Element => (
+  const createMemberDialogLink = (
+    member: MemberPublicInfo,
+  ): React.ReactNode => (
     <Link onClick={() => memberInfoDialog.open({ member })}>
       {getFullNameAndUsername(member)}
     </Link>

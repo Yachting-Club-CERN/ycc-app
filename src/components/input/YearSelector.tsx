@@ -21,14 +21,14 @@ type SelectedYear = number | typeof ALL_YEARS;
 type YearSelectorProps = {
   value: SelectedYear;
   onChange: (year: SelectedYear) => void;
-  includeAllOption?: boolean;
+  includeAllOption?: boolean | undefined;
 };
 
-const YearSelector: React.FC<YearSelectorProps> = ({
+const YearSelector = ({
   value,
   onChange,
   includeAllOption = false,
-}) => {
+}: YearSelectorProps): React.ReactNode => {
   const currentYear = getCurrentYear();
 
   if (value === ALL_YEARS && !includeAllOption) {
@@ -70,17 +70,17 @@ const YearSelector: React.FC<YearSelectorProps> = ({
 
 type UseYearSelectorProps = {
   /** Initial year for uncontrolled mode. Defaults to current year if not provided. */
-  initialYear?: SelectedYear;
+  initialYear?: SelectedYear | undefined;
   /** Current year value for controlled mode. If provided, component becomes controlled. */
-  value?: SelectedYear;
+  value?: SelectedYear | undefined;
   /** Callback when the year changes. */
-  onChange?: (year: SelectedYear) => void;
+  onChange?: ((year: SelectedYear) => void) | undefined;
 } & Omit<YearSelectorProps, "value" | "onChange">;
 
 type UseYearSelectorReturn = {
   selectedYear: SelectedYear;
   selectedYearForApi: number | null;
-  component: React.ReactElement;
+  component: React.ReactNode;
 };
 
 /**

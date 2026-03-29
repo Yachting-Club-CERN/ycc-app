@@ -4,7 +4,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import React from "react";
 
 import toJson from "@/utils/toJson";
 
@@ -12,7 +11,7 @@ type Props = {
   data: string | null | undefined;
 };
 
-export const AuditLogEntryDataView: React.FC<Props> = ({ data }) => {
+export const AuditLogEntryDataView = ({ data }: Props): React.ReactNode => {
   if (data === undefined) {
     return null;
   }

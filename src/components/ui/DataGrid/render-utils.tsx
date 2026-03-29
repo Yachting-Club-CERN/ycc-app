@@ -1,17 +1,16 @@
 import { GridRenderCellParams, GridValidRowModel } from "@mui/x-data-grid";
-import { JSX } from "react";
 
-import EmailLink from "../links/EmailLink";
-import PhoneLink from "../links/PhoneLink";
+import EmailLink from "@/components/ui/links/EmailLink";
+import PhoneLink from "@/components/ui/links/PhoneLink";
 
 export const renderEmail = (
   params: GridRenderCellParams<GridValidRowModel, string | null>,
-): JSX.Element => {
+): React.ReactNode => {
   return <EmailLink email={params.value} />;
 };
 
 export const renderPhoneNumber = (
   params: GridRenderCellParams<GridValidRowModel, string | null>,
-): JSX.Element => {
+): React.ReactNode => {
   return <PhoneLink phone={params.value} />;
 };

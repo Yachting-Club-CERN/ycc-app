@@ -10,7 +10,7 @@ import { sanitiseHtmlForReact } from "@/utils/html-utils";
 const initialContent =
   "<p>This is the <strong>initial</strong> content of the editor.</p>";
 
-const PlaygroundEditorPage: React.FC = () => {
+const PlaygroundEditorPage = (): React.ReactNode => {
   const [html, setHtml] = useState(initialContent);
 
   console.debug("HTML", html);

@@ -1,5 +1,3 @@
-import { JSX } from "react";
-
 import useDelayedRef from "@/hooks/useDelayedRef";
 
 import RichTextEditor from "./RichTextEditor";
@@ -12,7 +10,7 @@ type Props = Pick<
 const useRichTextEditor = (
   props: Props,
 ): {
-  component: JSX.Element;
+  component: React.ReactNode;
   content: string;
   clearContent: () => void;
 } => {

@@ -13,11 +13,15 @@ import { getFullName } from "@/pages/members/members-utils";
 
 type Props = {
   member: MemberPublicInfo | null;
-  extra?: Record<string, string>;
+  extra?: Record<string, string> | undefined;
   onClose: () => void;
 };
 
-const MemberInfoDialog: React.FC<Props> = ({ member, extra, onClose }) => {
+const MemberInfoDialog = ({
+  member,
+  extra,
+  onClose,
+}: Props): React.ReactNode => {
   return (
     <Dialog
       open={!!member}

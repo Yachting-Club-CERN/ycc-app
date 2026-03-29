@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate as useReactNavigate } from "react-router-dom";
 
 /**
@@ -10,29 +11,35 @@ import { useNavigate as useReactNavigate } from "react-router-dom";
  *
  * @returns A function that navigates to the given `location`, supporting modifier keys.
  */
-export const useNavigate = () => {
+export const useNavigate = (): ((
+  location: string,
+  event?: React.MouseEvent<HTMLElement>,
+) => Promise<void>) => {
   const navigate = useReactNavigate();
 
-  return async (
-    location: string,
-    event?: React.MouseEvent<HTMLElement>,
-  ): Promise<void> => {
-    // Not an <a> but good enough
-    // event.button === 1 is a middle click
-    // For onClick events it is only accessible here if onMouseDown called event.preventDefault()
-    if (event?.ctrlKey || event?.button === 1) {
-      // Note: blur/focus might not work depending on the browser
-      globalThis.open(location, "_blank")?.blur();
-      globalThis.focus();
-    } else if (event?.shiftKey) {
-      // https://stackoverflow.com/a/726803
-      globalThis.open(
-        location,
-        "_blank",
-        `height=${globalThis.innerHeight},width=${globalThis.innerWidth}`,
-      );
-    } else {
-      await navigate(location);
-    }
-  };
+  return useCallback(
+    async (
+      location: string,
+      event?: React.MouseEvent<HTMLElement>,
+    ): Promise<void> => {
+      // Not an <a> but good enough
+      // event.button === 1 is a middle click
+      // For onClick events it is only accessible here if onMouseDown called event.preventDefault()
+      if (event?.ctrlKey || event?.button === 1) {
+        // Note: blur/focus might not work depending on the browser
+        globalThis.open(location, "_blank")?.blur();
+        globalThis.focus();
+      } else if (event?.shiftKey) {
+        // https://stackoverflow.com/a/726803
+        globalThis.open(
+          location,
+          "_blank",
+          `height=${globalThis.innerHeight},width=${globalThis.innerWidth}`,
+        );
+      } else {
+        await navigate(location);
+      }
+    },
+    [navigate],
+  );
 };

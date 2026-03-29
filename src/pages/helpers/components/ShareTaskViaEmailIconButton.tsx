@@ -1,14 +1,13 @@
 import ShareViaEmailIconButton from "@/components/buttons/ShareViaEmailIconButton";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
-
-import { createTimingInfoLine } from "../helpers-format";
+import { createTimingInfoLine } from "@/pages/helpers/helpers-format";
 
 type Props = {
   task: HelperTask;
 };
 
-const ShareTaskViaEmailIconButton: React.FC<Props> = ({ task }) => {
+const ShareTaskViaEmailIconButton = ({ task }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const subject = `Helper task: ${task.title}`;
 

@@ -2,7 +2,7 @@ import HTMLReactParser, {
   Element as DOMElement,
   Text as DOMText,
 } from "html-react-parser";
-import React, { JSX } from "react";
+import React from "react";
 
 const forbiddenTags = [
   "base",
@@ -31,31 +31,29 @@ const forbiddenTags = [
  * @param html HTML to sanitise
  * @returns React component(s)
  */
-export const sanitiseHtmlForReact = (
-  html: string,
-): JSX.Element | JSX.Element[] => {
+export const sanitiseHtmlForReact = (html: string): React.ReactNode => {
   const reactDom = HTMLReactParser(html, {
     // We trust our backend + React + RichTextEditor, but you never know...
     replace: (domNode) => {
       if (domNode instanceof DOMText) {
         // Always keep text
-        return domNode;
+        return;
       } else if (domNode instanceof DOMElement) {
-        if (!forbiddenTags.includes(domNode.name)) {
-          return null;
+        if (forbiddenTags.includes(domNode.name)) {
+          return React.createElement(React.Fragment);
         } else if (
           domNode.name === "h1" ||
           domNode.name === "h2" ||
           domNode.name === "h3"
         ) {
-          // Does not look good
+          // h1-h3 are too large, demote them
           domNode.name = "h4";
         }
 
-        return domNode;
+        return;
       } else {
-        // Always skip comments, processing instructions (XHTML only), etc.
-        return null;
+        // Remove comments, processing instructions (XHTML only), etc.
+        return React.createElement(React.Fragment);
       }
     },
   });

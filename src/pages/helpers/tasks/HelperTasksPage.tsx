@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 
 import {
   isValidSelectedYear,
-  useYearSelector,
   type SelectedYear,
+  useYearSelector,
 } from "@/components/input/YearSelector";
 import ReadingBox from "@/components/layout/ReadingBox";
 import RowStack from "@/components/layout/RowStack";
@@ -27,12 +27,12 @@ import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
+import HelpersSpeedDial from "@/pages/helpers/components/HelpersSpeedDial";
+import { DONE_EMOJI, VALIDATED_EMOJI } from "@/pages/helpers/helpers-format";
+import { HelperTaskFilterOptions } from "@/pages/helpers/useFilteredHelperTasks";
 import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
-import HelpersSpeedDial from "../components/HelpersSpeedDial";
-import { DONE_EMOJI, VALIDATED_EMOJI } from "../helpers-format";
-import { HelperTaskFilterOptions } from "../useFilteredHelperTasks";
 import HelperTasksView from "./HelperTasksView";
 import { HelperTasksDisplay, HelperTasksDisplayOptions } from "./types";
 
@@ -67,7 +67,7 @@ const SESSION_STORAGE = {
   FILTER_OPTIONS: "helpers.tasks.filterOptions",
 } as const;
 
-const HelperTasksPage: React.FC = () => {
+const HelperTasksPage = (): React.ReactNode => {
   const currentUser = useCurrentUser();
   const currentYear = getCurrentYear();
 
@@ -86,8 +86,13 @@ const HelperTasksPage: React.FC = () => {
       }
 
       const parsed = JSON.parse(savedFilterOptions) as HelperTaskFilterOptions;
-      if (!isValidSelectedYear(parsed.year)) {
-        parsed.year = currentYear;
+      if (
+        !isValidSelectedYear(parsed.year) ||
+        // Non-admin/editor users can only view the current year
+        (!currentUser.helpersAppAdminOrEditor && parsed.year !== currentYear)
+      ) {
+        // Just reset the filter
+        return getDefaultFilterOptions();
       }
       return parsed;
     } catch (error) {
@@ -102,21 +107,14 @@ const HelperTasksPage: React.FC = () => {
       : "cards";
   });
 
-  // Non-admin/editor users can only view the current year
   useEffect(() => {
-    if (
-      !currentUser.helpersAppAdminOrEditor &&
-      filterOptions.year !== currentYear
-    ) {
-      setFilterOptionsImmediately(getDefaultFilterOptions());
-    }
-  }, [currentUser.helpersAppAdminOrEditor]);
-
-  useEffect(() => {
-    console.info("Save filter options to session storage", filterOptions);
+    console.info(
+      "Save filter options to session storage",
+      delayedFilterOptions,
+    );
     sessionStorage.setItem(
       SESSION_STORAGE.FILTER_OPTIONS,
-      JSON.stringify(filterOptions),
+      JSON.stringify(delayedFilterOptions),
     );
   }, [delayedFilterOptions]);
 

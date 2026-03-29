@@ -10,12 +10,12 @@ type PromiseOutcome<T> = {
  * Cancellable promise hook. Creates `useState()` and `useEffect()` hooks under the hood.
  *
  * @param promise promise
- * @param deps `useEffect()` dependencies, `undefined` is translated to `[]`
+ * @param deps `useEffect()` dependencies
  * @returns object of promise result, promise error and pending (boolean)
  */
 const usePromise = <T>(
   promise: (signal?: AbortSignal) => Promise<T>,
-  deps?: React.DependencyList,
+  deps: React.DependencyList,
 ): PromiseOutcome<T> => {
   const [result, setResult] = useState<T>();
   const [error, setError] = useState<unknown>();
@@ -51,7 +51,8 @@ const usePromise = <T>(
       abortController.abort();
       doReset();
     };
-  }, deps ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- deps are caller-controlled by design
+  }, deps);
 
   return { result, error, pending };
 };
