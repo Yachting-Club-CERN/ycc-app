@@ -59,7 +59,9 @@ describe("Forbidden tags are removed", () => {
   });
 
   test("removes forbidden tag but keeps surrounding content", () => {
-    const result = toSanitisedHtml("<p>before</p><script>alert(1)</script><p>after</p>");
+    const result = toSanitisedHtml(
+      "<p>before</p><script>alert(1)</script><p>after</p>",
+    );
     expect(result).toBe("<p>before</p><p>after</p>");
   });
 
@@ -110,7 +112,9 @@ describe("HTML comments", () => {
 
 describe("Mixed content", () => {
   test("keeps safe content and removes forbidden tags", () => {
-    const result = toSanitisedHtml("<p>hello</p><script>alert(1)</script><p>world</p>");
+    const result = toSanitisedHtml(
+      "<p>hello</p><script>alert(1)</script><p>world</p>",
+    );
     expect(result).toBe("<p>hello</p><p>world</p>");
   });
 

@@ -1,14 +1,5 @@
 /// <reference types="vite/client" />
 
-interface Navigator {
-  userAgentData?: NavigatorUserAgentData | undefined;
-  mobile?: boolean | undefined;
-}
-
-interface NavigatorUserAgentData {
-  platform?: string | undefined;
-}
-
 // eslint-disable-next-line no-var
 declare var oauth2Token: string | undefined;
 

@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 
+import { decycle } from "@/utils/decycle";
 import toJson from "@/utils/toJson";
 
 export const check = (
@@ -188,4 +189,17 @@ test("Complex object with special values", () => {
   ]
 }`,
   );
+});
+
+test("Object with inherited prototype properties skips them", () => {
+  const parent = { inherited: "from proto" };
+  const child = Object.create(parent);
+  child["own"] = "mine";
+
+  // decycle should only include own properties
+  const result = decycle(child);
+  expect(result).toEqual({ own: "mine" });
+
+  // Also verify via toJson
+  check(child, '{"own":"mine"}', false);
 });

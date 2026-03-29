@@ -15,7 +15,7 @@ import { useMemo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { HelperTask } from "@/model/helpers-dtos";
-import { statsSortByDate } from "@/pages/admin/statistics/utils";
+import { statsSortByDate } from "@/pages/admin/statistics/statistics-utils";
 import { getFullName } from "@/pages/members/members-utils";
 import { formatDate } from "@/utils/date-utils";
 
