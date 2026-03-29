@@ -19,7 +19,7 @@ Categorised snapshot of open issues with brief relevance notes.
 - **#113 PWA offline mode** — Provide offline indicator and limited offline views (My tasks, member list); requires caching strategy.
 - **#28 User-friendly helper task images** — Standardise image storage in DB and rendering in rich text; impacts task editor/viewer.
 - **#21 Display helper task category descriptions** — Show short/long descriptions (TinyMCE/HTML) in category views.
-- **#49 Auto/create motorboat booking reminder for surveillance shifts** — Add booking selection/reminder in task creation to prevent missed boat bookings.
+- **#49 Auto-create motorboat booking reminder for surveillance shifts** — Add booking selection/reminder in task creation to prevent missed boat bookings.
 
 ## Data/content correctness
 - **#123 Phone number shuffles** — Fix ordering/labeling of work/home/WhatsApp numbers in app and emails.
@@ -28,4 +28,3 @@ Categorised snapshot of open issues with brief relevance notes.
 ## Monitoring / Analytics
 - **#72 Front-end monitoring** — Add Sentry (or similar) to capture client errors and usage for helpers flow.
 - **#14 Web analytics** — Add analytics (Google/Matomo) for site usage tracking; likely minimal UI impact but requires consent handling.
-
