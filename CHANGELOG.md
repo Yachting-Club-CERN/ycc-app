@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.4.0] - 2026-03-??
+## 1.4.0 - 2026-03-??
 
 ### Added
 
@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Email links should always use body in plain text format (deployed in 2025)
+- Dependency upgrades (2026-03), notable:
+  - Node.js 24
+  - TypeScript 5.9
+  - React 19.2
+  - Material UI 7
+  - Material UI X 8
 
 ## [1.3.0] - 2025-04-09
 

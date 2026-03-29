@@ -11,7 +11,7 @@ import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import dayjs from "@/utils/dayjs";
 
-const ExportPage: React.FC = () => {
+const ExportPage = (): React.ReactNode => {
   const yearSelector = useYearSelector();
   const [error, setError] = useState<Error | null>(null);
   const [isExporting, setIsExporting] = useState(false);

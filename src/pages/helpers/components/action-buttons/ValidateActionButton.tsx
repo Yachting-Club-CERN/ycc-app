@@ -2,21 +2,15 @@ import DialogContentText from "@mui/material/DialogContentText";
 
 import useRichTextEditor from "@/components/ui/RichTextEditor/useRichTextEditor";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canValidate } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canValidate } from "../../helpers-utils";
 
-const ValidateActionButton: React.FC<TaskActionProps> = ({
+const ValidateActionButtonInner = ({
   task,
   ...props
-}) => {
-  const currentUser = useCurrentUser();
-
-  if (!canValidate(task, currentUser)) {
-    return null;
-  }
-
+}: TaskActionProps): React.ReactNode => {
   const commentEditor = useRichTextEditor({
     minHeight: 100,
     containerProps: { mb: 2 },
@@ -46,6 +40,19 @@ const ValidateActionButton: React.FC<TaskActionProps> = ({
       {...props}
     />
   );
+};
+
+const ValidateActionButton = ({
+  task,
+  ...props
+}: TaskActionProps): React.ReactNode => {
+  const currentUser = useCurrentUser();
+
+  if (!canValidate(task, currentUser)) {
+    return null;
+  }
+
+  return <ValidateActionButtonInner task={task} {...props} />;
 };
 
 export default ValidateActionButton;

@@ -9,7 +9,7 @@ import client from "@/utils/client";
 
 import HelperTaskView from "./HelperTaskView";
 
-const HelperTaskPage: React.FC = () => {
+const HelperTaskPage = (): React.ReactNode => {
   const { id } = useParams();
   const task = usePromise(
     async (signal?: AbortSignal) => {

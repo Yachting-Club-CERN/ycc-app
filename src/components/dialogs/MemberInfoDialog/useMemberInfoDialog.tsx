@@ -1,4 +1,4 @@
-import { JSX, useState } from "react";
+import { useState } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";
 
@@ -21,7 +21,7 @@ const DEFAULT_DIALOG_PROPS = { member: null } as const;
  * @returns object with the component to render and dialog functions
  */
 const useMemberInfoDialog = (): {
-  component: JSX.Element;
+  component: React.ReactNode;
   open: (props: OpenProps) => void;
   close: () => void;
 } => {

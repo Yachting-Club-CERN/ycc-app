@@ -1,5 +1,5 @@
-import { SxProps } from "@mui/material";
-import { JSX, useRef } from "react";
+import { SxProps } from "@mui/material/styles";
+import { useRef } from "react";
 
 import { MemberPublicInfo } from "@/model/dtos";
 
@@ -8,7 +8,7 @@ import MemberAutocomplete from "./MemberAutocomplete";
 const useMemberAutocomplete = (
   componentSx?: SxProps,
 ): {
-  component: JSX.Element;
+  component: React.ReactNode;
   requireSelectedMember: MemberPublicInfo;
   clearSelection: () => void;
 } => {

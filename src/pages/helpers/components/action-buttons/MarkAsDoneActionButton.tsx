@@ -2,21 +2,15 @@ import DialogContentText from "@mui/material/DialogContentText";
 
 import useRichTextEditor from "@/components/ui/RichTextEditor/useRichTextEditor";
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canMarkAsDone } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canMarkAsDone } from "../../helpers-utils";
 
-const MarkAsDoneActionButton: React.FC<TaskActionProps> = ({
+const MarkAsDoneActionButtonInner = ({
   task,
   ...props
-}) => {
-  const currentUser = useCurrentUser();
-
-  if (!canMarkAsDone(task, currentUser)) {
-    return null;
-  }
-
+}: TaskActionProps): React.ReactNode => {
   const commentEditor = useRichTextEditor({
     minHeight: 100,
     containerProps: { mb: 2 },
@@ -48,6 +42,19 @@ const MarkAsDoneActionButton: React.FC<TaskActionProps> = ({
       {...props}
     />
   );
+};
+
+const MarkAsDoneActionButton = ({
+  task,
+  ...props
+}: TaskActionProps): React.ReactNode => {
+  const currentUser = useCurrentUser();
+
+  if (!canMarkAsDone(task, currentUser)) {
+    return null;
+  }
+
+  return <MarkAsDoneActionButtonInner task={task} {...props} />;
 };
 
 export default MarkAsDoneActionButton;

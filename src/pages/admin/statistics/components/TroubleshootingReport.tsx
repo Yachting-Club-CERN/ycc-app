@@ -15,10 +15,9 @@ import { useMemo } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { HelperTask } from "@/model/helpers-dtos";
+import { statsSortByDate } from "@/pages/admin/statistics/statistics-utils";
 import { getFullName } from "@/pages/members/members-utils";
 import { formatDate } from "@/utils/date-utils";
-
-import { statsSortByDate } from "../utils";
 
 const findSurveillanceTasksWithoutCaptain = (
   tasks: HelperTask[],
@@ -70,7 +69,7 @@ type TaskTableProps = {
   columns: TaskTableColumn[];
 };
 
-const TaskTable: React.FC<TaskTableProps> = ({ tasks, columns }) => (
+const TaskTable = ({ tasks, columns }: TaskTableProps): React.ReactNode => (
   <TableContainer component={Paper} sx={{ mb: 3 }}>
     <Table>
       <TableHead>
@@ -132,10 +131,10 @@ type Props = {
   allTasks: HelperTask[];
 };
 
-const TroubleshootingReport: React.FC<Props> = ({
+const TroubleshootingReport = ({
   publishedTasks,
   allTasks,
-}) => {
+}: Props): React.ReactNode => {
   const surveillanceTasksWithoutCaptain = useMemo(
     () => findSurveillanceTasksWithoutCaptain(publishedTasks),
     [publishedTasks],

@@ -1,4 +1,4 @@
-import { JSX, useState } from "react";
+import { useState } from "react";
 
 import { AuditLogEntry } from "@/model/audit-log-dtos";
 
@@ -18,7 +18,7 @@ const DEFAULT_DIALOG_PROPS = { entry: null } as const;
  * @returns object with the component to render and dialog functions
  */
 const useAuditLogEntryDialog = (): {
-  component: JSX.Element;
+  component: React.ReactNode;
   open: (props: OpenProps) => void;
   close: () => void;
 } => {

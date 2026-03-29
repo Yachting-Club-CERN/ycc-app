@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const IS_CI = !!process.env["CI"];
+
 /**
  * Playwright configuration for E2E tests with a fully mocked backend.
  *
@@ -7,15 +9,15 @@ import { defineConfig, devices } from "@playwright/test";
  * which bypasses Keycloak authentication. Individual tests mock the YCC API
  * using page.route().
  *
- * Run with: pnpm test:e2e:mocked
+ * Run with: pnpm e2e:mocked
  */
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "e2e",
   testMatch: "**/page-title.spec.ts",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly: IS_CI,
+  retries: IS_CI ? 2 : 0,
+  workers: IS_CI ? 1 : "75%",
   reporter: "html",
   use: {
     baseURL: "http://localhost:3001",
@@ -28,7 +30,7 @@ export default defineConfig({
   webServer: {
     command: "pnpm vite --port 3001",
     url: "http://localhost:3001",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !IS_CI,
     timeout: 60000,
     env: {
       VITE_TEST_USER: "true",

@@ -1,13 +1,14 @@
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig, loadEnv } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig, loadEnv, Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import tsconfigPaths from "vite-tsconfig-paths";
+
 import { Environment, parseEnvironment } from "./src/environment";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  const environment = parseEnvironment(env.VITE_APP_ENVIRONMENT);
+  const environment = parseEnvironment(env["VITE_APP_ENVIRONMENT"]);
   const app_name =
     !environment || environment === Environment.PRODUCTION
       ? "YCC App"
@@ -30,7 +31,7 @@ export default defineConfig(({ mode }) => {
       }),
       tsconfigPaths(),
       // See stats.html for chunk details (after running pnpm build)
-      visualizer(),
+      visualizer() as unknown as Plugin,
       VitePWA({
         registerType: "autoUpdate",
         includeAssets: ["favicon.ico", "robots.txt"],
@@ -141,7 +142,7 @@ export default defineConfig(({ mode }) => {
         "@mui/icons-material",
         "@mui/x-data-grid",
         "@mui/x-date-pickers",
-        "react-hook-mui-form",
+        "react-hook-form-mui",
         "mui-tiptap",
       ],
     },
@@ -149,11 +150,10 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            // Some notes as quite bit of time was sent here:
+            // Some notes as quite bit of time was spent here:
             // - Big chunks cause very slow loading on mobile devices
             // - Tried to use a function, but it is error-prone that something gets package into the wrong location
             // - This way Rollup.js is able to optimize the chunks better
-            // - Surprisingly as of 2025-03 react-router-dom actually gets packaged with the app into index*.js
             oh: [
               "axios",
               "html-react-parser",
@@ -165,10 +165,13 @@ export default defineConfig(({ mode }) => {
               "react-router-dom",
               "zod",
             ],
-            no: ["@mui/material", "@mui/icons-material"],
-            nerd: ["@mui/x-data-grid"],
-            alert: ["@mui/x-date-pickers", "react-hook-form-mui"],
-            exclamationMark: ["mui-tiptap"],
+            nerd: [
+              // As of MUI 7 / MUI X 8 these must go together: ~1 MB :-(
+              "@mui/material",
+              "@mui/x-data-grid",
+              "@mui/x-date-pickers",
+            ],
+            alert: ["mui-tiptap"],
           },
         },
       },

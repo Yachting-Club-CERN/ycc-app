@@ -5,14 +5,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import SmartSpeedDial from "@/components/ui/SmartSpeedDial";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
-
-import { getTaskCloneLocation, getTaskEditLocation } from "../helpers-utils";
+import {
+  getTaskCloneLocation,
+  getTaskEditLocation,
+} from "@/pages/helpers/helpers-utils";
 
 type Props = {
-  task?: HelperTask;
+  task?: HelperTask | undefined;
 };
 
-const HelpersSpeedDial: React.FC<Props> = ({ task }) => {
+const HelpersSpeedDial = ({ task }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   if (!currentUser.helpersAppAdminOrEditor) {

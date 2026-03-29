@@ -1,33 +1,32 @@
-import { SxProps } from "@mui/material";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { JSX } from "react";
+import { SxProps } from "@mui/material/styles";
 
 import { OpenConfirmationDialogProps } from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import { HelperTask } from "@/model/helpers-dtos";
 
 type WithButtonProps = {
-  buttonText?: string;
+  buttonText?: string | undefined;
   buttonIcon?: never;
 };
 
 type WithIconButtonProps = {
   buttonText?: never;
-  buttonIcon: JSX.Element;
+  buttonIcon: React.ReactNode;
 };
 
 type CommonProps = {
   buttonColor: ButtonProps["color"];
-  buttonSx?: SxProps;
+  buttonSx?: SxProps | undefined;
 
   dialogTitle: string;
-  dialogContent: JSX.Element;
-  dialogConfirmButtonColor?: ButtonProps["color"];
-  dialogConfirmButtonText?: string;
-  dialogCancelButtonColor?: ButtonProps["color"];
-  dialogDelayConfirm?: boolean;
+  dialogContent: React.ReactElement | null; // No content has to be explicit
+  dialogConfirmButtonColor?: ButtonProps["color"] | undefined;
+  dialogConfirmButtonText?: string | undefined;
+  dialogCancelButtonColor?: ButtonProps["color"] | undefined;
+  dialogDelayConfirm?: boolean | undefined;
 
-  onDialogOpening?: () => void;
+  onDialogOpening?: (() => void) | undefined;
   onDialogConfirm: () => Promise<HelperTask>;
   openConfirmationDialog: (props: OpenConfirmationDialogProps) => void;
   onTaskUpdate: (task: HelperTask) => void;
@@ -40,7 +39,7 @@ export type TaskActionProps = {
   task: HelperTask;
 } & Pick<Props, "openConfirmationDialog" | "onTaskUpdate" | "onError">;
 
-const TaskActionButton: React.FC<Props> = ({
+const TaskActionButton = ({
   buttonText,
   buttonIcon,
   buttonColor,
@@ -56,7 +55,7 @@ const TaskActionButton: React.FC<Props> = ({
   openConfirmationDialog,
   onTaskUpdate: updateTask,
   onError,
-}) => {
+}: Props): React.ReactNode => {
   const handleClick = (): void => {
     onError(undefined);
     if (onDialogOpening) {

@@ -1,7 +1,7 @@
-import { cleanup, renderHook } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, test } from "vitest";
 
-import useDocumentTitle from "../useDocumentTitle";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const APP_TITLE = "YCC App";
 
@@ -10,24 +10,19 @@ describe("useDocumentTitle", () => {
     document.title = APP_TITLE;
   });
 
-  afterEach(() => {
-    cleanup();
-    document.title = APP_TITLE;
-  });
-
-  it("sets document.title to 'title | YCC App' on mount", () => {
+  test("sets document.title to 'title | YCC App' on mount", () => {
     renderHook(() => useDocumentTitle("Test Page"));
     expect(document.title).toBe(`Test Page | ${APP_TITLE}`);
   });
 
-  it("resets document.title to previous value on unmount", () => {
+  test("resets document.title to previous value on unmount", () => {
     const { unmount } = renderHook(() => useDocumentTitle("Test Page"));
     expect(document.title).toBe(`Test Page | ${APP_TITLE}`);
     unmount();
     expect(document.title).toBe(APP_TITLE);
   });
 
-  it("updates document.title when value changes", () => {
+  test("updates document.title when value changes", () => {
     const { rerender } = renderHook(
       ({ title }: { title: string }) => useDocumentTitle(title),
       { initialProps: { title: "Page 1" } },
@@ -37,7 +32,7 @@ describe("useDocumentTitle", () => {
     expect(document.title).toBe(`Page 2 | ${APP_TITLE}`);
   });
 
-  it("stacks correctly when multiple components use the hook", () => {
+  test("stacks correctly when multiple components use the hook", () => {
     const { unmount: unmount1 } = renderHook(() =>
       useDocumentTitle("Task: My Boat Race"),
     );

@@ -102,41 +102,41 @@ class UserFactory {
     const username = UserFactory.parseAsString(
       profile?.username,
       info?.preferred_username,
-      accessToken?.preferred_username,
-      idToken?.preferred_username,
+      accessToken?.["preferred_username"],
+      idToken?.["preferred_username"],
     );
 
     const email = UserFactory.parseAsString(
       profile?.email,
       info?.email,
-      accessToken?.email,
-      idToken?.email,
+      accessToken?.["email"],
+      idToken?.["email"],
     );
 
     const firstName = UserFactory.parseAsString(
       profile?.firstName,
       info?.given_name,
-      accessToken?.given_name,
-      idToken?.given_name,
+      accessToken?.["given_name"],
+      idToken?.["given_name"],
     );
 
     const lastName = UserFactory.parseAsString(
       profile?.lastName,
       info?.family_name,
-      accessToken?.family_name,
-      idToken?.family_name,
+      accessToken?.["family_name"],
+      idToken?.["family_name"],
     );
 
     const groups = UserFactory.parseAsStringArray(
       info?.groups,
-      accessToken?.groups,
-      idToken?.groups,
+      accessToken?.["groups"],
+      idToken?.["groups"],
     );
 
     const roles = UserFactory.parseAsStringArray(
       info?.roles,
-      accessToken?.roles,
-      idToken?.roles,
+      accessToken?.["roles"],
+      idToken?.["roles"],
     );
 
     return new User(

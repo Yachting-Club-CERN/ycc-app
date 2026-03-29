@@ -1,13 +1,12 @@
 import SpanBlockBox from "@/components/layout/SpanBlockBox";
 import { HelperTask, HelperTaskType } from "@/model/helpers-dtos";
+import { getStatusEmoji } from "@/pages/helpers/helpers-format";
+import { isMultiDayShift } from "@/pages/helpers/helpers-utils";
 import {
   formatDateTime,
   formatDateWithDay,
   formatTime,
 } from "@/utils/date-utils";
-
-import { getStatusEmoji } from "../helpers-format";
-import { isMultiDayShift } from "../helpers-utils";
 
 type Props = {
   task: HelperTask;
@@ -18,7 +17,7 @@ type Props = {
  *
  * Uses `<span>` elements to allow usage in `<p>` elements as well.
  */
-const HelperTaskTimingInfo: React.FC<Props> = ({ task }) => {
+const HelperTaskTimingInfo = ({ task }: Props): React.ReactNode => {
   const labels = [task.urgent && "Urgent", !task.published && "Hidden"]
     .filter(Boolean)
     .join(", ");

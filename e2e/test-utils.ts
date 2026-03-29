@@ -1,4 +1,4 @@
-import { Locator, Page, expect, test } from "@playwright/test";
+import { expect, Locator, Page, test } from "@playwright/test";
 import dayjs from "dayjs";
 
 import { TEST_USERS } from "./test-constants";
@@ -47,7 +47,7 @@ export const ui = {
 
   selectDateTime: async (page: Page, locator: Locator, date: string) => {
     // Date format: DD/MM/YYYY HH:MM
-    await locator.click();
+    await locator.click({ force: true }); // 2026-03: It was needed for MUI 7 / MUI X 8
 
     const dialog = page.getByRole("dialog");
     const nextMonthIcon = dialog.getByTestId("ArrowRightIcon");

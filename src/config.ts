@@ -53,17 +53,18 @@ const DEFAULT_CONFIG = DefaultConfigs.LOCAL;
 const config: Config = {
   environment:
     Environment[
-      import.meta.env.VITE_APP_ENVIRONMENT as keyof typeof Environment
+      import.meta.env["VITE_APP_ENVIRONMENT"] as keyof typeof Environment
     ] ?? DEFAULT_CONFIG.environment,
   keycloakServerUrl:
-    import.meta.env.VITE_APP_KEYCLOAK_SERVER_URL ??
+    import.meta.env["VITE_APP_KEYCLOAK_SERVER_URL"] ??
     DEFAULT_CONFIG.keycloakServerUrl,
   keycloakRealm:
-    import.meta.env.VITE_APP_KEYCLOAK_REALM ?? DEFAULT_CONFIG.keycloakRealm,
+    import.meta.env["VITE_APP_KEYCLOAK_REALM"] ?? DEFAULT_CONFIG.keycloakRealm,
   keycloakClient:
-    import.meta.env.VITE_APP_KEYCLOAK_CLIENT ?? DEFAULT_CONFIG.keycloakClient,
+    import.meta.env["VITE_APP_KEYCLOAK_CLIENT"] ??
+    DEFAULT_CONFIG.keycloakClient,
   yccHullUrl:
-    import.meta.env.VITE_APP_YCC_HULL_URL ?? DEFAULT_CONFIG.yccHullUrl,
+    import.meta.env["VITE_APP_YCC_HULL_URL"] ?? DEFAULT_CONFIG.yccHullUrl,
 };
 
 export { Environment };

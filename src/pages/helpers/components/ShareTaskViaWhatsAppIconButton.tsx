@@ -1,14 +1,13 @@
 import ShareViaWhatsAppIconButton from "@/components/buttons/ShareViaWhatsAppIconButton";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
-
-import { createTimingInfoLine } from "../helpers-format";
+import { createTimingInfoLine } from "@/pages/helpers/helpers-format";
 
 type Props = {
   task: HelperTask;
 };
 
-const ShareTaskViaWhatsAppIconButton: React.FC<Props> = ({ task }) => {
+const ShareTaskViaWhatsAppIconButton = ({ task }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const message = `Dear Sailors ⛵️🥳,
 

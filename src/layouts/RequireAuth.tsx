@@ -6,7 +6,7 @@ type Props = {
   redirectTo: string;
 };
 
-const RequireAdmin: React.FC<Props> = ({ redirectTo }) => {
+const RequireAdmin = ({ redirectTo }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   if (!currentUser.helpersAppAdmin) {
@@ -16,7 +16,7 @@ const RequireAdmin: React.FC<Props> = ({ redirectTo }) => {
   return <Outlet />;
 };
 
-const RequireAdminOrEditor: React.FC<Props> = ({ redirectTo }) => {
+const RequireAdminOrEditor = ({ redirectTo }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   if (!currentUser.helpersAppAdminOrEditor) {

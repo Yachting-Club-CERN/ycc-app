@@ -1,10 +1,10 @@
 type MailtoHrefProps = {
-  to?: string;
-  subject?: string;
+  to?: string | undefined;
+  subject?: string | undefined;
   /**
    * Use plain text, as HTML is only supported by a limited number of desktop clients.
    */
-  body?: string;
+  body?: string | undefined;
 };
 
 /**

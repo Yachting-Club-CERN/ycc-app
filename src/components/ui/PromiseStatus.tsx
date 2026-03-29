@@ -8,7 +8,7 @@ type Props = {
   outcomes: PromiseOutcome<unknown>[];
 };
 
-const PromiseStatus: React.FC<Props> = ({ outcomes }) => {
+const PromiseStatus = ({ outcomes }: Props): React.ReactNode => {
   const pending = outcomes.some((outcome) => outcome.pending);
   const error = outcomes.find((outcome) => outcome.error)?.error;
 

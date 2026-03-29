@@ -22,12 +22,12 @@ import {
 
 export type HelperTaskFilterOptions = {
   year: SelectedYear;
-  search?: string;
-  showOnlyUpcoming?: boolean;
-  showOnlyContactOrSignedUp?: boolean;
-  showOnlyAvailable?: boolean;
-  showOnlyUnpublished?: boolean;
-  states?: HelperTaskState[];
+  search?: string | undefined;
+  showOnlyUpcoming?: boolean | undefined;
+  showOnlyContactOrSignedUp?: boolean | undefined;
+  showOnlyAvailable?: boolean | undefined;
+  showOnlyUnpublished?: boolean | undefined;
+  states?: HelperTaskState[] | undefined;
 };
 
 const filterSearchMember = (

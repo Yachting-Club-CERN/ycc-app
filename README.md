@@ -11,7 +11,7 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 3. Start `ycc-hull`
 4. Populate test data if this is your first time
 5. `pnpm install`
-6. `pnpm start`
+6. `pnpm dev`
 
 ### Even quicker start
 
@@ -21,7 +21,7 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 2. Configure `ycc-hull` to use the DEVELOPMENT DB.
 3. Start `ycc-hull`
 4. `pnpm install`
-5. `pnpm start`
+5. `pnpm dev`
 
 ## Configuring Keycloak
 
@@ -40,8 +40,7 @@ YCC Frontend Application. Skeleton based on [hello-react/03-react-keycloak](http
 ## Basic QA
 
 ```sh
-pnpm lint
-pnpm fix
+pnpm check
 pnpm test
 ```
 
@@ -49,7 +48,7 @@ You can run the end-to-end tests using Playwright:
 
 ```sh
 pnpm exec playwright install
-pnpm exec playwright test --ui
+pnpm e2e:ui
 ```
 
 This needs the full stack running with test data. There are several ways doing so:
@@ -63,8 +62,8 @@ When writing end-to-end tests fewer longer ones are preferred over many short on
 
 Note that you can run the app locally in different ways:
 
-- Development mode (`pnpm start`)
-- Preview mode (`pnpm build && pnpm preview`)
+- Development mode (`pnpm dev`)
+- Preview mode (`pnpm build && pnpm start`)
 - Docker container (see below)
 
 ## Usage

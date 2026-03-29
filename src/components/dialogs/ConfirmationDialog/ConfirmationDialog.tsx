@@ -3,17 +3,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { JSX } from "react";
 
 import ConfirmButton from "@/components/buttons/ConfirmButton";
 
 type Props = {
   title: string;
-  content: JSX.Element | null; // No content has to be explicit
-  confirmButtonColor?: ButtonProps["color"];
-  confirmButtonText?: string;
-  cancelButtonColor?: ButtonProps["color"];
-  delayConfirm?: boolean;
+  content: React.ReactElement | null; // No content has to be explicit
+  confirmButtonColor?: ButtonProps["color"] | undefined;
+  confirmButtonText?: string | undefined;
+  cancelButtonColor?: ButtonProps["color"] | undefined;
+  delayConfirm?: boolean | undefined;
 
   // State
   open: boolean;
@@ -24,7 +23,7 @@ type Props = {
   onClose: () => void;
 };
 
-const ConfirmationDialog: React.FC<Props> = ({
+const ConfirmationDialog = ({
   title,
   content,
   confirmButtonText,
@@ -35,7 +34,7 @@ const ConfirmationDialog: React.FC<Props> = ({
   delayConfirm,
   onConfirm,
   onClose,
-}) => {
+}: Props): React.ReactNode => {
   return (
     <Dialog
       open={open}
@@ -52,6 +51,7 @@ const ConfirmationDialog: React.FC<Props> = ({
           Cancel
         </Button>
         <ConfirmButton
+          key={open ? "open" : "closed"}
           onConfirm={onConfirm}
           loading={confirming}
           color={confirmButtonColor}

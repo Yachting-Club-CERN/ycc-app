@@ -3,11 +3,10 @@ import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import Tooltip from "@mui/material/Tooltip";
-import { ReactElement } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 type Action = {
-  icon: ReactElement<SvgIconProps>;
+  icon: React.ReactElement<SvgIconProps>;
   name: string;
   href: string;
 };
@@ -21,10 +20,11 @@ type Props = {
  * - A simple FAB when only one action is provided
  * - A SpeedDial with multiple actions when more are given
  */
-const SmartSpeedDial: React.FC<Props> = ({ actions }) => {
+const SmartSpeedDial = ({ actions }: Props): React.ReactNode => {
   if (actions.length === 0) {
     return null;
   }
+  const firstAction = actions[0]!;
 
   const sxPosition = {
     position: "fixed",
@@ -32,27 +32,23 @@ const SmartSpeedDial: React.FC<Props> = ({ actions }) => {
     right: { xs: 16, md: 48 },
   };
 
-  const singleAction = actions.length === 1;
-
-  if (singleAction) {
-    const [action] = actions;
-
+  if (actions.length === 1) {
     return (
-      <Tooltip title={action.name}>
+      <Tooltip title={firstAction.name}>
         <Fab
           color="primary"
           component={RouterLink}
-          to={action.href}
+          to={firstAction.href}
           sx={sxPosition}
         >
-          {action.icon}
+          {firstAction.icon}
         </Fab>
       </Tooltip>
     );
   }
 
   return (
-    <SpeedDial ariaLabel="Actions" icon={actions[0].icon} sx={sxPosition}>
+    <SpeedDial ariaLabel="Actions" icon={firstAction.icon} sx={sxPosition}>
       {actions.map((action) => (
         <SpeedDialAction
           key={action.name}

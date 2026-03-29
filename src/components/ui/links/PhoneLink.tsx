@@ -1,10 +1,10 @@
 import Link from "@mui/material/Link";
 
 type Props = {
-  phone?: string | null;
+  phone?: string | null | undefined;
 };
 
-const PhoneLink: React.FC<Props> = ({ phone }) => {
+const PhoneLink = ({ phone }: Props): React.ReactNode => {
   if (!phone) {
     return null;
   }

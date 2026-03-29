@@ -7,7 +7,7 @@
  *
  * See playwright.mocked.config.ts for the test configuration.
  */
-import { Page, Route, expect, test } from "@playwright/test";
+import { expect, Page, Route, test } from "@playwright/test";
 
 // ---------------------------------------------------------------------------
 // Mock data

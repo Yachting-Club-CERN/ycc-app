@@ -1,6 +1,7 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 
-import toJson from "../toJson";
+import { decycle } from "@/utils/decycle";
+import toJson from "@/utils/toJson";
 
 export const check = (
   value: unknown,
@@ -21,7 +22,7 @@ test("General data types", () => {
 
   // Special numbers
   check(
-    NaN,
+    Number.NaN,
     `{
   "$specialValue": "NaN"
 }`,
@@ -37,7 +38,7 @@ test("General data types", () => {
 
   // Strings
   check("a", '"a"');
-  check("bc\nd", '"bc\\nd"');
+  check("bc\nd", String.raw`"bc\nd"`);
 
   // Specials
   check(null, "null");
@@ -55,16 +56,16 @@ test("General data types", () => {
   );
   check(
     function () {},
-    `{
-  "$specialValue": "function() {\\n    }"
+    String.raw`{
+  "$specialValue": "function() {\n    }"
 }`,
   );
   check(
     function (a: number, b: number) {
       return a + b;
     },
-    `{
-  "$specialValue": "function(a, b) {\\n      return a + b;\\n    }"
+    String.raw`{
+  "$specialValue": "function(a, b) {\n      return a + b;\n    }"
 }`,
   );
   check(
@@ -76,7 +77,7 @@ test("General data types", () => {
 
   // Errors
   check(
-    Error("Error", { cause: Error("Cause") }),
+    new Error("Error", { cause: new Error("Cause") }),
     `{
   "$error": "Error: Error",
   "$causeChain": [
@@ -85,7 +86,9 @@ test("General data types", () => {
 }`,
   );
   check(
-    new Error("Error 2", { cause: new Error("Cause 2", { cause: NaN }) }),
+    new Error("Error 2", {
+      cause: new Error("Cause 2", { cause: Number.NaN }),
+    }),
     `{
   "$error": "Error: Error 2",
   "$causeChain": [
@@ -103,7 +106,7 @@ test("Complex object with special values", () => {
     {
       booleans: [false, true],
       numbers: [0, 1],
-      specialNumbers: [NaN, -Infinity, Infinity, BigInt(123)],
+      specialNumbers: [Number.NaN, -Infinity, Infinity, BigInt(123)],
       strings: ["a", " bc\nd "],
       specials: [
         null,
@@ -116,11 +119,13 @@ test("Complex object with special values", () => {
         (c: number, d: number): number => c + d,
       ],
       errors: [
-        Error("Error", { cause: Error("Cause") }),
-        new Error("Error 2", { cause: new Error("Cause 2", { cause: NaN }) }),
+        new Error("Error", { cause: new Error("Cause") }),
+        new Error("Error 2", {
+          cause: new Error("Cause 2", { cause: Number.NaN }),
+        }),
       ],
     },
-    `{
+    String.raw`{
   "booleans": [
     false,
     true
@@ -145,7 +150,7 @@ test("Complex object with special values", () => {
   ],
   "strings": [
     "a",
-    " bc\\nd "
+    " bc\nd "
   ],
   "specials": [
     null,
@@ -156,10 +161,10 @@ test("Complex object with special values", () => {
       "$specialValue": "Symbol(sym)"
     },
     {
-      "$specialValue": "function() {\\n        }"
+      "$specialValue": "function() {\n        }"
     },
     {
-      "$specialValue": "function(a, b) {\\n          return a + b;\\n        }"
+      "$specialValue": "function(a, b) {\n          return a + b;\n        }"
     },
     {
       "$specialValue": "(c, d) => c + d"
@@ -184,4 +189,17 @@ test("Complex object with special values", () => {
   ]
 }`,
   );
+});
+
+test("Object with inherited prototype properties skips them", () => {
+  const parent = { inherited: "from proto" };
+  const child = Object.create(parent);
+  child["own"] = "mine";
+
+  // decycle should only include own properties
+  const result = decycle(child);
+  expect(result).toEqual({ own: "mine" });
+
+  // Also verify via toJson
+  check(child, '{"own":"mine"}', false);
 });

@@ -1,14 +1,14 @@
 import useCurrentUser from "@/context/auth/useCurrentUser";
+import { canSignUpAsHelper } from "@/pages/helpers/helpers-utils";
 import client from "@/utils/client";
 
 import CannotCancelDialogNotice from "./CannotCancelDialogNotice";
 import TaskActionButton, { TaskActionProps } from "./TaskActionButton";
-import { canSignUpAsHelper } from "../../helpers-utils";
 
-const SignUpAsHelperActionButton: React.FC<TaskActionProps> = ({
+const SignUpAsHelperActionButton = ({
   task,
   ...props
-}) => {
+}: TaskActionProps): React.ReactNode => {
   const currentUser = useCurrentUser();
 
   if (!canSignUpAsHelper(task, currentUser)) {

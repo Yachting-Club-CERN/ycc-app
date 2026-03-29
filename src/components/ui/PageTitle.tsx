@@ -1,15 +1,14 @@
 import Typography from "@mui/material/Typography";
 
+import Span from "@/components/layout/Span";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
-
-import Span from "../layout/Span";
 
 type Props = {
   value: string;
-  mobileValue?: string;
+  mobileValue?: string | undefined;
 };
 
-const PageTitle: React.FC<Props> = ({ value, mobileValue }) => {
+const PageTitle = ({ value, mobileValue }: Props): React.ReactNode => {
   useDocumentTitle(value);
 
   return (

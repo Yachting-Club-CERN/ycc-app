@@ -1,12 +1,12 @@
 import ReadingBox from "@/components/layout/ReadingBox";
 import ReadingBoxXL from "@/components/layout/ReadingBoxXL";
 import PromiseStatus from "@/components/ui/PromiseStatus";
-
-import HelperTaskCardGrid from "../components/HelperTaskCardGrid";
+import HelperTaskCardGrid from "@/pages/helpers/components/HelperTaskCardGrid";
 import {
   HelperTaskFilterOptions,
   useFilteredHelperTasks,
-} from "../useFilteredHelperTasks";
+} from "@/pages/helpers/useFilteredHelperTasks";
+
 import HelperTasksDataGrid from "./HelperTasksDataGrid";
 import HelperTasksReportView from "./HelperTasksReportView";
 import { HelperTasksDisplay } from "./types";
@@ -16,7 +16,10 @@ type Props = {
   filterOptions: HelperTaskFilterOptions;
 };
 
-const HelperTasksView: React.FC<Props> = ({ display, filterOptions }) => {
+const HelperTasksView = ({
+  display,
+  filterOptions,
+}: Props): React.ReactNode => {
   const filteredTasks = useFilteredHelperTasks(filterOptions);
 
   return (

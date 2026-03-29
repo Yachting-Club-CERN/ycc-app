@@ -7,7 +7,7 @@ import Switch from "@mui/material/Switch";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import React, { JSX, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AutocompleteElement,
   FormContainer,
@@ -37,20 +37,19 @@ import {
   HelperTaskType,
   HelperTaskUpdateRequest,
 } from "@/model/helpers-dtos";
-import client from "@/utils/client";
-import { getNow } from "@/utils/date-utils";
-import dayjs from "@/utils/dayjs";
-
-import { getFullNameAndUsername } from "../../members/members-utils";
 import {
   canEdit,
   getTaskLocation,
   hasAnyoneSignedUp,
   isMultiDayShift,
-} from "../helpers-utils";
+} from "@/pages/helpers/helpers-utils";
+import { getFullNameAndUsername } from "@/pages/members/members-utils";
+import client from "@/utils/client";
+import { getNow } from "@/utils/date-utils";
+import dayjs from "@/utils/dayjs";
 
 type Props = {
-  task?: HelperTask;
+  task: HelperTask | undefined;
   newTask: boolean;
   categories: Readonly<HelperTaskCategory[]>;
   members: Readonly<MemberPublicInfo[]>;
@@ -78,13 +77,13 @@ type HelperTaskFormData = {
   };
 };
 
-const HelperTaskForm: React.FC<Props> = ({
+const HelperTaskForm = ({
   task,
   newTask,
   categories,
   members,
   licenceInfos,
-}) => {
+}: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const [error, setError] = useState<unknown>();
   const longDescription = useDelayedRef<string | null | undefined>(
@@ -105,7 +104,7 @@ const HelperTaskForm: React.FC<Props> = ({
       );
       void navigate(getTaskLocation(task.id));
     }
-  }, [task, newTask, currentUser]);
+  }, [task, newTask, currentUser, navigate]);
 
   const initialData: HelperTaskFormData = {
     base: {
@@ -175,8 +174,8 @@ const HelperTaskForm: React.FC<Props> = ({
   const getConfirmations = (
     base: HelperTaskMutationRequestBase,
     update: HelperTaskUpdateRequestExtra,
-  ): JSX.Element[] => {
-    const confirmations: JSX.Element[] = [];
+  ): React.ReactElement[] => {
+    const confirmations: React.ReactElement[] = [];
 
     if (!newTask) {
       confirmations.push(
@@ -418,7 +417,7 @@ const HelperTaskForm: React.FC<Props> = ({
 
       <SpacedTypography variant="h3">Timing</SpacedTypography>
 
-      {!newTask && type == HelperTaskType.Shift && (
+      {!newTask && type === HelperTaskType.Shift && (
         <Alert severity="warning" sx={{ mt: 2 }}>
           <Typography>
             If you change the time of a task and some of the helpers are not

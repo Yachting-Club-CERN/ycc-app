@@ -1,30 +1,65 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    // Bundler mode
+    //
+    // Core
+    //
+    "target": "esnext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "esnext",
+    //
+    // Module Resolution
+    //
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    // Linting
-    "strict": true,
+    "resolveJsonModule": true,
+    "types": ["vite/client"],
+    //
+    // Type Checking
+    //
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-
+    "strict": true,
+    //
+    // Emit
+    //
+    "noEmit": true,
+    //
+    // Performance
+    //
+    "incremental": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    //
+    // React
+    //
+    "jsx": "react-jsx",
+    //
+    // Paths
+    //
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "tests"]
+  "include": [
+    "eslint.config.mts",
+    "playwright.config.ts",
+    "playwright.mocked.config.ts",
+    "src/**/*.mts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts",
+    "vitest.config.mts"
+  ]
 }

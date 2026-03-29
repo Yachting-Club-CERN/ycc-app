@@ -6,10 +6,10 @@ import getErrorText from "@/utils/error-helper";
 
 type Props = {
   error: unknown;
-  fatal?: boolean;
+  fatal?: boolean | undefined;
 };
 
-const ErrorAlert: React.FC<Props> = ({ error, fatal }) => {
+const ErrorAlert = ({ error, fatal }: Props): React.ReactNode => {
   return (
     <Alert severity="error">
       <AlertTitle>

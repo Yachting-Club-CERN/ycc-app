@@ -7,7 +7,7 @@ const useHelperTaskCategories = (): PromiseOutcome<
   Readonly<HelperTaskCategory[]>
 > => {
   const sharedData = useSharedData();
-  return usePromise(sharedData.getHelperTaskCategories);
+  return usePromise(sharedData.getHelperTaskCategories, []);
 };
 
 export default useHelperTaskCategories;
