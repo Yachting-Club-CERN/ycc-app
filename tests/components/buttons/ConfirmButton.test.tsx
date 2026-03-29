@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, test, vi } from "vitest";
 
 import ConfirmButton from "@/components/buttons/ConfirmButton";
+import ConfirmationDialog from "@/components/dialogs/ConfirmationDialog/ConfirmationDialog";
+import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
 
 describe("ConfirmButton", () => {
   test("renders with default text and color", () => {
@@ -101,5 +103,73 @@ describe("ConfirmButton", () => {
 
     expect(screen.getByRole("button")).toBeEnabled();
     expect(screen.getByRole("button")).toHaveTextContent("Confirm");
+  });
+});
+
+describe("ConfirmationDialog remounts ConfirmButton on reopen", () => {
+  test("delayed countdown resets when dialog is closed and reopened", () => {
+    vi.useFakeTimers();
+
+    const onConfirm = vi.fn();
+    const onClose = vi.fn();
+
+    const { rerender } = render(
+      <ConfirmationDialog
+        title="Delete?"
+        content={null}
+        open={true}
+        confirming={false}
+        delayConfirm={true}
+        onConfirm={onConfirm}
+        onClose={onClose}
+      />,
+    );
+
+    // Button starts disabled with full countdown
+    const button = screen.getByRole("button", { name: /Confirm/ });
+    expect(button).toBeDisabled();
+    expect(button).toHaveTextContent(
+      `Confirm (${CONFIRM_BUTTON_DELAY_MS / 1000}s)`,
+    );
+
+    // Let the countdown finish
+    act(() => {
+      vi.advanceTimersByTime(CONFIRM_BUTTON_DELAY_MS);
+    });
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeEnabled();
+
+    // Close the dialog
+    rerender(
+      <ConfirmationDialog
+        title="Delete?"
+        content={null}
+        open={false}
+        confirming={false}
+        delayConfirm={true}
+        onConfirm={onConfirm}
+        onClose={onClose}
+      />,
+    );
+
+    // Reopen the dialog — ConfirmButton should remount with fresh countdown
+    rerender(
+      <ConfirmationDialog
+        title="Delete?"
+        content={null}
+        open={true}
+        confirming={false}
+        delayConfirm={true}
+        onConfirm={onConfirm}
+        onClose={onClose}
+      />,
+    );
+
+    const reopenedButton = screen.getByRole("button", { name: /Confirm/ });
+    expect(reopenedButton).toBeDisabled();
+    expect(reopenedButton).toHaveTextContent(
+      `Confirm (${CONFIRM_BUTTON_DELAY_MS / 1000}s)`,
+    );
+
+    vi.useRealTimers();
   });
 });

@@ -51,6 +51,7 @@ const ConfirmationDialog = ({
           Cancel
         </Button>
         <ConfirmButton
+          key={open ? "open" : "closed"}
           onConfirm={onConfirm}
           loading={confirming}
           color={confirmButtonColor}
