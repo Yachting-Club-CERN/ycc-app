@@ -1,9 +1,4 @@
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 
 import useAuditLogEntryDialog from "@/components/dialogs/AuditLogEntryDialog/useAuditLogEntryDialog";
 import { AuditLogEntry } from "@/model/audit-log-dtos";
@@ -62,7 +57,7 @@ const AuditLogEntriesDataGrid = ({ entries }: Props): React.ReactNode => {
         disableColumnSelector
         disableDensitySelector
         density="compact"
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           toolbar: {
             showQuickFilter: true,
