@@ -9,7 +9,6 @@ const TopBarAndSidebar = (): React.ReactNode => {
     (open?: boolean) =>
     (event: React.SyntheticEvent): void => {
       if (
-        event &&
         event.type === "keydown" &&
         ((event as React.KeyboardEvent).key === "Tab" ||
           (event as React.KeyboardEvent).key === "Shift")

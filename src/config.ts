@@ -67,5 +67,4 @@ const config: Config = {
     import.meta.env["VITE_APP_YCC_HULL_URL"] ?? DEFAULT_CONFIG.yccHullUrl,
 };
 
-export { Environment };
 export default config;

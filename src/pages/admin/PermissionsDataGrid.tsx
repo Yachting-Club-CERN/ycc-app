@@ -121,7 +121,7 @@ const PermissionsDataGrid = ({
   const handleContextMenuOpen = (event: React.MouseEvent): void => {
     event.preventDefault();
 
-    const id = Number(event.currentTarget.getAttribute("data-id"));
+    const id = Number((event.currentTarget as HTMLElement).dataset["id"]);
     const row = permissions.find((row) => row.member.id === id);
 
     setContextMenu({
@@ -281,9 +281,9 @@ const PermissionsDataGrid = ({
         onClose={() => handleContextMenuClose()}
         anchorReference="anchorPosition"
         anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
+          contextMenu === null
+            ? undefined
+            : { top: contextMenu.mouseY, left: contextMenu.mouseX }
         }
         slotProps={{
           root: {

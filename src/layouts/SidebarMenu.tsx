@@ -24,8 +24,9 @@ import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
-import config, { Environment } from "@/config";
+import config from "@/config";
 import useAuth from "@/context/auth/useAuth";
+import { Environment } from "@/environment";
 import { YCC_URLS } from "@/utils/constants";
 
 type SidebarItem = {

@@ -4,7 +4,7 @@ import HTMLReactParser, {
 } from "html-react-parser";
 import React from "react";
 
-const forbiddenTags = [
+const forbiddenTags = new Set([
   "base",
   "button",
   "canvas",
@@ -23,7 +23,7 @@ const forbiddenTags = [
   "svg",
   "textarea",
   "title",
-];
+]);
 
 /**
  * Sanitises HTML for React.
@@ -39,7 +39,7 @@ export const sanitiseHtmlForReact = (html: string): React.ReactNode => {
         // Always keep text
         return;
       } else if (domNode instanceof DOMElement) {
-        if (forbiddenTags.includes(domNode.name)) {
+        if (forbiddenTags.has(domNode.name)) {
           return React.createElement(React.Fragment);
         } else if (
           domNode.name === "h1" ||
