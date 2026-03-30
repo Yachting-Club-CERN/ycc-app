@@ -121,7 +121,7 @@ const PermissionsDataGrid = ({
   const handleContextMenuOpen = (event: React.MouseEvent): void => {
     event.preventDefault();
 
-    const id = Number((event.currentTarget as HTMLElement).dataset["id"]);
+    const id = Number(event.currentTarget.getAttribute("data-id"));
     const row = permissions.find((row) => row.member.id === id);
 
     setContextMenu({
