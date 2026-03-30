@@ -7,7 +7,8 @@ import Link from "@mui/material/Link";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-import config, { Environment } from "@/config";
+import config from "@/config";
+import { Environment } from "@/environment";
 import { YCC_URLS } from "@/utils/constants";
 
 type Props = {

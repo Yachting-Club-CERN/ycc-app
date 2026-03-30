@@ -45,6 +45,10 @@ import {
 } from "@/pages/helpers/helpers-utils";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import client from "@/utils/client";
+import {
+  HELPER_TASK_SHORT_DESCRIPTION_MAX_LENGTH,
+  HELPER_TASK_TITLE_MAX_LENGTH,
+} from "@/utils/constants";
 import { getNow } from "@/utils/date-utils";
 import dayjs from "@/utils/dayjs";
 
@@ -375,7 +379,15 @@ const HelperTaskForm = ({
       </SpacedBox>
 
       <SpacedBox>
-        <TextFieldElement name="base.title" required label="Title" fullWidth />
+        <TextFieldElement
+          name="base.title"
+          required
+          label="Title"
+          fullWidth
+          slotProps={{
+            htmlInput: { maxLength: HELPER_TASK_TITLE_MAX_LENGTH },
+          }}
+        />
       </SpacedBox>
 
       <SpacedBox>
@@ -384,6 +396,11 @@ const HelperTaskForm = ({
           required
           label="Short Description (included in emails)"
           fullWidth
+          slotProps={{
+            htmlInput: {
+              maxLength: HELPER_TASK_SHORT_DESCRIPTION_MAX_LENGTH,
+            },
+          }}
         />
       </SpacedBox>
 

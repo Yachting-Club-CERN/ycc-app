@@ -3,12 +3,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
@@ -258,7 +253,7 @@ const PermissionsDataGrid = ({
         disableDensitySelector
         density="compact"
         pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           row: {
             onContextMenu: handleContextMenuOpen,
@@ -281,9 +276,9 @@ const PermissionsDataGrid = ({
         onClose={() => handleContextMenuClose()}
         anchorReference="anchorPosition"
         anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
+          contextMenu === null
+            ? undefined
+            : { top: contextMenu.mouseY, left: contextMenu.mouseX }
         }
         slotProps={{
           root: {
