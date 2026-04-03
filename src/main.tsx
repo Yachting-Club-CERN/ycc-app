@@ -28,9 +28,8 @@ if (globalThis.location.pathname === "/silent-check-sso") {
 } else {
   console.info("[main] Starting YCC App...");
 
-  const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement,
-  );
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const root = ReactDOM.createRoot(document.getElementById("root")!);
 
   if (import.meta.env.VITE_TEST_USER) {
     // For testing only: bypass Keycloak with a mock user.

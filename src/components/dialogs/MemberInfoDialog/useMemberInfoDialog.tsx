@@ -27,11 +27,15 @@ const useMemberInfoDialog = (): {
 } => {
   const [dialogProps, setDialogProps] = useState<Props>(DEFAULT_DIALOG_PROPS);
 
-  const close = (): void => setDialogProps(DEFAULT_DIALOG_PROPS);
+  const close = (): void => {
+    setDialogProps(DEFAULT_DIALOG_PROPS);
+  };
 
   return {
     component: <MemberInfoDialog {...dialogProps} onClose={close} />,
-    open: (props: OpenProps): void => setDialogProps(props),
+    open: (props: OpenProps): void => {
+      setDialogProps(props);
+    },
     close,
   };
 };

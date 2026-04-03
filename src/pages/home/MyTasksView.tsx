@@ -1,4 +1,6 @@
+import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 
@@ -10,6 +12,7 @@ import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
 import HelperTaskCardGrid from "@/pages/helpers/components/HelperTaskCardGrid";
+import NewHelperTaskAction from "@/pages/helpers/components/NewHelperTaskAction";
 import {
   HelperTaskFilterOptions,
   useFilteredHelperTasks,
@@ -37,15 +40,28 @@ const MyTasksView = (): React.ReactNode => {
 
   const showSearch = user.helpersAppAdminOrEditor;
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>): void =>
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setFilterOptionsWithDelay({
       ...filterOptions,
       search: event.target.value,
     });
+  };
 
   return (
     <>
-      <PageTitle value="My Tasks" />
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        flexWrap="wrap"
+        rowGap={0.5}
+        mb={2}
+      >
+        <PageTitle value="My Tasks" mb={0} />
+        <Box sx={{ marginLeft: "auto" }}>
+          <NewHelperTaskAction />
+        </Box>
+      </Stack>
 
       {showSearch && (
         <RowStack wrap={true} compact={true} mb={2}>
@@ -84,7 +100,7 @@ const MyTasksView = (): React.ReactNode => {
       {tasks.result && tasks.result.length > 0 && (
         <HelperTaskCardGrid tasks={tasks.result} />
       )}
-      {tasks.result && tasks.result.length === 0 && (
+      {tasks.result?.length === 0 && (
         <SpacedTypography>
           {showSearch ? "No tasks to display." : "You have no tasks yet. 😢"}
         </SpacedTypography>

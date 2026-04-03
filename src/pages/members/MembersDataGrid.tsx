@@ -6,6 +6,7 @@ import {
   renderPhoneNumber,
 } from "@/components/ui/DataGrid/render-utils";
 import PromiseStatus from "@/components/ui/PromiseStatus";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import useMembers from "@/context/shared-data/useMembers";
 import { MemberPublicInfo } from "@/model/dtos";
 import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
@@ -15,11 +16,6 @@ import {
 } from "@/utils/search-utils";
 
 const columns: GridColDef[] = [
-  {
-    field: "id",
-    headerName: "ID",
-    width: 70,
-  },
   {
     field: "lastName",
     headerName: "Last Name",
@@ -74,23 +70,35 @@ type Props = {
   search: string;
 };
 
+const idColumn: GridColDef = {
+  field: "id",
+  headerName: "ID",
+  width: 70,
+};
+
 const MembersDataGrid = ({ year, search }: Props): React.ReactNode => {
+  const currentUser = useCurrentUser();
   const members = useMembers(year);
+  const visibleColumns = currentUser.helpersAppAdmin
+    ? [...columns, idColumn]
+    : columns;
 
   const memberInfoDialog = useMemberInfoDialog();
 
   const getRowId = (member: MemberPublicInfo): number => member.id;
   const handleGridCellClick = (
     params: GridCellParams<MemberPublicInfo>,
-  ): void => memberInfoDialog.open({ member: params.row });
+  ): void => {
+    memberInfoDialog.open({ member: params.row });
+  };
 
   const filter = (
     search: string,
-    members: Readonly<MemberPublicInfo[]>,
-  ): Readonly<MemberPublicInfo[]> => {
+    members: readonly MemberPublicInfo[],
+  ): readonly MemberPublicInfo[] => {
     // User typically wants to search for one thing, e.g., name or phone number
     const s = search.toLowerCase().trim();
-    if (s && members) {
+    if (s && members.length > 0) {
       return members.filter(
         (member) =>
           searchMemberUsernameOrName(s, member) ||
@@ -105,19 +113,12 @@ const MembersDataGrid = ({ year, search }: Props): React.ReactNode => {
     <>
       {members.result && (
         <DataGrid
-          columns={columns}
+          columns={visibleColumns}
           rows={filter(search, members.result)}
           getRowId={getRowId}
           onCellClick={handleGridCellClick}
           disableColumnFilter
           pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                id: false,
-              },
-            },
-          }}
           sx={{
             // Landscape mode on smartphones. Displays 2 rows, while double scrolling is not annoying.
             minHeight: "215px",

@@ -3,12 +3,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
@@ -70,7 +65,7 @@ const columns: GridColDef[] = [
 ];
 
 type Props = {
-  permissions: Readonly<HelpersAppPermission[]>;
+  permissions: readonly HelpersAppPermission[];
   onPermissionsChange: (permissions: HelpersAppPermission[]) => void;
 };
 
@@ -109,7 +104,7 @@ const PermissionsDataGrid = ({
       return;
     }
 
-    return memberInfoDialog.open({
+    memberInfoDialog.open({
       member: params.row.member,
       extra: {
         Permission: params.row.permission,
@@ -252,13 +247,15 @@ const PermissionsDataGrid = ({
         getRowId={getRowId}
         onCellClick={handleGridCellClick}
         processRowUpdate={processRowUpdate}
-        onProcessRowUpdateError={(error): void => setError(error)}
+        onProcessRowUpdateError={(error): void => {
+          setError(error);
+        }}
         disableColumnFilter
         disableColumnSelector
         disableDensitySelector
         density="compact"
         pageSizeOptions={DATA_GRID_PAGE_SIZE_OPTIONS}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           row: {
             onContextMenu: handleContextMenuOpen,
@@ -278,12 +275,14 @@ const PermissionsDataGrid = ({
 
       <Menu
         open={contextMenu !== null}
-        onClose={() => handleContextMenuClose()}
+        onClose={() => {
+          handleContextMenuClose();
+        }}
         anchorReference="anchorPosition"
         anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
+          contextMenu === null
+            ? undefined
+            : { top: contextMenu.mouseY, left: contextMenu.mouseX }
         }
         slotProps={{
           root: {
@@ -305,7 +304,7 @@ const PermissionsDataGrid = ({
             <MenuItem
               dense
               onClick={() => {
-                if (!contextMenu?.row) {
+                if (!contextMenu.row) {
                   return;
                 }
 
@@ -313,7 +312,7 @@ const PermissionsDataGrid = ({
                 handleContextMenuClose();
               }}
             >
-              Revoke permissions from {contextMenu?.row?.member.username}
+              Revoke permissions from {contextMenu.row.member.username}
             </MenuItem>
           )}
       </Menu>

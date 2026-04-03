@@ -31,7 +31,9 @@ const ValidateActionButtonInner = ({
           {commentEditor.component}
         </>
       }
-      onDialogOpening={() => commentEditor.clearContent()}
+      onDialogOpening={() => {
+        commentEditor.clearContent();
+      }}
       onDialogConfirm={async () =>
         await client.helpers.validate(task.id, {
           comment: commentEditor.content,

@@ -32,11 +32,16 @@ describe("usePromise", () => {
   });
 
   test("starts in pending state", () => {
-    const { result } = renderHook(() => usePromise(async () => "hello", []));
+    const { result, unmount } = renderHook(() =>
+      usePromise(async () => "hello", []),
+    );
 
     expect(result.current.pending).toBe(true);
     expect(result.current.result).toBeUndefined();
     expect(result.current.error).toBeUndefined();
+
+    // Unmount to prevent state update after test ends
+    unmount();
   });
 
   test("ignores result after unmount (abort)", async () => {
@@ -127,7 +132,7 @@ describe("usePromise", () => {
       expect(signalSpy).toHaveBeenCalled();
     });
 
-    const signal = signalSpy.mock.calls[0][0];
+    const signal = signalSpy.mock.calls[0][0] as AbortSignal;
     expect(signal).toBeInstanceOf(AbortSignal);
     expect(signal.aborted).toBe(false);
 

@@ -2,12 +2,13 @@ import { expect, Page, test } from "@playwright/test";
 
 import { app } from "./test-utils";
 
-const verifyMyTasksView = async (page: Page): Promise<void> =>
+const verifyMyTasksView = async (page: Page): Promise<void> => {
   await test.step("Verify My Tasks View", async () => {
     await expect(page.locator("h2").nth(0)).toContainText("My Tasks");
   });
+};
 
-const verifyProfileView = async (page: Page): Promise<void> =>
+const verifyProfileView = async (page: Page): Promise<void> => {
   await test.step("Verify Profile View", async () => {
     await expect(page.locator("h2").nth(1)).toContainText("Profile");
 
@@ -25,6 +26,7 @@ const verifyProfileView = async (page: Page): Promise<void> =>
     expect(tableText).toContain("ycc-helpers-app-admin");
     expect(tableText).toContain("ycc-member-active");
   });
+};
 
 test("Home: Page shows", async ({ page }) => {
   await app.loadPage(page, "/", { expectSignIn: true });

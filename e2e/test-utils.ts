@@ -131,7 +131,7 @@ export const app = {
       expectSignIn: boolean;
       user?: string;
     },
-  ) =>
+  ) => {
     await test.step(`Load page: ${path} (expectSignIn: ${options.expectSignIn})`, async () => {
       console.info("[test] loadPage()", path, options);
 
@@ -156,13 +156,14 @@ export const app = {
       await page.waitForSelector("#ycc-page-end", { state: "attached" });
 
       console.info("[test] Page loaded", path);
-    }),
+    });
+  },
 
   /**
    * Signs out of the app.
    * @param page - Playwright Page object.
    */
-  signOut: async (page: Page) =>
+  signOut: async (page: Page) => {
     await test.step("Sign out", async () => {
       console.info("[test] signOut()");
 
@@ -173,5 +174,6 @@ export const app = {
       await sidebar.getByTestId("LogoutIcon").click();
       await waitForAuthPage(page);
       expect(page.url()).toContain("/protocol/openid-connect/auth");
-    }),
+    });
+  },
 } as const;

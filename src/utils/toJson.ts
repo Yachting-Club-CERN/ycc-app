@@ -22,7 +22,7 @@ const error = (
 const replacer = (_key: string, value: unknown): object | null => {
   if (value === undefined) {
     return specialValue("undefined");
-  } else if (typeof value === "number" && !isFinite(value)) {
+  } else if (typeof value === "number" && !Number.isFinite(value)) {
     // NaN, +/-Infinity
     return specialValue(value.toString());
   } else if (typeof value === "bigint") {

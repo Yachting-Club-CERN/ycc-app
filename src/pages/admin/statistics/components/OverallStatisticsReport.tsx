@@ -59,18 +59,18 @@ const calculateOverallStatistics = (tasks: HelperTask[]): OverallStatistics => {
   for (const task of tasks) {
     const categoryTitle = task.category.title;
 
-    if (!categoryMap.has(categoryTitle)) {
-      categoryMap.set(categoryTitle, {
+    let stats = categoryMap.get(categoryTitle);
+    if (!stats) {
+      stats = {
         categoryTitle,
         taskCount: 0,
         captainCount: 0,
         helpersCount: 0,
         totalHelp: 0,
         distinctMembers: new Set<number>(),
-      });
+      };
+      categoryMap.set(categoryTitle, stats);
     }
-
-    const stats = categoryMap.get(categoryTitle)!;
     stats.taskCount += 1;
 
     allDistinctMembers.add(task.contact.id);
@@ -97,10 +97,12 @@ const calculateOverallStatistics = (tasks: HelperTask[]): OverallStatistics => {
   const groupMap = new Map<string, CategoryStats[]>();
   for (const cat of categoryMap.values()) {
     const groupName = getCategoryGroupName(cat.categoryTitle);
-    if (!groupMap.has(groupName)) {
-      groupMap.set(groupName, []);
+    const group = groupMap.get(groupName);
+    if (group) {
+      group.push(cat);
+    } else {
+      groupMap.set(groupName, [cat]);
     }
-    groupMap.get(groupName)!.push(cat);
   }
 
   // Calculate group totals

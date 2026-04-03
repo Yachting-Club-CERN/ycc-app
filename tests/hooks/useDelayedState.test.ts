@@ -15,7 +15,7 @@ describe("useDelayedState", () => {
   test("setImmediately updates both states instantly", async () => {
     const { result } = renderHook(() => useDelayedState("init"));
 
-    await act(() => {
+    await act(async () => {
       const setImmediately = result.current[2];
       setImmediately("updated");
     });
@@ -29,7 +29,7 @@ describe("useDelayedState", () => {
 
     const { result } = renderHook(() => useDelayedState("init", 300));
 
-    await act(() => {
+    await act(async () => {
       const setWithDelay = result.current[3];
       setWithDelay("typed");
     });
@@ -39,7 +39,7 @@ describe("useDelayedState", () => {
     // Delayed state still old
     expect(result.current[1]).toBe("init");
 
-    await act(() => vi.advanceTimersByTime(300));
+    await act(async () => vi.advanceTimersByTime(300));
 
     // Now delayed state is updated too
     expect(result.current[0]).toBe("typed");
@@ -53,18 +53,24 @@ describe("useDelayedState", () => {
 
     const { result } = renderHook(() => useDelayedState("", 300));
 
-    await act(() => result.current[3]("a"));
-    await act(() => vi.advanceTimersByTime(100));
-    await act(() => result.current[3]("ab"));
-    await act(() => vi.advanceTimersByTime(100));
-    await act(() => result.current[3]("abc"));
+    await act(async () => {
+      result.current[3]("a");
+    });
+    await act(async () => vi.advanceTimersByTime(100));
+    await act(async () => {
+      result.current[3]("ab");
+    });
+    await act(async () => vi.advanceTimersByTime(100));
+    await act(async () => {
+      result.current[3]("abc");
+    });
 
     // Immediate state follows each change
     expect(result.current[0]).toBe("abc");
     // Delayed state hasn't caught up yet
     expect(result.current[1]).toBe("");
 
-    await act(() => vi.advanceTimersByTime(300));
+    await act(async () => vi.advanceTimersByTime(300));
 
     // Only the final value lands in delayed state
     expect(result.current[1]).toBe("abc");

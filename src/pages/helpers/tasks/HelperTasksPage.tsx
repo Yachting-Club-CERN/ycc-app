@@ -27,7 +27,7 @@ import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
-import HelpersSpeedDial from "@/pages/helpers/components/HelpersSpeedDial";
+import NewHelperTaskAction from "@/pages/helpers/components/NewHelperTaskAction";
 import { DONE_EMOJI, VALIDATED_EMOJI } from "@/pages/helpers/helpers-format";
 import { HelperTaskFilterOptions } from "@/pages/helpers/useFilteredHelperTasks";
 import { SEARCH_DELAY_MS } from "@/utils/constants";
@@ -123,8 +123,9 @@ const HelperTasksPage = (): React.ReactNode => {
     sessionStorage.setItem(SESSION_STORAGE.DISPLAY, display);
   }, [display]);
 
-  const handleReset = (): void =>
+  const handleReset = (): void => {
     setFilterOptionsImmediately(getDefaultFilterOptions());
+  };
 
   const handleYearChange = (year: SelectedYear): void => {
     const newFilterOptions: HelperTaskFilterOptions = { ...filterOptions };
@@ -176,13 +177,10 @@ const HelperTasksPage = (): React.ReactNode => {
 
   return (
     <>
-      <HelpersSpeedDial />
-
       <RowStack wrap={false} mb={2}>
-        <PageTitle value="Helper Tasks" mobileValue="Tasks" />
-
+        <PageTitle value="Helper Tasks" mobileValue="Tasks" mb={0} />
         {currentUser.helpersAppAdminOrEditor && yearSelector.component}
-
+        <NewHelperTaskAction />
         <ToggleButtonGroup
           value={display}
           exclusive

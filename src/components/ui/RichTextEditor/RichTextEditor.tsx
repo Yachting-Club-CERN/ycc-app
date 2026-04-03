@@ -72,7 +72,9 @@ const RichTextEditor = ({
     content: initialContent ?? null,
     onBlur: ({ editor }) => onBlur?.(editor.getHTML()),
     onCreate: ({ editor }) => onCreate?.(editor.getHTML()),
-    onUpdate: ({ editor }) => onUpdate(editor.getHTML()),
+    onUpdate: ({ editor }) => {
+      onUpdate(editor.getHTML());
+    },
   });
 
   const handleAddImageClick = (): void => {
@@ -98,6 +100,7 @@ const RichTextEditor = ({
   const boxProps = {
     ...containerProps,
     sx: {
+      // eslint-disable-next-line @typescript-eslint/no-misused-spread -- MUI sx can be a function, but here we always pass an object
       ...containerProps?.sx,
       "& .ProseMirror": { minHeight },
     },

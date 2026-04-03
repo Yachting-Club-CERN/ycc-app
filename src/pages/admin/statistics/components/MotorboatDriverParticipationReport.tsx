@@ -63,7 +63,7 @@ const calculateMotorboatDriverParticipation = (
       driverData.tasks.push({
         id: task.id,
         title: task.title,
-        date: task.startsAt || task.deadline,
+        date: task.startsAt ?? task.deadline,
       });
     }
   };

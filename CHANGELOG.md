@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - React 19.2
   - Material UI 7
   - Material UI X 8
+- Improve task action button UX:
+  - Desktop/tablet: replace FAB/SpeedDial with explicit inline buttons in the page header (similarly how it was before the FAB/SpeedDial)
+  - Mobile: keep FAB/SpeedDial with persistent action labels and backdrop, extended FAB with "New Task" text on the task list page, pencil icon on the task detail page
 
 ## [1.3.0] - 2025-04-09
 

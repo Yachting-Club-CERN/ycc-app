@@ -33,7 +33,9 @@ const MemberAutocomplete = ({ onChange, sx }: Props): React.ReactNode => {
       value={selected}
       getOptionLabel={(member) => getFullNameAndUsername(member)}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      onChange={(_, newValue) => handleChange(newValue)}
+      onChange={(_, newValue) => {
+        handleChange(newValue);
+      }}
       renderInput={(params) => (
         <TextField {...params} label="Member" required />
       )}

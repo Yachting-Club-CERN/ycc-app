@@ -24,7 +24,7 @@ import SignUpAsCaptainActionButton from "@/pages/helpers/components/action-butto
 import SignUpAsHelperActionButton from "@/pages/helpers/components/action-buttons/SignUpAsHelperActionButton";
 import { TaskActionProps } from "@/pages/helpers/components/action-buttons/TaskActionButton";
 import ValidateActionButton from "@/pages/helpers/components/action-buttons/ValidateActionButton";
-import HelpersSpeedDial from "@/pages/helpers/components/HelpersSpeedDial";
+import HelperTaskDetailActions from "@/pages/helpers/components/HelperTaskDetailActions";
 import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInfo";
 import ShareTaskViaEmailIconButton from "@/pages/helpers/components/ShareTaskViaEmailIconButton";
 import ShareTaskViaWhatsAppIconButton from "@/pages/helpers/components/ShareTaskViaWhatsAppIconButton";
@@ -45,7 +45,11 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
   const createMemberDialogLink = (
     member: MemberPublicInfo,
   ): React.ReactNode => (
-    <Link onClick={() => memberInfoDialog.open({ member })}>
+    <Link
+      onClick={() => {
+        memberInfoDialog.open({ member });
+      }}
+    >
       {getFullNameAndUsername(member)}
     </Link>
   );
@@ -59,9 +63,19 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
 
   return (
     <>
-      <HelpersSpeedDial task={task} />
-
-      <PageTitle value={task.title} />
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        flexWrap="wrap"
+        rowGap={0.5}
+        mb={2}
+      >
+        <PageTitle value={task.title} mb={0} />
+        <Box sx={{ marginLeft: "auto" }}>
+          <HelperTaskDetailActions task={task} />
+        </Box>
+      </Stack>
 
       <SpacedTypography variant="h3">
         Category: {task.category.title}
@@ -136,8 +150,8 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
           <Divider sx={{ mt: 2 }} />
           <SpacedTypography variant="h6" color="success">
             Update @ {formatDateTime(task.markedAsDoneAt)}:{" "}
-            {createMemberDialogLink(task.markedAsDoneBy!)} marked the task as
-            done
+            {task.markedAsDoneBy && createMemberDialogLink(task.markedAsDoneBy)}{" "}
+            marked the task as done
           </SpacedTypography>
           {task.markedAsDoneComment && (
             <SpacedTypography component="div" ml={4}>
@@ -152,7 +166,8 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
           <Divider sx={{ mt: 2 }} />
           <SpacedTypography variant="h6" color="success">
             Update @ {formatDateTime(task.validatedAt)}:{" "}
-            {createMemberDialogLink(task.validatedBy!)} validated the task
+            {task.validatedBy && createMemberDialogLink(task.validatedBy)}{" "}
+            validated the task
           </SpacedTypography>
           {task.validationComment && (
             <SpacedTypography component="div" ml={4}>
