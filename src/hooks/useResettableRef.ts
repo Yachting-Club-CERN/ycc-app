@@ -6,7 +6,7 @@ type ResettableRef<T> = {
 };
 
 const useResettableRef = <T>(initial: () => T): ResettableRef<T> => {
-  const ref = useRef<T>(initial());
+  const ref = useRef(initial());
   const reset = (): void => {
     ref.current = initial();
   };

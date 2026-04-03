@@ -28,7 +28,9 @@ const AddHelperActionButton = ({
           <NotificationDialogNotice />
         </>
       }
-      onDialogOpening={() => memberAutoComplete.clearSelection()}
+      onDialogOpening={() => {
+        memberAutoComplete.clearSelection();
+      }}
       onDialogConfirm={async () =>
         await client.helpers.addHelper(
           task.id,

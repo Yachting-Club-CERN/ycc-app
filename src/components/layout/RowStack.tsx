@@ -30,11 +30,7 @@ const RowStack = ({
   }, [children]);
 
   // Detect if no children was passed to the component
-  if (
-    !React.Children.toArray(children).some(
-      (child) => child !== null && child !== undefined,
-    )
-  ) {
+  if (React.Children.toArray(children).length === 0) {
     return null;
   }
 

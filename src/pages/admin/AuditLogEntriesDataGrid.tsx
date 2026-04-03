@@ -36,15 +36,16 @@ const columns: GridColDef[] = [
 ];
 
 type Props = {
-  entries: Readonly<AuditLogEntry[]>;
+  entries: readonly AuditLogEntry[];
 };
 
 const AuditLogEntriesDataGrid = ({ entries }: Props): React.ReactNode => {
   const auditLogEntryDialog = useAuditLogEntryDialog();
 
   const getRowId = (entry: AuditLogEntry): number => entry.id;
-  const handleGridCellClick = (params: GridCellParams<AuditLogEntry>): void =>
+  const handleGridCellClick = (params: GridCellParams<AuditLogEntry>): void => {
     auditLogEntryDialog.open({ entry: params.row });
+  };
 
   return (
     <>

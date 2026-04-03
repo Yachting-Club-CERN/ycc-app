@@ -7,8 +7,10 @@ import ConfirmationDialog from "@/components/dialogs/ConfirmationDialog/Confirma
 import { CONFIRM_BUTTON_DELAY_MS } from "@/utils/constants";
 
 describe("ConfirmButton", () => {
-  test("renders with default text and color", () => {
-    render(<ConfirmButton onConfirm={vi.fn()} loading={false} />);
+  test("renders with default text and color", async () => {
+    await act(async () => {
+      render(<ConfirmButton onConfirm={vi.fn()} loading={false} />);
+    });
 
     const button = screen.getByRole("button", { name: "Confirm" });
     expect(button).toBeInTheDocument();
@@ -60,14 +62,14 @@ describe("ConfirmButton", () => {
     expect(onConfirm).not.toHaveBeenCalled();
   });
 
-  test("becomes enabled after countdown completes", () => {
+  test("becomes enabled after countdown completes", async () => {
     vi.useFakeTimers();
 
     render(<ConfirmButton onConfirm={vi.fn()} loading={false} delayed />);
 
     expect(screen.getByRole("button")).toBeDisabled();
 
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(3000);
     });
 
@@ -107,7 +109,7 @@ describe("ConfirmButton", () => {
 });
 
 describe("ConfirmationDialog remounts ConfirmButton on reopen", () => {
-  test("delayed countdown resets when dialog is closed and reopened", () => {
+  test("delayed countdown resets when dialog is closed and reopened", async () => {
     vi.useFakeTimers();
 
     const onConfirm = vi.fn();
@@ -133,7 +135,7 @@ describe("ConfirmationDialog remounts ConfirmButton on reopen", () => {
     );
 
     // Let the countdown finish
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(CONFIRM_BUTTON_DELAY_MS);
     });
     expect(screen.getByRole("button", { name: "Confirm" })).toBeEnabled();

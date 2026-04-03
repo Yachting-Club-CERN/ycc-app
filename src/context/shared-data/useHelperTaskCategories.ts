@@ -4,7 +4,7 @@ import { HelperTaskCategory } from "@/model/helpers-dtos";
 import useSharedData from "./useSharedData";
 
 const useHelperTaskCategories = (): PromiseOutcome<
-  Readonly<HelperTaskCategory[]>
+  readonly HelperTaskCategory[]
 > => {
   const sharedData = useSharedData();
   return usePromise(sharedData.getHelperTaskCategories, []);

@@ -48,7 +48,7 @@ const signUp = async (
   page: Page,
   id: number,
   role: "Captain" | "Helper",
-): Promise<void> =>
+): Promise<void> => {
   await test.step(`Sign up as ${role}`, async () => {
     await page.getByRole("button", { name: `Sign up as ${role}` }).click();
     await page
@@ -59,11 +59,12 @@ const signUp = async (
     await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
     await expect(page.getByRole("dialog")).toBeHidden();
   });
+};
 
 const checkCaptain = async (
   page: Page,
   expectedCaptain: string | null,
-): Promise<void> =>
+): Promise<void> => {
   await test.step(`Check captain: ${expectedCaptain}`, async () => {
     const captain = await page
       .locator("//div[contains(text(), 'Captain:')]")
@@ -73,12 +74,13 @@ const checkCaptain = async (
 
     expectSameElements(captain, expectedCaptain ? [expectedCaptain] : []);
   });
+};
 
 const checkHelpers = async (
   page: Page,
   expectedHelpers: string[],
-): Promise<void> =>
-  await test.step(`Check helpers: ${expectedHelpers || "none"}`, async () => {
+): Promise<void> => {
+  await test.step(`Check helpers: ${expectedHelpers.length > 0 ? expectedHelpers.join(", ") : "none"}`, async () => {
     const helpers = await page
       .locator("//div[contains(text(), 'Helpers:')]")
       .locator("..")
@@ -87,6 +89,7 @@ const checkHelpers = async (
 
     expectSameElements(helpers, expectedHelpers);
   });
+};
 
 test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await app.loadPage(page, "/helpers", { expectSignIn: true });

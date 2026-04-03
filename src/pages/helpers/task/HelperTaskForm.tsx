@@ -55,9 +55,9 @@ import dayjs from "@/utils/dayjs";
 type Props = {
   task: HelperTask | undefined;
   newTask: boolean;
-  categories: Readonly<HelperTaskCategory[]>;
-  members: Readonly<MemberPublicInfo[]>;
-  licenceInfos: Readonly<LicenceDetailedInfo[]>;
+  categories: readonly HelperTaskCategory[];
+  members: readonly MemberPublicInfo[];
+  licenceInfos: readonly LicenceDetailedInfo[];
 };
 
 type HelperTaskCreationRequestExtra = Omit<
@@ -90,9 +90,7 @@ const HelperTaskForm = ({
 }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const [error, setError] = useState<unknown>();
-  const longDescription = useDelayedRef<string | null | undefined>(
-    task?.longDescription,
-  );
+  const longDescription = useDelayedRef(task?.longDescription);
   const [type, setType] = useState(task?.type ?? HelperTaskType.Shift);
   const [multiDayShift, setMultiDayShift] = useState(
     task ? isMultiDayShift(task) : false,
@@ -312,7 +310,9 @@ const HelperTaskForm = ({
         title: "Please confirm the following:",
         content,
         delayConfirm: true,
-        onConfirm: async () => await doSubmit(base, creation, update),
+        onConfirm: async () => {
+          await doSubmit(base, creation, update);
+        },
       });
     } else {
       await doSubmit(base, creation, update);
@@ -503,7 +503,9 @@ const HelperTaskForm = ({
                 control={
                   <Switch
                     checked={multiDayShift}
-                    onChange={(_, checked) => setMultiDayShift(checked)}
+                    onChange={(_, checked) => {
+                      setMultiDayShift(checked);
+                    }}
                   />
                 }
                 label="Multi-day shift"

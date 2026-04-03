@@ -27,6 +27,7 @@ export const useNavigate = (): ((
       // For onClick events it is only accessible here if onMouseDown called event.preventDefault()
       if (event?.ctrlKey || event?.button === 1) {
         // Note: blur/focus might not work depending on the browser
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         globalThis.open(location, "_blank")?.blur();
         globalThis.focus();
       } else if (event?.shiftKey) {

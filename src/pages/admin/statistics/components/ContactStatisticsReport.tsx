@@ -33,10 +33,12 @@ const calculateContactStatistics = (tasks: HelperTask[]): ContactStats[] => {
     const memberId = task.contact.id;
     const fullName = getFullName(task.contact);
 
-    if (!contactMap.has(memberId)) {
-      contactMap.set(memberId, { fullName, taskCount: 0 });
+    const existing = contactMap.get(memberId);
+    if (existing) {
+      existing.taskCount += 1;
+    } else {
+      contactMap.set(memberId, { fullName, taskCount: 1 });
     }
-    contactMap.get(memberId)!.taskCount += 1;
   }
 
   const stats: ContactStats[] = Array.from(contactMap.entries()).map(

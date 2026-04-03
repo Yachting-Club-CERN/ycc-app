@@ -27,6 +27,7 @@ export const fakeRandomSignUpText = (
     "I will help!",
     "I will do it!",
   ];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- modulo guarantees a valid index
   return texts[(taskId * (captain ? 2 : 1) * 92173) % texts.length]!;
 };
 

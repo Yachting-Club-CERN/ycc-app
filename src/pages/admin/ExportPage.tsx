@@ -38,7 +38,9 @@ const ExportPage = (): React.ReactNode => {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      globalThis.setTimeout(() => URL.revokeObjectURL(url), 500);
+      globalThis.setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 500);
     } catch (error) {
       setError(error instanceof Error ? error : new Error(String(error)));
     } finally {

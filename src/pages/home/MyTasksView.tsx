@@ -40,11 +40,12 @@ const MyTasksView = (): React.ReactNode => {
 
   const showSearch = user.helpersAppAdminOrEditor;
 
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>): void =>
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setFilterOptionsWithDelay({
       ...filterOptions,
       search: event.target.value,
     });
+  };
 
   return (
     <>
@@ -99,7 +100,7 @@ const MyTasksView = (): React.ReactNode => {
       {tasks.result && tasks.result.length > 0 && (
         <HelperTaskCardGrid tasks={tasks.result} />
       )}
-      {tasks.result && tasks.result.length === 0 && (
+      {tasks.result?.length === 0 && (
         <SpacedTypography>
           {showSearch ? "No tasks to display." : "You have no tasks yet. 😢"}
         </SpacedTypography>

@@ -15,6 +15,8 @@ const KEYCLOAK_CONFIG: KeycloakConfig = {
 
 const KEYCLOAK_UPDATE_TOKEN_MIN_VALIDITY = 30;
 
+const _UNKNOWN = "<unknown>";
+
 // Keycloak user info looks like this (information might be present on the access or the id token too):
 //
 // email: "heather.chang@mailinator.com"
@@ -81,98 +83,97 @@ class User {
   };
 }
 
-class UserFactory {
+const createUserFromKeycloak = (
+  info?: KeycloakUserInfo,
+  profile?: KeycloakProfile,
+  accessToken?: KeycloakTokenParsed,
+  idToken?: KeycloakTokenParsed,
+): User => {
   // Super resilient
-  public static create(
-    info?: KeycloakUserInfo,
-    profile?: KeycloakProfile,
-    accessToken?: KeycloakTokenParsed,
-    idToken?: KeycloakTokenParsed,
-  ): User {
-    const keycloakId = UserFactory.parseAsString(
-      profile?.id,
-      info?.sub,
-      accessToken?.sub,
-      idToken?.sub,
-    );
+  const keycloakId = parseAsString(
+    profile?.id,
+    info?.sub,
+    accessToken?.sub,
+    idToken?.sub,
+  );
 
-    // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
-    const memberId = Number.parseInt(keycloakId.split(":").at(-1)!);
-
-    const username = UserFactory.parseAsString(
-      profile?.username,
-      info?.preferred_username,
-      accessToken?.["preferred_username"],
-      idToken?.["preferred_username"],
-    );
-
-    const email = UserFactory.parseAsString(
-      profile?.email,
-      info?.email,
-      accessToken?.["email"],
-      idToken?.["email"],
-    );
-
-    const firstName = UserFactory.parseAsString(
-      profile?.firstName,
-      info?.given_name,
-      accessToken?.["given_name"],
-      idToken?.["given_name"],
-    );
-
-    const lastName = UserFactory.parseAsString(
-      profile?.lastName,
-      info?.family_name,
-      accessToken?.["family_name"],
-      idToken?.["family_name"],
-    );
-
-    const groups = UserFactory.parseAsStringArray(
-      info?.groups,
-      accessToken?.["groups"],
-      idToken?.["groups"],
-    );
-
-    const roles = UserFactory.parseAsStringArray(
-      info?.roles,
-      accessToken?.["roles"],
-      idToken?.["roles"],
-    );
-
-    return new User(
-      keycloakId,
-      memberId,
-      username,
-      email,
-      firstName,
-      lastName,
-      groups,
-      roles,
+  // 292 is YCC DB ID from sub 'f:a9b693ac-d9aa-43c7-8b68-b3bb7d30cc8e:292'
+  const memberIdStr = keycloakId.split(":").at(-1) ?? "";
+  const memberId = Number.parseInt(memberIdStr);
+  if (!Number.isFinite(memberId) || memberId <= 0) {
+    throw new Error(
+      `[auth] Failed to parse member ID from Keycloak sub "${keycloakId}" (parsed "${memberIdStr}")`,
     );
   }
 
-  private static parseAsString(...potentialValues: unknown[]): string {
-    return (
-      potentialValues
-        .map((value) => value?.toString())
-        .find((value) => value) ?? _UNKNOWN
-    );
-  }
+  const username = parseAsString(
+    profile?.username,
+    info?.preferred_username,
+    accessToken?.["preferred_username"],
+    idToken?.["preferred_username"],
+  );
 
-  private static parseAsStringArray(
-    ...potentialValueArrays: unknown[]
-  ): string[] {
-    const potentialValueArray = potentialValueArrays.find((value) =>
-      Array.isArray(value),
-    ) as unknown[] | undefined;
-    const valueArray = potentialValueArray
-      ?.map((el) => el?.toString())
-      .filter((el) => el) as string[] | undefined;
-    return valueArray ?? [];
-  }
-}
+  const email = parseAsString(
+    profile?.email,
+    info?.email,
+    accessToken?.["email"],
+    idToken?.["email"],
+  );
 
-const _UNKNOWN = "<unknown>";
+  const firstName = parseAsString(
+    profile?.firstName,
+    info?.given_name,
+    accessToken?.["given_name"],
+    idToken?.["given_name"],
+  );
+
+  const lastName = parseAsString(
+    profile?.lastName,
+    info?.family_name,
+    accessToken?.["family_name"],
+    idToken?.["family_name"],
+  );
+
+  const groups = parseAsStringArray(
+    info?.groups,
+    accessToken?.["groups"],
+    idToken?.["groups"],
+  );
+
+  const roles = parseAsStringArray(
+    info?.roles,
+    accessToken?.["roles"],
+    idToken?.["roles"],
+  );
+
+  return new User(
+    keycloakId,
+    memberId,
+    username,
+    email,
+    firstName,
+    lastName,
+    groups,
+    roles,
+  );
+};
+
+const parseAsString = (...potentialValues: unknown[]): string => {
+  return (
+    potentialValues.map((value) => value?.toString()).find((value) => value) ??
+    _UNKNOWN
+  );
+};
+
+const parseAsStringArray = (...potentialValueArrays: unknown[]): string[] => {
+  const potentialValueArray = potentialValueArrays.find((value) =>
+    Array.isArray(value),
+  ) as unknown[] | undefined;
+  const valueArray = potentialValueArray
+    ?.map((el) => el?.toString())
+    .filter((el) => el) as string[] | undefined;
+  return valueArray ?? [];
+};
 
 const UNKNOWN_USER: User = new User(
   _UNKNOWN,
@@ -200,7 +201,7 @@ class AuthenticationProvider {
 
   public get currentUser(): User {
     // Simplify component code by not making it nullable
-    return this._user || UNKNOWN_USER;
+    return this._user ?? UNKNOWN_USER;
   }
 
   public readonly init = async (): Promise<void> => {
@@ -241,19 +242,25 @@ class AuthenticationProvider {
 
         const loadUserInfo = this._keycloak.loadUserInfo();
         loadUserInfo
-          .then((info) => console.debug("[auth] User info", info))
-          .catch(() => console.error("[auth] Failed to load user info"));
-
-        // this._keycloak.
+          .then((info) => {
+            console.debug("[auth] User info", info);
+          })
+          .catch((error: unknown) => {
+            console.error("[auth] Failed to load user info", error);
+          });
 
         const loadUserProfile = this._keycloak.loadUserProfile();
         loadUserProfile
-          .then((profile) => console.debug("[auth] User profile", profile))
-          .catch(() => console.error("[auth] Failed to load user info"));
+          .then((profile) => {
+            console.debug("[auth] User profile", profile);
+          })
+          .catch((error: unknown) => {
+            console.error("[auth] Failed to load user profile", error);
+          });
 
-        return Promise.all([loadUserInfo, loadUserProfile])
+        await Promise.all([loadUserInfo, loadUserProfile])
           .then(([info, profile]) => {
-            this._user = UserFactory.create(
+            this._user = createUserFromKeycloak(
               info,
               profile,
               accessToken,
@@ -262,8 +269,8 @@ class AuthenticationProvider {
             this.updateGlobalToken();
             console.debug("[auth] User:", this._user);
           })
-          .catch(() => {
-            console.error("[auth] Failed to load user info and profile");
+          .catch((error: unknown) => {
+            console.error("[auth] Failed to load user info and profile", error);
             this._user = null;
           });
       } else {
@@ -272,7 +279,7 @@ class AuthenticationProvider {
         throw new Error("Not authenticated");
       }
     } catch (error) {
-      return console.error("[auth] Authentication failed", error);
+      console.error("[auth] Authentication failed", error);
     }
   };
 
@@ -287,7 +294,7 @@ class AuthenticationProvider {
 }
 
 const auth = new AuthenticationProvider();
-const AuthenticationContext = createContext<AuthenticationProvider>(auth);
+const AuthenticationContext = createContext(auth);
 
 export { auth, User };
 export default AuthenticationContext;

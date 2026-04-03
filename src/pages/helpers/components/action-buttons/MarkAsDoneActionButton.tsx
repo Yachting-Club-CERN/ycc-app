@@ -33,7 +33,9 @@ const MarkAsDoneActionButtonInner = ({
           {commentEditor.component}
         </>
       }
-      onDialogOpening={() => commentEditor.clearContent()}
+      onDialogOpening={() => {
+        commentEditor.clearContent();
+      }}
       onDialogConfirm={async () =>
         await client.helpers.markAsDone(task.id, {
           comment: commentEditor.content,

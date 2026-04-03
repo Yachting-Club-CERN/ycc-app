@@ -115,6 +115,7 @@ const sortImportsRule: Linter.RulesRecord = {
 } as const;
 
 const typescriptRules: Linter.RulesRecord = {
+  "@typescript-eslint/consistent-type-definitions": ["error", "type"],
   "@typescript-eslint/explicit-function-return-type": "error",
   "@typescript-eslint/explicit-member-accessibility": "error",
   "@typescript-eslint/explicit-module-boundary-types": "error",
@@ -153,8 +154,14 @@ const eslintConfig = defineConfig([
     ...js.configs.recommended,
   },
 
-  // TypeScript recommended rules
-  tseslint.configs.recommended,
+  // TypeScript strict rules
+  {
+    files: [TS_FILES],
+    extends: [
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+    ],
+  },
 
   // Import plugin recommended rules (no-unresolved, named, default, export, no-duplicates, etc.)
   {
@@ -216,6 +223,7 @@ const eslintConfig = defineConfig([
           "./e2e/tsconfig.json",
           "./tests/tsconfig.json",
         ],
+        noWarnOnMultipleProjects: true,
       },
     },
     rules: tsRules,
@@ -223,20 +231,30 @@ const eslintConfig = defineConfig([
 
   // React
   {
-    name: "base/react",
     files: [JS_AND_TS_FILES],
-    plugins: {
-      react,
-      // @ts-expect-error https://github.com/typescript-eslint/typescript-eslint/issues/11543
-      "react-hooks": reactHooks,
-    },
+    extends: [
+      react.configs.flat["recommended"] as Linter.Config,
+      react.configs.flat["jsx-runtime"] as Linter.Config,
+    ],
     settings: {
       react: {
         version: "detect",
       },
     },
+  },
+  {
+    files: [JS_AND_TS_FILES],
+    extends: [reactHooks.configs.flat["recommended-latest"]],
+  },
+
+  // Relaxed rules for tests
+  {
+    name: "tests/relaxed",
+    files: ["tests/**", "e2e/**"],
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/require-await": "off",
     },
   },
 

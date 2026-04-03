@@ -16,6 +16,7 @@ export type OpenConfirmationDialogProps = Pick<
 const DEFAULT_DIALOG_PROPS = {
   title: "",
   content: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onConfirm: () => {},
 } as const;
 

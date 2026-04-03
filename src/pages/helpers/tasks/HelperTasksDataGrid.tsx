@@ -39,7 +39,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 })) as typeof DataGrid;
 
 type Props = {
-  tasks: Readonly<HelperTask[]>;
+  tasks: readonly HelperTask[];
 };
 
 const HelperTasksDataGrid = ({ tasks }: Props): React.ReactNode => {
@@ -53,7 +53,9 @@ const HelperTasksDataGrid = ({ tasks }: Props): React.ReactNode => {
   const handleGridCellClick = async (
     params: GridCellParams<MemberPublicInfo>,
     event: MuiEvent<React.MouseEvent<HTMLElement>>,
-  ): Promise<void> => await navigate(getTaskLocation(params.row.id), event);
+  ): Promise<void> => {
+    await navigate(getTaskLocation(params.row.id), event);
+  };
 
   const openMemberInfoDialogFromGrid = (
     event: React.SyntheticEvent,
@@ -68,7 +70,9 @@ const HelperTasksDataGrid = ({ tasks }: Props): React.ReactNode => {
   ): React.ReactNode => (
     <Link
       sx={{ color: "grey", textDecorationColor: "grey" }}
-      onClick={(event) => openMemberInfoDialogFromGrid(event, member)}
+      onClick={(event) => {
+        openMemberInfoDialogFromGrid(event, member);
+      }}
     >
       {member.username}
     </Link>

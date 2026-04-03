@@ -17,7 +17,9 @@ const HelperTaskCard = ({ task }: Props): React.ReactNode => {
   const navigate = useNavigate();
   const handleClick = async (
     event: React.MouseEvent<HTMLElement>,
-  ): Promise<void> => await navigate(getTaskLocation(task.id), event);
+  ): Promise<void> => {
+    await navigate(getTaskLocation(task.id), event);
+  };
 
   return (
     <Card
@@ -25,7 +27,9 @@ const HelperTaskCard = ({ task }: Props): React.ReactNode => {
       className="ycc-helper-task-card"
       onClick={handleClick}
       onAuxClick={handleClick}
-      onMouseDown={(event) => event.preventDefault()}
+      onMouseDown={(event) => {
+        event.preventDefault();
+      }}
     >
       <CardActionArea>
         <CardContent>

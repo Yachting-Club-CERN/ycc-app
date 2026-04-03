@@ -88,15 +88,17 @@ const MembersDataGrid = ({ year, search }: Props): React.ReactNode => {
   const getRowId = (member: MemberPublicInfo): number => member.id;
   const handleGridCellClick = (
     params: GridCellParams<MemberPublicInfo>,
-  ): void => memberInfoDialog.open({ member: params.row });
+  ): void => {
+    memberInfoDialog.open({ member: params.row });
+  };
 
   const filter = (
     search: string,
-    members: Readonly<MemberPublicInfo[]>,
-  ): Readonly<MemberPublicInfo[]> => {
+    members: readonly MemberPublicInfo[],
+  ): readonly MemberPublicInfo[] => {
     // User typically wants to search for one thing, e.g., name or phone number
     const s = search.toLowerCase().trim();
-    if (s && members) {
+    if (s && members.length > 0) {
       return members.filter(
         (member) =>
           searchMemberUsernameOrName(s, member) ||

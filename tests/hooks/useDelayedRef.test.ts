@@ -13,7 +13,9 @@ describe("useDelayedRef", () => {
   test("setImmediately updates value right away", async () => {
     const { result } = renderHook(() => useDelayedRef("init"));
 
-    await act(() => result.current.setImmediately("updated"));
+    await act(async () => {
+      result.current.setImmediately("updated");
+    });
 
     expect(result.current.get()).toBe("updated");
   });
@@ -23,12 +25,14 @@ describe("useDelayedRef", () => {
 
     const { result } = renderHook(() => useDelayedRef("init", 300));
 
-    await act(() => result.current.setWithDelay("delayed"));
+    await act(async () => {
+      result.current.setWithDelay("delayed");
+    });
 
     // Not yet updated
     expect(result.current.get()).toBe("init");
 
-    await act(() => vi.advanceTimersByTime(300));
+    await act(async () => vi.advanceTimersByTime(300));
 
     expect(result.current.get()).toBe("delayed");
 
@@ -40,11 +44,15 @@ describe("useDelayedRef", () => {
 
     const { result } = renderHook(() => useDelayedRef("init", 300));
 
-    await act(() => result.current.setWithDelay("a"));
-    await act(() => vi.advanceTimersByTime(100));
-    await act(() => result.current.setWithDelay("b"));
+    await act(async () => {
+      result.current.setWithDelay("a");
+    });
+    await act(async () => vi.advanceTimersByTime(100));
+    await act(async () => {
+      result.current.setWithDelay("b");
+    });
 
-    await act(() => vi.advanceTimersByTime(300));
+    await act(async () => vi.advanceTimersByTime(300));
 
     expect(result.current.get()).toBe("b");
 
