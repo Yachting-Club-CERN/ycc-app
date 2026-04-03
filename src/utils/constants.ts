@@ -14,6 +14,11 @@ export const YCC_URLS = {
 export const HELPER_TASK_TITLE_MAX_LENGTH = 40;
 export const HELPER_TASK_SHORT_DESCRIPTION_MAX_LENGTH = 200;
 
+// Being this specific helps iOS/iPhone Safari to convert HEIC to JPEG on the client device
+export const UPLOAD_IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
+export const UPLOAD_MAX_DIMENSION = 2000;
+export const UPLOAD_PHOTO_JPEG_QUALITY = 0.85;
+
 // UI specific
 export const CONFIRM_BUTTON_DELAY_MS = 3000;
 export const DATA_GRID_PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
