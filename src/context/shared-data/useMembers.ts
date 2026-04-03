@@ -5,7 +5,7 @@ import useSharedData from "./useSharedData";
 
 const useMembers = (
   year: number,
-): PromiseOutcome<Readonly<MemberPublicInfo[]>> => {
+): PromiseOutcome<readonly MemberPublicInfo[]> => {
   const sharedData = useSharedData();
   return usePromise(
     async (signal?: AbortSignal) => await sharedData.getMembers(year, signal),

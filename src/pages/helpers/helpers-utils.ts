@@ -45,7 +45,9 @@ export const isMultiDayShift = (
   task: HelperTask | HelperTaskMutationRequestBase,
 ): boolean =>
   getHelperTaskType(task) === HelperTaskType.Shift &&
-  !isSameDay(task.startsAt!, task.endsAt!);
+  task.startsAt !== null &&
+  task.endsAt !== null &&
+  !isSameDay(task.startsAt, task.endsAt);
 
 /**
  * Tells if a shift is happening right now.

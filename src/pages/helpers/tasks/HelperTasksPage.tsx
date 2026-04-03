@@ -123,8 +123,9 @@ const HelperTasksPage = (): React.ReactNode => {
     sessionStorage.setItem(SESSION_STORAGE.DISPLAY, display);
   }, [display]);
 
-  const handleReset = (): void =>
+  const handleReset = (): void => {
     setFilterOptionsImmediately(getDefaultFilterOptions());
+  };
 
   const handleYearChange = (year: SelectedYear): void => {
     const newFilterOptions: HelperTaskFilterOptions = { ...filterOptions };

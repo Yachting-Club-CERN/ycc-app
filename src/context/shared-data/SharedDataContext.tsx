@@ -11,7 +11,7 @@ class SharedData {
 
   public readonly getHelperTaskCategories = async (
     signal?: AbortSignal,
-  ): Promise<Readonly<HelperTaskCategory[]>> => {
+  ): Promise<readonly HelperTaskCategory[]> => {
     if (this._helperTaskCategories === undefined) {
       console.debug("[shared-data] Loading helper task categories");
       this._helperTaskCategories =
@@ -30,7 +30,7 @@ class SharedData {
 
   public readonly getLicenceInfos = async (
     signal?: AbortSignal,
-  ): Promise<Readonly<LicenceDetailedInfo[]>> => {
+  ): Promise<readonly LicenceDetailedInfo[]> => {
     if (this._licenceInfos === undefined) {
       console.debug("[shared-data] Loading licence infos");
       this._licenceInfos = await client.licenceInfos.getAll(signal);
@@ -49,7 +49,7 @@ class SharedData {
   public readonly getMembers = async (
     year: number,
     signal?: AbortSignal,
-  ): Promise<Readonly<MemberPublicInfo[]>> => {
+  ): Promise<readonly MemberPublicInfo[]> => {
     if (this._members[year] === undefined) {
       console.debug(`[shared-data] Loading members for ${year}`);
       this._members[year] = await client.members.getAll(year, signal);
@@ -68,7 +68,7 @@ class SharedData {
 }
 
 const sharedData = new SharedData();
-const SharedDataContext = createContext<SharedData>(sharedData);
+const SharedDataContext = createContext(sharedData);
 
 export { sharedData };
 export default SharedDataContext;

@@ -13,12 +13,6 @@ export type OpenConfirmationDialogProps = Pick<
   | "onConfirm"
 >;
 
-const DEFAULT_DIALOG_PROPS = {
-  title: "",
-  content: null,
-  onConfirm: () => {},
-} as const;
-
 /**
  * Hook for confirmation dialog. Creates `useState()` hooks under the hood.
  *
@@ -32,30 +26,26 @@ const useConfirmationDialog = (): {
   close: () => void;
 } => {
   const [dialogProps, setDialogProps] =
-    useState<OpenConfirmationDialogProps>(DEFAULT_DIALOG_PROPS);
-  const [open, setOpen] = useState(false);
+    useState<OpenConfirmationDialogProps | null>(null);
   const [confirming, setConfirming] = useState(false);
 
-  const { onConfirm, ...dialogPropsWithoutOnConfirm } = dialogProps;
-
   const close = (): void => {
-    setDialogProps(DEFAULT_DIALOG_PROPS);
-    setOpen(false);
+    setDialogProps(null);
   };
 
   return {
-    component: (
+    component: dialogProps && (
       <ConfirmationDialog
-        {...dialogPropsWithoutOnConfirm}
-        open={open}
+        {...dialogProps}
+        open
         confirming={confirming}
         onConfirm={async () => {
           try {
             setConfirming(true);
-            await onConfirm();
+            await dialogProps.onConfirm();
           } finally {
             setConfirming(false);
-            setOpen(false);
+            setDialogProps(null);
           }
         }}
         onClose={close}
@@ -63,7 +53,6 @@ const useConfirmationDialog = (): {
     ),
     open: (props: OpenConfirmationDialogProps): void => {
       setDialogProps(props);
-      setOpen(true);
     },
     close,
   };

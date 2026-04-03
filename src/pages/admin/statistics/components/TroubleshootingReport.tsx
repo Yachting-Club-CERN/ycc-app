@@ -52,9 +52,9 @@ const findTasksWithLicenceNotInSurveillance = (
         task.category.title.toLowerCase() !== "surveillance",
     )
     .sort((a, b) => {
-      const licenceCmp = a.captainRequiredLicenceInfo!.licence.localeCompare(
-        b.captainRequiredLicenceInfo!.licence,
-      );
+      const licenceCmp = (
+        a.captainRequiredLicenceInfo?.licence ?? ""
+      ).localeCompare(b.captainRequiredLicenceInfo?.licence ?? "");
       if (licenceCmp !== 0) return licenceCmp;
       return statsSortByDate(a, b);
     });
@@ -107,7 +107,7 @@ const dateColumn: TaskTableColumn = {
   label: "Date",
   getValue: (task) =>
     task.startsAt || task.deadline
-      ? formatDate(task.startsAt || task.deadline)
+      ? formatDate(task.startsAt ?? task.deadline)
       : "N/A",
 };
 
@@ -123,7 +123,7 @@ const contactColumn: TaskTableColumn = {
 
 const licenceColumn: TaskTableColumn = {
   label: "Required Licence",
-  getValue: (task) => task.captainRequiredLicenceInfo?.licence || "N/A",
+  getValue: (task) => task.captainRequiredLicenceInfo?.licence ?? "N/A",
 };
 
 type Props = {

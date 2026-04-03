@@ -5,7 +5,7 @@ import { HelperTask } from "@/model/helpers-dtos";
 import HelperTaskCard from "./HelperTaskCard";
 
 type Props = {
-  tasks: Readonly<HelperTask[]>;
+  tasks: readonly HelperTask[];
 };
 
 const HelperTaskCardGrid = ({ tasks }: Props): React.ReactNode => {

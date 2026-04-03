@@ -5,7 +5,10 @@ import dayjs from "@/utils/dayjs";
 
 const d = (s: string): dayjs.Dayjs => dayjs.tz(s, "Europe/Zurich");
 
-type Sortable = { startsAt: dayjs.Dayjs | null; deadline: dayjs.Dayjs | null };
+type Sortable = {
+  startsAt: dayjs.Dayjs | null;
+  deadline: dayjs.Dayjs | null;
+};
 
 const sort = (items: Sortable[]): Sortable[] =>
   [...items].sort(statsSortByDate);

@@ -193,7 +193,7 @@ test("Complex object with special values", () => {
 
 test("Object with inherited prototype properties skips them", () => {
   const parent = { inherited: "from proto" };
-  const child = Object.create(parent);
+  const child = Object.create(parent) as Record<string, string>;
   child["own"] = "mine";
 
   // decycle should only include own properties

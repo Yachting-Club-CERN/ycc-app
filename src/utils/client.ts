@@ -75,7 +75,7 @@ class HttpClient {
       (config) => {
         const token = globalThis.oauth2Token;
         if (token) {
-          config.headers["Authorization"] = `Bearer ${token}`;
+          config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
@@ -215,14 +215,15 @@ class AuditLogClient extends BaseClient {
   public readonly deleteEntries = async (
     request: AuditLogEntriesDeleteRequest,
     signal?: AbortSignal,
-  ): Promise<void> =>
-    await this._http.request<void>({
+  ): Promise<void> => {
+    await this._http.request<undefined>({
       method: "DELETE",
       path: "/api/v1/audit-log/entries",
       responseSchema: null,
       data: request,
       signal,
     });
+  };
 }
 
 class HelpersClient extends BaseClient {
@@ -264,13 +265,14 @@ class HelpersClient extends BaseClient {
   public readonly revokePermission = async (
     memberId: number,
     signal?: AbortSignal,
-  ): Promise<void> =>
-    await this._http.request<void>({
+  ): Promise<void> => {
+    await this._http.request<undefined>({
       method: "DELETE",
       path: `/api/v1/helpers/permissions/${memberId}`,
       responseSchema: null,
       signal,
     });
+  };
 
   public readonly getTaskCategories = async (
     signal?: AbortSignal,

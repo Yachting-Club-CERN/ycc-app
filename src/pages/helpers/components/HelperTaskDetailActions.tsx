@@ -76,8 +76,12 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
           icon={<EditIcon />}
           sx={SX_FAB_POSITION}
           open={speedDialOpen}
-          onOpen={() => setSpeedDialOpen(true)}
-          onClose={() => setSpeedDialOpen(false)}
+          onOpen={() => {
+            setSpeedDialOpen(true);
+          }}
+          onClose={() => {
+            setSpeedDialOpen(false);
+          }}
         >
           {actions.map((action) => (
             <SpeedDialAction

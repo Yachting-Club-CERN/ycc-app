@@ -10,38 +10,38 @@ describe("useResettableRef", () => {
     expect(result.current.current).toBe(42);
   });
 
-  test("allows setting current value", () => {
+  test("allows setting current value", async () => {
     const { result } = renderHook(() => useResettableRef(() => "initial"));
 
-    act(() => {
+    await act(async () => {
       result.current.current = "updated";
     });
 
     expect(result.current.current).toBe("updated");
   });
 
-  test("reset restores the initial value", () => {
+  test("reset restores the initial value", async () => {
     const { result } = renderHook(() => useResettableRef(() => 0));
 
-    act(() => {
+    await act(async () => {
       result.current.current = 99;
     });
     expect(result.current.current).toBe(99);
 
-    act(() => {
+    await act(async () => {
       result.current.reset();
     });
     expect(result.current.current).toBe(0);
   });
 
-  test("reset calls the factory again", () => {
+  test("reset calls the factory again", async () => {
     const factory = vi.fn(() => ({ count: 0 }));
     const { result } = renderHook(() => useResettableRef(factory));
 
     // Factory called once on init
     expect(factory).toHaveBeenCalledOnce();
 
-    act(() => {
+    await act(async () => {
       result.current.reset();
     });
 
@@ -49,14 +49,14 @@ describe("useResettableRef", () => {
     expect(factory).toHaveBeenCalledTimes(2);
   });
 
-  test("reset produces a fresh object reference", () => {
+  test("reset produces a fresh object reference", async () => {
     const { result } = renderHook(() =>
       useResettableRef(() => ({ value: "fresh" })),
     );
 
     const firstRef = result.current.current;
 
-    act(() => {
+    await act(async () => {
       result.current.reset();
     });
 

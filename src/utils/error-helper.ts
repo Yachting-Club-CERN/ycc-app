@@ -6,7 +6,7 @@ const getErrorDetail = (error: AxiosError): unknown => {
   const data: unknown = error.response?.data;
 
   if (data !== null && typeof data === "object") {
-    return (data as Record<string, unknown>)?.["detail"];
+    return (data as Record<string, unknown>)["detail"];
   } else {
     return undefined;
   }
@@ -14,7 +14,7 @@ const getErrorDetail = (error: AxiosError): unknown => {
 
 const getErrorDetailMsg = (detail: unknown): unknown => {
   if (detail !== null && typeof detail === "object") {
-    return (detail as Record<string, unknown>)?.["msg"];
+    return (detail as Record<string, unknown>)["msg"];
   } else {
     return undefined;
   }
@@ -28,6 +28,7 @@ const getText = (value: unknown): string => {
   } else if (typeof value === "function" || typeof value === "object") {
     return toJson(value);
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- the value is already narrowed
     return value.toString();
   }
 };
@@ -54,7 +55,7 @@ const getErrorAsString = (error: Error): string => {
     }
 
     if (detail) {
-      detailStr += `${getText(detail)}`;
+      detailStr += getText(detail);
     }
 
     if (detailStr) {

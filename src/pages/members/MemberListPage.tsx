@@ -12,7 +12,7 @@ import MembersDataGrid from "./MembersDataGrid";
 
 const MemberListPage = (): React.ReactNode => {
   const currentYear = dayjs().year();
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState("");
 
   const onSearch = useDelay(
     SEARCH_DELAY_MS,

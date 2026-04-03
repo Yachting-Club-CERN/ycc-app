@@ -64,7 +64,7 @@ export function decycle(object: unknown): unknown {
         const _valueArray = _value as unknown[];
         const nu = [];
         for (i = 0; i < _valueArray.length; i += 1) {
-          nu[i] = derez(_valueArray[i], path + "[" + i + "]");
+          nu[i] = derez(_valueArray[i], `${path}[${i}]`);
         }
         return nu;
       } else if (_value instanceof Error) {
@@ -72,9 +72,9 @@ export function decycle(object: unknown): unknown {
         return _value;
       } else {
         // If it is an object, replicate the object.
-        const _valueObject = _value as { [key: string]: unknown };
+        const _valueObject = _value as Record<string, unknown>;
 
-        const nu: { [key: string]: unknown } = {};
+        const nu: Record<string, unknown> = {};
         for (name in _valueObject) {
           if (Object.hasOwn(_value, name)) {
             nu[name] = derez(

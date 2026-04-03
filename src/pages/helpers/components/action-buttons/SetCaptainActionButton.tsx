@@ -28,7 +28,9 @@ const SetCaptainActionButton = ({
           <NotificationDialogNotice />
         </>
       }
-      onDialogOpening={() => memberAutoComplete.clearSelection()}
+      onDialogOpening={() => {
+        memberAutoComplete.clearSelection();
+      }}
       onDialogConfirm={async () =>
         await client.helpers.setCaptain(
           task.id,

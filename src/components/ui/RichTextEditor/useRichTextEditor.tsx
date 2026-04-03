@@ -28,7 +28,9 @@ const useRichTextEditor = (
     get content(): string {
       return contentRef.get();
     },
-    clearContent: (): void => contentRef.setImmediately(""),
+    clearContent: (): void => {
+      contentRef.setImmediately("");
+    },
   };
 };
 

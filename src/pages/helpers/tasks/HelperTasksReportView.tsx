@@ -7,7 +7,7 @@ import { createTimingInfoLine } from "@/pages/helpers/helpers-format";
 import { getTaskLocation } from "@/pages/helpers/helpers-utils";
 
 type Props = {
-  tasks: Readonly<HelperTask[]>;
+  tasks: readonly HelperTask[];
 };
 
 const HelperTasksReportView = ({ tasks }: Props): React.ReactNode => {

@@ -48,8 +48,8 @@ const filterSearchTask = (searchToken: string, task: HelperTask): boolean =>
 
 const filterSearch = (
   search: string,
-  tasks: Readonly<HelperTask[]>,
-): Readonly<HelperTask[]> => {
+  tasks: readonly HelperTask[],
+): readonly HelperTask[] => {
   // The user might want to search for a combination of things such as "J80 maintenance jib" or "MicMac Tim"
   const searchTokens = search.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
@@ -65,8 +65,8 @@ const filterSearch = (
 const filterFlags = (
   filterOptions: HelperTaskFilterOptions,
   currentUser: User,
-  tasks: Readonly<HelperTask[]>,
-): Readonly<HelperTask[]> => {
+  tasks: readonly HelperTask[],
+): readonly HelperTask[] => {
   let filtered = tasks;
 
   if (filterOptions.showOnlyUpcoming) {
@@ -101,8 +101,8 @@ const filterFlags = (
 const filter = (
   filterOptions: HelperTaskFilterOptions,
   user: User,
-  tasks: Readonly<HelperTask[]>,
-): Readonly<HelperTask[]> => {
+  tasks: readonly HelperTask[],
+): readonly HelperTask[] => {
   let filtered = filterFlags(filterOptions, user, tasks);
 
   if (filterOptions.search) {
@@ -114,7 +114,7 @@ const filter = (
 
 export const useFilteredHelperTasks = (
   filterOptions: HelperTaskFilterOptions,
-): PromiseOutcome<Readonly<HelperTask[]>> => {
+): PromiseOutcome<readonly HelperTask[]> => {
   const currentUser = useCurrentUser();
   const tasks = usePromise(
     async (signal?: AbortSignal) =>
