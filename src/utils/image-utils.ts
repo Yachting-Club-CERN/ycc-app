@@ -33,17 +33,43 @@ export const processImageForUpload = async (file: File): Promise<Blob> => {
   const w = Math.round(img.width * scale);
   const h = Math.round(img.height * scale);
 
-  const canvas = new OffscreenCanvas(w, h);
+  // Use OffscreenCanvas where available, fall back to regular canvas (Safari)
+  if (typeof OffscreenCanvas !== "undefined") {
+    const canvas = new OffscreenCanvas(w, h);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("Failed to create canvas context");
+    }
+    ctx.drawImage(img, 0, 0, w, h);
+    img.close();
+    return await canvas.convertToBlob({
+      type: "image/jpeg",
+      quality: UPLOAD_PHOTO_JPEG_QUALITY,
+    });
+  }
+
+  // TODO but is it displayed?! research why and how this works
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
   const ctx = canvas.getContext("2d");
   if (!ctx) {
     throw new Error("Failed to create canvas context");
   }
   ctx.drawImage(img, 0, 0, w, h);
   img.close();
-
-  return await canvas.convertToBlob({
-    type: "image/jpeg",
-    quality: UPLOAD_PHOTO_JPEG_QUALITY,
+  return await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to convert canvas to blob"));
+        }
+      },
+      "image/jpeg",
+      UPLOAD_PHOTO_JPEG_QUALITY,
+    );
   });
 };
 

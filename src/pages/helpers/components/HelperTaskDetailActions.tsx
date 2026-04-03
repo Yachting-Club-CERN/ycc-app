@@ -31,29 +31,30 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
     return null;
   }
 
-  const actions = [
-    {
-      icon: <EditIcon />,
-      name: "Edit Task",
-      to: getTaskEditLocation(task.id),
-    },
-    {
-      icon: <ContentCopyIcon />,
-      name: "Clone Task",
-      to: getTaskCloneLocation(task.id),
-    },
-    {
-      icon: <AddIcon />,
-      name: "New Task",
-      to: "/helpers/tasks/new",
-    },
-  ];
+  const editAction = {
+    icon: <EditIcon />,
+    name: "Edit Task",
+    to: getTaskEditLocation(task.id),
+  };
+  const cloneAction = {
+    icon: <ContentCopyIcon />,
+    name: "Clone Task",
+    to: getTaskCloneLocation(task.id),
+  };
+  const newAction = {
+    icon: <AddIcon />,
+    name: "New Task",
+    to: "/helpers/tasks/new",
+  };
+
+  const buttonActions = [newAction, editAction, cloneAction];
+  const fabActions = [editAction, cloneAction, newAction];
 
   return (
     <>
       <Box sx={{ display: { xs: "none", sm: "flex" } }}>
         <RowStack wrap={true} compact={true}>
-          {actions.map((action) => (
+          {buttonActions.map((action) => (
             <Button
               key={action.name}
               variant="contained"
@@ -83,7 +84,7 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
             setSpeedDialOpen(false);
           }}
         >
-          {actions.map((action) => (
+          {fabActions.map((action) => (
             <SpeedDialAction
               key={action.name}
               icon={action.icon}
