@@ -55,9 +55,8 @@ const createTestPng = (
 ): { name: string; mimeType: string; buffer: Uint8Array } => {
   // Minimal valid 1x1 red pixel PNG
   const hex =
-    "89504e470d0a1a0a0000000d49484452000000010000000108020000009001" +
-    "2e00600000000f49444154789c626060f80f0000010100005018d84d000000" +
-    "0049454e44ae426082";
+    "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de" +
+    "0000000c49444154789c63f8cfc0000003010100c9fe92ef0000000049454e44ae426082";
   const bytes = new Uint8Array(hex.length / 2);
   for (let i = 0; i < hex.length; i += 2) {
     bytes[i / 2] = Number.parseInt(hex.substring(i, i + 2), 16);
@@ -88,22 +87,16 @@ const uploadPhoto = async (
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText("Upload Photos")).toBeVisible();
 
-    // Verify filename is shown
-    await expect(dialog.getByText(fileName)).toBeVisible();
+    // Verify file preview is shown (filename is the alt text on the preview image)
+    await expect(dialog.getByAltText(fileName)).toBeVisible();
 
     // Fill caption if provided
     if (caption) {
       await dialog.getByPlaceholder("Description (optional)").fill(caption);
     }
 
-    // Click Upload button
+    // Click Upload button — dialog auto-closes on success
     await dialog.getByRole("button", { name: /Upload/ }).click();
-
-    // Wait for "Uploaded" status
-    await expect(dialog.getByText("Uploaded")).toBeVisible();
-
-    // Close the dialog
-    await dialog.getByRole("button", { name: "Close" }).click();
     await expect(dialog).toBeHidden();
   });
 };
@@ -114,7 +107,7 @@ test("Helpers Attachments: Upload photo and view in gallery", async ({
   await createTask(page);
 
   await test.step("Verify Photos section exists", async () => {
-    await expect(page.getByText("Photos", { exact: false })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Photos" })).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Add Photos" }),
     ).toBeVisible();

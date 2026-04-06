@@ -236,6 +236,41 @@ class HttpClient {
     }
   };
 
+  public readonly requestUploadBlob = async ({
+    path,
+    data,
+    signal,
+  }: {
+    path: string;
+    data: FormData;
+    signal?: AbortSignal | undefined;
+  }): Promise<Blob> => {
+    console.debug("[client]", "POST", path, "(upload->blob) ...");
+
+    try {
+      const response = await this._http.request<Blob>({
+        method: "POST",
+        url: path,
+        data,
+        responseType: "blob",
+        ...(signal ? { signal } : {}),
+      });
+
+      console.debug(
+        "[client]",
+        "POST",
+        path,
+        "(upload -> blob) -",
+        response.status,
+        response.statusText,
+      );
+
+      return response.data;
+    } catch (error) {
+      throw this.handleError("POST", path, undefined, error);
+    }
+  };
+
   private readonly handleError = (
     method: Method,
     path: string,
@@ -566,6 +601,21 @@ class HelpersClient extends BaseClient {
       method: "DELETE",
       path: `/api/v1/helpers/tasks/${taskId}/attachments/${attachmentId}`,
       responseSchema: null,
+      signal,
+    });
+  };
+
+  public readonly transcodeAttachment = async (
+    file: Blob,
+    fileName: string,
+    signal?: AbortSignal,
+  ): Promise<Blob> => {
+    const formData = new FormData();
+    formData.append("file", file, fileName);
+
+    return await this._http.requestUploadBlob({
+      path: "/api/v1/helpers/attachments/transcode",
+      data: formData,
       signal,
     });
   };

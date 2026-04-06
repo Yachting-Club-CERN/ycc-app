@@ -1,25 +1,42 @@
+import client from "./client";
 import { UPLOAD_MAX_DIMENSION, UPLOAD_PHOTO_JPEG_QUALITY } from "./constants";
 
 /**
- * Validates that the browser can decode the given file as an image.
- * Returns the decoded ImageBitmap on success, throws on failure.
+ * Decodes the given file into an ImageBitmap.
+ *
+ * Fast path: createImageBitmap handles JPEG/PNG/WebP everywhere, and HEIC on
+ * Apple browsers (iOS Safari, iPadOS Safari, macOS Safari) via system ImageIO.
+ *
+ * Fallback path: on browsers without a HEIC decoder (Mac Firefox, Windows Chrome,
+ * Android Chrome), createImageBitmap throws. We send the bytes to the BE
+ * transcode endpoint, which uses pillow-heif to produce a JPEG, then decode that
+ * JPEG locally and return the bitmap. Same downstream pipeline either way.
  */
 const decodeImage = async (file: File): Promise<ImageBitmap> => {
   try {
     return await createImageBitmap(file);
   } catch {
-    throw new Error(
-      "This image format is not supported. Please use JPEG or PNG.",
-    );
+    // Browser can't decode this natively. Try server-side transcoding.
+    try {
+      const jpeg = await client.helpers.transcodeAttachment(file, file.name);
+      return await createImageBitmap(jpeg);
+    } catch {
+      throw new Error(
+        "Could not process this image. Please try a different file.",
+      );
+    }
   }
 };
 
 /**
  * Processes an image file for upload:
- * - Validates the image can be decoded
- * - Resizes to max 2000px on the largest dimension
- * - Bakes EXIF rotation into pixel data
- * - Converts to JPEG (quality 0.85)
+ * - Decodes via createImageBitmap, falling back to BE transcoding for HEIC on
+ *   browsers that can't decode it natively
+ * - Resizes to max 2000px on the largest dimension (never upscales)
+ * - Bakes EXIF orientation into pixel data
+ * - Strips all other EXIF metadata as a side effect of the canvas round-trip
+ *   (no GPS, no camera info, no timestamps)
+ * - Re-encodes as JPEG at quality 0.85
  *
  * @returns JPEG blob ready for upload
  */
