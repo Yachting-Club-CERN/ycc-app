@@ -1,4 +1,5 @@
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,18 +8,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
 import ErrorAlert from "@/components/ui/ErrorAlert";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { AttachmentMetadata, HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import { UPLOAD_IMAGE_ACCEPT } from "@/utils/constants";
 
 import AttachmentGallery from "./AttachmentGallery";
 import UploadAttachmentsDialog from "./UploadAttachmentsDialog";
+import { DialogContentText } from "@mui/material";
 
 type Props = {
   task: HelperTask;
 };
 
 const AttachmentsSection = ({ task }: Props): React.ReactNode => {
+  const currentUser = useCurrentUser();
   const confirmationDialog = useConfirmationDialog();
   const [attachments, setAttachments] = useState<AttachmentMetadata[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,6 +118,41 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
     [task.id, attachments, confirmationDialog],
   );
 
+  const handleDeleteAll = useCallback((): void => {
+    const total = attachments.length;
+    if (total === 0) return;
+
+    confirmationDialog.open({
+      title: "Delete ALL photos?",
+      content: (
+        <DialogContentText mb={2}>
+          This will permanently delete all <strong>{total}</strong> photo
+          {total !== 1 ? "s" : ""} from this task.
+        </DialogContentText>
+      ),
+      confirmButtonColor: "error",
+      confirmButtonText: `Delete All ${total} Photos`,
+      cancelButtonColor: "primary",
+      delayConfirm: true,
+      onConfirm: async () => {
+        const ids = attachments.map((a) => a.id);
+        const deleted = new Set<number>();
+        try {
+          await Promise.all(
+            ids.map(async (id) => {
+              await client.helpers.deleteAttachment(task.id, id);
+              deleted.add(id);
+            }),
+          );
+          setAttachments([]);
+        } catch (err) {
+          setAttachments((prev) => prev.filter((a) => !deleted.has(a.id)));
+          setError(err);
+        }
+      },
+    });
+  }, [task.id, attachments, confirmationDialog]);
+
   // Drag-and-drop handlers
   const handleDragOver = (e: React.DragEvent): void => {
     e.preventDefault();
@@ -130,9 +169,22 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
 
   return (
     <>
-      <Typography variant="h6" mt={2} mb={1}>
-        Photos{attachments.length > 0 ? ` (${attachments.length})` : ""}
-      </Typography>
+      <Box display="flex" alignItems="center" gap={1} mt={2} mb={1}>
+        <Typography variant="h6">
+          Photos{attachments.length > 0 ? ` (${attachments.length})` : ""}
+        </Typography>
+        {currentUser.helpersAppAdmin && attachments.length > 0 && (
+          <Button
+            size="small"
+            color="error"
+            variant="outlined"
+            startIcon={<DeleteForeverIcon />}
+            onClick={handleDeleteAll}
+          >
+            Delete All
+          </Button>
+        )}
+      </Box>
 
       {loading && (
         <Box display="flex" justifyContent="center" py={2}>
