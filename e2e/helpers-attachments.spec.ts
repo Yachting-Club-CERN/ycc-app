@@ -52,7 +52,7 @@ const createTask = async (page: Page): Promise<number> =>
  */
 const createTestPng = (
   name: string,
-): { name: string; mimeType: string; buffer: Uint8Array } => {
+): { name: string; mimeType: string; buffer: Buffer } => {
   // Minimal valid 1x1 red pixel PNG
   const hex =
     "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de" +
@@ -61,7 +61,7 @@ const createTestPng = (
   for (let i = 0; i < hex.length; i += 2) {
     bytes[i / 2] = Number.parseInt(hex.substring(i, i + 2), 16);
   }
-  return { name, mimeType: "image/png", buffer: bytes };
+  return { name, mimeType: "image/png", buffer: Buffer.from(bytes) };
 };
 
 /**

@@ -3,6 +3,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import DialogContentText from "@mui/material/DialogContentText";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -15,7 +16,6 @@ import { UPLOAD_IMAGE_ACCEPT } from "@/utils/constants";
 
 import AttachmentGallery from "./AttachmentGallery";
 import UploadAttachmentsDialog from "./UploadAttachmentsDialog";
-import { DialogContentText } from "@mui/material";
 
 type Props = {
   task: HelperTask;
