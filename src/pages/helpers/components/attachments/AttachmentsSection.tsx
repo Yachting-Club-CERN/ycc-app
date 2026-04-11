@@ -46,7 +46,6 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
 
   const handleUploadDialogClose = (): void => {
     setSelectedFiles(null);
-    // Reset the file input so picking the same files again triggers onChange
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -162,7 +161,6 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
         onDelete={handleDelete}
       />
 
-      {/* Upload area */}
       <DropZone accept={UPLOAD_IMAGE_ACCEPT} onFiles={handleFilesSelected}>
         <input
           ref={fileInputRef}

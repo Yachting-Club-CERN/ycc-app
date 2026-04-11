@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 import client from "@/utils/client";
@@ -53,6 +53,15 @@ const UploadAttachmentsDialog = ({
   const uploadedRef = useRef<AttachmentMetadata[]>([]);
   const previewUrlsRef = useRef<string[]>([]);
 
+  const updateEntry = useCallback(
+    (index: number, patch: Partial<FileEntry>): void => {
+      setEntries((prev) =>
+        prev.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)),
+      );
+    },
+    [],
+  );
+
   useEffect(() => {
     let cancelled = false;
     const createdUrls: string[] = [];
@@ -84,14 +93,7 @@ const UploadAttachmentsDialog = ({
         URL.revokeObjectURL(url);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const updateEntry = (index: number, patch: Partial<FileEntry>): void => {
-    setEntries((prev) =>
-      prev.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)),
-    );
-  };
+  }, [files, updateEntry]);
 
   const handleUpload = async (): Promise<void> => {
     setUploading(true);

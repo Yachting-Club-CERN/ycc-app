@@ -5,7 +5,6 @@ const decodeImage = async (file: File): Promise<ImageBitmap> => {
   try {
     return await createImageBitmap(file);
   } catch {
-    // Browser can't decode this natively. Try server-side transcoding.
     try {
       const jpeg = await client.helpers.transcodeAttachment(file, file.name);
       return await createImageBitmap(jpeg);
