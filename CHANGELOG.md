@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Statistics page (admin): overall stats, participation reports, troubleshooting report
 - JSON export page (admin)
 - Allow attachments for helper tasks
+- Bulk clone for helpers tasks
+- Mass publish for unpublished helper tasks
 
 ### Changed
 

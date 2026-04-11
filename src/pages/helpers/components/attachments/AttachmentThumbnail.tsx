@@ -7,10 +7,7 @@ import Typography from "@mui/material/Typography";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 
-type AttachmentImage = {
-  url: string | undefined;
-  error: boolean;
-};
+import { AttachmentImage } from "./useAttachmentImages";
 
 type Props = {
   attachment: AttachmentMetadata;
@@ -42,14 +39,15 @@ const AttachmentThumbnail = ({
         }}
         onClick={onClick}
       >
-        {image?.url ? (
+        {image?.url && (
           <Box
             component="img"
             src={image.url}
             alt={description || attachment.name}
             sx={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
-        ) : image?.error ? (
+        )}
+        {image?.error && (
           <Box
             sx={{
               display: "flex",
@@ -61,7 +59,8 @@ const AttachmentThumbnail = ({
           >
             <BrokenImageIcon color="disabled" />
           </Box>
-        ) : (
+        )}
+        {!image?.url && !image?.error && (
           <Box
             sx={{
               display: "flex",

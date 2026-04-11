@@ -4,6 +4,14 @@ import usePromise from "@/hooks/usePromise";
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
+const createEmptyEdits = (): {
+  added: AttachmentMetadata[];
+  removed: Set<number>;
+} => ({
+  added: [],
+  removed: new Set<number>(),
+});
+
 type UseAttachmentsResult = {
   attachments: AttachmentMetadata[];
   loading: boolean;
@@ -22,17 +30,13 @@ const useAttachments = (taskId: number): UseAttachmentsResult => {
 
   const [mutationError, setMutationError] = useState<unknown>();
 
-  const emptyEdits = {
-    added: [] as AttachmentMetadata[],
-    removed: new Set<number>(),
-  };
-  const [localEdits, setLocalEdits] = useState(emptyEdits);
+  const [localEdits, setLocalEdits] = useState(createEmptyEdits);
   const [prevResult, setPrevResult] = useState(fetched.result);
 
   // Reset local edits when fetch result changes (new taskId or refetch)
   if (fetched.result !== prevResult) {
     setPrevResult(fetched.result);
-    setLocalEdits(emptyEdits);
+    setLocalEdits(createEmptyEdits());
   }
 
   const attachments = useMemo(

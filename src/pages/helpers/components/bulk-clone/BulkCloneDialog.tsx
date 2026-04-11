@@ -89,12 +89,16 @@ const BulkCloneDialog = ({
   const canGenerate =
     selectedDays.length > 0 && startDate !== null && endDate !== null;
 
-  const timeLabel =
-    task.startsAt && task.endsAt
-      ? `${formatTime(task.startsAt)} - ${formatTime(task.endsAt)}`
-      : task.deadline
-        ? `Deadline: ${formatTime(task.deadline)}`
-        : "";
+  const getTimeLabel = (): string => {
+    if (task.startsAt && task.endsAt) {
+      return `${formatTime(task.startsAt)} - ${formatTime(task.endsAt)}`;
+    }
+    if (task.deadline) {
+      return `Deadline: ${formatTime(task.deadline)}`;
+    }
+    return "";
+  };
+  const timeLabel = getTimeLabel();
 
   return (
     <Dialog

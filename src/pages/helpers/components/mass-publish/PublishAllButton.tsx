@@ -32,9 +32,12 @@ const PublishAllButton = ({ tasks, onComplete }: Props): React.ReactNode => {
         </DialogContentText>
       ),
       onConfirm: async () => {
-        await start(tasks, true);
-        reset();
-        onComplete();
+        try {
+          await start(tasks, true);
+        } finally {
+          reset();
+          onComplete();
+        }
       },
     });
   };

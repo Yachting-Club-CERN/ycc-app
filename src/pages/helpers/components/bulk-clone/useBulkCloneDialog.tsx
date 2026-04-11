@@ -17,9 +17,9 @@ const useBulkCloneDialog = (): {
     setTask(null);
   }, []);
 
-  const handleComplete = useCallback(async () => {
+  const handleComplete = useCallback(() => {
     setTask(null);
-    await navigate("/helpers");
+    void navigate("/helpers");
   }, [navigate]);
 
   return {

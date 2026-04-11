@@ -16,10 +16,7 @@ import "swiper/css/zoom";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 
-type AttachmentImage = {
-  url: string | undefined;
-  error: boolean;
-};
+import { AttachmentImage } from "./useAttachmentImages";
 
 type Props = {
   attachments: AttachmentMetadata[];
@@ -105,7 +102,7 @@ const AttachmentLightbox = ({
                 justifyContent: "center",
               }}
             >
-              {image?.url ? (
+              {image?.url && (
                 <div className="swiper-zoom-container">
                   <img
                     src={image.url}
@@ -117,7 +114,8 @@ const AttachmentLightbox = ({
                     }}
                   />
                 </div>
-              ) : image?.error ? (
+              )}
+              {image?.error && (
                 <Box
                   sx={{
                     display: "flex",
@@ -127,7 +125,8 @@ const AttachmentLightbox = ({
                 >
                   <BrokenImageIcon sx={{ color: "grey.500", fontSize: 48 }} />
                 </Box>
-              ) : (
+              )}
+              {!image?.url && !image?.error && (
                 <CircularProgress sx={{ color: "white" }} />
               )}
               {description && (

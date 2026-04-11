@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
-type AttachmentImage = {
+export type AttachmentImage = {
   url: string | undefined;
   error: boolean;
 };
@@ -20,22 +20,21 @@ const useAttachmentImages = (
   const [images, setImages] = useState(new Map<number, AttachmentImage>());
   const urlsRef = useRef(new Map<number, string>());
 
-  // Stable dependency: only re-run when the set of attachment IDs changes
-  const attachmentIds = useMemo(
-    () => attachments.map((a) => a.id),
-    [attachments],
-  );
+  const attachmentIds = attachments.map((a) => a.id);
+  // Primitive string key so the effect only re-runs when IDs actually change
+  const attachmentIdsKey = attachmentIds.join(",");
 
   useEffect(() => {
     const abortController = new AbortController();
-    const currentIds = new Set(attachmentIds);
+    const ids = attachmentIdsKey.split(",").filter(Boolean).map(Number);
+    const currentIds = new Set(ids);
 
     const loadImages = async (): Promise<void> => {
       const newUrls = new Map<number, string>();
       const newImages = new Map<number, AttachmentImage>();
 
       await Promise.allSettled(
-        attachmentIds.map(async (id) => {
+        ids.map(async (id) => {
           // Reuse existing URL if already loaded
           const existing = urlsRef.current.get(id);
           if (existing) {
@@ -86,7 +85,7 @@ const useAttachmentImages = (
         }
       }
     };
-  }, [taskId, attachmentIds]);
+  }, [taskId, attachmentIdsKey]);
 
   // Cleanup all URLs on unmount
   useEffect(() => {
