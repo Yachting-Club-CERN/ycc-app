@@ -1,16 +1,12 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import { useCallback, useState } from "react";
 
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { AttachmentMetadata, HelperTask } from "@/model/helpers-dtos";
-import { extractCaption } from "@/pages/helpers/attachment-utils";
 import { canEdit } from "@/pages/helpers/helpers-utils";
 
 import AttachmentLightbox from "./AttachmentLightbox";
+import AttachmentThumbnail from "./AttachmentThumbnail";
 import useAttachmentImages from "./useAttachmentImages";
 
 type Props = {
@@ -41,7 +37,6 @@ const AttachmentGallery = ({
 
   return (
     <>
-      {/* Thumbnail Grid */}
       <Box
         sx={{
           display: "grid",
@@ -49,86 +44,22 @@ const AttachmentGallery = ({
           gap: 1.5,
         }}
       >
-        {attachments.map((attachment, index) => {
-          const url = imageUrls.get(attachment.id);
-          const description = extractCaption(attachment.description);
-
-          return (
-            <Box key={attachment.id}>
-              <Box
-                sx={{
-                  position: "relative",
-                  aspectRatio: "1",
-                  borderRadius: 1,
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  bgcolor: "grey.100",
-                }}
-                onClick={() => {
-                  setLightboxIndex(index);
-                }}
-              >
-                {url ? (
-                  <Box
-                    component="img"
-                    src={url}
-                    alt={description || attachment.name}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  >
-                    <CircularProgress size={24} />
-                  </Box>
-                )}
-                {canDeleteAttachment(attachment) && (
-                  <IconButton
-                    size="small"
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      bgcolor: "rgba(0,0,0,0.5)",
-                      color: "white",
-                      "&:hover": { bgcolor: "rgba(0,0,0,0.7)" },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete(attachment.id, url);
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                )}
-              </Box>
-              <Typography variant="caption" display="block" noWrap>
-                {description}
-              </Typography>
-              <Typography
-                variant="caption"
-                display="block"
-                color="text.secondary"
-                noWrap
-              >
-                {attachment.owner.firstName} {attachment.owner.lastName}
-              </Typography>
-            </Box>
-          );
-        })}
+        {attachments.map((attachment, index) => (
+          <AttachmentThumbnail
+            key={attachment.id}
+            attachment={attachment}
+            imageUrl={imageUrls.get(attachment.id)}
+            canDelete={canDeleteAttachment(attachment)}
+            onClick={() => {
+              setLightboxIndex(index);
+            }}
+            onDelete={() => {
+              onDelete(attachment.id, imageUrls.get(attachment.id));
+            }}
+          />
+        ))}
       </Box>
 
-      {/* Lightbox */}
       {lightboxIndex !== null && (
         <AttachmentLightbox
           attachments={attachments}
