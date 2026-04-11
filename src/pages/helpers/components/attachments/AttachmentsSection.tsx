@@ -108,18 +108,24 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
       delayConfirm: true,
       onConfirm: async () => {
         const ids = attachments.map((a) => a.id);
-        const deleted: number[] = [];
-        try {
-          await Promise.all(
-            ids.map(async (id) => {
-              await client.helpers.deleteAttachment(task.id, id);
-              deleted.push(id);
-            }),
-          );
-          removeAttachments(ids);
-        } catch (err) {
-          removeAttachments(deleted);
-          setError(err);
+        const results = await Promise.allSettled(
+          ids.map(async (id) => {
+            await client.helpers.deleteAttachment(task.id, id);
+            return id;
+          }),
+        );
+        const deletedIds = results
+          .filter(
+            (r): r is PromiseFulfilledResult<number> =>
+              r.status === "fulfilled",
+          )
+          .map((r) => r.value);
+        removeAttachments(deletedIds);
+        const firstFailure = results.find(
+          (r): r is PromiseRejectedResult => r.status === "rejected",
+        );
+        if (firstFailure) {
+          setError(firstFailure.reason);
         }
       },
     });
@@ -194,7 +200,6 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
         <UploadAttachmentsDialog
           open
           taskId={task.id}
-          existingCount={attachments.length}
           files={selectedFiles}
           onComplete={addUploaded}
           onClose={handleUploadDialogClose}

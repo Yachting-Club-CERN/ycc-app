@@ -5,7 +5,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
-import { extractCaption } from "@/pages/helpers/attachment-utils";
 
 type Props = {
   attachment: AttachmentMetadata;
@@ -22,7 +21,7 @@ const AttachmentThumbnail = ({
   onClick,
   onDelete,
 }: Props): React.ReactNode => {
-  const description = extractCaption(attachment.description);
+  const description = attachment.description?.trim() ?? "";
 
   return (
     <Box>

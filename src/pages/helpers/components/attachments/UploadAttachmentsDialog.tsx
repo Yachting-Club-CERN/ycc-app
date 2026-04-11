@@ -1,28 +1,21 @@
 import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { useEffect, useRef, useState } from "react";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
-import {
-  buildDescription,
-  USER_DESCRIPTION_MAX_LENGTH,
-} from "@/pages/helpers/attachment-utils";
 import client from "@/utils/client";
 import getErrorText from "@/utils/error-helper";
 import { processImageForUpload, toJpegFileName } from "@/utils/image-utils";
 
-type FileEntry = {
+import FileEntryRow from "./FileEntryRow";
+
+export type FileEntry = {
   originalFile: File;
-  // Set once eager processing finishes successfully:
   processedBlob: Blob | null;
   processedFileName: string | null;
   previewUrl: string | null;
@@ -34,7 +27,6 @@ type FileEntry = {
 type Props = {
   open: boolean;
   taskId: number;
-  existingCount: number;
   files: File[];
   onComplete: (uploaded: AttachmentMetadata[]) => void;
   onClose: () => void;
@@ -43,7 +35,6 @@ type Props = {
 const UploadAttachmentsDialog = ({
   open,
   taskId,
-  existingCount,
   files,
   onComplete,
   onClose,
@@ -60,10 +51,11 @@ const UploadAttachmentsDialog = ({
   );
   const [uploading, setUploading] = useState(false);
   const uploadedRef = useRef<AttachmentMetadata[]>([]);
+  const previewUrlsRef = useRef<string[]>([]);
 
   // Eager processing: decode + resize + encode each file when the dialog opens.
-  // This means previews are real JPEG thumbnails (even for HEIC, via BE transcode),
-  // and the Upload click becomes a pure HTTP call.
+  // Previews are real JPEG thumbnails (even for HEIC via BE transcode),
+  // so the Upload click becomes a pure HTTP call.
   useEffect(() => {
     let cancelled = false;
     const createdUrls: string[] = [];
@@ -78,6 +70,7 @@ const UploadAttachmentsDialog = ({
             }
             const previewUrl = URL.createObjectURL(blob);
             createdUrls.push(previewUrl);
+            previewUrlsRef.current.push(previewUrl);
             setEntries((prev) =>
               prev.map((entry, i) =>
                 i === index
@@ -140,21 +133,17 @@ const UploadAttachmentsDialog = ({
     setUploading(true);
     uploadedRef.current = [];
 
-    const promises = entries.map(async (entry, index) => {
-      // Skip entries that failed during preparation
+    for (const [index, entry] of entries.entries()) {
       if (
         entry.status !== "pending" ||
         !entry.processedBlob ||
         !entry.processedFileName
       ) {
-        return;
+        continue;
       }
       updateStatus(index, "uploading");
       try {
-        const description = buildDescription(
-          existingCount + index,
-          entry.description,
-        );
+        const description = entry.description.trim() || null;
 
         const metadata = await client.helpers.uploadAttachment(
           taskId,
@@ -169,32 +158,32 @@ const UploadAttachmentsDialog = ({
         const message = getErrorText(ex);
         updateStatus(index, "error", message);
       }
-    });
-
-    await Promise.allSettled(promises);
+    }
     setUploading(false);
 
-    // Notify parent of any successful uploads
     if (uploadedRef.current.length > 0) {
       onComplete(uploadedRef.current);
     }
 
-    // Auto-close if all succeeded, otherwise show only errors
     if (uploadedRef.current.length === entries.length) {
       handleClose();
     } else {
-      // Remove successful entries, keep only errors
       setEntries((prev) => prev.filter((e) => e.status === "error"));
     }
   };
 
-  const handleClose = (): void => {
-    // Revoke all preview URLs on close
-    for (const entry of entries) {
-      if (entry.previewUrl) {
-        URL.revokeObjectURL(entry.previewUrl);
-      }
+  const revokeAllPreviewUrls = (): void => {
+    for (const url of previewUrlsRef.current) {
+      URL.revokeObjectURL(url);
     }
+    previewUrlsRef.current = [];
+  };
+
+  // Revoke all preview URLs on unmount (route change, error boundary, etc.)
+  useEffect(() => revokeAllPreviewUrls, []);
+
+  const handleClose = (): void => {
+    revokeAllPreviewUrls();
     onClose();
   };
 
@@ -203,6 +192,12 @@ const UploadAttachmentsDialog = ({
   const showForm = !hasErrors || entries.some((e) => e.status === "pending");
   const canUpload =
     !preparing && !uploading && entries.some((e) => e.status === "pending");
+
+  const uploadLabel = preparing
+    ? "Preparing..."
+    : entries.length > 1
+      ? `Upload (${entries.length})`
+      : "Upload";
 
   return (
     <Dialog
@@ -216,72 +211,27 @@ const UploadAttachmentsDialog = ({
       </DialogTitle>
       <DialogContent>
         <Stack spacing={2} mt={1}>
-          {entries.map((entry, index) =>
-            entry.status === "error" && !showForm ? (
-              <Alert key={index} severity="error">
-                <strong>{entry.originalFile.name}</strong>: {entry.error}
-              </Alert>
-            ) : (
-              <Stack key={index} spacing={1}>
-                {entry.status === "preparing" ? (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      aspectRatio: "4 / 3",
-                      borderRadius: 1,
-                      bgcolor: "grey.100",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 1,
-                    }}
-                  >
-                    <CircularProgress size={24} />
-                    <Typography variant="caption" color="text.secondary">
-                      Preparing {entry.originalFile.name}...
-                    </Typography>
-                  </Box>
-                ) : entry.status === "error" ? (
-                  <Alert severity="error">
-                    <strong>{entry.originalFile.name}</strong>: {entry.error}
-                  </Alert>
-                ) : entry.previewUrl ? (
-                  <Box
-                    component="img"
-                    src={entry.previewUrl}
-                    alt={entry.originalFile.name}
-                    sx={{
-                      width: "100%",
-                      objectFit: "cover",
-                      borderRadius: 1,
-                      flexShrink: 0,
-                    }}
-                  />
-                ) : null}
-                {entry.status !== "preparing" && entry.status !== "error" && (
-                  <TextField
-                    size="small"
-                    placeholder="Description (optional)"
-                    fullWidth
-                    multiline
-                    minRows={3}
-                    maxRows={5}
-                    value={entry.description}
-                    onChange={(e) => {
-                      updateDescription(index, e.target.value);
-                    }}
-                    disabled={entry.status !== "pending"}
-                    slotProps={{
-                      htmlInput: { maxLength: USER_DESCRIPTION_MAX_LENGTH },
-                    }}
-                    helperText={`${entry.description.length}/${USER_DESCRIPTION_MAX_LENGTH}`}
-                  />
-                )}
-                {entry.status === "uploading" && <CircularProgress size={16} />}
-              </Stack>
-            ),
-          )}
+          {entries.map((entry, index) => {
+            const key = `${entry.originalFile.name}-${entry.originalFile.lastModified}`;
+
+            if (entry.status === "error" && !showForm) {
+              return (
+                <Alert key={key} severity="error">
+                  <strong>{entry.originalFile.name}</strong>: {entry.error}
+                </Alert>
+              );
+            }
+
+            return (
+              <FileEntryRow
+                key={key}
+                entry={entry}
+                onDescriptionChange={(desc) => {
+                  updateDescription(index, desc);
+                }}
+              />
+            );
+          })}
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -293,9 +243,7 @@ const UploadAttachmentsDialog = ({
               onClick={handleUpload}
               disabled={!canUpload}
             >
-              {preparing
-                ? "Preparing..."
-                : `Upload${entries.length > 1 ? ` (${entries.length})` : ""}`}
+              {uploadLabel}
             </Button>
           </>
         ) : (

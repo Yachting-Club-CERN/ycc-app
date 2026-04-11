@@ -170,7 +170,7 @@ test("Helpers Attachments: Delete photo", async ({ page }) => {
     await expect(dialog.getByText("Delete photo?")).toBeVisible();
 
     // Confirm deletion
-    await dialog.getByRole("button", { name: "Delete" }).click();
+    await dialog.getByRole("button", { name: /Delete Photo/ }).click();
     await expect(dialog).toBeHidden();
   });
 

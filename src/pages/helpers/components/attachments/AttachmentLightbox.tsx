@@ -13,7 +13,6 @@ import "swiper/css/navigation";
 import "swiper/css/zoom";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
-import { extractCaption } from "@/pages/helpers/attachment-utils";
 
 type Props = {
   attachments: AttachmentMetadata[];
@@ -85,7 +84,7 @@ const AttachmentLightbox = ({
       >
         {attachments.map((attachment) => {
           const url = imageUrls.get(attachment.id);
-          const description = extractCaption(attachment.description);
+          const description = attachment.description?.trim() ?? "";
           return (
             <SwiperSlide
               key={attachment.id}
@@ -100,7 +99,7 @@ const AttachmentLightbox = ({
                 <div className="swiper-zoom-container">
                   <img
                     src={url}
-                    alt={description}
+                    alt={description || attachment.name}
                     style={{
                       maxWidth: "100%",
                       maxHeight: description ? "calc(100vh - 80px)" : "100%",

@@ -30,6 +30,7 @@ import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInf
 import ShareTaskViaEmailIconButton from "@/pages/helpers/components/ShareTaskViaEmailIconButton";
 import ShareTaskViaWhatsAppIconButton from "@/pages/helpers/components/ShareTaskViaWhatsAppIconButton";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
+import { ATTACHMENTS_CATEGORY_MATCH } from "@/utils/constants";
 import { formatDateTime } from "@/utils/date-utils";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
@@ -64,7 +65,7 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
 
   const showAttachmentsSection = task.category.title
     .toLowerCase()
-    .includes("maintenance");
+    .includes(ATTACHMENTS_CATEGORY_MATCH);
 
   return (
     <>

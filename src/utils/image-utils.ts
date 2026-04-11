@@ -65,7 +65,9 @@ export const processImageForUpload = async (file: File): Promise<Blob> => {
     });
   }
 
-  // TODO but is it displayed?! research why and how this works
+  // Safari fallback: a detached <canvas> element is used for in-memory
+  // drawing and JPEG conversion via toBlob(). It does not need to be
+  // attached to the DOM.
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
@@ -99,9 +101,3 @@ export const toJpegFileName = (originalName: string): string => {
     dotIndex > 0 ? originalName.substring(0, dotIndex) : originalName;
   return `${stem}.jpg`;
 };
-
-/**
- * Creates an object URL for a blob. The caller must call `URL.revokeObjectURL()` when the URL is no longer needed.
- */
-export const createObjectUrl = (blob: Blob): string =>
-  URL.createObjectURL(blob);

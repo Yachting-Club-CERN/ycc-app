@@ -17,7 +17,7 @@ export const AttachmentMetadataSchema = z
     mimeType: z.string(),
     sizeBytes: z.number(),
     owner: MemberPublicInfoSchema,
-    created: z.string(),
+    created: z.unknown().transform(zodTransformDate),
   })
   .readonly();
 export type AttachmentMetadata = z.infer<typeof AttachmentMetadataSchema>;

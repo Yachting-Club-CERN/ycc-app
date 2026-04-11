@@ -48,11 +48,7 @@ const useAttachments = (taskId: number): UseAttachmentsResult => {
   }, [taskId]);
 
   const addUploaded = useCallback((uploaded: AttachmentMetadata[]): void => {
-    setAttachments((prev) =>
-      [...prev, ...uploaded].toSorted((a, b) =>
-        (a.description ?? "").localeCompare(b.description ?? ""),
-      ),
-    );
+    setAttachments((prev) => [...prev, ...uploaded]);
   }, []);
 
   const removeAttachment = useCallback((attachmentId: number): void => {

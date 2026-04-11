@@ -37,6 +37,7 @@ const useAttachmentImages = (
               attachment.id,
               abortController.signal,
             );
+            if (abortController.signal.aborted) return;
             const url = URL.createObjectURL(blob);
             newUrls.set(attachment.id, url);
           } catch (error) {

@@ -10,9 +10,13 @@ export const YCC_URLS = {
   WEBSITE: "https://yachting.web.cern.ch",
 } as const;
 
+// Only allow attachments for maintenance tasks
+export const ATTACHMENTS_CATEGORY_MATCH = "maintenance";
+
 // Aligned with BE entities/DB tables
 export const HELPER_TASK_TITLE_MAX_LENGTH = 40;
 export const HELPER_TASK_SHORT_DESCRIPTION_MAX_LENGTH = 200;
+export const ATTACHMENT_DESCRIPTION_MAX_LENGTH = 150;
 
 // Image processing
 export const UPLOAD_IMAGE_ACCEPT =
