@@ -30,6 +30,7 @@ export const processImageForUpload = async (file: File): Promise<Blob> => {
     const canvas = new OffscreenCanvas(w, h);
     const ctx = canvas.getContext("2d");
     if (!ctx) {
+      img.close();
       throw new Error("Failed to create canvas context");
     }
     ctx.drawImage(img, 0, 0, w, h);
@@ -47,6 +48,7 @@ export const processImageForUpload = async (file: File): Promise<Blob> => {
   canvas.height = h;
   const ctx = canvas.getContext("2d");
   if (!ctx) {
+    img.close();
     throw new Error("Failed to create canvas context");
   }
   ctx.drawImage(img, 0, 0, w, h);

@@ -138,14 +138,14 @@ const UploadAttachmentsDialog = ({
     }
   };
 
-  const revokeAllPreviewUrls = (): void => {
+  const revokeAllPreviewUrls = useCallback((): void => {
     for (const url of previewUrlsRef.current) {
       URL.revokeObjectURL(url);
     }
     previewUrlsRef.current = [];
-  };
+  }, []);
 
-  useEffect(() => revokeAllPreviewUrls, []);
+  useEffect(() => revokeAllPreviewUrls, [revokeAllPreviewUrls]);
 
   const handleClose = (): void => {
     revokeAllPreviewUrls();
