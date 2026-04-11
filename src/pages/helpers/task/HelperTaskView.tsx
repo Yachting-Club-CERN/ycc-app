@@ -24,11 +24,13 @@ import SignUpAsCaptainActionButton from "@/pages/helpers/components/action-butto
 import SignUpAsHelperActionButton from "@/pages/helpers/components/action-buttons/SignUpAsHelperActionButton";
 import { TaskActionProps } from "@/pages/helpers/components/action-buttons/TaskActionButton";
 import ValidateActionButton from "@/pages/helpers/components/action-buttons/ValidateActionButton";
+import AttachmentsSection from "@/pages/helpers/components/attachments/AttachmentsSection";
 import HelperTaskDetailActions from "@/pages/helpers/components/HelperTaskDetailActions";
 import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInfo";
 import ShareTaskViaEmailIconButton from "@/pages/helpers/components/ShareTaskViaEmailIconButton";
 import ShareTaskViaWhatsAppIconButton from "@/pages/helpers/components/ShareTaskViaWhatsAppIconButton";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
+import { ATTACHMENTS_CATEGORY_MATCH } from "@/utils/constants";
 import { formatDateTime } from "@/utils/date-utils";
 import { sanitiseHtmlForReact } from "@/utils/html-utils";
 
@@ -60,6 +62,10 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
     onTaskUpdate: refreshTask,
     onError: setError,
   };
+
+  const showAttachmentsSection = task.category.title
+    .toLowerCase()
+    .includes(ATTACHMENTS_CATEGORY_MATCH);
 
   return (
     <>
@@ -93,6 +99,13 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
           <SpacedTypography component="div">
             {sanitiseHtmlForReact(task.longDescription)}
           </SpacedTypography>
+          <Divider sx={{ mt: 2 }} />
+        </>
+      )}
+
+      {showAttachmentsSection && (
+        <>
+          <AttachmentsSection key={task.id} task={task} />
           <Divider sx={{ mt: 2 }} />
         </>
       )}

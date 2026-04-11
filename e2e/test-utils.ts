@@ -160,6 +160,52 @@ export const app = {
   },
 
   /**
+   * Creates a new helper task. The page must already be on `/helpers/tasks/new`.
+   * Returns the task ID after creation.
+   */
+  createHelperTask: async (
+    page: Page,
+    options?: { title?: string; shortDescription?: string },
+  ): Promise<number> =>
+    await test.step("Create task", async () => {
+      expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
+
+      const now = dayjs();
+      const title = options?.title ?? `Test Task @ ${now.format("HH:mm:ss")}`;
+      const shortDescription =
+        options?.shortDescription ?? `Test task @ ${now.format("HH:mm:ss")}`;
+      const deadline = now.add(3, "day").format("DD/MM/YYYY HH:mm");
+
+      await ui.selectOption(
+        page.getByLabel("Category"),
+        "Maintenance / General",
+      );
+      await page.getByLabel("Title").fill(title);
+      await page.getByLabel("Short Description").fill(shortDescription);
+
+      await ui.selectOption(
+        page.getByLabel("Contact"),
+        TEST_USERS.CONTACT.username,
+      );
+
+      await page.getByRole("button", { name: "Deadline" }).click();
+      await ui.selectDateTime(
+        page,
+        page.locator(".ycc-helper-task-deadline-input * input"),
+        deadline,
+      );
+
+      await page.getByLabel("Max. Helpers").fill("2");
+      await page.getByRole("button", { name: "Submit" }).click();
+
+      await page.waitForURL(/\/helpers\/tasks\/\d+$/);
+      await expect(page.locator("h2")).toContainText(title);
+
+      const segments = page.url().split("/");
+      return Number.parseInt(segments[segments.length - 1]);
+    }),
+
+  /**
    * Signs out of the app.
    * @param page - Playwright Page object.
    */

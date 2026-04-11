@@ -16,6 +16,10 @@ import {
   MemberPublicInfosSchema,
 } from "@/model/dtos";
 import {
+  AttachmentMetadata,
+  AttachmentMetadataArray,
+  AttachmentMetadataArraySchema,
+  AttachmentMetadataSchema,
   HelpersAppPermission,
   HelpersAppPermissionGrantRequest,
   HelpersAppPermissions,
@@ -145,6 +149,125 @@ class HttpClient {
         error,
         ClientErrorCode.Failed,
       );
+    }
+  };
+
+  public readonly requestUpload = async <TResponse>({
+    path,
+    data,
+    responseSchema,
+    signal,
+  }: {
+    path: string;
+    data: FormData;
+    responseSchema: z.ZodType;
+    signal?: AbortSignal | undefined;
+  }): Promise<TResponse> => {
+    console.debug("[client]", "POST", path, "(upload) ...");
+
+    let response: AxiosResponse;
+    try {
+      response = await this._http.request({
+        method: "POST",
+        url: path,
+        data,
+        ...(signal ? { signal } : {}),
+      });
+
+      console.debug(
+        "[client]",
+        "POST",
+        path,
+        "(upload) -",
+        response.status,
+        response.statusText,
+      );
+    } catch (error) {
+      throw this.handleError("POST", path, undefined, error);
+    }
+
+    try {
+      return responseSchema.parse(response.data) as TResponse;
+    } catch (error) {
+      console.error(
+        "[client] Response parsing failed",
+        "POST",
+        path,
+        response.data,
+        error,
+      );
+      throw new ClientError(
+        "Response parsing failed",
+        error,
+        ClientErrorCode.Failed,
+      );
+    }
+  };
+
+  public readonly requestBlob = async ({
+    path,
+    signal,
+  }: {
+    path: string;
+    signal?: AbortSignal | undefined;
+  }): Promise<Blob> => {
+    console.debug("[client]", "GET", path, "(blob) ...");
+
+    try {
+      const response = await this._http.request<Blob>({
+        method: "GET",
+        url: path,
+        responseType: "blob",
+        ...(signal ? { signal } : {}),
+      });
+
+      console.debug(
+        "[client]",
+        "GET",
+        path,
+        "(blob) -",
+        response.status,
+        response.statusText,
+      );
+
+      return response.data;
+    } catch (error) {
+      throw this.handleError("GET", path, undefined, error);
+    }
+  };
+
+  public readonly requestUploadBlob = async ({
+    path,
+    data,
+    signal,
+  }: {
+    path: string;
+    data: FormData;
+    signal?: AbortSignal | undefined;
+  }): Promise<Blob> => {
+    console.debug("[client]", "POST", path, "(upload blob) ...");
+
+    try {
+      const response = await this._http.request<Blob>({
+        method: "POST",
+        url: path,
+        data,
+        responseType: "blob",
+        ...(signal ? { signal } : {}),
+      });
+
+      console.debug(
+        "[client]",
+        "POST",
+        path,
+        "(upload blob) -",
+        response.status,
+        response.statusText,
+      );
+
+      return response.data;
+    } catch (error) {
+      throw this.handleError("POST", path, undefined, error);
     }
   };
 
@@ -426,6 +549,76 @@ class HelpersClient extends BaseClient {
       responseSchema: HelperTaskSchema,
       signal,
     });
+
+  public readonly getAttachments = async (
+    taskId: number,
+    signal?: AbortSignal,
+  ): Promise<AttachmentMetadataArray> =>
+    await this._http.request<AttachmentMetadataArray>({
+      method: "GET",
+      path: `/api/v1/helpers/tasks/${taskId}/attachments`,
+      responseSchema: AttachmentMetadataArraySchema,
+      signal,
+    });
+
+  public readonly downloadAttachment = async (
+    taskId: number,
+    attachmentId: number,
+    signal?: AbortSignal,
+  ): Promise<Blob> =>
+    await this._http.requestBlob({
+      path: `/api/v1/helpers/tasks/${taskId}/attachments/${attachmentId}`,
+      signal,
+    });
+
+  public readonly uploadAttachment = async (
+    taskId: number,
+    file: Blob,
+    fileName: string,
+    description: string | null,
+    signal?: AbortSignal,
+  ): Promise<AttachmentMetadata> => {
+    const formData = new FormData();
+    formData.append("file", file, fileName);
+    if (description !== null) {
+      formData.append("description", description);
+    }
+
+    return await this._http.requestUpload<AttachmentMetadata>({
+      path: `/api/v1/helpers/tasks/${taskId}/attachments`,
+      data: formData,
+      responseSchema: AttachmentMetadataSchema,
+      signal,
+    });
+  };
+
+  public readonly deleteAttachment = async (
+    taskId: number,
+    attachmentId: number,
+    signal?: AbortSignal,
+  ): Promise<void> => {
+    await this._http.request<undefined>({
+      method: "DELETE",
+      path: `/api/v1/helpers/tasks/${taskId}/attachments/${attachmentId}`,
+      responseSchema: null,
+      signal,
+    });
+  };
+
+  public readonly transcodeAttachment = async (
+    file: Blob,
+    fileName: string,
+    signal?: AbortSignal,
+  ): Promise<Blob> => {
+    const formData = new FormData();
+    formData.append("file", file, fileName);
+
+    return await this._http.requestUploadBlob({
+      path: "/api/v1/helpers/attachments/transcode",
+      data: formData,
+      signal,
+    });
+  };
 }
 
 class LicenceInfosClient extends BaseClient {

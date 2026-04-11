@@ -1,5 +1,10 @@
 /// <reference types="vite/client" />
 
+// Swiper CSS subpath exports lack type declarations
+declare module "swiper/css" {}
+declare module "swiper/css/navigation" {}
+declare module "swiper/css/zoom" {}
+
 // eslint-disable-next-line no-var
 declare var oauth2Token: string | undefined;
 
