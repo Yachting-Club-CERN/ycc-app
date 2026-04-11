@@ -245,7 +245,7 @@ class HttpClient {
     data: FormData;
     signal?: AbortSignal | undefined;
   }): Promise<Blob> => {
-    console.debug("[client]", "POST", path, "(upload->blob) ...");
+    console.debug("[client]", "POST", path, "(upload blob) ...");
 
     try {
       const response = await this._http.request<Blob>({
@@ -260,7 +260,7 @@ class HttpClient {
         "[client]",
         "POST",
         path,
-        "(upload -> blob) -",
+        "(upload blob) -",
         response.status,
         response.statusText,
       );
