@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
+import usePromise from "@/hooks/usePromise";
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 
@@ -14,56 +15,50 @@ type UseAttachmentsResult = {
 };
 
 const useAttachments = (taskId: number): UseAttachmentsResult => {
-  const [attachments, setAttachments] = useState<AttachmentMetadata[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>();
+  const fetched = usePromise(
+    (signal) => client.helpers.getAttachments(taskId, signal),
+    [taskId],
+  );
 
-  useEffect(() => {
-    const abortController = new AbortController();
+  const [mutationError, setMutationError] = useState<unknown>();
 
-    client.helpers
-      .getAttachments(taskId, abortController.signal)
-      .then((result) => {
-        if (!abortController.signal.aborted) {
-          setAttachments(result);
-          setError(undefined);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!abortController.signal.aborted) {
-          setAttachments([]);
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (!abortController.signal.aborted) {
-          setLoading(false);
-        }
-      });
+  const [localEdits, setLocalEdits] = useState<{
+    added: AttachmentMetadata[];
+    removed: Set<number>;
+  }>({ added: [], removed: new Set() });
 
-    return (): void => {
-      abortController.abort();
-    };
-  }, [taskId]);
+  const attachments =
+    fetched.result
+      ?.filter((a) => !localEdits.removed.has(a.id))
+      .concat(localEdits.added) ?? [];
 
   const addUploaded = useCallback((uploaded: AttachmentMetadata[]): void => {
-    setAttachments((prev) => [...prev, ...uploaded]);
+    setLocalEdits((prev) => ({
+      ...prev,
+      added: [...prev.added, ...uploaded],
+    }));
   }, []);
 
   const removeAttachment = useCallback((attachmentId: number): void => {
-    setAttachments((prev) => prev.filter((a) => a.id !== attachmentId));
+    setLocalEdits((prev) => ({
+      added: prev.added.filter((a) => a.id !== attachmentId),
+      removed: new Set([...prev.removed, attachmentId]),
+    }));
   }, []);
 
   const removeAttachments = useCallback((attachmentIds: number[]): void => {
-    const idSet = new Set(attachmentIds);
-    setAttachments((prev) => prev.filter((a) => !idSet.has(a.id)));
+    const idsToRemove = new Set(attachmentIds);
+    setLocalEdits((prev) => ({
+      added: prev.added.filter((a) => !idsToRemove.has(a.id)),
+      removed: new Set([...prev.removed, ...attachmentIds]),
+    }));
   }, []);
 
   return {
     attachments,
-    loading,
-    error,
-    setError,
+    loading: fetched.pending,
+    error: mutationError ?? fetched.error,
+    setError: setMutationError,
     addUploaded,
     removeAttachment,
     removeAttachments,
