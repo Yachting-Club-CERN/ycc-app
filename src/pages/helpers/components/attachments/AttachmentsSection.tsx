@@ -5,17 +5,19 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogContentText from "@mui/material/DialogContentText";
 import Typography from "@mui/material/Typography";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
+import DropZone from "@/components/input/DropZone";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import useCurrentUser from "@/context/auth/useCurrentUser";
-import { AttachmentMetadata, HelperTask } from "@/model/helpers-dtos";
+import { HelperTask } from "@/model/helpers-dtos";
 import client from "@/utils/client";
 import { UPLOAD_IMAGE_ACCEPT } from "@/utils/constants";
 
 import AttachmentGallery from "./AttachmentGallery";
 import UploadAttachmentsDialog from "./UploadAttachmentsDialog";
+import useAttachments from "./useAttachments";
 
 type Props = {
   task: HelperTask;
@@ -24,52 +26,22 @@ type Props = {
 const AttachmentsSection = ({ task }: Props): React.ReactNode => {
   const currentUser = useCurrentUser();
   const confirmationDialog = useConfirmationDialog();
-  const [attachments, setAttachments] = useState<AttachmentMetadata[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>();
+  const {
+    attachments,
+    loading,
+    error,
+    setError,
+    addUploaded,
+    removeAttachment,
+    removeAttachments,
+  } = useAttachments(task.id);
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
-  const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load attachments on mount
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    client.helpers
-      .getAttachments(task.id, abortController.signal)
-      .then((result) => {
-        if (!abortController.signal.aborted) {
-          setAttachments(result);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!abortController.signal.aborted) {
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (!abortController.signal.aborted) {
-          setLoading(false);
-        }
-      });
-
-    return (): void => {
-      abortController.abort();
-    };
-  }, [task.id]);
-
-  const handleFilesSelected = (files: FileList | null): void => {
-    if (files && files.length > 0) {
-      setSelectedFiles(Array.from(files));
+  const handleFilesSelected = (files: File[]): void => {
+    if (files.length > 0) {
+      setSelectedFiles(files);
     }
-  };
-
-  const handleUploadComplete = (uploaded: AttachmentMetadata[]): void => {
-    setAttachments((prev) =>
-      [...prev, ...uploaded].toSorted((a, b) =>
-        (a.description ?? "").localeCompare(b.description ?? ""),
-      ),
-    );
   };
 
   const handleUploadDialogClose = (): void => {
@@ -108,14 +80,14 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
         onConfirm: async () => {
           try {
             await client.helpers.deleteAttachment(task.id, attachmentId);
-            setAttachments((prev) => prev.filter((a) => a.id !== attachmentId));
+            removeAttachment(attachmentId);
           } catch (err) {
             setError(err);
           }
         },
       });
     },
-    [task.id, attachments, confirmationDialog],
+    [task.id, attachments, confirmationDialog, removeAttachment, setError],
   );
 
   const handleDeleteAll = useCallback((): void => {
@@ -136,36 +108,22 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
       delayConfirm: true,
       onConfirm: async () => {
         const ids = attachments.map((a) => a.id);
-        const deleted = new Set<number>();
+        const deleted: number[] = [];
         try {
           await Promise.all(
             ids.map(async (id) => {
               await client.helpers.deleteAttachment(task.id, id);
-              deleted.add(id);
+              deleted.push(id);
             }),
           );
-          setAttachments([]);
+          removeAttachments(ids);
         } catch (err) {
-          setAttachments((prev) => prev.filter((a) => !deleted.has(a.id)));
+          removeAttachments(deleted);
           setError(err);
         }
       },
     });
-  }, [task.id, attachments, confirmationDialog]);
-
-  // Drag-and-drop handlers
-  const handleDragOver = (e: React.DragEvent): void => {
-    e.preventDefault();
-    setDragging(true);
-  };
-  const handleDragLeave = (): void => {
-    setDragging(false);
-  };
-  const handleDrop = (e: React.DragEvent): void => {
-    e.preventDefault();
-    setDragging(false);
-    handleFilesSelected(e.dataTransfer.files);
-  };
+  }, [task.id, attachments, confirmationDialog, removeAttachments, setError]);
 
   return (
     <>
@@ -199,21 +157,7 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
       />
 
       {/* Upload area */}
-      <Box
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        sx={{
-          mt: 2,
-          p: 2,
-          border: "2px dashed",
-          borderColor: dragging ? "primary.main" : "grey.300",
-          borderRadius: 1,
-          textAlign: "center",
-          bgcolor: dragging ? "action.hover" : "transparent",
-          transition: "all 0.2s",
-        }}
-      >
+      <DropZone accept={UPLOAD_IMAGE_ACCEPT} onFiles={handleFilesSelected}>
         <input
           ref={fileInputRef}
           type="file"
@@ -221,7 +165,9 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
           multiple
           hidden
           onChange={(e) => {
-            handleFilesSelected(e.target.files);
+            if (e.target.files) {
+              handleFilesSelected(Array.from(e.target.files));
+            }
           }}
         />
         <Button
@@ -239,7 +185,7 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
         >
           or drag and drop images here
         </Typography>
-      </Box>
+      </DropZone>
 
       {error && <ErrorAlert error={error} />}
 
@@ -250,7 +196,7 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
           taskId={task.id}
           existingCount={attachments.length}
           files={selectedFiles}
-          onComplete={handleUploadComplete}
+          onComplete={addUploaded}
           onClose={handleUploadDialogClose}
         />
       )}
