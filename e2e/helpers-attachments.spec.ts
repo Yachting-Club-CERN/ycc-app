@@ -42,8 +42,8 @@ const createTask = async (page: Page): Promise<number> =>
     await page.waitForURL(/\/helpers\/tasks\/\d+$/);
     await expect(page.locator("h2")).toContainText(title);
 
-    const id = Number.parseInt(page.url().split("/").pop()!);
-    return id;
+    const segments = page.url().split("/");
+    return Number.parseInt(segments[segments.length - 1]);
   });
 
 /**

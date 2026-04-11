@@ -60,45 +60,26 @@ const UploadAttachmentsDialog = ({
     let cancelled = false;
     const createdUrls: string[] = [];
 
-    void (async (): Promise<void> => {
-      await Promise.all(
-        files.map(async (file, index) => {
-          try {
-            const blob = await processImageForUpload(file);
-            if (cancelled) {
-              return;
-            }
-            const previewUrl = URL.createObjectURL(blob);
-            createdUrls.push(previewUrl);
-            previewUrlsRef.current.push(previewUrl);
-            setEntries((prev) =>
-              prev.map((entry, i) =>
-                i === index
-                  ? {
-                      ...entry,
-                      processedBlob: blob,
-                      processedFileName: toJpegFileName(file.name),
-                      previewUrl,
-                      status: "pending",
-                    }
-                  : entry,
-              ),
-            );
-          } catch (ex) {
-            if (cancelled) {
-              return;
-            }
-            setEntries((prev) =>
-              prev.map((entry, i) =>
-                i === index
-                  ? { ...entry, status: "error", error: getErrorText(ex) }
-                  : entry,
-              ),
-            );
-          }
-        }),
-      );
-    })();
+    const processFile = async (file: File, index: number): Promise<void> => {
+      try {
+        const blob = await processImageForUpload(file);
+        if (cancelled) return;
+        const previewUrl = URL.createObjectURL(blob);
+        createdUrls.push(previewUrl);
+        previewUrlsRef.current.push(previewUrl);
+        updateEntry(index, {
+          processedBlob: blob,
+          processedFileName: toJpegFileName(file.name),
+          previewUrl,
+          status: "pending",
+        });
+      } catch (ex) {
+        if (cancelled) return;
+        updateEntry(index, { status: "error", error: getErrorText(ex) });
+      }
+    };
+
+    void Promise.all(files.map(processFile));
 
     return (): void => {
       cancelled = true;
@@ -111,21 +92,9 @@ const UploadAttachmentsDialog = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const updateDescription = (index: number, description: string): void => {
+  const updateEntry = (index: number, patch: Partial<FileEntry>): void => {
     setEntries((prev) =>
-      prev.map((entry, i) => (i === index ? { ...entry, description } : entry)),
-    );
-  };
-
-  const updateStatus = (
-    index: number,
-    status: FileEntry["status"],
-    error?: string,
-  ): void => {
-    setEntries((prev) =>
-      prev.map((entry, i) =>
-        i === index ? { ...entry, status, error } : entry,
-      ),
+      prev.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)),
     );
   };
 
@@ -141,7 +110,7 @@ const UploadAttachmentsDialog = ({
       ) {
         continue;
       }
-      updateStatus(index, "uploading");
+      updateEntry(index, { status: "uploading" });
       try {
         const description = entry.description.trim() || null;
 
@@ -153,10 +122,10 @@ const UploadAttachmentsDialog = ({
         );
 
         uploadedRef.current.push(metadata);
-        updateStatus(index, "done");
+        updateEntry(index, { status: "done" });
       } catch (ex) {
         const message = getErrorText(ex);
-        updateStatus(index, "error", message);
+        updateEntry(index, { status: "error", error: message });
       }
     }
     setUploading(false);
@@ -193,11 +162,12 @@ const UploadAttachmentsDialog = ({
   const canUpload =
     !preparing && !uploading && entries.some((e) => e.status === "pending");
 
-  const uploadLabel = preparing
-    ? "Preparing..."
-    : entries.length > 1
-      ? `Upload (${entries.length})`
-      : "Upload";
+  let uploadLabel = "Upload";
+  if (preparing) {
+    uploadLabel = "Preparing...";
+  } else if (entries.length > 1) {
+    uploadLabel = `Upload (${entries.length})`;
+  }
 
   return (
     <Dialog
@@ -227,7 +197,7 @@ const UploadAttachmentsDialog = ({
                 key={key}
                 entry={entry}
                 onDescriptionChange={(desc) => {
-                  updateDescription(index, desc);
+                  updateEntry(index, { description: desc });
                 }}
               />
             );
@@ -235,7 +205,7 @@ const UploadAttachmentsDialog = ({
         </Stack>
       </DialogContent>
       <DialogActions>
-        {uploading ? null : showForm ? (
+        {!uploading && showForm && (
           <>
             <Button onClick={handleClose}>Cancel</Button>
             <Button
@@ -246,7 +216,8 @@ const UploadAttachmentsDialog = ({
               {uploadLabel}
             </Button>
           </>
-        ) : (
+        )}
+        {!uploading && !showForm && (
           <Button onClick={handleClose}>Close</Button>
         )}
       </DialogActions>

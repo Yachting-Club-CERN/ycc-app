@@ -99,7 +99,7 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
       content: (
         <DialogContentText mb={2}>
           This will permanently delete all <strong>{total}</strong> photo
-          {total !== 1 ? "s" : ""} from this task.
+          {total === 1 ? "" : "s"} from this task.
         </DialogContentText>
       ),
       confirmButtonColor: "error",
