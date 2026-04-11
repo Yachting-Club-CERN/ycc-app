@@ -9,6 +9,24 @@ import {
   zodTransformDate,
 } from "./dtos";
 
+export const AttachmentMetadataSchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    description: z.string().nullable(),
+    mimeType: z.string(),
+    sizeBytes: z.number(),
+    owner: MemberPublicInfoSchema,
+    created: z.unknown().transform(zodTransformDate),
+  })
+  .readonly();
+export type AttachmentMetadata = z.infer<typeof AttachmentMetadataSchema>;
+
+export const AttachmentMetadataArraySchema = z.array(AttachmentMetadataSchema);
+export type AttachmentMetadataArray = z.infer<
+  typeof AttachmentMetadataArraySchema
+>;
+
 export enum HelperTaskType {
   Shift = "Shift",
   Deadline = "Deadline",

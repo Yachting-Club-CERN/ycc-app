@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Editors can show/hide validated tasks on the my tasks page (deployed in 2025)
 - Statistics page (admin): overall stats, participation reports, troubleshooting report
 - JSON export page (admin)
+- Allow attachments for helper tasks
 
 ### Changed
 

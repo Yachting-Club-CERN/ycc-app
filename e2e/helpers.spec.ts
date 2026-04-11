@@ -1,48 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
-import dayjs from "dayjs";
 
 import { TEST_USERS } from "./test-constants";
-import { app, expectSameElements, ui } from "./test-utils";
-
-const createTask = async (page: Page): Promise<number> =>
-  await test.step("Create task", async () => {
-    expect(page.url()).toMatch(/\/helpers\/tasks\/new$/);
-    await expect(page.locator("h2")).toContainText("New Helper Task");
-
-    const now = dayjs();
-    const taskTime = now.format("HH:mm");
-    const title = `Test Task @ ${taskTime}`;
-    const deadline = now.add(3, "day").format("DD/MM/YYYY HH:mm");
-
-    await ui.selectOption(page.getByLabel("Category"), "Maintenance / General");
-
-    await page.getByLabel("Title").fill(title);
-    await page
-      .getByLabel("Short Description")
-      .fill(`Test task @ ${taskTime} description`);
-
-    await ui.selectOption(
-      page.getByLabel("Contact"),
-      TEST_USERS.CONTACT.username,
-    );
-
-    await page.getByRole("button", { name: "Deadline" }).click();
-    await ui.selectDateTime(
-      page,
-      page.locator(".ycc-helper-task-deadline-input * input"),
-      deadline,
-    );
-
-    await page.getByLabel("Max. Helpers").fill("2");
-
-    await page.getByRole("button", { name: "Submit" }).click();
-
-    await page.waitForURL(/\/helpers\/tasks\/\d+$/);
-    await expect(page.locator("h2")).toContainText(title);
-
-    const id = Number.parseInt(page.url().split("/").pop()!);
-    return id;
-  });
+import { app, expectSameElements } from "./test-utils";
 
 const signUp = async (
   page: Page,
@@ -97,7 +56,7 @@ test("Helpers: Create task and sign up as captain", async ({ page }) => {
   await page.getByRole("link", { name: "New Task" }).click();
   await page.waitForURL("/helpers/tasks/new");
 
-  const id = await createTask(page);
+  const id = await app.createHelperTask(page);
   await checkCaptain(page, null);
 
   await signUp(page, id, "Captain");
@@ -113,7 +72,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await page.getByRole("link", { name: "New Task" }).click();
   await page.waitForURL("/helpers/tasks/new");
 
-  const id = await createTask(page);
+  const id = await app.createHelperTask(page);
   await checkHelpers(page, []);
 
   await signUp(page, id, "Helper");
