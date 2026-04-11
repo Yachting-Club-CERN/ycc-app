@@ -57,12 +57,8 @@ export const buildCloneRequest = (
       .second(task.startsAt.second());
 
   const endsAt =
-    task.startsAt && task.endsAt
-      ? date
-          .add(task.endsAt.diff(task.startsAt, "day"), "day")
-          .hour(task.endsAt.hour())
-          .minute(task.endsAt.minute())
-          .second(task.endsAt.second())
+    startsAt && task.startsAt && task.endsAt
+      ? startsAt.add(task.endsAt.diff(task.startsAt), "millisecond")
       : null;
 
   const deadline =

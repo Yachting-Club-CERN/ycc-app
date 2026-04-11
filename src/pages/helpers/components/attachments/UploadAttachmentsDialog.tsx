@@ -98,6 +98,7 @@ const UploadAttachmentsDialog = ({
   const handleUpload = async (): Promise<void> => {
     setUploading(true);
     uploadedRef.current = [];
+    let hasFailures = false;
 
     for (const [index, entry] of entries.entries()) {
       if (
@@ -121,6 +122,7 @@ const UploadAttachmentsDialog = ({
         uploadedRef.current.push(metadata);
         updateEntry(index, { status: "done" });
       } catch (ex) {
+        hasFailures = true;
         const message = getErrorText(ex);
         updateEntry(index, { status: "error", error: message });
       }
@@ -131,7 +133,7 @@ const UploadAttachmentsDialog = ({
       onComplete(uploadedRef.current);
     }
 
-    if (entries.some((e) => e.status === "error")) {
+    if (hasFailures) {
       setEntries((prev) => prev.filter((e) => e.status === "error"));
     } else {
       handleClose();
