@@ -102,7 +102,7 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
         </DialogContentText>
       ),
       confirmButtonColor: "error",
-      confirmButtonText: `Delete All ${total} Photos`,
+      confirmButtonText: `Delete ALL Photos`,
       cancelButtonColor: "primary",
       delayConfirm: true,
       onConfirm: async () => {
