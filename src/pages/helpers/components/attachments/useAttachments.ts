@@ -29,10 +29,12 @@ const useAttachments = (taskId: number): UseAttachmentsResult => {
       .then((result) => {
         if (!abortController.signal.aborted) {
           setAttachments(result);
+          setError(undefined);
         }
       })
       .catch((err: unknown) => {
         if (!abortController.signal.aborted) {
+          setAttachments([]);
           setError(err);
         }
       })

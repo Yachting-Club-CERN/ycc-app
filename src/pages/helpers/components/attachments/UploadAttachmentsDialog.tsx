@@ -79,7 +79,7 @@ const UploadAttachmentsDialog = ({
       }
     };
 
-    void Promise.all(files.map(processFile));
+    void Promise.all(files.map((file, index) => processFile(file, index)));
 
     return (): void => {
       cancelled = true;
@@ -182,7 +182,7 @@ const UploadAttachmentsDialog = ({
       <DialogContent>
         <Stack spacing={2} mt={1}>
           {entries.map((entry, index) => {
-            const key = `${entry.originalFile.name}-${entry.originalFile.lastModified}`;
+            const key = `${index}-${entry.originalFile.name}-${entry.originalFile.lastModified}-${entry.originalFile.size}`;
 
             if (entry.status === "error" && !showForm) {
               return (

@@ -105,7 +105,7 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
 
       {showAttachmentsSection && (
         <>
-          <AttachmentsSection task={task} />
+          <AttachmentsSection key={task.id} task={task} />
           <Divider sx={{ mt: 2 }} />
         </>
       )}
