@@ -53,9 +53,6 @@ const UploadAttachmentsDialog = ({
   const uploadedRef = useRef<AttachmentMetadata[]>([]);
   const previewUrlsRef = useRef<string[]>([]);
 
-  // Eager processing: decode + resize + encode each file when the dialog opens.
-  // Previews are real JPEG thumbnails (even for HEIC via BE transcode),
-  // so the Upload click becomes a pure HTTP call.
   useEffect(() => {
     let cancelled = false;
     const createdUrls: string[] = [];
@@ -87,8 +84,6 @@ const UploadAttachmentsDialog = ({
         URL.revokeObjectURL(url);
       }
     };
-    // Process once per dialog open. The `files` array identity is stable for
-    // the lifetime of a single dialog instance (set by the parent before open).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,7 +143,6 @@ const UploadAttachmentsDialog = ({
     previewUrlsRef.current = [];
   };
 
-  // Revoke all preview URLs on unmount (route change, error boundary, etc.)
   useEffect(() => revokeAllPreviewUrls, []);
 
   const handleClose = (): void => {

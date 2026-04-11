@@ -195,7 +195,6 @@ const AttachmentsSection = ({ task }: Props): React.ReactNode => {
 
       {error && <ErrorAlert error={error} />}
 
-      {/* Upload dialog */}
       {selectedFiles && (
         <UploadAttachmentsDialog
           open

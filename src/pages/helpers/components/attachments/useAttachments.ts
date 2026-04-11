@@ -13,9 +13,6 @@ type UseAttachmentsResult = {
   removeAttachments: (attachmentIds: number[]) => void;
 };
 
-/**
- * Fetches and manages attachment state for a helper task.
- */
 const useAttachments = (taskId: number): UseAttachmentsResult => {
   const [attachments, setAttachments] = useState<AttachmentMetadata[]>([]);
   const [loading, setLoading] = useState(true);

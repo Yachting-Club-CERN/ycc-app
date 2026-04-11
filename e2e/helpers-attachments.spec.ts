@@ -4,10 +4,6 @@ import dayjs from "dayjs";
 import { TEST_USERS } from "./test-constants";
 import { app, ui } from "./test-utils";
 
-/**
- * Creates a minimal test task and returns its ID.
- * Navigates to the task detail page after creation.
- */
 const createTask = async (page: Page): Promise<number> =>
   await test.step("Create task", async () => {
     await app.loadPage(page, "/helpers", { expectSignIn: true });
@@ -46,10 +42,6 @@ const createTask = async (page: Page): Promise<number> =>
     return Number.parseInt(segments[segments.length - 1]);
   });
 
-/**
- * Creates a minimal valid PNG buffer for upload testing.
- * Uses a pre-encoded 1x1 red pixel PNG as a Uint8Array.
- */
 const createTestPng = (
   name: string,
 ): { name: string; mimeType: string; buffer: Buffer } => {
@@ -64,16 +56,13 @@ const createTestPng = (
   return { name, mimeType: "image/png", buffer: Buffer.from(bytes) };
 };
 
-/**
- * Uploads a file via the Add Photos button and upload dialog.
- */
 const uploadPhoto = async (
   page: Page,
   fileName: string,
   caption?: string,
 ): Promise<void> => {
   await test.step(`Upload photo: ${fileName}`, async () => {
-    const fileInput = page.locator('input[type="file"]');
+    const fileInput = page.locator('input[type="file"][hidden]');
     const testFile = createTestPng(fileName);
 
     await fileInput.setInputFiles({
@@ -82,20 +71,16 @@ const uploadPhoto = async (
       buffer: testFile.buffer,
     });
 
-    // Upload dialog should appear
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText("Upload Photos")).toBeVisible();
 
-    // Verify file preview is shown (filename is the alt text on the preview image)
     await expect(dialog.getByAltText(fileName)).toBeVisible();
 
-    // Fill caption if provided
     if (caption) {
       await dialog.getByPlaceholder("Description (optional)").fill(caption);
     }
 
-    // Click Upload button — dialog auto-closes on success
     await dialog.getByRole("button", { name: /Upload/ }).click();
     await expect(dialog).toBeHidden();
   });
@@ -116,22 +101,16 @@ test("Helpers Attachments: Upload photo and view in gallery", async ({
   await uploadPhoto(page, "test-image.jpg", "My test photo");
 
   await test.step("Verify photo appears in gallery", async () => {
-    // Photo count should update
     await expect(page.getByText("Photos (1)")).toBeVisible();
-
-    // Caption should be visible (prefix stripped)
     await expect(page.getByText("My test photo")).toBeVisible();
   });
 
   await test.step("Open lightbox and verify Swiper", async () => {
-    // Click the thumbnail to open lightbox
     await page.locator("img[alt='My test photo']").first().click();
 
-    // Fullscreen dialog should open with swiper
     const lightbox = page.locator(".swiper");
     await expect(lightbox).toBeVisible();
 
-    // Close the lightbox
     await page.getByTestId("CloseIcon").click();
     await expect(lightbox).toBeHidden();
   });
@@ -161,21 +140,17 @@ test("Helpers Attachments: Delete photo", async ({ page }) => {
   });
 
   await test.step("Delete the photo", async () => {
-    // Click the delete button on the thumbnail
     await page.getByTestId("DeleteIcon").click();
 
-    // Confirmation dialog should appear
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText("Delete photo?")).toBeVisible();
 
-    // Confirm deletion
     await dialog.getByRole("button", { name: /Delete Photo/ }).click();
     await expect(dialog).toBeHidden();
   });
 
   await test.step("Verify photo is removed", async () => {
-    // Count should reset (no count shown when 0)
     await expect(page.getByText("Photos (1)")).toBeHidden();
     await expect(page.getByText("Delete me")).toBeHidden();
   });
