@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { ALL_YEARS, type SelectedYear } from "@/components/input/YearSelector";
 import { User } from "@/context/auth/AuthenticationContext";
@@ -112,17 +112,22 @@ const filter = (
   return filtered;
 };
 
+export type FilteredHelperTasks = PromiseOutcome<readonly HelperTask[]> & {
+  refresh: () => void;
+};
+
 export const useFilteredHelperTasks = (
   filterOptions: HelperTaskFilterOptions,
-): PromiseOutcome<readonly HelperTask[]> => {
+): FilteredHelperTasks => {
   const currentUser = useCurrentUser();
+  const [refreshKey, setRefreshKey] = useState(0);
   const tasks = usePromise(
     async (signal?: AbortSignal) =>
       await client.helpers.getTasks(
         filterOptions.year === ALL_YEARS ? null : filterOptions.year,
         signal,
       ),
-    [filterOptions.year],
+    [filterOptions.year, refreshKey],
   );
 
   const filteredTasks = useMemo(() => {
@@ -131,9 +136,14 @@ export const useFilteredHelperTasks = (
       : undefined;
   }, [tasks.result, filterOptions, currentUser]);
 
+  const refresh = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
+
   return {
     result: filteredTasks,
     pending: tasks.pending,
     error: tasks.error,
+    refresh,
   };
 };

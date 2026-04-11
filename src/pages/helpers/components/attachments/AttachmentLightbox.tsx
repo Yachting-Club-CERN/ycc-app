@@ -1,5 +1,7 @@
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
@@ -14,9 +16,14 @@ import "swiper/css/zoom";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 
+type AttachmentImage = {
+  url: string | undefined;
+  error: boolean;
+};
+
 type Props = {
   attachments: AttachmentMetadata[];
-  imageUrls: Map<number, string>;
+  imageUrls: Map<number, AttachmentImage>;
   initialIndex: number;
   canDelete: (attachment: AttachmentMetadata) => boolean;
   onDelete: (attachmentId: number, imageUrl: string | undefined) => void;
@@ -58,7 +65,10 @@ const AttachmentLightbox = ({
         <IconButton
           onClick={() => {
             onClose();
-            onDelete(activeAttachment.id, imageUrls.get(activeAttachment.id));
+            onDelete(
+              activeAttachment.id,
+              imageUrls.get(activeAttachment.id)?.url,
+            );
           }}
           sx={{
             position: "absolute",
@@ -83,7 +93,7 @@ const AttachmentLightbox = ({
         style={{ width: "100%", height: "100%" }}
       >
         {attachments.map((attachment) => {
-          const url = imageUrls.get(attachment.id);
+          const image = imageUrls.get(attachment.id);
           const description = attachment.description?.trim() ?? "";
           return (
             <SwiperSlide
@@ -95,10 +105,10 @@ const AttachmentLightbox = ({
                 justifyContent: "center",
               }}
             >
-              {url ? (
+              {image?.url ? (
                 <div className="swiper-zoom-container">
                   <img
-                    src={url}
+                    src={image.url}
                     alt={description || attachment.name}
                     style={{
                       maxWidth: "100%",
@@ -107,6 +117,16 @@ const AttachmentLightbox = ({
                     }}
                   />
                 </div>
+              ) : image?.error ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <BrokenImageIcon sx={{ color: "grey.500", fontSize: 48 }} />
+                </Box>
               ) : (
                 <CircularProgress sx={{ color: "white" }} />
               )}

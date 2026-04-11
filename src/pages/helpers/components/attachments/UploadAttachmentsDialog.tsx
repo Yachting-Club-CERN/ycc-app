@@ -131,10 +131,10 @@ const UploadAttachmentsDialog = ({
       onComplete(uploadedRef.current);
     }
 
-    if (uploadedRef.current.length === entries.length) {
-      handleClose();
-    } else {
+    if (entries.some((e) => e.status === "error")) {
       setEntries((prev) => prev.filter((e) => e.status === "error"));
+    } else {
+      handleClose();
     }
   };
 
@@ -158,11 +158,12 @@ const UploadAttachmentsDialog = ({
   const canUpload =
     !preparing && !uploading && entries.some((e) => e.status === "pending");
 
+  const pendingCount = entries.filter((e) => e.status === "pending").length;
   let uploadLabel = "Upload";
   if (preparing) {
     uploadLabel = "Preparing...";
-  } else if (entries.length > 1) {
-    uploadLabel = `Upload (${entries.length})`;
+  } else if (pendingCount > 1) {
+    uploadLabel = `Upload (${pendingCount})`;
   }
 
   return (

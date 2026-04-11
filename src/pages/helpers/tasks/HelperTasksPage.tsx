@@ -27,9 +27,13 @@ import PageTitle from "@/components/ui/PageTitle";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDelayedState from "@/hooks/useDelayedState";
 import { HelperTaskState } from "@/model/helpers-dtos";
+import PublishAllButton from "@/pages/helpers/components/mass-publish/PublishAllButton";
 import NewHelperTaskAction from "@/pages/helpers/components/NewHelperTaskAction";
 import { DONE_EMOJI, VALIDATED_EMOJI } from "@/pages/helpers/helpers-format";
-import { HelperTaskFilterOptions } from "@/pages/helpers/useFilteredHelperTasks";
+import {
+  HelperTaskFilterOptions,
+  useFilteredHelperTasks,
+} from "@/pages/helpers/useFilteredHelperTasks";
 import { SEARCH_DELAY_MS } from "@/utils/constants";
 import { getCurrentYear } from "@/utils/date-utils";
 
@@ -107,6 +111,18 @@ const HelperTasksPage = (): React.ReactNode => {
       : "cards";
   });
 
+  const filteredTasks = useFilteredHelperTasks(delayedFilterOptions);
+
+  const showPublishToolbar =
+    currentUser.helpersAppAdmin && filterOptions.showOnlyUnpublished === true;
+
+  const publishToolbar = showPublishToolbar && filteredTasks.result && (
+    <PublishAllButton
+      tasks={filteredTasks.result}
+      onComplete={filteredTasks.refresh}
+    />
+  );
+
   useEffect(() => {
     console.info(
       "Save filter options to session storage",
@@ -180,7 +196,6 @@ const HelperTasksPage = (): React.ReactNode => {
       <RowStack wrap={false} mb={2}>
         <PageTitle value="Helper Tasks" mobileValue="Tasks" mb={0} />
         {currentUser.helpersAppAdminOrEditor && yearSelector.component}
-        <NewHelperTaskAction />
         <ToggleButtonGroup
           value={display}
           exclusive
@@ -201,6 +216,7 @@ const HelperTasksPage = (): React.ReactNode => {
             <ListIcon />
           </ToggleButton>
         </ToggleButtonGroup>
+        <NewHelperTaskAction />
       </RowStack>
 
       <ReadingBox>
@@ -326,10 +342,11 @@ const HelperTasksPage = (): React.ReactNode => {
               label="Unpublished"
             />
           )}
+          {publishToolbar}
         </RowStack>
       </ReadingBox>
 
-      <HelperTasksView display={display} filterOptions={delayedFilterOptions} />
+      <HelperTasksView display={display} filteredTasks={filteredTasks} />
     </>
   );
 };
