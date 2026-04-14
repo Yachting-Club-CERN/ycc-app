@@ -121,8 +121,11 @@ export const app = {
   /** Loads a web page and performs sign-in if needed.
    *
    * @param page - Playwright Page object.
-   * @param path - The path to a specific page (optional).
-   * @param options - Options: expectSignIn (boolean), user (default: an admin user).
+   * @param path - The path to a specific page.
+   * @param options - Options:
+   *   - expectSignIn (boolean)
+   *   - user (default: an admin user)
+   *   - expectedTitle (default: "YCC App")
    */
   loadPage: async (
     page: Page,
@@ -130,6 +133,7 @@ export const app = {
     options: {
       expectSignIn: boolean;
       user?: string;
+      expectedTitle?: string | RegExp;
     },
   ) => {
     await test.step(`Load page: ${path} (expectSignIn: ${options.expectSignIn})`, async () => {
@@ -154,6 +158,8 @@ export const app = {
 
       // Wait for load to complete
       await page.waitForSelector("#ycc-page-end", { state: "attached" });
+
+      await expect(page).toHaveTitle(options.expectedTitle ?? "YCC App");
 
       console.info("[test] Page loaded", path);
     });
@@ -200,6 +206,7 @@ export const app = {
 
       await page.waitForURL(/\/helpers\/tasks\/\d+$/);
       await expect(page.locator("h2")).toContainText(title);
+      await expect(page).toHaveTitle(`${title} | YCC App`);
 
       const segments = page.url().split("/");
       return Number.parseInt(segments[segments.length - 1]);

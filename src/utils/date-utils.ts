@@ -18,6 +18,14 @@ export const formatDateWithDay = (
     : dayjs(date).tz(TIME_ZONE_ID).format("dddd, D MMMM YYYY");
 };
 
+export const formatDateWithoutDay = (
+  date: OptionalDate,
+): string | null | undefined => {
+  return date === null || date === undefined
+    ? date
+    : dayjs(date).tz(TIME_ZONE_ID).format("D MMMM YYYY");
+};
+
 export const formatTime = (date: OptionalDate): string | null | undefined => {
   return date === null || date === undefined
     ? date

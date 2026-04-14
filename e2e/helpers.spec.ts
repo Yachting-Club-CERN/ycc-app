@@ -86,6 +86,7 @@ test("Helpers: Create task and sign up as helper", async ({ browser }) => {
   await app.loadPage(page, `/helpers/tasks/${id}`, {
     expectSignIn: true,
     user: TEST_USERS.MEMBER.username,
+    expectedTitle: /^Test Task @ \d{2}:\d{2}:\d{2} \| YCC App$/,
   });
   await page.waitForURL(new RegExp(`/helpers/tasks/${id}$`));
 
