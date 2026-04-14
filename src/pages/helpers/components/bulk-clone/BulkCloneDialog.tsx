@@ -46,15 +46,22 @@ const BulkCloneDialog = ({
     onCreateTask,
   );
 
+  const hasInvalidDateRange = useMemo(
+    () => !!startDate && !!endDate && endDate.isBefore(startDate),
+    [startDate, endDate],
+  );
+
   const generatedDates = useMemo(() => {
-    if (!startDate || !endDate || selectedDays.length === 0) {
-      return [];
-    }
-    if (endDate.isBefore(startDate)) {
+    if (
+      !startDate ||
+      !endDate ||
+      selectedDays.length === 0 ||
+      hasInvalidDateRange
+    ) {
       return [];
     }
     return generateDates(startDate, endDate, new Set(selectedDays));
-  }, [startDate, endDate, selectedDays]);
+  }, [startDate, endDate, selectedDays, hasInvalidDateRange]);
 
   const includedDates = useMemo(
     () => generatedDates.filter((d) => !excludedDates.has(d.toISOString())),
@@ -165,7 +172,13 @@ const BulkCloneDialog = ({
           </RowStack>
         </SpacedBox>
 
-        {canGenerate && !hasPreview && (
+        {hasInvalidDateRange && (
+          <Alert severity="error">
+            End date must be on or after start date.
+          </Alert>
+        )}
+
+        {canGenerate && !hasInvalidDateRange && !hasPreview && (
           <Alert severity="info">
             No dates match the selected days and date range.
           </Alert>

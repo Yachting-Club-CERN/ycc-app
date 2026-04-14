@@ -1,8 +1,11 @@
 import Button from "@mui/material/Button";
 import DialogContentText from "@mui/material/DialogContentText";
+import { useMemo } from "react";
 
 import useConfirmationDialog from "@/components/dialogs/ConfirmationDialog/useConfirmationDialog";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
+import { canEdit } from "@/pages/helpers/helpers-utils";
 
 import useMassPublish from "./useMassPublish";
 
@@ -12,10 +15,15 @@ type Props = {
 };
 
 const PublishAllButton = ({ tasks, onComplete }: Props): React.ReactNode => {
+  const currentUser = useCurrentUser();
   const { state, start, reset } = useMassPublish();
   const confirmationDialog = useConfirmationDialog();
 
-  const unpublishedCount = tasks.filter((t) => !t.published).length;
+  const editableTasks = useMemo(
+    () => tasks.filter((t) => canEdit(t, currentUser)),
+    [tasks, currentUser],
+  );
+  const unpublishedCount = editableTasks.filter((t) => !t.published).length;
 
   if (unpublishedCount === 0) {
     return null;
@@ -33,7 +41,7 @@ const PublishAllButton = ({ tasks, onComplete }: Props): React.ReactNode => {
       ),
       onConfirm: async () => {
         try {
-          await start(tasks, true);
+          await start(editableTasks, true);
         } finally {
           reset();
           onComplete();

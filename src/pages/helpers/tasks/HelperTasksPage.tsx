@@ -114,7 +114,8 @@ const HelperTasksPage = (): React.ReactNode => {
   const filteredTasks = useFilteredHelperTasks(delayedFilterOptions);
 
   const showPublishToolbar =
-    currentUser.helpersAppAdmin && filterOptions.showOnlyUnpublished === true;
+    currentUser.helpersAppAdminOrEditor &&
+    delayedFilterOptions.showOnlyUnpublished === true;
 
   const publishToolbar = showPublishToolbar && filteredTasks.result && (
     <PublishAllButton

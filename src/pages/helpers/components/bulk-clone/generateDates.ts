@@ -57,7 +57,7 @@ export const buildCloneRequest = (
       .second(task.startsAt.second());
 
   const endsAt =
-    startsAt && task.startsAt && task.endsAt
+    startsAt && task.endsAt
       ? startsAt.add(task.endsAt.diff(task.startsAt), "millisecond")
       : null;
 
