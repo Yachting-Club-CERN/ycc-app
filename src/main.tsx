@@ -31,40 +31,27 @@ if (globalThis.location.pathname === "/silent-check-sso") {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const root = ReactDOM.createRoot(document.getElementById("root")!);
 
-  if (import.meta.env.VITE_TEST_USER) {
-    // For testing only: bypass Keycloak with a mock user.
-    // This path is only active when VITE_TEST_USER is explicitly set
-    // and must never be used in production.
-    console.info("[main] Test mode: bypassing authentication");
-    auth.useTestUser();
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>,
-    );
-  } else {
-    void auth.init().finally(() => {
-      console.debug("[main] Authentication initialized");
+  void auth.init().finally(() => {
+    console.debug("[main] Authentication initialized");
 
-      if (auth.authenticated) {
-        if (auth.currentUser.activeMember) {
-          root.render(
-            <React.StrictMode>
-              <App />
-            </React.StrictMode>,
-          );
-        } else {
-          alert(
-            "Sorry, but it seems that you are not an active member of YCC.\n" +
-              "Maybe your membership fee for the current year was not recorded yet.\n" +
-              `If this is the case, please contact us with your username which is ${auth.currentUser.username}.`,
-          );
-          void auth.logout();
-        }
+    if (auth.authenticated) {
+      if (auth.currentUser.activeMember) {
+        root.render(
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>,
+        );
       } else {
-        alert("Authentication failed");
-        globalThis.location.reload();
+        alert(
+          "Sorry, but it seems that you are not an active member of YCC.\n" +
+            "Maybe your membership fee for the current year was not recorded yet.\n" +
+            `If this is the case, please contact us with your username which is ${auth.currentUser.username}.`,
+        );
+        void auth.logout();
       }
-    });
-  }
+    } else {
+      alert("Authentication failed");
+      globalThis.location.reload();
+    }
+  });
 }

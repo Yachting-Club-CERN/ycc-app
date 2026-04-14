@@ -288,28 +288,6 @@ class AuthenticationProvider {
     await this._keycloak.logout();
   };
 
-  /**
-   * For testing only. Sets a mock authenticated user, bypassing Keycloak.
-   * Only call this when VITE_TEST_USER is set in the environment.
-   */
-  public readonly useTestUser = (): void => {
-    if (!import.meta.env.VITE_TEST_USER) {
-      throw new Error(
-        "useTestUser() must only be called when VITE_TEST_USER is set",
-      );
-    }
-    this._user = new User(
-      "test-user-id",
-      1,
-      "TUSER",
-      "test@ycc-test.ch",
-      "Test",
-      "User",
-      ["ycc-members-all-past-and-present"],
-      ["ycc-member-active"],
-    );
-  };
-
   private readonly updateGlobalToken = (): void => {
     globalThis.oauth2Token = this._keycloak.token;
   };

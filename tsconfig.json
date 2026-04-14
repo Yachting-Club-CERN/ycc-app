@@ -55,7 +55,6 @@
   "include": [
     "eslint.config.mts",
     "playwright.config.ts",
-    "playwright.mocked.config.ts",
     "src/**/*.mts",
     "src/**/*.ts",
     "src/**/*.tsx",

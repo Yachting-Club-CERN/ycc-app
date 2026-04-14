@@ -27,7 +27,6 @@ const importRules: Linter.RulesRecord = {
         "e2e/**",
         "eslint.config.mts",
         "playwright.config.ts",
-        "playwright.mocked.config.ts",
         "tests/**",
         "vite.config.ts",
         "vitest.config.mts",
