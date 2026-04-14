@@ -44,20 +44,23 @@ const AttachmentGallery = ({
           gap: 1.5,
         }}
       >
-        {attachments.map((attachment, index) => (
-          <AttachmentThumbnail
-            key={attachment.id}
-            attachment={attachment}
-            imageUrl={imageUrls.get(attachment.id)}
-            canDelete={canDeleteAttachment(attachment)}
-            onClick={() => {
-              setLightboxIndex(index);
-            }}
-            onDelete={() => {
-              onDelete(attachment.id, imageUrls.get(attachment.id));
-            }}
-          />
-        ))}
+        {attachments.map((attachment, index) => {
+          const image = imageUrls.get(attachment.id);
+          return (
+            <AttachmentThumbnail
+              key={attachment.id}
+              attachment={attachment}
+              image={image}
+              canDelete={canDeleteAttachment(attachment)}
+              onClick={() => {
+                setLightboxIndex(index);
+              }}
+              onDelete={() => {
+                onDelete(attachment.id, image?.url);
+              }}
+            />
+          );
+        })}
       </Box>
 
       {lightboxIndex !== null && (
