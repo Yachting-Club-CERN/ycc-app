@@ -8,11 +8,6 @@ export type AttachmentImage = {
   error: boolean;
 };
 
-/**
- * Downloads attachment images as object URLs and manages their lifecycle.
- * Reuses existing URLs when attachments haven't changed, and revokes
- * stale URLs on update or unmount.
- */
 const useAttachmentImages = (
   taskId: number,
   attachments: AttachmentMetadata[],

@@ -113,11 +113,11 @@ const HelperTasksPage = (): React.ReactNode => {
 
   const filteredTasks = useFilteredHelperTasks(delayedFilterOptions);
 
-  const showPublishToolbar =
+  const showPublishAllButton =
     currentUser.helpersAppAdminOrEditor &&
     delayedFilterOptions.showOnlyUnpublished === true;
 
-  const publishToolbar = showPublishToolbar && filteredTasks.result && (
+  const publishAllButton = showPublishAllButton && filteredTasks.result && (
     <PublishAllButton
       tasks={filteredTasks.result}
       onComplete={filteredTasks.refresh}
@@ -343,7 +343,7 @@ const HelperTasksPage = (): React.ReactNode => {
               label="Unpublished"
             />
           )}
-          {publishToolbar}
+          {publishAllButton}
         </RowStack>
       </ReadingBox>
 

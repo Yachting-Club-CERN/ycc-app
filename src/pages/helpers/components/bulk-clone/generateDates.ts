@@ -40,11 +40,6 @@ export const generateDates = (
   return dates;
 };
 
-/**
- * Builds a creation request for a clone of the given task on the given date.
- * Preserves the time-of-day from the source task, only changing the date.
- * For multi-day shifts, the end date is offset by the same duration as the source.
- */
 export const buildCloneRequest = (
   task: HelperTask,
   date: dayjs.Dayjs,
