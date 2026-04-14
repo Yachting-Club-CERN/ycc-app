@@ -125,7 +125,7 @@ export const app = {
    * @param options - Options:
    *   - expectSignIn (boolean)
    *   - user (default: an admin user)
-   *   - expectedTitle (default: "YCC App" — only the helper task detail page sets a dynamic document title).
+   *   - expectedTitle (default: "YCC App")
    */
   loadPage: async (
     page: Page,
@@ -159,12 +159,7 @@ export const app = {
       // Wait for load to complete
       await page.waitForSelector("#ycc-page-end", { state: "attached" });
 
-      const expectedTitle = options.expectedTitle ?? "YCC App";
-      if (typeof expectedTitle === "string") {
-        expect(await page.title()).toBe(expectedTitle);
-      } else {
-        expect(await page.title()).toMatch(expectedTitle);
-      }
+      await expect(page).toHaveTitle(options.expectedTitle ?? "YCC App");
 
       console.info("[test] Page loaded", path);
     });
@@ -211,7 +206,7 @@ export const app = {
 
       await page.waitForURL(/\/helpers\/tasks\/\d+$/);
       await expect(page.locator("h2")).toContainText(title);
-      expect(await page.title()).toBe(`${title} | YCC App`);
+      await expect(page).toHaveTitle(`${title} | YCC App`);
 
       const segments = page.url().split("/");
       return Number.parseInt(segments[segments.length - 1]);

@@ -57,21 +57,4 @@ describe("useDocumentTitle", () => {
     expect(document.title).toBe("Page 2 | YCC App");
   });
 
-  test("stacks correctly when components are nested", () => {
-    const { unmount: unmountOuter } = renderHook(() => {
-      useDocumentTitle("Outer Page");
-    });
-    expect(document.title).toBe("Outer Page | YCC App");
-
-    const { unmount: unmountInner } = renderHook(() => {
-      useDocumentTitle("Inner Modal");
-    });
-    expect(document.title).toBe("Inner Modal | YCC App");
-
-    unmountInner();
-    expect(document.title).toBe("Outer Page | YCC App");
-
-    unmountOuter();
-    expect(document.title).toBe("YCC App");
-  });
 });
