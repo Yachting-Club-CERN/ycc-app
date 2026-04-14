@@ -1,11 +1,10 @@
+import Typography from "@mui/material/Typography";
+
 import ReadingBox from "@/components/layout/ReadingBox";
 import ReadingBoxXL from "@/components/layout/ReadingBoxXL";
 import PromiseStatus from "@/components/ui/PromiseStatus";
 import HelperTaskCardGrid from "@/pages/helpers/components/HelperTaskCardGrid";
-import {
-  HelperTaskFilterOptions,
-  useFilteredHelperTasks,
-} from "@/pages/helpers/useFilteredHelperTasks";
+import { FilteredHelperTasks } from "@/pages/helpers/useFilteredHelperTasks";
 
 import HelperTasksDataGrid from "./HelperTasksDataGrid";
 import HelperTasksReportView from "./HelperTasksReportView";
@@ -13,18 +12,23 @@ import { HelperTasksDisplay } from "./types";
 
 type Props = {
   display: HelperTasksDisplay;
-  filterOptions: HelperTaskFilterOptions;
+  filteredTasks: FilteredHelperTasks;
 };
 
 const HelperTasksView = ({
   display,
-  filterOptions,
+  filteredTasks,
 }: Props): React.ReactNode => {
-  const filteredTasks = useFilteredHelperTasks(filterOptions);
-
   return (
     <>
-      {filteredTasks.result && (
+      {filteredTasks.result?.length === 0 && (
+        <ReadingBox>
+          <Typography color="text.secondary" mt={2} mb={2}>
+            No tasks match the current filters.
+          </Typography>
+        </ReadingBox>
+      )}
+      {filteredTasks.result && filteredTasks.result.length > 0 && (
         <>
           {display === "data-grid" && (
             <ReadingBoxXL>

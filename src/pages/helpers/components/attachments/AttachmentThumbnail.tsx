@@ -1,3 +1,4 @@
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -6,9 +7,11 @@ import Typography from "@mui/material/Typography";
 
 import { AttachmentMetadata } from "@/model/helpers-dtos";
 
+import { AttachmentImage } from "./useAttachmentImages";
+
 type Props = {
   attachment: AttachmentMetadata;
-  imageUrl: string | undefined;
+  image: AttachmentImage | undefined;
   canDelete: boolean;
   onClick: () => void;
   onDelete: () => void;
@@ -16,7 +19,7 @@ type Props = {
 
 const AttachmentThumbnail = ({
   attachment,
-  imageUrl,
+  image,
   canDelete,
   onClick,
   onDelete,
@@ -36,14 +39,28 @@ const AttachmentThumbnail = ({
         }}
         onClick={onClick}
       >
-        {imageUrl ? (
+        {image?.url && (
           <Box
             component="img"
-            src={imageUrl}
+            src={image.url}
             alt={description || attachment.name}
             sx={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
-        ) : (
+        )}
+        {image?.error && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <BrokenImageIcon color="disabled" />
+          </Box>
+        )}
+        {!image?.url && !image?.error && (
           <Box
             sx={{
               display: "flex",
