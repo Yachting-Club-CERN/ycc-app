@@ -13,6 +13,7 @@ import SpacedBox from "@/components/layout/SpacedBox";
 import ErrorAlert from "@/components/ui/ErrorAlert";
 import PageTitle from "@/components/ui/PageTitle";
 import SpacedTypography from "@/components/ui/SpacedTypography";
+import useCurrentUser from "@/context/auth/useCurrentUser";
 import useDocumentTitle from "@/hooks/useDocumentTitle";
 import { MemberPublicInfo } from "@/model/dtos";
 import { HelperTask, HelperTaskState } from "@/model/helpers-dtos";
@@ -28,9 +29,11 @@ import ValidateActionButton from "@/pages/helpers/components/action-buttons/Vali
 import AttachmentsSection from "@/pages/helpers/components/attachments/AttachmentsSection";
 import HelperTaskDetailActions from "@/pages/helpers/components/HelperTaskDetailActions";
 import HelperTaskTimingInfo from "@/pages/helpers/components/HelperTaskTimingInfo";
+import NewHelperTaskAction from "@/pages/helpers/components/NewHelperTaskAction";
 import ShareTaskViaEmailIconButton from "@/pages/helpers/components/ShareTaskViaEmailIconButton";
 import ShareTaskViaWhatsAppIconButton from "@/pages/helpers/components/ShareTaskViaWhatsAppIconButton";
 import { formatHelperTaskDocumentTitle } from "@/pages/helpers/helpers-format";
+import { canEdit } from "@/pages/helpers/helpers-utils";
 import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import { ATTACHMENTS_CATEGORY_MATCH } from "@/utils/constants";
 import { formatDateTime } from "@/utils/date-utils";
@@ -44,6 +47,7 @@ type Props = {
 const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
   useDocumentTitle(formatHelperTaskDocumentTitle(task));
 
+  const currentUser = useCurrentUser();
   const [error, setError] = useState<unknown>();
   const memberInfoDialog = useMemberInfoDialog();
   const confirmationDialog = useConfirmationDialog();
@@ -83,7 +87,11 @@ const HelperTaskView = ({ task, refreshTask }: Props): React.ReactNode => {
       >
         <PageTitle value={task.title} mb={0} />
         <Box sx={{ marginLeft: "auto" }}>
-          <HelperTaskDetailActions task={task} />
+          {canEdit(task, currentUser) ? (
+            <HelperTaskDetailActions task={task} />
+          ) : (
+            <NewHelperTaskAction />
+          )}
         </Box>
       </Stack>
 

@@ -19,6 +19,7 @@ import { Link as RouterLink } from "react-router-dom";
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import { HelperTask } from "@/model/helpers-dtos";
 import {
+  canEdit,
   getTaskCloneLocation,
   getTaskEditLocation,
 } from "@/pages/helpers/helpers-utils";
@@ -53,6 +54,10 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
   const bulkCloneDialog = useBulkCloneDialog();
 
   if (!currentUser.helpersAppAdminOrEditor) {
+    return null;
+  }
+
+  if (!canEdit(task, currentUser)) {
     return null;
   }
 
