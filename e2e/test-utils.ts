@@ -122,7 +122,10 @@ export const app = {
    *
    * @param page - Playwright Page object.
    * @param path - The path to a specific page (optional).
-   * @param options - Options: expectSignIn (boolean), user (default: an admin user).
+   * @param options - Options:
+   *   - expectSignIn (boolean)
+   *   - user (default: an admin user)
+   *   - expectedTitle (default: "YCC App" — only the helper task detail page sets a dynamic document title).
    */
   loadPage: async (
     page: Page,
@@ -130,6 +133,7 @@ export const app = {
     options: {
       expectSignIn: boolean;
       user?: string;
+      expectedTitle?: string | RegExp;
     },
   ) => {
     await test.step(`Load page: ${path} (expectSignIn: ${options.expectSignIn})`, async () => {
@@ -154,6 +158,13 @@ export const app = {
 
       // Wait for load to complete
       await page.waitForSelector("#ycc-page-end", { state: "attached" });
+
+      const expectedTitle = options.expectedTitle ?? "YCC App";
+      if (typeof expectedTitle === "string") {
+        expect(await page.title()).toBe(expectedTitle);
+      } else {
+        expect(await page.title()).toMatch(expectedTitle);
+      }
 
       console.info("[test] Page loaded", path);
     });
@@ -200,6 +211,7 @@ export const app = {
 
       await page.waitForURL(/\/helpers\/tasks\/\d+$/);
       await expect(page.locator("h2")).toContainText(title);
+      expect(await page.title()).toBe(`${title} | YCC App`);
 
       const segments = page.url().split("/");
       return Number.parseInt(segments[segments.length - 1]);

@@ -28,6 +28,7 @@ import {
   isSignedUp,
   isSignedUpAsCaptain,
   isSignedUpAsHelper,
+  isSurveillanceTask,
   isUpcoming,
 } from "@/pages/helpers/helpers-utils";
 import dayjs from "@/utils/dayjs";
@@ -73,6 +74,22 @@ describe("URL builders", () => {
   test("getTaskCloneLocation", () => {
     expect(getTaskCloneLocation(42)).toBe("/helpers/tasks/new?from=42");
   });
+});
+
+describe("isSurveillanceTask", () => {
+  test.each(["Surveillance", "SURVEILLANCE NIGHT", "SUrveILLANCE NIGHT"])(
+    "matches '%s'",
+    (title) => {
+      expect(isSurveillanceTask({ category: { title } })).toBe(true);
+    },
+  );
+
+  test.each(["Maintenance", "Cleaning", "", "Boat Surveillance"])(
+    "does not match '%s'",
+    (title) => {
+      expect(isSurveillanceTask({ category: { title } })).toBe(false);
+    },
+  );
 });
 
 describe("isMultiDayShift", () => {

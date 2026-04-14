@@ -13,6 +13,9 @@ export const YCC_URLS = {
 // Only allow attachments for maintenance tasks
 export const ATTACHMENTS_CATEGORY_MATCH = "maintenance";
 
+// Matches backend logic
+export const SURVEILLANCE_TASK_PREFIX = "Surveillance";
+
 // Aligned with BE entities/DB tables
 export const HELPER_TASK_TITLE_MAX_LENGTH = 40;
 export const HELPER_TASK_SHORT_DESCRIPTION_MAX_LENGTH = 200;

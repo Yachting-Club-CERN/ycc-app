@@ -16,6 +16,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { HelperTask } from "@/model/helpers-dtos";
 import { statsSortByDate } from "@/pages/admin/statistics/statistics-utils";
+import { isSurveillanceTask } from "@/pages/helpers/helpers-utils";
 import { getFullName } from "@/pages/members/members-utils";
 import { formatDate } from "@/utils/date-utils";
 
@@ -23,10 +24,7 @@ const findSurveillanceTasksWithoutCaptain = (
   tasks: HelperTask[],
 ): HelperTask[] =>
   tasks
-    .filter(
-      (task) =>
-        task.category.title.toLowerCase() === "surveillance" && !task.captain,
-    )
+    .filter((task) => isSurveillanceTask(task) && !task.captain)
     .sort(statsSortByDate);
 
 const findUnpublishedTasks = (tasks: HelperTask[]): HelperTask[] =>
@@ -47,9 +45,7 @@ const findTasksWithLicenceNotInSurveillance = (
 ): HelperTask[] =>
   tasks
     .filter(
-      (task) =>
-        task.captainRequiredLicenceInfo &&
-        task.category.title.toLowerCase() !== "surveillance",
+      (task) => task.captainRequiredLicenceInfo && !isSurveillanceTask(task),
     )
     .sort((a, b) => {
       const licenceCmp = (

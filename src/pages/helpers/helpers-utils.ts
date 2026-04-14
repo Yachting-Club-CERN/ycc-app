@@ -6,6 +6,7 @@ import {
   HelperTaskState,
   HelperTaskType,
 } from "@/model/helpers-dtos";
+import { SURVEILLANCE_TASK_PREFIX } from "@/utils/constants";
 import { getNow, isSameDay } from "@/utils/date-utils";
 
 /**
@@ -34,6 +35,14 @@ export const getTaskEditLocation = (taskId: number): string =>
  */
 export const getTaskCloneLocation = (taskId: number): string =>
   `/helpers/tasks/new?from=${taskId}`;
+
+// Matches backend logic
+export const isSurveillanceTask = (task: {
+  category: { title: string };
+}): boolean =>
+  task.category.title
+    .toLowerCase()
+    .startsWith(SURVEILLANCE_TASK_PREFIX.toLowerCase());
 
 /**
  * Tells if a shift is multi-day shift.

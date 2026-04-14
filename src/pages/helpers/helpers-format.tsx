@@ -1,14 +1,34 @@
-import { HelperTask, HelperTaskType } from "@/model/helpers-dtos";
+import {
+  getHelperTaskType,
+  HelperTask,
+  HelperTaskType,
+} from "@/model/helpers-dtos";
 import {
   formatDateTime,
   formatDateWithDay,
+  formatDateWithoutDay,
   formatTime,
 } from "@/utils/date-utils";
 
-import { isMultiDayShift } from "./helpers-utils";
+import { isMultiDayShift, isSurveillanceTask } from "./helpers-utils";
 
 export const DONE_EMOJI = "🚦";
 export const VALIDATED_EMOJI = "✔️";
+
+export const formatHelperTaskDocumentTitle = (task: HelperTask): string => {
+  if (!isSurveillanceTask(task)) {
+    return task.title;
+  }
+
+  const type = getHelperTaskType(task);
+  if (type === HelperTaskType.Shift) {
+    return `${task.title} (${formatDateWithoutDay(task.startsAt)})`;
+  } else if (type === HelperTaskType.Deadline) {
+    return `${task.title} (by ${formatDateWithoutDay(task.deadline)})`;
+  } else {
+    return task.title;
+  }
+};
 
 /**
  * Gives a "fake random" sign up text. Deterministic.

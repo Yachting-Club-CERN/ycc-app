@@ -1,15 +1,66 @@
 import { describe, expect, test } from "vitest";
 
-import { makeTask } from "@tests/factories";
+import { makeCategory, makeTask } from "@tests/factories";
 
 import {
   createTimingInfoLine,
   DONE_EMOJI,
   fakeRandomSignUpText,
+  formatHelperTaskDocumentTitle,
   getStatusEmoji,
   VALIDATED_EMOJI,
 } from "@/pages/helpers/helpers-format";
 import dayjs from "@/utils/dayjs";
+
+describe("formatHelperTaskDocumentTitle", () => {
+  test.each([
+    {
+      name: "surveillance shift: appends start date",
+      title: "Sailing Course",
+      category: "Surveillance",
+      startsAt: dayjs.tz("2026-04-14 10:00:00", "Europe/Zurich"),
+      endsAt: dayjs.tz("2026-04-14 14:00:00", "Europe/Zurich"),
+      deadline: null,
+      expected: "Sailing Course (14 April 2026)",
+    },
+    {
+      name: "surveillance deadline: appends 'by <date>'",
+      title: "Annual Inspection",
+      category: "Surveillance West",
+      startsAt: null,
+      endsAt: null,
+      deadline: dayjs.tz("2026-09-30 23:59:00", "Europe/Zurich"),
+      expected: "Annual Inspection (by 30 September 2026)",
+    },
+    {
+      name: "surveillance with no dates: returns plain title",
+      title: "Surveillance Setup",
+      category: "Surveillance",
+      startsAt: null,
+      endsAt: null,
+      deadline: null,
+      expected: "Surveillance Setup",
+    },
+    {
+      name: "non-surveillance task: returns plain title even with dates",
+      title: "Spring Cleanup 2026",
+      category: "Maintenance",
+      startsAt: dayjs.tz("2026-04-14 10:00:00", "Europe/Zurich"),
+      endsAt: dayjs.tz("2026-04-14 14:00:00", "Europe/Zurich"),
+      deadline: null,
+      expected: "Spring Cleanup 2026",
+    },
+  ])("$name", ({ title, category, startsAt, endsAt, deadline, expected }) => {
+    const task = makeTask({
+      title,
+      category: makeCategory({ title: category }),
+      startsAt,
+      endsAt,
+      deadline,
+    });
+    expect(formatHelperTaskDocumentTitle(task)).toBe(expected);
+  });
+});
 
 describe("fakeRandomSignUpText", () => {
   test("returns a string from the texts array", () => {
