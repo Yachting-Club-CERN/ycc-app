@@ -121,7 +121,7 @@ export const app = {
   /** Loads a web page and performs sign-in if needed.
    *
    * @param page - Playwright Page object.
-   * @param path - The path to a specific page (optional).
+   * @param path - The path to a specific page.
    * @param options - Options:
    *   - expectSignIn (boolean)
    *   - user (default: an admin user)
