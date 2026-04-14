@@ -56,5 +56,4 @@ describe("useDocumentTitle", () => {
     rerender({ title: "Page 2" });
     expect(document.title).toBe("Page 2 | YCC App");
   });
-
 });
