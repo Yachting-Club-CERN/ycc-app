@@ -2,7 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { makeMember, makeTask, makeUser } from "@tests/factories";
+import { makeMember, makeTask } from "@tests/factories";
+import {
+  adminUser,
+  editorUser,
+  regularUser,
+} from "@tests/pages/helpers/helpers-test-fixtures";
 
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import HelperTaskView from "@/pages/helpers/task/HelperTaskView";
@@ -17,21 +22,6 @@ vi.mock("@/pages/helpers/components/bulk-clone/useBulkCloneDialog", () => ({
     open: vi.fn(),
   }),
 }));
-
-const adminUser = makeUser({
-  username: "ADMIN",
-  roles: ["ycc-member-active", "ycc-helpers-app-admin"],
-});
-
-const editorUser = makeUser({
-  username: "EDITOR",
-  roles: ["ycc-member-active", "ycc-helpers-app-editor"],
-});
-
-const regularUser = makeUser({
-  username: "REGULAR",
-  roles: ["ycc-member-active"],
-});
 
 const renderView = (
   ...args: Parameters<typeof HelperTaskView>

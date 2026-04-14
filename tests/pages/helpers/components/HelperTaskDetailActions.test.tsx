@@ -2,7 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { makeMember, makeTask, makeUser } from "@tests/factories";
+import { makeMember, makeTask } from "@tests/factories";
+import {
+  adminUser,
+  editorUser,
+  regularUser,
+} from "@tests/pages/helpers/helpers-test-fixtures";
 
 import useCurrentUser from "@/context/auth/useCurrentUser";
 import HelperTaskDetailActions from "@/pages/helpers/components/HelperTaskDetailActions";
@@ -17,21 +22,6 @@ vi.mock("@/pages/helpers/components/bulk-clone/useBulkCloneDialog", () => ({
     open: vi.fn(),
   }),
 }));
-
-const adminUser = makeUser({
-  username: "ADMIN",
-  roles: ["ycc-member-active", "ycc-helpers-app-admin"],
-});
-
-const editorUser = makeUser({
-  username: "EDITOR",
-  roles: ["ycc-member-active", "ycc-helpers-app-editor"],
-});
-
-const regularUser = makeUser({
-  username: "REGULAR",
-  roles: ["ycc-member-active"],
-});
 
 const renderActions = (
   ...args: Parameters<typeof HelperTaskDetailActions>
@@ -58,22 +48,14 @@ describe("HelperTaskDetailActions", () => {
   });
 
   describe("editor without edit rights (not the contact)", () => {
-    test("shows New Task only - no Actions menu, Edit Task, or Clone Task", () => {
+    test("renders nothing", () => {
       vi.mocked(useCurrentUser).mockReturnValue(editorUser);
       const task = makeTask({
         contact: makeMember({ username: "SOMEONE_ELSE" }),
       });
-      renderActions({ task });
+      const { container } = renderActions({ task });
 
-      expect(
-        screen.queryByRole("button", { name: "Actions" }),
-      ).not.toBeInTheDocument();
-      expect(screen.getAllByText("New Task").length).toBeGreaterThan(0);
-      expect(screen.queryByText("Edit Task")).not.toBeInTheDocument();
-      expect(screen.queryByText("Clone Task")).not.toBeInTheDocument();
-      expect(
-        screen.queryByText("Clone to Multiple Dates"),
-      ).not.toBeInTheDocument();
+      expect(container.innerHTML).toBe("");
     });
   });
 

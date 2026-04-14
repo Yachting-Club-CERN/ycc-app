@@ -26,7 +26,6 @@ import {
 import { SX_FAB_POSITION } from "@/utils/constants";
 
 import useBulkCloneDialog from "./bulk-clone/useBulkCloneDialog";
-import NewHelperTaskAction from "./NewHelperTaskAction";
 
 type LinkAction = {
   icon: React.ReactElement;
@@ -59,7 +58,7 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
   }
 
   if (!canEdit(task, currentUser)) {
-    return <NewHelperTaskAction />;
+    return null;
   }
 
   const closeMenu = (): void => {
