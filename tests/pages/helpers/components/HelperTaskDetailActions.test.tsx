@@ -58,91 +58,69 @@ describe("HelperTaskDetailActions", () => {
   });
 
   describe("editor without edit rights (not the contact)", () => {
-    test("does not show the Actions menu button", () => {
+    test("shows New Task only - no Actions menu, Edit Task, or Clone Task", () => {
       vi.mocked(useCurrentUser).mockReturnValue(editorUser);
       const task = makeTask({
         contact: makeMember({ username: "SOMEONE_ELSE" }),
       });
       renderActions({ task });
+
       expect(
         screen.queryByRole("button", { name: "Actions" }),
       ).not.toBeInTheDocument();
-    });
-
-    test("shows a New Task button", () => {
-      vi.mocked(useCurrentUser).mockReturnValue(editorUser);
-      const task = makeTask({
-        contact: makeMember({ username: "SOMEONE_ELSE" }),
-      });
-      const { container } = renderActions({ task });
-      expect(container).toHaveTextContent("New Task");
-    });
-
-    test("does not expose an Edit Task link", () => {
-      vi.mocked(useCurrentUser).mockReturnValue(editorUser);
-      const task = makeTask({
-        contact: makeMember({ username: "SOMEONE_ELSE" }),
-      });
-      renderActions({ task });
+      expect(screen.getAllByText("New Task").length).toBeGreaterThan(0);
       expect(screen.queryByText("Edit Task")).not.toBeInTheDocument();
+      expect(screen.queryByText("Clone Task")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Clone to Multiple Dates"),
+      ).not.toBeInTheDocument();
     });
   });
 
   describe("editor with edit rights (is the contact)", () => {
-    test("shows the Actions menu button", () => {
+    test("shows full Actions menu with all options - no standalone New Task", () => {
       vi.mocked(useCurrentUser).mockReturnValue(editorUser);
       const task = makeTask({ contact: makeMember({ username: "EDITOR" }) });
       renderActions({ task });
+
       expect(
         screen.getByRole("button", { name: "Actions" }),
       ).toBeInTheDocument();
-    });
-
-    test("shows Edit Task in the Actions menu", async () => {
-      vi.mocked(useCurrentUser).mockReturnValue(editorUser);
-      const task = makeTask({ contact: makeMember({ username: "EDITOR" }) });
-      renderActions({ task });
-
-      // "Edit Task" appears in SpeedDial tooltip labels (mobile) even when menu is closed
-      expect(screen.queryAllByText("Edit Task").length).toBeGreaterThan(0);
-    });
-
-    test("shows Clone Task in the Actions menu", async () => {
-      vi.mocked(useCurrentUser).mockReturnValue(editorUser);
-      const task = makeTask({ contact: makeMember({ username: "EDITOR" }) });
-      renderActions({ task });
-
-      // "Clone Task" appears in SpeedDial tooltip labels (mobile) even when menu is closed
-      expect(screen.queryAllByText("Clone Task").length).toBeGreaterThan(0);
+      // SpeedDial tooltip labels are present in the DOM even when dial is closed
+      expect(screen.getAllByText("Edit Task").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Clone Task").length).toBeGreaterThan(0);
+      expect(
+        screen.getAllByText("Clone to Multiple Dates").length,
+      ).toBeGreaterThan(0);
+      expect(screen.getAllByText("New Task").length).toBeGreaterThan(0);
     });
   });
 
   describe("admin", () => {
-    test("shows the Actions menu button", () => {
+    test("shows full Actions menu for own tasks", () => {
       vi.mocked(useCurrentUser).mockReturnValue(adminUser);
-      renderActions({ task: makeTask() });
+      const task = makeTask({ contact: makeMember({ username: "ADMIN" }) });
+      renderActions({ task });
+
       expect(
         screen.getByRole("button", { name: "Actions" }),
       ).toBeInTheDocument();
+      expect(screen.getAllByText("Edit Task").length).toBeGreaterThan(0);
+      expect(screen.queryByText("Clone Task")).toBeInTheDocument();
     });
 
-    test("shows Edit Task in the Actions menu", async () => {
-      vi.mocked(useCurrentUser).mockReturnValue(adminUser);
-      renderActions({ task: makeTask() });
-
-      // "Edit Task" appears in SpeedDial tooltip labels (mobile) even when menu is closed
-      expect(screen.queryAllByText("Edit Task").length).toBeGreaterThan(0);
-    });
-
-    test("can edit any task regardless of contact", async () => {
+    test("shows full Actions menu even when not the contact", () => {
       vi.mocked(useCurrentUser).mockReturnValue(adminUser);
       const task = makeTask({
         contact: makeMember({ username: "SOMEONE_ELSE" }),
       });
       renderActions({ task });
 
-      // "Edit Task" appears in SpeedDial tooltip labels (mobile) even when menu is closed
-      expect(screen.queryAllByText("Edit Task").length).toBeGreaterThan(0);
+      expect(
+        screen.getByRole("button", { name: "Actions" }),
+      ).toBeInTheDocument();
+      expect(screen.getAllByText("Edit Task").length).toBeGreaterThan(0);
+      expect(screen.queryByText("Clone Task")).toBeInTheDocument();
     });
   });
 });

@@ -6,14 +6,13 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Fab, { FabProps } from "@mui/material/Fab";
+import { FabProps } from "@mui/material/Fab";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -27,6 +26,7 @@ import {
 import { SX_FAB_POSITION } from "@/utils/constants";
 
 import useBulkCloneDialog from "./bulk-clone/useBulkCloneDialog";
+import NewHelperTaskAction from "./NewHelperTaskAction";
 
 type LinkAction = {
   icon: React.ReactElement;
@@ -59,34 +59,7 @@ const HelperTaskDetailActions = ({ task }: Props): React.ReactNode => {
   }
 
   if (!canEdit(task, currentUser)) {
-    return (
-      <>
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            component={RouterLink}
-            to="/helpers/tasks/new"
-          >
-            New Task
-          </Button>
-        </Box>
-        <Box sx={{ display: { xs: "block", sm: "none" } }}>
-          <Fab
-            variant="extended"
-            color="primary"
-            component={RouterLink}
-            to="/helpers/tasks/new"
-            sx={SX_FAB_POSITION}
-          >
-            <AddIcon />
-            <Typography variant="button" ml={1}>
-              New Task
-            </Typography>
-          </Fab>
-        </Box>
-      </>
-    );
+    return <NewHelperTaskAction />;
   }
 
   const closeMenu = (): void => {
