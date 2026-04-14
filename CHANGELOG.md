@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Only show helper task actions to editors if they are allowed to edit the task
+
 ## [1.4.0] - 2026-04-14
 
 ### Added
