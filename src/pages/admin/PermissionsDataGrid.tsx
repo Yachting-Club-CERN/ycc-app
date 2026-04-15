@@ -17,6 +17,7 @@ import {
   HelpersAppPermission,
   HelpersAppPermissionType,
 } from "@/model/helpers-dtos";
+import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import client from "@/utils/client";
 import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 
@@ -187,7 +188,7 @@ const PermissionsDataGrid = ({
     setError(undefined);
 
     confirmationDialog.open({
-      title: `Revoke permission from ${permission.member.username}?`,
+      title: `Revoke permission from ${getFullNameAndUsername(permission.member)}?`,
       content: null,
       confirmButtonColor: "error",
       confirmButtonText: "Revoke permission",
@@ -312,7 +313,8 @@ const PermissionsDataGrid = ({
                 handleContextMenuClose();
               }}
             >
-              Revoke permissions from {contextMenu.row.member.username}
+              Revoke permissions from{" "}
+              {getFullNameAndUsername(contextMenu.row.member)}
             </MenuItem>
           )}
       </Menu>
