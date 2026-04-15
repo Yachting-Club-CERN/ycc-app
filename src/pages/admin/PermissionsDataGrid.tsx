@@ -1,3 +1,4 @@
+import DialogContentText from "@mui/material/DialogContentText";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -188,8 +189,12 @@ const PermissionsDataGrid = ({
     setError(undefined);
 
     confirmationDialog.open({
-      title: `Revoke permission from ${getFullNameAndUsername(permission.member)}?`,
-      content: null,
+      title: "Revoke permission?",
+      content: (
+        <DialogContentText mb={2}>
+          Member: <strong>{getFullNameAndUsername(permission.member)}</strong>
+        </DialogContentText>
+      ),
       confirmButtonColor: "error",
       confirmButtonText: "Revoke permission",
       cancelButtonColor: "primary",
