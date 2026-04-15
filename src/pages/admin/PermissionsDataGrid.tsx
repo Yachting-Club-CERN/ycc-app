@@ -1,3 +1,4 @@
+import DialogContentText from "@mui/material/DialogContentText";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,6 +18,7 @@ import {
   HelpersAppPermission,
   HelpersAppPermissionType,
 } from "@/model/helpers-dtos";
+import { getFullNameAndUsername } from "@/pages/members/members-utils";
 import client from "@/utils/client";
 import { DATA_GRID_PAGE_SIZE_OPTIONS } from "@/utils/constants";
 
@@ -187,8 +189,12 @@ const PermissionsDataGrid = ({
     setError(undefined);
 
     confirmationDialog.open({
-      title: `Revoke permission from ${permission.member.username}?`,
-      content: null,
+      title: "Revoke permission?",
+      content: (
+        <DialogContentText mb={2}>
+          Member: <strong>{getFullNameAndUsername(permission.member)}</strong>
+        </DialogContentText>
+      ),
       confirmButtonColor: "error",
       confirmButtonText: "Revoke permission",
       cancelButtonColor: "primary",
@@ -312,7 +318,8 @@ const PermissionsDataGrid = ({
                 handleContextMenuClose();
               }}
             >
-              Revoke permissions from {contextMenu.row.member.username}
+              Revoke permissions from{" "}
+              {getFullNameAndUsername(contextMenu.row.member)}
             </MenuItem>
           )}
       </Menu>
